@@ -34,15 +34,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 var app = builder.Build();
 
-// Apply migrations on startup in development only
-// For production, use manual migration scripts or deployment pipelines
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<RushtonRootsDbContext>();
-        dbContext.Database.Migrate();
-    }
+    var dbContext = scope.ServiceProvider.GetRequiredService<RushtonRootsDbContext>();
+    dbContext.Database.Migrate();
 }
 
 // Configure the HTTP request pipeline

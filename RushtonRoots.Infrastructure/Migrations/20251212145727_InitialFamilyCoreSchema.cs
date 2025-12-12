@@ -331,19 +331,16 @@ namespace RushtonRoots.Infrastructure.Migrations
                 columns: new[] { "ParentPersonId", "ChildPersonId" },
                 unique: true);
 
+            migrationBuilder.AddCheckConstraint(
+                name: "CK_Partnerships_PersonAId_LessThan_PersonBId",
+                table: "Partnerships",
+                sql: "[PersonAId] < [PersonBId]");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Partnerships_PersonAId_PersonBId",
                 table: "Partnerships",
                 columns: new[] { "PersonAId", "PersonBId" },
-                unique: true,
-                filter: "[PersonAId] < [PersonBId]");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Partnerships_PersonBId_PersonAId",
-                table: "Partnerships",
-                columns: new[] { "PersonBId", "PersonAId" },
-                unique: true,
-                filter: "[PersonBId] < [PersonAId]");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_People_HouseholdId",
