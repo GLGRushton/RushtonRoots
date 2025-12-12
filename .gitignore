@@ -54,7 +54,9 @@ yarn-error.log*
 
 # Angular build output in wwwroot (only present after publish)
 /RushtonRoots.Web/wwwroot/*.js
+/RushtonRoots.Web/wwwroot/*.js.map
 /RushtonRoots.Web/wwwroot/*.css
+/RushtonRoots.Web/wwwroot/*.css.map
 /RushtonRoots.Web/wwwroot/*.txt
 /RushtonRoots.Web/wwwroot/*.html
 /RushtonRoots.Web/wwwroot/assets/
