@@ -1,4 +1,15 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using RushtonRoots.Web;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Autofac as the service provider
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+{
+    containerBuilder.RegisterModule(new AutofacModule(builder.Configuration));
+});
 
 // Add services to the container
 builder.Services.AddControllersWithViews();

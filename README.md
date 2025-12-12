@@ -76,31 +76,54 @@ The npm watch script will NOT run if:
 ```
 RushtonRoots/
 ├── RushtonRoots.sln
-└── RushtonRoots.Web/
-    ├── Controllers/          # MVC and API controllers
-    │   ├── HomeController.cs
-    │   └── SampleApiController.cs
-    ├── Views/               # Razor views
-    │   ├── Home/
-    │   │   └── Index.cshtml
-    │   └── Shared/
-    │       └── _Layout.cshtml
-    ├── ClientApp/           # Angular application
-    │   ├── src/
-    │   │   ├── app/
-    │   │   │   ├── app.module.ts
-    │   │   │   ├── app.component.*
-    │   │   │   └── welcome/  # Example Angular Element component
-    │   │   ├── main.ts
-    │   │   └── index.html
-    │   ├── angular.json
-    │   └── package.json
-    ├── Scripts/            # Build automation scripts
-    │   ├── start-watch.ps1
-    │   └── stop-watch.ps1
-    └── wwwroot/            # Static files and Angular build output
+├── PATTERNS.md                     # Detailed architecture and patterns documentation
+├── RushtonRoots.Domain/           # Domain layer (no dependencies)
+│   ├── UI/
+│   │   ├── Models/                # View models and DTOs
+│   │   └── Requests/              # Request models (SearchRequest, etc.)
+│   └── Database/                  # Domain entities
+├── RushtonRoots.Infrastructure/   # Infrastructure layer (depends on Domain)
+│   ├── Database/
+│   │   ├── RushtonRootsDbContext.cs
+│   │   └── EntityConfigs/         # EF Core entity configurations
+│   ├── Migrations/                # EF Core migrations
+│   └── Repositories/              # Repository implementations
+├── RushtonRoots.Application/      # Application layer (depends on Domain & Infrastructure)
+│   ├── Services/                  # Business logic services
+│   ├── Mappers/                   # Entity to ViewModel mappers
+│   └── Validators/                # Input validation logic
+├── RushtonRoots.Web/             # Presentation layer (depends on Application)
+│   ├── Controllers/              # MVC and API controllers
+│   │   ├── HomeController.cs
+│   │   └── SampleApiController.cs
+│   ├── Views/                    # Razor views
+│   │   ├── Home/
+│   │   │   └── Index.cshtml
+│   │   └── Shared/
+│   │       └── _Layout.cshtml
+│   ├── ClientApp/                # Angular application
+│   │   ├── src/
+│   │   │   ├── app/
+│   │   │   │   ├── app.module.ts
+│   │   │   │   ├── app.component.*
+│   │   │   │   └── welcome/     # Example Angular Element component
+│   │   │   ├── main.ts
+│   │   │   └── index.html
+│   │   ├── angular.json
+│   │   └── package.json
+│   ├── Scripts/                  # Build automation scripts
+│   │   ├── start-watch.ps1
+│   │   └── stop-watch.ps1
+│   ├── AutofacModule.cs          # Dependency injection configuration
+│   ├── Program.cs                # Application entry point
+│   ├── appsettings.json          # Configuration (ConnectionStrings, Azure Blob Storage)
+│   └── wwwroot/                  # Static files and Angular build output
+└── RushtonRoots.UnitTests/       # Unit tests (XUnit + FakeItEasy)
 
 ```
+
+For detailed information about the architecture, patterns, and development guidelines, see [PATTERNS.md](PATTERNS.md).
+
 
 ## Angular Integration
 
