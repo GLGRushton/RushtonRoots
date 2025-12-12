@@ -109,7 +109,7 @@ let AppComponent = /*#__PURE__*/(() => {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.title);
         }
       },
-      styles: [".app-container[_ngcontent-%COMP%] {\n  padding: 20px;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n\nh1[_ngcontent-%COMP%] {\n  color: #333;\n}\n\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvYXBwLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxhQUFhO0VBQ2IsaUJBQWlCO0VBQ2pCLGNBQWM7QUFDaEI7O0FBRUE7RUFDRSxXQUFXO0FBQ2IiLCJzb3VyY2VzQ29udGVudCI6WyIuYXBwLWNvbnRhaW5lciB7XG4gIHBhZGRpbmc6IDIwcHg7XG4gIG1heC13aWR0aDogMTIwMHB4O1xuICBtYXJnaW46IDAgYXV0bztcbn1cblxuaDEge1xuICBjb2xvcjogIzMzMztcbn1cbiJdLCJzb3VyY2VSb290IjoiIn0= */"]
+      styles: [".app-container[_ngcontent-%COMP%] {\n  padding: 20px;\n  max-width: 1200px;\n  margin: 0 auto;\n}\n\nh1[_ngcontent-%COMP%] {\n  color: #333;\n}\n\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvYXBwLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxhQUFhO0VBQ2IsaUJBQWlCO0VBQ2pCLGNBQWM7QUFDaEI7O0FBRUE7RUFDRSxXQUFXO0FBQ2IiLCJzb3VyY2VzQ29udGVudCI6WyIuYXBwLWNvbnRhaW5lciB7XHJcbiAgcGFkZGluZzogMjBweDtcclxuICBtYXgtd2lkdGg6IDEyMDBweDtcclxuICBtYXJnaW46IDAgYXV0bztcclxufVxyXG5cclxuaDEge1xyXG4gIGNvbG9yOiAjMzMzO1xyXG59XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */"]
     });
   }
   return AppComponent;
@@ -10529,7 +10529,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "ɵɵviewQuery": () => (/* binding */ ɵɵviewQuery),
 /* harmony export */   "ɵɵviewQuerySignal": () => (/* binding */ ɵɵviewQuerySignal)
 /* harmony export */ });
-/* harmony import */ var _home_runner_work_RushtonRoots_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
+/* harmony import */ var C_GitHub_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js */ 9204);
 /* harmony import */ var _untracked_BKcld_ew_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core/primitives/signals */ 8008);
 /* harmony import */ var _primitives_di_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core/primitives/di */ 2867);
 /* harmony import */ var _angular_core_primitives_signals__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/core/primitives/signals */ 5689);
@@ -16448,7 +16448,7 @@ let PendingTasks = /*#__PURE__*/(() => {
      */
     run(fn) {
       var _this = this;
-      return (0,_home_runner_work_RushtonRoots_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      return (0,C_GitHub_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
         const removeTask = _this.add();
         try {
           return yield fn();
@@ -34161,7 +34161,7 @@ function triggerHydrationFromBlockName(_x, _x2, _x3) {
  * events.
  */
 function _triggerHydrationFromBlockName() {
-  _triggerHydrationFromBlockName = (0,_home_runner_work_RushtonRoots_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (injector, blockName, replayQueuedEventsFn) {
+  _triggerHydrationFromBlockName = (0,C_GitHub_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (injector, blockName, replayQueuedEventsFn) {
     const dehydratedBlockRegistry = injector.get(DEHYDRATED_BLOCK_REGISTRY);
     const blocksBeingHydrated = dehydratedBlockRegistry.hydrating;
     // Make sure we don't hydrate/trigger the same thing multiple times
@@ -34201,7 +34201,7 @@ function _triggerHydrationFromBlockName() {
       // been navigated, etc. So we need to queue up the hydration process
       // so that it can be finished after the top block has had its defer
       // instruction executed.
-      dehydratedBlockRegistry.awaitParentBlock(topmostParentBlock, /*#__PURE__*/(0,_home_runner_work_RushtonRoots_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+      dehydratedBlockRegistry.awaitParentBlock(topmostParentBlock, /*#__PURE__*/(0,C_GitHub_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
         return yield triggerHydrationForBlockQueue(injector, hydrationQueue, replayQueuedEventsFn);
       }));
     }
@@ -34212,7 +34212,7 @@ function triggerHydrationForBlockQueue(_x4, _x5, _x6) {
   return _triggerHydrationForBlockQueue.apply(this, arguments);
 }
 function _triggerHydrationForBlockQueue() {
-  _triggerHydrationForBlockQueue = (0,_home_runner_work_RushtonRoots_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (injector, hydrationQueue, replayQueuedEventsFn) {
+  _triggerHydrationForBlockQueue = (0,C_GitHub_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (injector, hydrationQueue, replayQueuedEventsFn) {
     const dehydratedBlockRegistry = injector.get(DEHYDRATED_BLOCK_REGISTRY);
     const blocksBeingHydrated = dehydratedBlockRegistry.hydrating;
     // Indicate that we have some pending async work.
@@ -34309,7 +34309,7 @@ function triggerResourceLoadingForHydration(_x7) {
  * fetching and rendering
  */
 function _triggerResourceLoadingForHydration() {
-  _triggerResourceLoadingForHydration = (0,_home_runner_work_RushtonRoots_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (dehydratedBlock) {
+  _triggerResourceLoadingForHydration = (0,C_GitHub_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (dehydratedBlock) {
     const {
       tNode,
       lView
@@ -49629,7 +49629,7 @@ class ResourceImpl extends BaseWritableResource {
   }
   loadEffect() {
     var _this2 = this;
-    return (0,_home_runner_work_RushtonRoots_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
+    return (0,C_GitHub_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* () {
       const extRequest = _this2.extRequest();
       // Capture the previous status before any state transitions. Note that this is `untracked` since
       // we do not want the effect to depend on the state of the resource, only on the request.
@@ -49721,7 +49721,7 @@ function getLoader(options) {
     return options.stream;
   }
   return /*#__PURE__*/function () {
-    var _ref = (0,_home_runner_work_RushtonRoots_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (params) {
+    var _ref = (0,C_GitHub_RushtonRoots_RushtonRoots_Web_ClientApp_node_modules_babel_runtime_helpers_esm_asyncToGenerator_js__WEBPACK_IMPORTED_MODULE_0__["default"])(function* (params) {
       try {
         return signal({
           value: yield options.loader(params)
@@ -52730,7 +52730,7 @@ let WelcomeComponent = /*#__PURE__*/(() => {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.name);
         }
       },
-      styles: [".welcome-card[_ngcontent-%COMP%] {\n  background-color: white;\n  border-radius: 8px;\n  padding: 30px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n  margin: 20px 0;\n}\n\n.welcome-card[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  color: #2c3e50;\n  margin-top: 0;\n}\n\n.welcome-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  color: #555;\n  line-height: 1.6;\n}\n\n.welcome-card[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  color: #3498db;\n}\n\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvd2VsY29tZS93ZWxjb21lLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSx1QkFBdUI7RUFDdkIsa0JBQWtCO0VBQ2xCLGFBQWE7RUFDYix3Q0FBd0M7RUFDeEMsY0FBYztBQUNoQjs7QUFFQTtFQUNFLGNBQWM7RUFDZCxhQUFhO0FBQ2Y7O0FBRUE7RUFDRSxXQUFXO0VBQ1gsZ0JBQWdCO0FBQ2xCOztBQUVBO0VBQ0UsY0FBYztBQUNoQiIsInNvdXJjZXNDb250ZW50IjpbIi53ZWxjb21lLWNhcmQge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcbiAgYm9yZGVyLXJhZGl1czogOHB4O1xuICBwYWRkaW5nOiAzMHB4O1xuICBib3gtc2hhZG93OiAwIDJweCA0cHggcmdiYSgwLCAwLCAwLCAwLjEpO1xuICBtYXJnaW46IDIwcHggMDtcbn1cblxuLndlbGNvbWUtY2FyZCBoMiB7XG4gIGNvbG9yOiAjMmMzZTUwO1xuICBtYXJnaW4tdG9wOiAwO1xufVxuXG4ud2VsY29tZS1jYXJkIHAge1xuICBjb2xvcjogIzU1NTtcbiAgbGluZS1oZWlnaHQ6IDEuNjtcbn1cblxuLndlbGNvbWUtY2FyZCBzdHJvbmcge1xuICBjb2xvcjogIzM0OThkYjtcbn1cbiJdLCJzb3VyY2VSb290IjoiIn0= */"]
+      styles: [".welcome-card[_ngcontent-%COMP%] {\n  background-color: white;\n  border-radius: 8px;\n  padding: 30px;\n  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n  margin: 20px 0;\n}\n\n.welcome-card[_ngcontent-%COMP%]   h2[_ngcontent-%COMP%] {\n  color: #2c3e50;\n  margin-top: 0;\n}\n\n.welcome-card[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  color: #555;\n  line-height: 1.6;\n}\n\n.welcome-card[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  color: #3498db;\n}\n\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvd2VsY29tZS93ZWxjb21lLmNvbXBvbmVudC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSx1QkFBdUI7RUFDdkIsa0JBQWtCO0VBQ2xCLGFBQWE7RUFDYix3Q0FBd0M7RUFDeEMsY0FBYztBQUNoQjs7QUFFQTtFQUNFLGNBQWM7RUFDZCxhQUFhO0FBQ2Y7O0FBRUE7RUFDRSxXQUFXO0VBQ1gsZ0JBQWdCO0FBQ2xCOztBQUVBO0VBQ0UsY0FBYztBQUNoQiIsInNvdXJjZXNDb250ZW50IjpbIi53ZWxjb21lLWNhcmQge1xyXG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xyXG4gIGJvcmRlci1yYWRpdXM6IDhweDtcclxuICBwYWRkaW5nOiAzMHB4O1xyXG4gIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XHJcbiAgbWFyZ2luOiAyMHB4IDA7XHJcbn1cclxuXHJcbi53ZWxjb21lLWNhcmQgaDIge1xyXG4gIGNvbG9yOiAjMmMzZTUwO1xyXG4gIG1hcmdpbi10b3A6IDA7XHJcbn1cclxuXHJcbi53ZWxjb21lLWNhcmQgcCB7XHJcbiAgY29sb3I6ICM1NTU7XHJcbiAgbGluZS1oZWlnaHQ6IDEuNjtcclxufVxyXG5cclxuLndlbGNvbWUtY2FyZCBzdHJvbmcge1xyXG4gIGNvbG9yOiAjMzQ5OGRiO1xyXG59XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */"]
     });
   }
   return WelcomeComponent;

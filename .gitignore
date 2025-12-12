@@ -51,6 +51,7 @@ yarn-error.log*
 # Angular
 /RushtonRoots.Web/wwwroot/dist/
 /RushtonRoots.Web/ClientApp/dist/
+/RushtonRoots.Web/ClientApp/.angular/cache
 
 # Build artifacts
 *.dll
