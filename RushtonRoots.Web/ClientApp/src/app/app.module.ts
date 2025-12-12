@@ -4,11 +4,13 @@ import { createCustomElement } from '@angular/elements';
 
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { FamilyTreeComponent } from './family-tree/family-tree.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    FamilyTreeComponent
   ],
   imports: [
     BrowserModule
@@ -20,6 +22,9 @@ export class AppModule {
     // Register Angular Elements for use in Razor views
     const welcomeElement = createCustomElement(WelcomeComponent, { injector: this.injector });
     customElements.define('app-welcome', welcomeElement);
+
+    const familyTreeElement = createCustomElement(FamilyTreeComponent, { injector: this.injector });
+    customElements.define('app-family-tree', familyTreeElement);
   }
 
   ngDoBootstrap() {
