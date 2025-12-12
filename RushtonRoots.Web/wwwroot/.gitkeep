@@ -1,0 +1,3 @@
+# This directory will contain Angular production build output after publish
+# During development, this directory remains empty
+# Angular build files are copied here only during the publish process

@@ -49,9 +49,15 @@ yarn-debug.log*
 yarn-error.log*
 
 # Angular
-/RushtonRoots.Web/wwwroot/dist/
 /RushtonRoots.Web/ClientApp/dist/
 /RushtonRoots.Web/ClientApp/.angular/cache
+
+# Angular build output in wwwroot (only present after publish)
+/RushtonRoots.Web/wwwroot/*.js
+/RushtonRoots.Web/wwwroot/*.css
+/RushtonRoots.Web/wwwroot/*.txt
+/RushtonRoots.Web/wwwroot/*.html
+/RushtonRoots.Web/wwwroot/assets/
 
 # Build artifacts
 *.dll
