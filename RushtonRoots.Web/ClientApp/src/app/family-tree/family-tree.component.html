@@ -1,0 +1,50 @@
+<div class="family-tree">
+  <!-- Generation 0: Root Couple -->
+  <div class="generation generation-0">
+    <h3 class="generation-title">The Founders</h3>
+    <div class="couple-container">
+      <div class="couple root-couple">
+        <div class="person">
+          <div class="person-card">{{ rootCouple.person1.name }}</div>
+        </div>
+        <div class="connection">❤️</div>
+        <div class="person">
+          <div class="person-card">{{ rootCouple.person2.name }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generation 1: Children with Partners -->
+  <div class="generation generation-1">
+    <h3 class="generation-title">Their Children</h3>
+    <div class="children-grid">
+      <div class="couple" *ngFor="let couple of childrenCouples; let i = index">
+        <div class="person child">
+          <div class="person-card">{{ couple.person1.name }}</div>
+        </div>
+        <div class="connection-small">+</div>
+        <div class="person partner">
+          <div class="person-card">{{ couple.person2.name }}</div>
+        </div>
+        
+        <!-- Generation 2: Grandchildren for specific couples -->
+        <div class="grandchildren" *ngIf="i === 1">
+          <div class="grandchild" *ngFor="let grandchild of secondChildGrandchildren">
+            <div class="person-card small">{{ grandchild.name }}</div>
+          </div>
+        </div>
+        <div class="grandchildren" *ngIf="i === 2">
+          <div class="grandchild" *ngFor="let grandchild of thirdChildGrandchildren">
+            <div class="person-card small">{{ grandchild.name }}</div>
+          </div>
+        </div>
+        <div class="grandchildren" *ngIf="i === 3">
+          <div class="grandchild" *ngFor="let grandchild of fourthChildGrandchildren">
+            <div class="person-card small">{{ grandchild.name }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

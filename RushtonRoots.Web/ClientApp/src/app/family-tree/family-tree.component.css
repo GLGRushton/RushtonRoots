@@ -1,0 +1,167 @@
+.family-tree {
+  padding: 20px;
+  background: linear-gradient(to bottom, #f0f7f4, #e8f5e9);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+}
+
+.generation {
+  margin-bottom: 40px;
+}
+
+.generation-title {
+  text-align: center;
+  color: #2e7d32;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.couple-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.couple {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-direction: column;
+  position: relative;
+  padding: 10px;
+}
+
+.root-couple {
+  flex-direction: row;
+  background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+}
+
+.person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.person-card {
+  background: white;
+  border: 3px solid #4caf50;
+  border-radius: 12px;
+  padding: 15px 25px;
+  font-weight: 600;
+  color: #1b5e20;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  min-width: 120px;
+  text-align: center;
+  font-size: 1em;
+}
+
+.person-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(76, 175, 80, 0.3);
+  border-color: #2e7d32;
+}
+
+.person-card.small {
+  padding: 10px 15px;
+  min-width: 100px;
+  font-size: 0.9em;
+  border-width: 2px;
+}
+
+.connection {
+  font-size: 2em;
+  color: #e91e63;
+  margin: 0 10px;
+  animation: pulse 2s infinite;
+}
+
+.connection-small {
+  font-size: 1.2em;
+  color: #4caf50;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.children-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.child .person-card {
+  background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+  border-color: #66bb6a;
+  color: #1b5e20;
+}
+
+.partner .person-card {
+  background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+  border-color: #fdd835;
+  color: #f57f17;
+}
+
+.grandchildren {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px dashed #81c784;
+}
+
+.grandchild {
+  display: flex;
+  justify-content: center;
+}
+
+.grandchild .person-card {
+  background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+  border-color: #4fc3f7;
+  color: #01579b;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .children-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+  }
+
+  .person-card {
+    padding: 12px 18px;
+    min-width: 100px;
+    font-size: 0.9em;
+  }
+
+  .generation-title {
+    font-size: 1.2em;
+  }
+
+  .root-couple {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .children-grid {
+    grid-template-columns: 1fr;
+  }
+}

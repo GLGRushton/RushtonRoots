@@ -2,74 +2,196 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="container">
-    <h1>Welcome to Rushton Roots</h1>
-    <p>This is a sample homepage demonstrating ASP.NET Core + Angular integration on a single port.</p>
-    
-    <div class="features">
-        <h2>Features</h2>
-        <ul>
-            <li>ASP.NET Core 10 backend</li>
-            <li>Angular frontend</li>
-            <li>Single port hosting</li>
-            <li>API controllers for data services</li>
-            <li>Razor views with Angular component integration</li>
-        </ul>
-    </div>
+<div class="home-container">
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+        <h1>Welcome to Rushton Roots</h1>
+        <p class="tagline">Discover, Preserve, and Celebrate Your Family Heritage</p>
+        <div class="description">
+            <p>
+                Rushton Roots is your digital family tree, connecting generations and preserving memories. 
+                Explore your family's rich history, discover connections across generations, and build 
+                a lasting legacy for future family members.
+            </p>
+            <p>
+                From the founding couple to grandchildren, each branch tells a unique story. Navigate 
+                through the generations, learn about your ancestors, and see how your family has grown 
+                and flourished over time.
+            </p>
+        </div>
+    </section>
 
-    <div class="angular-demo">
-        <h2>Angular Component Demo</h2>
-        <p>Below is an Angular component embedded in this Razor view:</p>
-        <app-welcome name="Family Member" message="Discover Your Roots!"></app-welcome>
-    </div>
+    <!-- Family Tree Section -->
+    <section class="family-tree-section">
+        <h2>Our Family Tree</h2>
+        <p class="section-description">
+            Explore the Rushton family lineage, from the founding couple through multiple generations.
+        </p>
+        <app-family-tree></app-family-tree>
+    </section>
 
-    <div class="api-demo">
-        <h2>API Demo</h2>
-        <p>Sample API endpoint: <a href="/api/sampleapi" target="_blank">/api/sampleapi</a></p>
-    </div>
+    <!-- Features Section -->
+    <section class="features-section">
+        <h2>Explore Your Heritage</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Connect Generations</h3>
+                <p>See relationships between family members across multiple generations</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📖</div>
+                <h3>Preserve Stories</h3>
+                <p>Share and document family stories, memories, and milestones</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3>Map Your Roots</h3>
+                <p>Discover where your family came from and how they spread across the world</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📸</div>
+                <h3>Share Memories</h3>
+                <p>Upload photos and documents to create a rich family archive</p>
+            </div>
+        </div>
+    </section>
 </div>
 
 <style>
-    .container {
+    .home-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 20px;
     }
 
-    .features, .angular-demo, .api-demo {
-        background-color: white;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 20px 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    .welcome-section {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+        border-left: 6px solid #4caf50;
     }
 
-    h1 {
-        color: #2c3e50;
+    .welcome-section h1 {
+        color: #2e7d32;
+        margin: 0 0 10px 0;
+        font-size: 2.5em;
+        font-weight: 700;
     }
 
-    h2 {
-        color: #34495e;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 10px;
+    .tagline {
+        color: #66bb6a;
+        font-size: 1.3em;
+        font-style: italic;
+        margin: 0 0 20px 0;
     }
 
-    ul {
+    .description {
+        color: #555;
         line-height: 1.8;
+        font-size: 1.05em;
     }
 
-    a {
-        color: #3498db;
-        text-decoration: none;
+    .description p {
+        margin: 15px 0;
     }
 
-    a:hover {
-        text-decoration: underline;
+    .family-tree-section {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+    }
+
+    .family-tree-section h2 {
+        color: #2e7d32;
+        margin: 0 0 10px 0;
+        font-size: 2em;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .section-description {
+        text-align: center;
+        color: #666;
+        font-size: 1.1em;
+        margin-bottom: 30px;
+    }
+
+    .features-section {
+        margin-bottom: 40px;
+    }
+
+    .features-section h2 {
+        color: #2e7d32;
+        text-align: center;
+        font-size: 2em;
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
+        border-color: #4caf50;
+    }
+
+    .feature-icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+    }
+
+    .feature-card h3 {
+        color: #2e7d32;
+        margin: 15px 0;
+        font-size: 1.3em;
+    }
+
+    .feature-card p {
+        color: #666;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    @@media (max-width: 768px) {
+        .welcome-section, .family-tree-section {
+            padding: 25px;
+        }
+
+        .welcome-section h1 {
+            font-size: 2em;
+        }
+
+        .tagline {
+            font-size: 1.1em;
+        }
+
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 
 @section Scripts {
-    <script src="/runtime.js"></script>
-    <script src="/polyfills.js"></script>
-    <script src="/main.js"></script>
+    <script src="/runtime.48a6a67ff67fee4f.js"></script>
+    <script src="/polyfills.69df3032339393c2.js"></script>
+    <script src="/main.2706535bcdf785e7.js"></script>
 }

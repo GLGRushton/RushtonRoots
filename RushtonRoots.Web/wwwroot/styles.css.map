@@ -1,1 +1,0 @@
-{"version":3,"file":"styles.css","mappings":";;;AAAA,kBAAkB;AAClB;EACE,8BAA8B;EAC9B,SAAS;EACT,UAAU;EACV,yBAAyB;AAC3B","sources":["./src/styles.css"],"sourcesContent":["/* Global styles */\r\nbody {\r\n  font-family: Arial, sans-serif;\r\n  margin: 0;\r\n  padding: 0;\r\n  background-color: #f5f5f5;\r\n}\r\n"],"names":[],"sourceRoot":"webpack:///","x_google_ignoreList":[]}
