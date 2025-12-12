@@ -34,7 +34,7 @@
     <Exec Command="npm install" WorkingDirectory="$(SpaRoot)" />
   </Target>
 
-  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+  <Target Name="PublishRunWebpack" BeforeTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the Angular build runs -->
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --configuration production" />
@@ -45,11 +45,25 @@
     </ItemGroup>
     <Copy SourceFiles="@(DistFiles)" DestinationFolder="wwwroot\%(RecursiveDir)" SkipUnchangedFiles="true" />
     
-    <!-- Include the wwwroot files in the publish output -->
+    <!-- Create non-hashed copies for consistent Razor view references (Windows) -->
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ProjectDir)Scripts\copy-angular-files.ps1&quot; -WwwrootPath &quot;$(ProjectDir)wwwroot&quot;" 
+          Condition="'$(OS)' == 'Windows_NT'" 
+          IgnoreExitCode="false" />
+    
+    <!-- Create non-hashed copies for consistent Razor view references (Linux/Mac) -->
+    <Exec Command="bash &quot;$(ProjectDir)Scripts/copy-angular-files.sh&quot; &quot;$(ProjectDir)wwwroot&quot;" 
+          Condition="'$(OS)' != 'Windows_NT'" 
+          IgnoreExitCode="false" />
+    
+    <!-- Include all wwwroot files in publish (both hashed and non-hashed) -->
     <ItemGroup>
-      <ResolvedFileToPublish Include="wwwroot\**\*" Exclude="wwwroot\**\*.json">
+      <WwwrootFilesToPublish Include="wwwroot\**\*" />
+    </ItemGroup>
+    <ItemGroup>
+      <ResolvedFileToPublish Include="@(WwwrootFilesToPublish)">
         <RelativePath>wwwroot\%(RecursiveDir)%(Filename)%(Extension)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
