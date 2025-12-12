@@ -1,0 +1,22 @@
+namespace RushtonRoots.Domain.Database;
+
+/// <summary>
+/// Represents a human in the family tree.
+/// Each person must belong to exactly one household.
+/// </summary>
+public class Person : BaseEntity
+{
+    public int HouseholdId { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public DateTime? DateOfBirth { get; set; }
+    public bool IsDeceased { get; set; }
+    
+    // Navigation properties
+    public Household? Household { get; set; }
+    public ICollection<ParentChild> ParentRelationships { get; set; } = new List<ParentChild>();
+    public ICollection<ParentChild> ChildRelationships { get; set; } = new List<ParentChild>();
+    public ICollection<Partnership> PartnershipsAsPersonA { get; set; } = new List<Partnership>();
+    public ICollection<Partnership> PartnershipsAsPersonB { get; set; } = new List<Partnership>();
+    public ICollection<HouseholdPermission> HouseholdPermissions { get; set; } = new List<HouseholdPermission>();
+}

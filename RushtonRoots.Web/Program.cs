@@ -1,5 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using RushtonRoots.Domain.Database;
+using RushtonRoots.Infrastructure.Database;
 using RushtonRoots.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +18,32 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
+// Add Identity services
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    // Configure Identity options as needed
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 8;
+})
+.AddEntityFrameworkStores<RushtonRootsDbContext>()
+.AddDefaultTokenProviders();
+
 var app = builder.Build();
+
+// Apply migrations on startup in development only
+// For production, use manual migration scripts or deployment pipelines
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<RushtonRootsDbContext>();
+        dbContext.Database.Migrate();
+    }
+}
 
 // Configure the HTTP request pipeline
 if (!app.Environment.IsDevelopment())
@@ -28,6 +57,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Map controller routes
