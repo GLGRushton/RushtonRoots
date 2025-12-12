@@ -1,0 +1,71 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container">
+    <h1>Welcome to Rushton Roots</h1>
+    <p>This is a sample homepage demonstrating ASP.NET Core + Angular integration on a single port.</p>
+    
+    <div class="features">
+        <h2>Features</h2>
+        <ul>
+            <li>ASP.NET Core 10 backend</li>
+            <li>Angular frontend</li>
+            <li>Single port hosting</li>
+            <li>API controllers for data services</li>
+            <li>Razor views with Angular component integration</li>
+        </ul>
+    </div>
+
+    <div class="angular-demo">
+        <h2>Angular Component Demo</h2>
+        <p>Below is an Angular component embedded in this Razor view:</p>
+        <app-welcome name="Family Member" message="Discover Your Roots!"></app-welcome>
+    </div>
+
+    <div class="api-demo">
+        <h2>API Demo</h2>
+        <p>Sample API endpoint: <a href="/api/sampleapi" target="_blank">/api/sampleapi</a></p>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .features, .angular-demo, .api-demo {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #2c3e50;
+    }
+
+    h2 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+    }
+
+    ul {
+        line-height: 1.8;
+    }
+
+    a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<script src="/main.js"></script>
