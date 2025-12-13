@@ -17,6 +17,12 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ParentChild> ParentChildren { get; set; }
     public DbSet<Partnership> Partnerships { get; set; }
     public DbSet<HouseholdPermission> HouseholdPermissions { get; set; }
+    public DbSet<LifeEvent> LifeEvents { get; set; }
+    public DbSet<Location> Locations { get; set; }
+    public DbSet<PersonPhoto> PersonPhotos { get; set; }
+    public DbSet<BiographicalNote> BiographicalNotes { get; set; }
+    public DbSet<Source> Sources { get; set; }
+    public DbSet<Citation> Citations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
