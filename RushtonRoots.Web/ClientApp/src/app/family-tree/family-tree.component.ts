@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 interface Person {
   id: number;
@@ -49,7 +50,7 @@ export class FamilyTreeComponent implements OnInit {
     this.loading = true;
     this.error = null;
     try {
-      const data = await this.http.get<any>('/api/familytree/all').toPromise();
+      const data = await firstValueFrom(this.http.get<any>('/api/familytree/all'));
       this.allPeople = data.people || [];
       
       // Default to first person if available
@@ -77,7 +78,7 @@ export class FamilyTreeComponent implements OnInit {
         ? `/api/familytree/pedigree/${this.selectedPersonId}`
         : `/api/familytree/descendants/${this.selectedPersonId}`;
       
-      const data = await this.http.get<TreeNode>(endpoint).toPromise();
+      const data = await firstValueFrom(this.http.get<TreeNode>(endpoint));
       this.treeData = data || null;
     } catch (err: any) {
       console.error('Error loading tree view:', err);
