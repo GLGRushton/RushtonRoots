@@ -167,11 +167,39 @@
                 </a>
             </h1>
             <div class="user-details">
-                <div class="user-avatar">👤</div>
-                <div class="user-info">
-                    <p class="user-name">Guest User</p>
-                    <p class="user-role">Family Member</p>
-                </div>
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <div class="user-avatar">👤</div>
+                    <div class="user-info">
+                        <p class="user-name">@User.Identity.Name</p>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <p class="user-role">System Admin</p>
+                        }
+                        else if (User.IsInRole("HouseholdAdmin"))
+                        {
+                            <p class="user-role">Household Admin</p>
+                        }
+                        else
+                        {
+                            <p class="user-role">Family Member</p>
+                        }
+                    </div>
+                    <div style="margin-left: 15px;">
+                        <a href="/Account/Profile" style="color: white; text-decoration: none; margin-right: 10px;">Profile</a>
+                        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+                        {
+                            <a href="/Account/CreateUser" style="color: white; text-decoration: none; margin-right: 10px;">Add User</a>
+                        }
+                        <form asp-controller="Account" asp-action="Logout" method="post" style="display: inline;">
+                            <button type="submit" style="background: none; border: none; color: white; cursor: pointer; text-decoration: underline;">Logout</button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <a href="/Account/Login" style="color: white; text-decoration: none; padding: 8px 20px; background: rgba(255, 255, 255, 0.2); border-radius: 20px;">Login</a>
+                }
             </div>
         </div>
     </header>
