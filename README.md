@@ -1,5 +1,5 @@
 # RushtonRoots
-A family creation
+A comprehensive family platform designed to serve multiple generations.
 
 ## Overview
 This is a .NET 10 ASP.NET Core + Angular application hosted on a single port. The application demonstrates:
@@ -122,7 +122,12 @@ RushtonRoots/
 
 ```
 
-For detailed information about the architecture, patterns, and development guidelines, see [PATTERNS.md](PATTERNS.md).
+## Documentation
+
+- **[PATTERNS.md](PATTERNS.md)** - Detailed architecture, patterns, and development guidelines
+- **[ROADMAP.md](ROADMAP.md)** - Comprehensive development roadmap with phased feature plans
+- **[IMPLEMENTATION.md](IMPLEMENTATION.md)** - Solution implementation summary
+- **[PROJECT_STRUCTURE_IMPLEMENTATION.md](PROJECT_STRUCTURE_IMPLEMENTATION.md)** - Project structure details
 
 
 ## Angular Integration
