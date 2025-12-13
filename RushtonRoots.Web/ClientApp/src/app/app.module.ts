@@ -1,5 +1,7 @@
 import { NgModule, Injector } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { createCustomElement } from '@angular/elements';
 
 import { AppComponent } from './app.component';
@@ -13,7 +15,9 @@ import { FamilyTreeComponent } from './family-tree/family-tree.component';
     FamilyTreeComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule,
+    FormsModule
   ],
   providers: []
 })
