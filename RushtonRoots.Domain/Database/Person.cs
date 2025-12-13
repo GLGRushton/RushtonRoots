@@ -10,7 +10,9 @@ public class Person : BaseEntity
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public DateTime? DateOfBirth { get; set; }
+    public DateTime? DateOfDeath { get; set; }
     public bool IsDeceased { get; set; }
+    public string? PhotoUrl { get; set; }
     
     // Navigation properties
     public Household? Household { get; set; }

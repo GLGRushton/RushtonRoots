@@ -30,9 +30,15 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.Property(p => p.DateOfBirth)
             .HasColumnType("date");
             
+        builder.Property(p => p.DateOfDeath)
+            .HasColumnType("date");
+            
         builder.Property(p => p.IsDeceased)
             .IsRequired()
             .HasDefaultValue(false);
+            
+        builder.Property(p => p.PhotoUrl)
+            .HasMaxLength(500);
             
         builder.Property(p => p.CreatedDateTime)
             .IsRequired();

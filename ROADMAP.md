@@ -9,23 +9,25 @@ RushtonRoots is a comprehensive family platform designed to serve multiple gener
 
 **Goal**: Establish the foundational genealogy features and user authentication system.
 
-### Phase 1.1: Authentication & Authorization (Weeks 1-2)
-- [ ] Implement user registration and login with ASP.NET Identity
-- [ ] Add email verification for new accounts
-- [ ] Create password reset functionality
-- [ ] Implement role-based access control (Admin, Family Member, Guest)
-- [ ] Add household-based permissions system
-- [ ] Create user profile management
+### Phase 1.1: Authentication & Authorization (Weeks 1-2) ✅ COMPLETE
+- [x] Implement user registration and login with ASP.NET Identity
+- [x] Add email verification for new accounts
+- [x] Create password reset functionality
+- [x] Implement role-based access control (Admin, Family Member, Guest)
+- [x] Add household-based permissions system
+- [x] Create user profile management
 
 **Success Criteria**: Users can register, login, and manage their profiles securely.
 
-### Phase 1.2: Person & Household Management (Weeks 3-4)
-- [ ] Create Person CRUD operations (Create, Read, Update, Delete)
-- [ ] Build household management interface
-- [ ] Implement person search and filtering
-- [ ] Add basic person details (name, DOB, DOD, photos)
-- [ ] Create household assignment workflow
-- [ ] Build household member listing
+**Note**: User registration is not publicly available. Initial users are seeded via DatabaseSeeder, and household admins can add other users through the CreateUser interface.
+
+### Phase 1.2: Person & Household Management (Weeks 3-4) ✅ COMPLETE
+- [x] Create Person CRUD operations (Create, Read, Update, Delete)
+- [x] Build household management interface
+- [x] Implement person search and filtering
+- [x] Add basic person details (name, DOB, DOD, photos)
+- [x] Create household assignment workflow
+- [x] Build household member listing
 
 **Success Criteria**: Users can add, edit, and organize family members and households.
 
