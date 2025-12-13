@@ -1,0 +1,41 @@
+@model RushtonRoots.Domain.UI.Models.PartnershipViewModel
+@{
+    ViewData["Title"] = "Partnership Details";
+}
+
+<div class="container mt-4">
+    <h2>Partnership Details</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Person A</dt>
+        <dd class="col-sm-9">@Model.PersonAName</dd>
+
+        <dt class="col-sm-3">Person B</dt>
+        <dd class="col-sm-9">@Model.PersonBName</dd>
+
+        <dt class="col-sm-3">Partnership Type</dt>
+        <dd class="col-sm-9">@Model.PartnershipType</dd>
+
+        <dt class="col-sm-3">Start Date</dt>
+        <dd class="col-sm-9">@(Model.StartDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+
+        <dt class="col-sm-3">End Date</dt>
+        <dd class="col-sm-9">@(Model.EndDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+
+        <dt class="col-sm-3">Created</dt>
+        <dd class="col-sm-9">@Model.CreatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
+
+        <dt class="col-sm-3">Last Updated</dt>
+        <dd class="col-sm-9">@Model.UpdatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
+    </dl>
+
+    <div>
+        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

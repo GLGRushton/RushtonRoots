@@ -38,11 +38,16 @@ public class PersonServiceTests
         var mockRepository = A.Fake<IPersonRepository>();
         var mockMapper = A.Fake<IPersonMapper>();
         var mockValidator = A.Fake<IPersonValidator>();
+        var mockPartnershipRepository = A.Fake<IPartnershipRepository>();
+        var mockParentChildRepository = A.Fake<IParentChildRepository>();
 
         A.CallTo(() => mockRepository.GetByIdAsync(personId)).Returns(person);
         A.CallTo(() => mockMapper.MapToViewModel(person)).Returns(expectedViewModel);
+        A.CallTo(() => mockPartnershipRepository.GetByPersonIdAsync(personId)).Returns(new List<Partnership>());
+        A.CallTo(() => mockParentChildRepository.GetByChildIdAsync(personId)).Returns(new List<ParentChild>());
+        A.CallTo(() => mockParentChildRepository.GetByParentIdAsync(personId)).Returns(new List<ParentChild>());
 
-        var service = new PersonService(mockRepository, mockMapper, mockValidator);
+        var service = new PersonService(mockRepository, mockMapper, mockValidator, mockPartnershipRepository, mockParentChildRepository);
 
         // Act
         var result = await service.GetByIdAsync(personId);
@@ -63,10 +68,12 @@ public class PersonServiceTests
         var mockRepository = A.Fake<IPersonRepository>();
         var mockMapper = A.Fake<IPersonMapper>();
         var mockValidator = A.Fake<IPersonValidator>();
+        var mockPartnershipRepository = A.Fake<IPartnershipRepository>();
+        var mockParentChildRepository = A.Fake<IParentChildRepository>();
 
         A.CallTo(() => mockRepository.GetByIdAsync(personId)).Returns((Person?)null);
 
-        var service = new PersonService(mockRepository, mockMapper, mockValidator);
+        var service = new PersonService(mockRepository, mockMapper, mockValidator, mockPartnershipRepository, mockParentChildRepository);
 
         // Act
         var result = await service.GetByIdAsync(personId);
@@ -95,10 +102,12 @@ public class PersonServiceTests
         var mockRepository = A.Fake<IPersonRepository>();
         var mockMapper = A.Fake<IPersonMapper>();
         var mockValidator = A.Fake<IPersonValidator>();
+        var mockPartnershipRepository = A.Fake<IPartnershipRepository>();
+        var mockParentChildRepository = A.Fake<IParentChildRepository>();
 
         A.CallTo(() => mockValidator.ValidateCreateAsync(request)).Returns(validationResult);
 
-        var service = new PersonService(mockRepository, mockMapper, mockValidator);
+        var service = new PersonService(mockRepository, mockMapper, mockValidator, mockPartnershipRepository, mockParentChildRepository);
 
         // Act & Assert
         await Assert.ThrowsAsync<ValidationException>(() => service.CreateAsync(request));
@@ -146,6 +155,8 @@ public class PersonServiceTests
         var mockRepository = A.Fake<IPersonRepository>();
         var mockMapper = A.Fake<IPersonMapper>();
         var mockValidator = A.Fake<IPersonValidator>();
+        var mockPartnershipRepository = A.Fake<IPartnershipRepository>();
+        var mockParentChildRepository = A.Fake<IParentChildRepository>();
 
         A.CallTo(() => mockValidator.ValidateCreateAsync(request)).Returns(validationResult);
         A.CallTo(() => mockMapper.MapToEntity(request)).Returns(person);
@@ -153,7 +164,7 @@ public class PersonServiceTests
         A.CallTo(() => mockRepository.GetByIdAsync(1)).Returns(savedPerson);
         A.CallTo(() => mockMapper.MapToViewModel(savedPerson)).Returns(expectedViewModel);
 
-        var service = new PersonService(mockRepository, mockMapper, mockValidator);
+        var service = new PersonService(mockRepository, mockMapper, mockValidator, mockPartnershipRepository, mockParentChildRepository);
 
         // Act
         var result = await service.CreateAsync(request);
@@ -187,11 +198,13 @@ public class PersonServiceTests
         var mockRepository = A.Fake<IPersonRepository>();
         var mockMapper = A.Fake<IPersonMapper>();
         var mockValidator = A.Fake<IPersonValidator>();
+        var mockPartnershipRepository = A.Fake<IPartnershipRepository>();
+        var mockParentChildRepository = A.Fake<IParentChildRepository>();
 
         A.CallTo(() => mockRepository.SearchAsync(searchRequest)).Returns(people);
         A.CallTo(() => mockMapper.MapToViewModel(A<Person>._)).ReturnsLazily((Person p) => viewModels.First());
 
-        var service = new PersonService(mockRepository, mockMapper, mockValidator);
+        var service = new PersonService(mockRepository, mockMapper, mockValidator, mockPartnershipRepository, mockParentChildRepository);
 
         // Act
         var result = await service.SearchAsync(searchRequest);

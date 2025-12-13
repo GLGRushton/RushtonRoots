@@ -1,0 +1,83 @@
+@model RushtonRoots.Domain.UI.Requests.UpdatePartnershipRequest
+@{
+    ViewData["Title"] = "Edit Partnership";
+    var people = ViewBag.People as IEnumerable<RushtonRoots.Domain.UI.Models.PersonViewModel>;
+}
+
+<div class="container mt-4">
+    <h2>Edit Partnership</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="PersonAId" class="control-label">First Person</label>
+                    <select asp-for="PersonAId" class="form-control">
+                        <option value="">-- Select Person --</option>
+                        @if (people != null)
+                        {
+                            foreach (var person in people)
+                            {
+                                <option value="@person.Id" selected="@(person.Id == Model.PersonAId)">@person.FullName</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="PersonAId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="PersonBId" class="control-label">Second Person</label>
+                    <select asp-for="PersonBId" class="form-control">
+                        <option value="">-- Select Person --</option>
+                        @if (people != null)
+                        {
+                            foreach (var person in people)
+                            {
+                                <option value="@person.Id" selected="@(person.Id == Model.PersonBId)">@person.FullName</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="PersonBId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="PartnershipType" class="control-label">Partnership Type</label>
+                    <select asp-for="PartnershipType" class="form-control">
+                        <option value="">-- Select Type --</option>
+                        <option value="Married">Married</option>
+                        <option value="Partnered">Partnered</option>
+                        <option value="Engaged">Engaged</option>
+                        <option value="Divorced">Divorced</option>
+                        <option value="Separated">Separated</option>
+                    </select>
+                    <span asp-validation-for="PartnershipType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="StartDate" class="control-label">Start Date</label>
+                    <input asp-for="StartDate" type="date" class="form-control" />
+                    <span asp-validation-for="StartDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="EndDate" class="control-label">End Date</label>
+                    <input asp-for="EndDate" type="date" class="form-control" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -17,4 +17,9 @@ public class PersonViewModel
     public string? PhotoUrl { get; set; }
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
+    
+    // Relationships
+    public IEnumerable<PartnershipViewModel> Partnerships { get; set; } = new List<PartnershipViewModel>();
+    public IEnumerable<ParentChildViewModel> ParentRelationships { get; set; } = new List<ParentChildViewModel>();
+    public IEnumerable<ParentChildViewModel> ChildRelationships { get; set; } = new List<ParentChildViewModel>();
 }

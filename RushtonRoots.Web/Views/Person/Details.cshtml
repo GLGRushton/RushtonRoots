@@ -78,4 +78,80 @@
             </div>
         </div>
     </div>
+
+    <!-- Relationships Section -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>Relationships</h4>
+        </div>
+        <div class="card-body">
+            <!-- Partnerships -->
+            <div class="mb-4">
+                <h5>Partnerships</h5>
+                @if (Model.Partnerships.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var partnership in Model.Partnerships)
+                        {
+                            var partnerName = partnership.PersonAId == Model.Id ? partnership.PersonBName : partnership.PersonAName;
+                            <li class="list-group-item">
+                                <strong>@partnerName</strong> - @partnership.PartnershipType
+                                @if (partnership.StartDate.HasValue)
+                                {
+                                    <span> (From: @partnership.StartDate.Value.ToString("MM/dd/yyyy"))</span>
+                                }
+                                <a asp-controller="Partnership" asp-action="Details" asp-route-id="@partnership.Id" class="btn btn-sm btn-info float-end">Details</a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No partnerships recorded.</p>
+                }
+            </div>
+
+            <!-- Parents -->
+            <div class="mb-4">
+                <h5>Parents</h5>
+                @if (Model.ParentRelationships.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var relationship in Model.ParentRelationships)
+                        {
+                            <li class="list-group-item">
+                                <strong>@relationship.ParentName</strong> - @relationship.RelationshipType
+                                <a asp-controller="ParentChild" asp-action="Details" asp-route-id="@relationship.Id" class="btn btn-sm btn-info float-end">Details</a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No parents recorded.</p>
+                }
+            </div>
+
+            <!-- Children -->
+            <div class="mb-4">
+                <h5>Children</h5>
+                @if (Model.ChildRelationships.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var relationship in Model.ChildRelationships)
+                        {
+                            <li class="list-group-item">
+                                <strong>@relationship.ChildName</strong> - @relationship.RelationshipType
+                                <a asp-controller="ParentChild" asp-action="Details" asp-route-id="@relationship.Id" class="btn btn-sm btn-info float-end">Details</a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">No children recorded.</p>
+                }
+            </div>
+        </div>
+    </div>
 </div>
