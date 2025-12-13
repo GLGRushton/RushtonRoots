@@ -1,0 +1,72 @@
+@model IEnumerable<RushtonRoots.Domain.UI.Models.PersonViewModel>
+@{
+    ViewData["Title"] = "Household Members";
+    var household = ViewBag.Household as RushtonRoots.Domain.UI.Models.HouseholdViewModel;
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Members of @household?.HouseholdName</h2>
+        <div>
+            @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+            {
+                <a asp-controller="Person" asp-action="Create" asp-route-householdId="@household?.Id" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add Member
+                </a>
+            }
+            <a asp-action="Details" asp-route-id="@household?.Id" class="btn btn-secondary">Back to Household</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date of Birth</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var person in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-controller="Person" asp-action="Details" asp-route-id="@person.Id">@person.FullName</a>
+                        </td>
+                        <td>@(person.DateOfBirth?.ToString("MM/dd/yyyy") ?? "N/A")</td>
+                        <td>
+                            @if (person.IsDeceased)
+                            {
+                                <span class="badge bg-secondary">Deceased</span>
+                                @if (person.DateOfDeath.HasValue)
+                                {
+                                    <small>(@person.DateOfDeath.Value.ToString("MM/dd/yyyy"))</small>
+                                }
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Living</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-controller="Person" asp-action="Details" asp-route-id="@person.Id" class="btn btn-sm btn-info">Details</a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+                            {
+                                <a asp-controller="Person" asp-action="Edit" asp-route-id="@person.Id" class="btn btn-sm btn-warning">Edit</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No members found in this household.
+        </div>
+    }
+</div>
