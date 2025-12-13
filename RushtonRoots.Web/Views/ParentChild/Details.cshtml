@@ -1,0 +1,35 @@
+@model RushtonRoots.Domain.UI.Models.ParentChildViewModel
+@{
+    ViewData["Title"] = "Relationship Details";
+}
+
+<div class="container mt-4">
+    <h2>Parent-Child Relationship Details</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-3">Parent</dt>
+        <dd class="col-sm-9">@Model.ParentName</dd>
+
+        <dt class="col-sm-3">Child</dt>
+        <dd class="col-sm-9">@Model.ChildName</dd>
+
+        <dt class="col-sm-3">Relationship Type</dt>
+        <dd class="col-sm-9">@Model.RelationshipType</dd>
+
+        <dt class="col-sm-3">Created</dt>
+        <dd class="col-sm-9">@Model.CreatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
+
+        <dt class="col-sm-3">Last Updated</dt>
+        <dd class="col-sm-9">@Model.UpdatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
+    </dl>
+
+    <div>
+        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

@@ -14,21 +14,73 @@ public class PersonService : IPersonService
     private readonly IPersonRepository _personRepository;
     private readonly IPersonMapper _personMapper;
     private readonly IPersonValidator _personValidator;
+    private readonly IPartnershipRepository _partnershipRepository;
+    private readonly IParentChildRepository _parentChildRepository;
 
     public PersonService(
         IPersonRepository personRepository,
         IPersonMapper personMapper,
-        IPersonValidator personValidator)
+        IPersonValidator personValidator,
+        IPartnershipRepository partnershipRepository,
+        IParentChildRepository parentChildRepository)
     {
         _personRepository = personRepository;
         _personMapper = personMapper;
         _personValidator = personValidator;
+        _partnershipRepository = partnershipRepository;
+        _parentChildRepository = parentChildRepository;
     }
 
     public async Task<PersonViewModel?> GetByIdAsync(int id)
     {
         var person = await _personRepository.GetByIdAsync(id);
-        return person != null ? _personMapper.MapToViewModel(person) : null;
+        if (person == null) return null;
+
+        var viewModel = _personMapper.MapToViewModel(person);
+        
+        // Load relationships
+        var partnerships = await _partnershipRepository.GetByPersonIdAsync(id);
+        viewModel.Partnerships = partnerships.Select(p => new PartnershipViewModel
+        {
+            Id = p.Id,
+            PersonAId = p.PersonAId,
+            PersonBId = p.PersonBId,
+            PersonAName = p.PersonA != null ? $"{p.PersonA.FirstName} {p.PersonA.LastName}" : "Unknown",
+            PersonBName = p.PersonB != null ? $"{p.PersonB.FirstName} {p.PersonB.LastName}" : "Unknown",
+            PartnershipType = p.PartnershipType,
+            StartDate = p.StartDate,
+            EndDate = p.EndDate,
+            CreatedDateTime = p.CreatedDateTime,
+            UpdatedDateTime = p.UpdatedDateTime
+        }).ToList();
+
+        var parentRelationships = await _parentChildRepository.GetByChildIdAsync(id);
+        viewModel.ParentRelationships = parentRelationships.Select(pc => new ParentChildViewModel
+        {
+            Id = pc.Id,
+            ParentPersonId = pc.ParentPersonId,
+            ChildPersonId = pc.ChildPersonId,
+            ParentName = pc.ParentPerson != null ? $"{pc.ParentPerson.FirstName} {pc.ParentPerson.LastName}" : "Unknown",
+            ChildName = pc.ChildPerson != null ? $"{pc.ChildPerson.FirstName} {pc.ChildPerson.LastName}" : "Unknown",
+            RelationshipType = pc.RelationshipType,
+            CreatedDateTime = pc.CreatedDateTime,
+            UpdatedDateTime = pc.UpdatedDateTime
+        }).ToList();
+
+        var childRelationships = await _parentChildRepository.GetByParentIdAsync(id);
+        viewModel.ChildRelationships = childRelationships.Select(pc => new ParentChildViewModel
+        {
+            Id = pc.Id,
+            ParentPersonId = pc.ParentPersonId,
+            ChildPersonId = pc.ChildPersonId,
+            ParentName = pc.ParentPerson != null ? $"{pc.ParentPerson.FirstName} {pc.ParentPerson.LastName}" : "Unknown",
+            ChildName = pc.ChildPerson != null ? $"{pc.ChildPerson.FirstName} {pc.ChildPerson.LastName}" : "Unknown",
+            RelationshipType = pc.RelationshipType,
+            CreatedDateTime = pc.CreatedDateTime,
+            UpdatedDateTime = pc.UpdatedDateTime
+        }).ToList();
+
+        return viewModel;
     }
 
     public async Task<IEnumerable<PersonViewModel>> GetAllAsync()

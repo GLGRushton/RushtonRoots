@@ -1,0 +1,71 @@
+@model RushtonRoots.Domain.UI.Requests.UpdateParentChildRequest
+@{
+    ViewData["Title"] = "Edit Parent-Child Relationship";
+    var people = ViewBag.People as IEnumerable<RushtonRoots.Domain.UI.Models.PersonViewModel>;
+}
+
+<div class="container mt-4">
+    <h2>Edit Parent-Child Relationship</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="ParentPersonId" class="control-label">Parent</label>
+                    <select asp-for="ParentPersonId" class="form-control">
+                        <option value="">-- Select Parent --</option>
+                        @if (people != null)
+                        {
+                            foreach (var person in people)
+                            {
+                                <option value="@person.Id" selected="@(person.Id == Model.ParentPersonId)">@person.FullName</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="ParentPersonId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ChildPersonId" class="control-label">Child</label>
+                    <select asp-for="ChildPersonId" class="form-control">
+                        <option value="">-- Select Child --</option>
+                        @if (people != null)
+                        {
+                            foreach (var person in people)
+                            {
+                                <option value="@person.Id" selected="@(person.Id == Model.ChildPersonId)">@person.FullName</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="ChildPersonId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="RelationshipType" class="control-label">Relationship Type</label>
+                    <select asp-for="RelationshipType" class="form-control">
+                        <option value="">-- Select Type --</option>
+                        <option value="Biological">Biological</option>
+                        <option value="Adopted">Adopted</option>
+                        <option value="Step">Step</option>
+                        <option value="Guardian">Guardian</option>
+                        <option value="Foster">Foster</option>
+                    </select>
+                    <span asp-validation-for="RelationshipType" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

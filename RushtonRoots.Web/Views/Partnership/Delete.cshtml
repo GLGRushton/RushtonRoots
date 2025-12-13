@@ -1,0 +1,36 @@
+@model RushtonRoots.Domain.UI.Models.PartnershipViewModel
+@{
+    ViewData["Title"] = "Delete Partnership";
+}
+
+<div class="container mt-4">
+    <h2>Delete Partnership</h2>
+    <hr />
+
+    <div class="alert alert-warning">
+        <h4>Are you sure you want to delete this partnership?</h4>
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Person A</dt>
+        <dd class="col-sm-9">@Model.PersonAName</dd>
+
+        <dt class="col-sm-3">Person B</dt>
+        <dd class="col-sm-9">@Model.PersonBName</dd>
+
+        <dt class="col-sm-3">Partnership Type</dt>
+        <dd class="col-sm-9">@Model.PartnershipType</dd>
+
+        <dt class="col-sm-3">Start Date</dt>
+        <dd class="col-sm-9">@(Model.StartDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+
+        <dt class="col-sm-3">End Date</dt>
+        <dd class="col-sm-9">@(Model.EndDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
