@@ -75,14 +75,14 @@ public class AccountService : IAccountService
         if (user == null)
         {
             // Don't reveal that the user does not exist
-            _logger.LogInformation("Password reset requested for non-existent email: {Email}", model.Email);
+            _logger.LogInformation("Password reset requested for non-existent account");
             return true;
         }
 
         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
         await _emailService.SendPasswordResetEmailAsync(user.Email!, code);
         
-        _logger.LogInformation("Password reset email sent to: {Email}", model.Email);
+        _logger.LogInformation("Password reset email sent to user account");
         return true;
     }
 
