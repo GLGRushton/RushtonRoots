@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RushtonRoots.Application.Services;
+using RushtonRoots.Domain.UI.Models;
 
 namespace RushtonRoots.Web.Controllers;
 
@@ -168,7 +169,7 @@ public class FamilyTreeController : ControllerBase
         descendant["generation"] = currentGeneration;
 
         // Get partner if any
-        var partnerships = person.Partnerships?.ToList() ?? new List<Domain.UI.Models.PartnershipViewModel>();
+        var partnerships = person.Partnerships?.ToList() ?? new List<PartnershipViewModel>();
         if (partnerships.Any())
         {
             var partnership = partnerships.First();

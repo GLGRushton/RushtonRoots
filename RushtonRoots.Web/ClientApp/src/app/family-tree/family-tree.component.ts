@@ -21,6 +21,12 @@ interface TreeNode {
   children?: TreeNode[];
 }
 
+interface FamilyDataResponse {
+  people: Person[];
+  parentChildRelationships: any[];
+  partnerships: any[];
+}
+
 type ViewMode = 'descendant' | 'pedigree' | 'fan';
 
 @Component({
@@ -50,7 +56,7 @@ export class FamilyTreeComponent implements OnInit {
     this.loading = true;
     this.error = null;
     try {
-      const data = await firstValueFrom(this.http.get<any>('/api/familytree/all'));
+      const data = await firstValueFrom(this.http.get<FamilyDataResponse>('/api/familytree/all'));
       this.allPeople = data.people || [];
       
       // Default to first person if available
@@ -59,7 +65,7 @@ export class FamilyTreeComponent implements OnInit {
       }
       
       await this.loadTreeView();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading family data:', err);
       this.error = 'Failed to load family data';
       this.loadSampleData(); // Fallback to sample data
@@ -80,7 +86,7 @@ export class FamilyTreeComponent implements OnInit {
       
       const data = await firstValueFrom(this.http.get<TreeNode>(endpoint));
       this.treeData = data || null;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading tree view:', err);
       this.error = 'Failed to load tree view';
       this.loadSampleData(); // Fallback to sample data
