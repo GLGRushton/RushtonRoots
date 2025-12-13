@@ -96,6 +96,51 @@
             opacity: 0.9;
             margin: 0;
         }
+
+        .user-actions {
+            margin-left: 15px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .logout-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            text-decoration: underline;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .logout-button:hover {
+            opacity: 0.8;
+        }
+
+        .login-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .login-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .inline-form {
+            display: inline;
+        }
         
         main {
             max-width: 1400px;
@@ -167,11 +212,39 @@
                 </a>
             </h1>
             <div class="user-details">
-                <div class="user-avatar">👤</div>
-                <div class="user-info">
-                    <p class="user-name">Guest User</p>
-                    <p class="user-role">Family Member</p>
-                </div>
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <div class="user-avatar">👤</div>
+                    <div class="user-info">
+                        <p class="user-name">@User.Identity.Name</p>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <p class="user-role">System Admin</p>
+                        }
+                        else if (User.IsInRole("HouseholdAdmin"))
+                        {
+                            <p class="user-role">Household Admin</p>
+                        }
+                        else
+                        {
+                            <p class="user-role">Family Member</p>
+                        }
+                    </div>
+                    <div class="user-actions">
+                        <a href="/Account/Profile" class="nav-link">Profile</a>
+                        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+                        {
+                            <a href="/Account/CreateUser" class="nav-link">Add User</a>
+                        }
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="inline-form">
+                            <button type="submit" class="logout-button">Logout</button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="login-link">Login</a>
+                }
             </div>
         </div>
     </header>

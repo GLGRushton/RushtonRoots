@@ -1,0 +1,63 @@
+@model RushtonRoots.Domain.UI.Models.UserProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 col-lg-6">
+        <h2>@ViewData["Title"]</h2>
+        
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        
+        <hr />
+        <form asp-action="Profile" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input asp-for="Id" type="hidden" />
+            
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" readonly />
+                <small class="form-text text-muted">Email cannot be changed.</small>
+            </div>
+            
+            @if (Model.PersonName != null)
+            {
+                <div class="mb-3">
+                    <label class="form-label">Linked Person</label>
+                    <input type="text" class="form-control" value="@Model.PersonName" readonly />
+                    <small class="form-text text-muted">Your account is linked to this family member.</small>
+                </div>
+            }
+            
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Email Confirmed</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" checked="@Model.EmailConfirmed" disabled />
+                    <label class="form-check-label">
+                        @(Model.EmailConfirmed ? "Yes" : "No - Please check your email")
+                    </label>
+                </div>
+            </div>
+            
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

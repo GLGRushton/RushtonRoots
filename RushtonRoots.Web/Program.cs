@@ -28,16 +28,45 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 8;
+    
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+    
+    // User settings
+    options.User.RequireUniqueEmail = true;
 })
 .AddEntityFrameworkStores<RushtonRootsDbContext>()
 .AddDefaultTokenProviders();
 
+// Configure cookie settings
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromDays(14);
+    options.SlidingExpiration = true;
+});
+
 var app = builder.Build();
 
+// Run migrations and seed database
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<RushtonRootsDbContext>();
+    var services = scope.ServiceProvider;
+    var dbContext = services.GetRequiredService<RushtonRootsDbContext>();
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var logger = services.GetRequiredService<ILogger<DatabaseSeeder>>();
+    
+    // Apply migrations
     dbContext.Database.Migrate();
+    
+    // Seed database
+    var seeder = new DatabaseSeeder(dbContext, userManager, roleManager, logger);
+    await seeder.SeedAsync();
 }
 
 // Configure the HTTP request pipeline

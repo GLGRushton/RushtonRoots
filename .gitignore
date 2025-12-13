@@ -64,3 +64,8 @@ Thumbs.db
 
 # PowerShell watch process tracking
 npm-watch.pid
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
