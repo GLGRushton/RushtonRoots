@@ -1,18 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 interface Person {
   id: number;
-  name: string;
-  generation: number;
-  parentCouple?: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  dateOfBirth?: Date;
+  dateOfDeath?: Date;
+  isDeceased: boolean;
+  photoUrl?: string;
 }
 
-interface Couple {
-  id: number;
-  person1: Person;
-  person2: Person;
+interface TreeNode {
+  person: Person;
+  partner?: Person;
   generation: number;
+  parents?: TreeNode[];
+  children?: TreeNode[];
 }
+
+interface FamilyDataResponse {
+  people: Person[];
+  parentChildRelationships: any[];
+  partnerships: any[];
+}
+
+type ViewMode = 'descendant' | 'pedigree' | 'fan';
 
 @Component({
   selector: 'app-family-tree',
@@ -20,77 +35,117 @@ interface Couple {
   templateUrl: './family-tree.component.html',
   styleUrl: './family-tree.component.css'
 })
-export class FamilyTreeComponent {
-  // Root couple (Generation 0)
-  rootCouple: Couple = {
-    id: 1,
-    person1: { id: 1, name: 'John Rushton', generation: 0 },
-    person2: { id: 2, name: 'Mary Rushton', generation: 0 },
-    generation: 0
-  };
+export class FamilyTreeComponent implements OnInit {
+  viewMode: ViewMode = 'descendant';
+  treeData: TreeNode | null = null;
+  allPeople: Person[] = [];
+  loading = false;
+  error: string | null = null;
+  selectedPersonId = 1; // Default to first person
+  zoom = 1.0;
+  panX = 0;
+  panY = 0;
 
-  // 7 children with partners (Generation 1)
-  childrenCouples: Couple[] = [
-    {
-      id: 2,
-      person1: { id: 3, name: 'Alice', generation: 1, parentCouple: 1 },
-      person2: { id: 4, name: 'Tom', generation: 1 },
-      generation: 1
-    },
-    {
-      id: 3,
-      person1: { id: 5, name: 'Bob', generation: 1, parentCouple: 1 },
-      person2: { id: 6, name: 'Sarah', generation: 1 },
-      generation: 1
-    },
-    {
-      id: 4,
-      person1: { id: 7, name: 'Carol', generation: 1, parentCouple: 1 },
-      person2: { id: 8, name: 'James', generation: 1 },
-      generation: 1
-    },
-    {
-      id: 5,
-      person1: { id: 9, name: 'David', generation: 1, parentCouple: 1 },
-      person2: { id: 10, name: 'Emma', generation: 1 },
-      generation: 1
-    },
-    {
-      id: 6,
-      person1: { id: 11, name: 'Eve', generation: 1, parentCouple: 1 },
-      person2: { id: 12, name: 'Michael', generation: 1 },
-      generation: 1
-    },
-    {
-      id: 7,
-      person1: { id: 13, name: 'Frank', generation: 1, parentCouple: 1 },
-      person2: { id: 14, name: 'Lisa', generation: 1 },
-      generation: 1
-    },
-    {
-      id: 8,
-      person1: { id: 15, name: 'Grace', generation: 1, parentCouple: 1 },
-      person2: { id: 16, name: 'Peter', generation: 1 },
-      generation: 1
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.loadFamilyData();
+  }
+
+  async loadFamilyData() {
+    this.loading = true;
+    this.error = null;
+    try {
+      const data = await firstValueFrom(this.http.get<FamilyDataResponse>('/api/familytree/all'));
+      this.allPeople = data.people || [];
+      
+      // Default to first person if available
+      if (this.allPeople.length > 0 && !this.selectedPersonId) {
+        this.selectedPersonId = this.allPeople[0].id;
+      }
+      
+      await this.loadTreeView();
+    } catch (err: unknown) {
+      console.error('Error loading family data:', err);
+      this.error = 'Failed to load family data';
+      this.loadSampleData(); // Fallback to sample data
+    } finally {
+      this.loading = false;
     }
-  ];
+  }
 
-  // 2nd eldest child (Bob & Sarah) has 2 children
-  secondChildGrandchildren: Person[] = [
-    { id: 17, name: 'Oliver', generation: 2, parentCouple: 3 },
-    { id: 18, name: 'Sophie', generation: 2, parentCouple: 3 }
-  ];
+  async loadTreeView() {
+    if (!this.selectedPersonId) return;
 
-  // 3rd eldest child (Carol & James) has 3 children
-  thirdChildGrandchildren: Person[] = [
-    { id: 19, name: 'Lucas', generation: 2, parentCouple: 4 },
-    { id: 20, name: 'Isabella', generation: 2, parentCouple: 4 },
-    { id: 21, name: 'Noah', generation: 2, parentCouple: 4 }
-  ];
+    this.loading = true;
+    this.error = null;
+    try {
+      const endpoint = this.viewMode === 'pedigree' 
+        ? `/api/familytree/pedigree/${this.selectedPersonId}`
+        : `/api/familytree/descendants/${this.selectedPersonId}`;
+      
+      const data = await firstValueFrom(this.http.get<TreeNode>(endpoint));
+      this.treeData = data || null;
+    } catch (err: unknown) {
+      console.error('Error loading tree view:', err);
+      this.error = 'Failed to load tree view';
+      this.loadSampleData(); // Fallback to sample data
+    } finally {
+      this.loading = false;
+    }
+  }
 
-  // 4th eldest child (David & Emma) has 2 children
-  fourthChildGrandchildren: Person[] = [
-    { id: 22, name: 'Ethan', generation: 2, parentCouple: 5 },
-    { id: 23, name: 'Mia', generation: 2, parentCouple: 5 }
-  ];
+  setViewMode(mode: ViewMode) {
+    this.viewMode = mode;
+    this.loadTreeView();
+  }
+
+  setSelectedPerson(personId: number) {
+    this.selectedPersonId = personId;
+    this.loadTreeView();
+  }
+
+  zoomIn() {
+    this.zoom = Math.min(this.zoom + 0.1, 2.0);
+  }
+
+  zoomOut() {
+    this.zoom = Math.max(this.zoom - 0.1, 0.5);
+  }
+
+  resetZoom() {
+    this.zoom = 1.0;
+    this.panX = 0;
+    this.panY = 0;
+  }
+
+  print() {
+    window.print();
+  }
+
+  // Fallback sample data for when API is not available
+  loadSampleData() {
+    this.allPeople = [
+      { id: 1, firstName: 'John', lastName: 'Rushton', fullName: 'John Rushton', isDeceased: false },
+      { id: 2, firstName: 'Mary', lastName: 'Rushton', fullName: 'Mary Rushton', isDeceased: false }
+    ];
+    this.selectedPersonId = 1;
+    this.treeData = {
+      person: this.allPeople[0],
+      partner: this.allPeople[1],
+      generation: 0,
+      children: []
+    };
+  }
+
+  getPersonDisplayName(person: Person): string {
+    return person.fullName || `${person.firstName} ${person.lastName}`;
+  }
+
+  getPersonYears(person: Person): string {
+    if (!person.dateOfBirth && !person.dateOfDeath) return '';
+    const birth = person.dateOfBirth ? new Date(person.dateOfBirth).getFullYear() : '?';
+    const death = person.dateOfDeath ? new Date(person.dateOfDeath).getFullYear() : '';
+    return death ? `(${birth} - ${death})` : `(b. ${birth})`;
+  }
 }

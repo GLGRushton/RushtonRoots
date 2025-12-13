@@ -1,53 +1,151 @@
-.family-tree {
+.family-tree-container {
   padding: 20px;
   background: linear-gradient(to bottom, #f0f7f4, #e8f5e9);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+  min-height: 500px;
 }
 
-.generation {
-  margin-bottom: 40px;
-}
-
-.generation-title {
-  text-align: center;
-  color: #2e7d32;
-  font-size: 1.5em;
-  margin-bottom: 20px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.couple-container {
+/* Control Panel */
+.control-panel {
   display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  align-items: center;
 }
 
-.couple {
+.view-mode-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.mode-btn {
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #4caf50;
+  border-radius: 6px;
+  color: #2e7d32;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-btn:hover {
+  background: #e8f5e9;
+  transform: translateY(-2px);
+}
+
+.mode-btn.active {
+  background: #4caf50;
+  color: white;
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 15px;
+  border-left: 2px solid #e0e0e0;
+}
+
+.control-btn {
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #4caf50;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+}
+
+.control-btn:hover {
+  background: #e8f5e9;
+  transform: scale(1.05);
+}
+
+.zoom-level {
+  min-width: 50px;
+  text-align: center;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.person-selector {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-direction: column;
-  position: relative;
-  padding: 10px;
+  margin-left: auto;
 }
 
-.root-couple {
-  flex-direction: row;
-  background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
+.person-selector label {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.person-selector select {
+  padding: 8px 12px;
+  border: 2px solid #4caf50;
+  border-radius: 6px;
+  background: white;
+  color: #2e7d32;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+/* Loading and Error States */
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  color: #2e7d32;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 20px;
+  border: 4px solid #e8f5e9;
+  border-top: 4px solid #4caf50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  color: #d32f2f;
+}
+
+.error-hint {
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 10px;
+}
+
+/* Tree Viewport */
+.tree-viewport {
+  overflow: auto;
+  background: white;
+  border-radius: 8px;
   padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+  min-height: 400px;
 }
 
-.person {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.tree-canvas {
+  transition: transform 0.3s ease;
+  transform-origin: top left;
+  min-width: min-content;
 }
 
+/* Person Cards */
 .person-card {
   background: white;
   border: 3px solid #4caf50;
@@ -57,9 +155,9 @@
   color: #1b5e20;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
-  min-width: 120px;
+  min-width: 150px;
   text-align: center;
-  font-size: 1em;
+  cursor: pointer;
 }
 
 .person-card:hover {
@@ -68,100 +166,213 @@
   border-color: #2e7d32;
 }
 
-.person-card.small {
-  padding: 10px 15px;
-  min-width: 100px;
-  font-size: 0.9em;
-  border-width: 2px;
+.person-card.deceased {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+  border-color: #757575;
+  color: #424242;
 }
 
-.connection {
-  font-size: 2em;
+.person-name {
+  font-size: 1em;
+  margin-bottom: 5px;
+}
+
+.person-years {
+  font-size: 0.85em;
+  color: #666;
+  font-weight: normal;
+}
+
+.generation-label {
+  font-size: 0.75em;
+  color: #4caf50;
+  margin-top: 5px;
+  font-weight: normal;
+}
+
+/* Descendant View */
+.descendant-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.descendant-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.couple-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.connection-line {
+  font-size: 1.5em;
   color: #e91e63;
-  margin: 0 10px;
   animation: pulse 2s infinite;
 }
 
-.connection-small {
-  font-size: 1.2em;
-  color: #4caf50;
-  font-weight: bold;
-  margin: 5px 0;
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+.children-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.connector-line {
+  width: 2px;
+  height: 30px;
+  background: #4caf50;
 }
 
 .children-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
+  gap: 30px;
+  justify-items: center;
 }
 
-.child .person-card {
-  background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
-  border-color: #66bb6a;
-  color: #1b5e20;
-}
-
-.partner .person-card {
-  background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
-  border-color: #fdd835;
-  color: #f57f17;
-}
-
-.grandchildren {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 2px dashed #81c784;
-}
-
-.grandchild {
+/* Pedigree View */
+.pedigree-view {
   display: flex;
   justify-content: center;
+  padding: 20px;
 }
 
-.grandchild .person-card {
-  background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
-  border-color: #4fc3f7;
-  color: #01579b;
+.pedigree-node {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin: 10px 0;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .children-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
+.pedigree-layout {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.parents-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-right: 30px;
+  border-right: 3px solid #4caf50;
+}
+
+.pedigree-person {
+  min-width: 180px;
+}
+
+/* Fan Chart */
+.fan-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.fan-chart-info {
+  text-align: center;
+  padding: 40px;
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border-radius: 12px;
+  border: 3px dashed #4caf50;
+}
+
+.fan-chart-info p {
+  color: #2e7d32;
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.fan-chart-info .hint {
+  font-size: 0.95em;
+  color: #66bb6a;
+  font-style: italic;
+}
+
+/* Print Styles */
+@media print {
+  .control-panel {
+    display: none;
+  }
+
+  .tree-viewport {
+    overflow: visible;
+  }
+
+  .tree-canvas {
+    transform: none !important;
   }
 
   .person-card {
-    padding: 12px 18px;
-    min-width: 100px;
-    font-size: 0.9em;
+    page-break-inside: avoid;
   }
+}
 
-  .generation-title {
-    font-size: 1.2em;
-  }
-
-  .root-couple {
+/* Responsive Design */
+@media (max-width: 768px) {
+  .control-panel {
     flex-direction: column;
+    align-items: stretch;
+  }
+
+  .view-mode-selector {
+    justify-content: center;
+  }
+
+  .zoom-controls {
+    justify-content: center;
+    border-left: none;
+    border-top: 2px solid #e0e0e0;
+    padding-top: 10px;
+  }
+
+  .person-selector {
+    margin-left: 0;
+  }
+
+  .person-card {
+    min-width: 120px;
+    padding: 12px 18px;
+  }
+
+  .children-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pedigree-layout {
+    flex-direction: column;
+  }
+
+  .parents-container {
+    border-right: none;
+    border-bottom: 3px solid #4caf50;
+    padding-right: 0;
+    padding-bottom: 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .children-grid {
-    grid-template-columns: 1fr;
+  .mode-btn {
+    padding: 8px 12px;
+    font-size: 0.9em;
+  }
+
+  .control-btn {
+    padding: 6px 10px;
+    font-size: 14px;
   }
 }
+
