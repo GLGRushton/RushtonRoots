@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RushtonRoots.Application.Services;
 using RushtonRoots.Domain.UI.Requests;

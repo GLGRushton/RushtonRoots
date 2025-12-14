@@ -185,32 +185,49 @@ public class DocumentService : IDocumentService
         var documentUrl = await _blobStorageService.UploadFileAsync(file.FileName, file.ContentType, stream);
         var blobName = ExtractBlobNameFromUrl(documentUrl);
 
-        // Get next version number
+        // Get next version number - using database constraint to prevent duplicates
+        // The unique index on (DocumentId, VersionNumber) will handle race conditions
         var versions = await _documentRepository.GetVersionsByDocumentIdAsync(documentId);
         var nextVersionNumber = versions.Any() ? versions.Max(v => v.VersionNumber) + 1 : 1;
 
-        // Create new version
-        var version = new DocumentVersion
+        try
         {
-            DocumentId = documentId,
-            DocumentUrl = documentUrl,
-            BlobName = blobName,
-            FileSize = file.Length,
-            ContentType = file.ContentType,
-            VersionNumber = nextVersionNumber,
-            ChangeNotes = changeNotes ?? "Updated document",
-            UploadedByUserId = userId
-        };
-        var savedVersion = await _documentRepository.AddVersionAsync(version);
+            // Create new version
+            var version = new DocumentVersion
+            {
+                DocumentId = documentId,
+                DocumentUrl = documentUrl,
+                BlobName = blobName,
+                FileSize = file.Length,
+                ContentType = file.ContentType,
+                VersionNumber = nextVersionNumber,
+                ChangeNotes = changeNotes ?? "Updated document",
+                UploadedByUserId = userId
+            };
+            var savedVersion = await _documentRepository.AddVersionAsync(version);
 
-        // Update main document to point to latest version
-        document.DocumentUrl = documentUrl;
-        document.BlobName = blobName;
-        document.FileSize = file.Length;
-        document.ContentType = file.ContentType;
-        await _documentRepository.UpdateAsync(document);
+            // Update main document to point to latest version
+            document.DocumentUrl = documentUrl;
+            document.BlobName = blobName;
+            document.FileSize = file.Length;
+            document.ContentType = file.ContentType;
+            await _documentRepository.UpdateAsync(document);
 
-        return _mapper.MapToViewModel(savedVersion);
+            return _mapper.MapToViewModel(savedVersion);
+        }
+        catch (Exception)
+        {
+            // If version creation or document update fails, clean up the uploaded blob
+            try
+            {
+                await _blobStorageService.DeleteFileAsync(blobName);
+            }
+            catch
+            {
+                // Log but don't throw - the original exception is more important
+            }
+            throw;
+        }
     }
 
     public async Task<List<DocumentVersionViewModel>> GetVersionsAsync(int documentId)
@@ -238,10 +255,19 @@ public class DocumentService : IDocumentService
 
     private string ExtractBlobNameFromUrl(string url)
     {
-        // Extract the blob name from the full URL
-        // Example: https://account.blob.core.windows.net/container/blobname -> blobname
-        var uri = new Uri(url);
-        var segments = uri.Segments;
-        return segments.Length > 0 ? segments[^1] : string.Empty;
+        try
+        {
+            // Extract the blob name from the full URL
+            // Example: https://account.blob.core.windows.net/container/blobname -> blobname
+            var uri = new Uri(url);
+            var segments = uri.Segments;
+            return segments.Length > 0 ? segments[^1] : string.Empty;
+        }
+        catch (UriFormatException)
+        {
+            // If URL is malformed, return the original string
+            // This shouldn't happen with BlobStorageService, but handle gracefully
+            return url;
+        }
     }
 }

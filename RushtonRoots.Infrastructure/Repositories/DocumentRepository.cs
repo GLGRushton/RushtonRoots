@@ -55,9 +55,8 @@ public class DocumentRepository : IDocumentRepository
 
     public async Task<List<Document>> GetByPersonIdAsync(int personId)
     {
-        return await _context.DocumentPeople
-            .Where(dp => dp.PersonId == personId)
-            .Select(dp => dp.Document!)
+        return await _context.Documents
+            .Where(d => d.DocumentPeople.Any(dp => dp.PersonId == personId))
             .Include(d => d.UploadedBy)
             .OrderBy(d => d.DisplayOrder)
             .ThenByDescending(d => d.CreatedDateTime)
