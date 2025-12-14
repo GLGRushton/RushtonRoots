@@ -62,6 +62,12 @@ public class LocationController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
+        var location = await _locationService.GetByIdAsync(id);
+        if (location == null)
+        {
+            return NotFound();
+        }
+        
         await _locationService.DeleteAsync(id);
         return NoContent();
     }

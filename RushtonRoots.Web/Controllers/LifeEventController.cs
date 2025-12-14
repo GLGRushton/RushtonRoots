@@ -88,6 +88,12 @@ public class LifeEventController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
+        var lifeEvent = await _lifeEventService.GetByIdAsync(id);
+        if (lifeEvent == null)
+        {
+            return NotFound();
+        }
+        
         await _lifeEventService.DeleteAsync(id);
         return NoContent();
     }
