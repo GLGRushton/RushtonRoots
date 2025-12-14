@@ -30,6 +30,10 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<DocumentVersion> DocumentVersions { get; set; }
     public DbSet<DocumentPerson> DocumentPeople { get; set; }
     public DbSet<DocumentPermission> DocumentPermissions { get; set; }
+    public DbSet<Media> Media { get; set; }
+    public DbSet<MediaTimelineMarker> MediaTimelineMarkers { get; set; }
+    public DbSet<MediaPerson> MediaPeople { get; set; }
+    public DbSet<MediaPermission> MediaPermissions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
