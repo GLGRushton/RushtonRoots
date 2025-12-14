@@ -24,4 +24,5 @@ public class Person : BaseEntity
     public ICollection<LifeEvent> LifeEvents { get; set; } = new List<LifeEvent>();
     public ICollection<PersonPhoto> Photos { get; set; } = new List<PersonPhoto>();
     public ICollection<BiographicalNote> BiographicalNotes { get; set; } = new List<BiographicalNote>();
+    public ICollection<StoryPerson> StoryPeople { get; set; } = new List<StoryPerson>();
 }

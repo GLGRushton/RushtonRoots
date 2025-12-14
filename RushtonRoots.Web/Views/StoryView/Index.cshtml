@@ -1,0 +1,346 @@
+@{
+    ViewData["Title"] = "Family Stories";
+}
+
+<div class="story-container">
+    <section class="story-header">
+        <h1>📖 Family Stories & Memories</h1>
+        <p class="tagline">Preserving our family's stories for future generations</p>
+        <div class="description">
+            <p>
+                Welcome to the Rushton family stories collection. Here we preserve cherished memories, 
+                family traditions, life experiences, and the rich tapestry of our shared history.
+            </p>
+        </div>
+    </section>
+
+    <section class="story-categories">
+        <h2>Browse by Category</h2>
+        <div id="categories-container" class="categories-grid">
+            <p>Loading categories...</p>
+        </div>
+    </section>
+
+    <section class="story-collections">
+        <h2>Story Collections</h2>
+        <div id="collections-container" class="collections-grid">
+            <p>Loading collections...</p>
+        </div>
+    </section>
+
+    <section class="story-recent">
+        <h2>Recently Shared Stories</h2>
+        <div id="recent-stories-container">
+            <p>Loading recent stories...</p>
+        </div>
+    </section>
+</div>
+
+<style>
+    .story-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .story-header {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+        border-left: 6px solid #4caf50;
+    }
+
+    .story-header h1 {
+        color: #2e7d32;
+        margin: 0 0 10px 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .tagline {
+        color: #66bb6a;
+        font-size: 1.3em;
+        font-style: italic;
+        margin: 0 0 20px 0;
+    }
+
+    .description {
+        color: #555;
+        line-height: 1.8;
+        font-size: 1.05em;
+    }
+
+    .story-categories,
+    .story-collections,
+    .story-recent {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+    }
+
+    .story-categories h2,
+    .story-collections h2,
+    .story-recent h2 {
+        color: #2e7d32;
+        margin: 0 0 20px 0;
+        font-size: 1.8em;
+        font-weight: 600;
+    }
+
+    .categories-grid,
+    .collections-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .category-card,
+    .collection-card {
+        background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+        border: 2px solid #c8e6c9;
+        border-radius: 12px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-card:hover,
+    .collection-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        border-color: #81c784;
+    }
+
+    .category-card::before,
+    .collection-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4caf50, #81c784);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover::before,
+    .collection-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .category-name,
+    .collection-name {
+        color: #2e7d32;
+        font-weight: 600;
+        font-size: 1.1em;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .category-count,
+    .collection-count {
+        color: #66bb6a;
+        font-size: 0.9em;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .story-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .story-item {
+        background: #f9fdf9;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .story-item:hover {
+        background: #e8f5e9;
+        border-color: #81c784;
+        box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
+    }
+
+    .story-title {
+        color: #2e7d32;
+        font-size: 1.3em;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .story-summary {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    .story-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        font-size: 0.85em;
+        color: #777;
+    }
+
+    .story-category-badge {
+        background: #4caf50;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .story-date,
+    .story-author,
+    .story-views {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .loading-message {
+        text-align: center;
+        color: #66bb6a;
+        font-style: italic;
+        padding: 20px;
+    }
+
+    .error-message {
+        background: #ffebee;
+        border: 1px solid #ef5350;
+        color: #c62828;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        await loadCategories();
+        await loadCollections();
+        await loadRecentStories();
+    });
+
+    async function loadCategories() {
+        const container = document.getElementById('categories-container');
+        try {
+            const response = await fetch('/api/Story/categories');
+            if (!response.ok) throw new Error('Failed to load categories');
+            
+            const categories = await response.json();
+            
+            if (categories.length === 0) {
+                container.innerHTML = '<p class="loading-message">No categories yet. Start by creating your first story!</p>';
+                return;
+            }
+
+            container.innerHTML = categories.map(category => `
+                <div class="category-card" onclick="filterByCategory('${category}')">
+                    <div class="category-name">${category}</div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading categories:', error);
+            container.innerHTML = '<div class="error-message">Failed to load categories</div>';
+        }
+    }
+
+    async function loadCollections() {
+        const container = document.getElementById('collections-container');
+        try {
+            const response = await fetch('/api/StoryCollection?publishedOnly=true');
+            if (!response.ok) throw new Error('Failed to load collections');
+            
+            const collections = await response.json();
+            
+            if (collections.length === 0) {
+                container.innerHTML = '<p class="loading-message">No story collections yet.</p>';
+                return;
+            }
+
+            container.innerHTML = collections.map(collection => `
+                <div class="collection-card" onclick="viewCollection(${collection.id})">
+                    <div class="collection-name">${escapeHtml(collection.name)}</div>
+                    <div class="collection-count">${collection.storyCount} ${collection.storyCount === 1 ? 'story' : 'stories'}</div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading collections:', error);
+            container.innerHTML = '<div class="error-message">Failed to load collections</div>';
+        }
+    }
+
+    async function loadRecentStories() {
+        const container = document.getElementById('recent-stories-container');
+        try {
+            const response = await fetch('/api/Story/recent?count=10&publishedOnly=true');
+            if (!response.ok) throw new Error('Failed to load stories');
+            
+            const stories = await response.json();
+            
+            if (stories.length === 0) {
+                container.innerHTML = '<p class="loading-message">No stories yet. Be the first to share a family memory!</p>';
+                return;
+            }
+
+            container.innerHTML = '<div class="story-list">' + stories.map(story => {
+                const storyDate = story.storyDate ? new Date(story.storyDate).toLocaleDateString() : '';
+                const updatedDate = new Date(story.updatedDateTime).toLocaleDateString();
+                
+                return `
+                    <div class="story-item" onclick="viewStory(${story.id})">
+                        <div class="story-title">${escapeHtml(story.title)}</div>
+                        ${story.summary ? `<div class="story-summary">${escapeHtml(story.summary)}</div>` : ''}
+                        <div class="story-meta">
+                            <span class="story-category-badge">${escapeHtml(story.category)}</span>
+                            ${storyDate ? `<span class="story-date">📅 ${storyDate}</span>` : ''}
+                            <span class="story-author">✍️ ${escapeHtml(story.submittedByUserName || 'Unknown')}</span>
+                            <span class="story-views">👁️ ${story.viewCount} ${story.viewCount === 1 ? 'view' : 'views'}</span>
+                            <span>🕒 Updated ${updatedDate}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('') + '</div>';
+        } catch (error) {
+            console.error('Error loading stories:', error);
+            container.innerHTML = '<div class="error-message">Failed to load stories</div>';
+        }
+    }
+
+    function filterByCategory(category) {
+        // TODO: Implement category filtering or navigation
+        console.log('Filter by category:', category);
+        alert('Category filtering coming soon! Category: ' + category);
+    }
+
+    function viewCollection(collectionId) {
+        // TODO: Implement collection view navigation
+        console.log('View collection:', collectionId);
+        alert('Collection view coming soon! Collection ID: ' + collectionId);
+    }
+
+    function viewStory(storyId) {
+        // TODO: Implement story view navigation
+        console.log('View story:', storyId);
+        alert('Story view coming soon! Story ID: ' + storyId);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+</script>
