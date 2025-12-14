@@ -38,6 +38,7 @@ public class SearchServiceTests
         // Arrange
         var person = new Person { Id = 1, FirstName = "John", LastName = "Doe" };
         A.CallTo(() => _personRepository.GetByIdAsync(1)).Returns(person);
+        A.CallTo(() => _personRepository.GetAllAsync()).Returns(new List<Person> { person });
 
         // Act
         var result = await _searchService.FindRelationshipAsync(1, 1);
@@ -71,6 +72,7 @@ public class SearchServiceTests
         
         A.CallTo(() => _personRepository.GetByIdAsync(1)).Returns(parent);
         A.CallTo(() => _personRepository.GetByIdAsync(2)).Returns(child);
+        A.CallTo(() => _personRepository.GetAllAsync()).Returns(new List<Person> { parent, child });
         
         var parentChildRel = new ParentChild
         {

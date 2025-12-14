@@ -49,8 +49,12 @@ public class SearchService : ISearchService
             };
         }
 
+        // Pre-load all people to avoid excessive database calls during BFS
+        var allPeople = await _personRepository.GetAllAsync();
+        var personCache = allPeople.ToDictionary(p => p.Id);
+
         // Use breadth-first search to find shortest relationship path
-        var path = await FindShortestPathAsync(personAId, personBId);
+        var path = await FindShortestPathAsync(personAId, personBId, personCache);
         
         if (path == null)
             return null;
@@ -58,7 +62,10 @@ public class SearchService : ISearchService
         return path;
     }
 
-    private async Task<RelationshipPathViewModel?> FindShortestPathAsync(int startId, int targetId)
+    private async Task<RelationshipPathViewModel?> FindShortestPathAsync(
+        int startId, 
+        int targetId, 
+        Dictionary<int, Domain.Database.Person> personCache)
     {
         var visited = new HashSet<int>();
         var queue = new Queue<(int PersonId, List<RelationshipStepViewModel> Path)>();
@@ -77,10 +84,9 @@ public class SearchService : ISearchService
                 if (visited.Contains(connectedId))
                     continue;
 
-                var currentPerson = await _personRepository.GetByIdAsync(currentId);
-                var connectedPerson = await _personRepository.GetByIdAsync(connectedId);
-
-                if (currentPerson == null || connectedPerson == null)
+                // Use cached person data instead of database calls
+                if (!personCache.TryGetValue(currentId, out var currentPerson) ||
+                    !personCache.TryGetValue(connectedId, out var connectedPerson))
                     continue;
 
                 var newPath = new List<RelationshipStepViewModel>(currentPath)
@@ -98,15 +104,15 @@ public class SearchService : ISearchService
                 // Found the target
                 if (connectedId == targetId)
                 {
-                    var startPerson = await _personRepository.GetByIdAsync(startId);
-                    var targetPerson = await _personRepository.GetByIdAsync(targetId);
+                    var startPerson = personCache[startId];
+                    var targetPerson = personCache[targetId];
 
                     return new RelationshipPathViewModel
                     {
                         PersonAId = startId,
-                        PersonAName = $"{startPerson!.FirstName} {startPerson.LastName}",
+                        PersonAName = $"{startPerson.FirstName} {startPerson.LastName}",
                         PersonBId = targetId,
-                        PersonBName = $"{targetPerson!.FirstName} {targetPerson.LastName}",
+                        PersonBName = $"{targetPerson.FirstName} {targetPerson.LastName}",
                         RelationshipDescription = GenerateRelationshipDescription(newPath),
                         Degree = newPath.Count,
                         Steps = newPath
