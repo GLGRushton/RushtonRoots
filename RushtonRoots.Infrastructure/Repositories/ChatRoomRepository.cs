@@ -56,7 +56,10 @@ public class ChatRoomRepository : IChatRoomRepository
         await _context.SaveChangesAsync();
         
         // Reload with includes
-        return (await GetByIdAsync(chatRoom.Id))!;
+        var savedChatRoom = await GetByIdAsync(chatRoom.Id);
+        if (savedChatRoom == null)
+            throw new InvalidOperationException("Failed to retrieve saved chat room");
+        return savedChatRoom;
     }
 
     public async Task<ChatRoom> UpdateAsync(ChatRoom chatRoom)
@@ -65,7 +68,10 @@ public class ChatRoomRepository : IChatRoomRepository
         await _context.SaveChangesAsync();
         
         // Reload with includes
-        return (await GetByIdAsync(chatRoom.Id))!;
+        var updatedChatRoom = await GetByIdAsync(chatRoom.Id);
+        if (updatedChatRoom == null)
+            throw new InvalidOperationException("Failed to retrieve updated chat room");
+        return updatedChatRoom;
     }
 
     public async Task DeleteAsync(int id)

@@ -21,8 +21,21 @@ public class NotificationController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return Unauthorized();
+        }
+
         var notification = await _notificationService.GetByIdAsync(id);
         if (notification == null) return NotFound();
+        
+        // Verify user owns this notification
+        if (notification.UserId != userIdClaim)
+        {
+            return Forbid();
+        }
+        
         return Ok(notification);
     }
 

@@ -55,7 +55,10 @@ public class MessageRepository : IMessageRepository
         await _context.SaveChangesAsync();
         
         // Reload with includes
-        return (await GetByIdAsync(message.Id))!;
+        var savedMessage = await GetByIdAsync(message.Id);
+        if (savedMessage == null)
+            throw new InvalidOperationException("Failed to retrieve saved message");
+        return savedMessage;
     }
 
     public async Task<Message> UpdateAsync(Message message)
@@ -64,7 +67,10 @@ public class MessageRepository : IMessageRepository
         await _context.SaveChangesAsync();
         
         // Reload with includes
-        return (await GetByIdAsync(message.Id))!;
+        var updatedMessage = await GetByIdAsync(message.Id);
+        if (updatedMessage == null)
+            throw new InvalidOperationException("Failed to retrieve updated message");
+        return updatedMessage;
     }
 
     public async Task DeleteAsync(int id)

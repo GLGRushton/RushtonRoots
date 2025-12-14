@@ -198,7 +198,7 @@ public class NotificationServiceTests
         var mockMapper = A.Fake<INotificationMapper>();
         var mockEmailService = A.Fake<IEmailService>();
 
-        A.CallTo(() => mockRepository.GetPreferenceAsync(userId, request.NotificationType)).Returns((NotificationPreference?)null);
+        A.CallTo(() => mockRepository.GetPreferenceAsync(userId, request.NotificationType)).Returns<NotificationPreference?>(null);
         A.CallTo(() => mockMapper.MapToEntity(request, userId)).Returns(newPreference);
         A.CallTo(() => mockRepository.AddPreferenceAsync(newPreference)).Returns(newPreference);
         A.CallTo(() => mockMapper.MapToViewModel(newPreference)).Returns(expectedViewModel);

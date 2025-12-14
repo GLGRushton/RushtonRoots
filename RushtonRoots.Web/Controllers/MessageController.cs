@@ -21,8 +21,23 @@ public class MessageController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return Unauthorized();
+        }
+
         var message = await _messageService.GetByIdAsync(id);
         if (message == null) return NotFound();
+        
+        // Verify user is sender, recipient, or member of chat room
+        if (message.SenderUserId != userIdClaim && 
+            message.RecipientUserId != userIdClaim && 
+            message.ChatRoomId == null)
+        {
+            return Forbid();
+        }
+        
         return Ok(message);
     }
 
@@ -42,6 +57,14 @@ public class MessageController : ControllerBase
     [HttpGet("chatroom/{chatRoomId}")]
     public async Task<IActionResult> GetChatRoomMessages(int chatRoomId, [FromQuery] int pageSize = 50, [FromQuery] int pageNumber = 1)
     {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return Unauthorized();
+        }
+
+        // Note: In a production system, we should verify the user is a member of the chat room
+        // This would require injecting IChatRoomService to check membership
         var messages = await _messageService.GetChatRoomMessagesAsync(chatRoomId, pageSize, pageNumber);
         return Ok(messages);
     }

@@ -21,8 +21,21 @@ public class ChatRoomController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return Unauthorized();
+        }
+
         var chatRoom = await _chatRoomService.GetByIdAsync(id);
         if (chatRoom == null) return NotFound();
+        
+        // Verify user is a member of the chat room
+        if (!chatRoom.Members.Any(m => m.UserId == userIdClaim && m.IsActive))
+        {
+            return Forbid();
+        }
+        
         return Ok(chatRoom);
     }
 

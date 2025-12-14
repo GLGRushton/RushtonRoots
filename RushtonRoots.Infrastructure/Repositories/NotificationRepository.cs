@@ -49,7 +49,10 @@ public class NotificationRepository : INotificationRepository
         await _context.SaveChangesAsync();
         
         // Reload with includes
-        return (await GetByIdAsync(notification.Id))!;
+        var savedNotification = await GetByIdAsync(notification.Id);
+        if (savedNotification == null)
+            throw new InvalidOperationException("Failed to retrieve saved notification");
+        return savedNotification;
     }
 
     public async Task<Notification> UpdateAsync(Notification notification)
@@ -58,7 +61,10 @@ public class NotificationRepository : INotificationRepository
         await _context.SaveChangesAsync();
         
         // Reload with includes
-        return (await GetByIdAsync(notification.Id))!;
+        var updatedNotification = await GetByIdAsync(notification.Id);
+        if (updatedNotification == null)
+            throw new InvalidOperationException("Failed to retrieve updated notification");
+        return updatedNotification;
     }
 
     public async Task DeleteAsync(int id)
