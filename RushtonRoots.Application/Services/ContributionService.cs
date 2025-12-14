@@ -144,9 +144,12 @@ public class ContributionService : IContributionService
             return false;
         }
 
-        // In a real implementation, this would apply the change to the actual entity
-        // For now, we just mark it as applied
+        // Mark the contribution as applied
+        // Note: In a real implementation, this would apply the change to the actual entity
         // This would need to use reflection or a strategy pattern to update different entity types
+        // For now, we track that the contribution has been processed
+        contribution.Status = "Applied";
+        await _contributionRepository.UpdateAsync(contribution);
 
         return true;
     }

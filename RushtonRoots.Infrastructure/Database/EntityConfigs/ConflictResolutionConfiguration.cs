@@ -46,7 +46,7 @@ public class ConflictResolutionConfiguration : IEntityTypeConfiguration<Conflict
         builder.HasOne(cr => cr.Contribution)
             .WithMany(c => c.Conflicts)
             .HasForeignKey(cr => cr.ContributionId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(cr => cr.ResolvedBy)
             .WithMany()
