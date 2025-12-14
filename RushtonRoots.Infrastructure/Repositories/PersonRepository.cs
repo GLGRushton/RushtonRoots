@@ -35,8 +35,13 @@ public class PersonRepository : IPersonRepository
 
     public async Task<IEnumerable<Person>> SearchAsync(SearchPersonRequest request)
     {
-        var query = _context.People.Include(p => p.Household).AsQueryable();
+        var query = _context.People
+            .Include(p => p.Household)
+            .Include(p => p.LifeEvents)
+                .ThenInclude(e => e.Location)
+            .AsQueryable();
 
+        // Basic name search
         if (!string.IsNullOrWhiteSpace(request.SearchTerm))
         {
             var searchTerm = request.SearchTerm.ToLower();
@@ -45,14 +50,56 @@ public class PersonRepository : IPersonRepository
                 p.LastName.ToLower().Contains(searchTerm));
         }
 
+        // Surname-only search
+        if (!string.IsNullOrWhiteSpace(request.Surname))
+        {
+            var surname = request.Surname.ToLower();
+            query = query.Where(p => p.LastName.ToLower().Contains(surname));
+        }
+
+        // Household filter
         if (request.HouseholdId.HasValue)
         {
             query = query.Where(p => p.HouseholdId == request.HouseholdId.Value);
         }
 
+        // Deceased status filter
         if (request.IsDeceased.HasValue)
         {
             query = query.Where(p => p.IsDeceased == request.IsDeceased.Value);
+        }
+
+        // Birth date range filter
+        if (request.BirthDateFrom.HasValue)
+        {
+            query = query.Where(p => p.DateOfBirth.HasValue && p.DateOfBirth.Value >= request.BirthDateFrom.Value);
+        }
+        if (request.BirthDateTo.HasValue)
+        {
+            query = query.Where(p => p.DateOfBirth.HasValue && p.DateOfBirth.Value <= request.BirthDateTo.Value);
+        }
+
+        // Death date range filter
+        if (request.DeathDateFrom.HasValue)
+        {
+            query = query.Where(p => p.DateOfDeath.HasValue && p.DateOfDeath.Value >= request.DeathDateFrom.Value);
+        }
+        if (request.DeathDateTo.HasValue)
+        {
+            query = query.Where(p => p.DateOfDeath.HasValue && p.DateOfDeath.Value <= request.DeathDateTo.Value);
+        }
+
+        // Location-based search (people with events at specific location)
+        if (request.LocationId.HasValue)
+        {
+            query = query.Where(p => p.LifeEvents.Any(e => e.LocationId == request.LocationId.Value));
+        }
+
+        // Event type search (people with specific event type)
+        if (!string.IsNullOrWhiteSpace(request.EventType))
+        {
+            var eventType = request.EventType.ToLower();
+            query = query.Where(p => p.LifeEvents.Any(e => e.EventType.ToLower() == eventType));
         }
 
         return await query
