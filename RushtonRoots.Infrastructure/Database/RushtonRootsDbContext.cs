@@ -43,6 +43,12 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<EventRsvp> EventRsvps { get; set; }
     public DbSet<FamilyTask> FamilyTasks { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<Contribution> Contributions { get; set; }
+    public DbSet<ContributionApproval> ContributionApprovals { get; set; }
+    public DbSet<FactCitation> FactCitations { get; set; }
+    public DbSet<ConflictResolution> ConflictResolutions { get; set; }
+    public DbSet<ActivityFeedItem> ActivityFeedItems { get; set; }
+    public DbSet<ContributionScore> ContributionScores { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
