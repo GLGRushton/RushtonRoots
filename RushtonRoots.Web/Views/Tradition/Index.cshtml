@@ -277,8 +277,8 @@
             }
 
             container.innerHTML = categories.map(category => `
-                <div class="category-card" onclick="filterByCategory('${category}')">
-                    <div class="category-name">${category}</div>
+                <div class="category-card" onclick="filterByCategory('${escapeHtml(category)}')">
+                    <div class="category-name">${escapeHtml(category)}</div>
                 </div>
             `).join('');
         } catch (error) {
