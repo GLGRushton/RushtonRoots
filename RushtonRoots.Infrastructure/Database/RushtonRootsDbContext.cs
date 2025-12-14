@@ -20,6 +20,9 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<LifeEvent> LifeEvents { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<PersonPhoto> PersonPhotos { get; set; }
+    public DbSet<PhotoAlbum> PhotoAlbums { get; set; }
+    public DbSet<PhotoTag> PhotoTags { get; set; }
+    public DbSet<PhotoPermission> PhotoPermissions { get; set; }
     public DbSet<BiographicalNote> BiographicalNotes { get; set; }
     public DbSet<Source> Sources { get; set; }
     public DbSet<Citation> Citations { get; set; }
