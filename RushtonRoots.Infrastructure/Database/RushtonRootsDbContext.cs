@@ -49,6 +49,11 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ConflictResolution> ConflictResolutions { get; set; }
     public DbSet<ActivityFeedItem> ActivityFeedItems { get; set; }
     public DbSet<ContributionScore> ContributionScores { get; set; }
+    public DbSet<WikiPage> WikiPages { get; set; }
+    public DbSet<WikiPageVersion> WikiPageVersions { get; set; }
+    public DbSet<WikiCategory> WikiCategories { get; set; }
+    public DbSet<WikiTag> WikiTags { get; set; }
+    public DbSet<WikiTemplate> WikiTemplates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
