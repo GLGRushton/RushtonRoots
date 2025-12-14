@@ -11,7 +11,7 @@ using RushtonRoots.Infrastructure.Database;
 namespace RushtonRoots.Infrastructure.Migrations
 {
     [DbContext(typeof(RushtonRootsDbContext))]
-    [Migration("20251214102125_AddMediaManagement")]
+    [Migration("20251214102425_AddMediaManagement")]
     partial class AddMediaManagement
     {
         /// <inheritdoc />
