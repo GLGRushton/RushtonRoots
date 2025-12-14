@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RushtonRoots.Application.Services;
 using RushtonRoots.Domain.UI.Requests;
-using System.Security.Claims;
 
 namespace RushtonRoots.Web.Controllers;
 

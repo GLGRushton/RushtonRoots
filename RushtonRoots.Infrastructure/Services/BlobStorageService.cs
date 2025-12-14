@@ -48,8 +48,9 @@ public class BlobStorageService : IBlobStorageService
 
     public async Task<string> GenerateThumbnailAsync(string originalBlobName, Stream originalStream)
     {
-        // For now, we'll use a simple approach - just upload a smaller version
-        // In a production environment, you'd want to use an image processing library like ImageSharp
+        // TODO: Implement actual thumbnail generation using ImageSharp or similar library
+        // Current implementation: uploads original image as placeholder
+        // In production, this should resize the image to thumbnail dimensions (e.g., 200x200)
         var thumbnailBlobName = $"thumbnails/{originalBlobName}";
         var blobClient = _containerClient.GetBlobClient(thumbnailBlobName);
         

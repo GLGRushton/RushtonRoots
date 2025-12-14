@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using RushtonRoots.Domain.Database;
 using RushtonRoots.Domain.UI.Models;
 using RushtonRoots.Domain.UI.Requests;
@@ -156,16 +155,16 @@ public class PersonPhotoService : IPersonPhotoService
 
     public async Task<List<PersonPhotoViewModel>> GetPhotosByDateRangeAsync(DateTime? startDate, DateTime? endDate)
     {
-        // This would need a new repository method, for now return empty list
-        // TODO: Implement in repository
-        return new List<PersonPhotoViewModel>();
+        // TODO: Implement date-based filtering in repository
+        // For now, return empty list as this is a future enhancement
+        return await Task.FromResult(new List<PersonPhotoViewModel>());
     }
 
     public async Task<List<PersonPhotoViewModel>> GetPhotosByAlbumIdAsync(int albumId)
     {
-        // This would need a new repository method, for now return empty list
-        // TODO: Implement in repository
-        return new List<PersonPhotoViewModel>();
+        // TODO: Implement album-based filtering in repository
+        // For now, return empty list as this is a future enhancement
+        return await Task.FromResult(new List<PersonPhotoViewModel>());
     }
 
     private PersonPhotoViewModel MapToViewModel(PersonPhoto photo, List<PhotoTag> tags)
