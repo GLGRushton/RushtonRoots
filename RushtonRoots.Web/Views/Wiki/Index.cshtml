@@ -206,7 +206,7 @@
                     container.innerHTML = '<p>No categories yet. Be the first to create one!</p>';
                 } else {
                     container.innerHTML = categories.map(cat => `
-                        <div class="category-card" onclick="window.location.href='/api/WikiPage/category/${cat.id}'">
+                        <div class="category-card" onclick="filterByCategory(${cat.id}, '${cat.name}')">
                             <div class="category-icon">${cat.icon || '📁'}</div>
                             <div class="category-name">${cat.name}</div>
                             <div class="category-count">${cat.pageCount} pages</div>
@@ -229,7 +229,7 @@
                     container.innerHTML = '<p>No wiki pages yet. Start by creating one!</p>';
                 } else {
                     container.innerHTML = '<ul class="page-list">' + pages.map(page => `
-                        <li onclick="window.location.href='/api/WikiPage/${page.id}'">
+                        <li onclick="showPageDetails(${page.id}, '${page.title.replace(/'/g, "\\'")}')">
                             <div class="page-title">${page.title}</div>
                             <div class="page-meta">
                                 Updated ${new Date(page.updatedDateTime).toLocaleDateString()} 
@@ -255,7 +255,7 @@
                     container.innerHTML = '<p>No tags yet.</p>';
                 } else {
                     container.innerHTML = '<div class="tag-cloud">' + tags.map(tag => `
-                        <div class="tag" onclick="window.location.href='/api/WikiPage/tag/${tag.id}'">
+                        <div class="tag" onclick="filterByTag(${tag.id}, '${tag.name.replace(/'/g, "\\'")}')">
                             ${tag.name}
                             <span class="tag-count">${tag.usageCount}</span>
                         </div>
@@ -267,5 +267,18 @@
                 document.getElementById('popular-tags-container').innerHTML = 
                     '<p>Error loading tags. Please try again later.</p>';
             });
+
+        // Helper functions for navigation
+        function filterByCategory(categoryId, categoryName) {
+            alert(`Filter by category: ${categoryName}\n\nThis would show all pages in this category. API endpoint: /api/WikiPage/category/${categoryId}`);
+        }
+
+        function showPageDetails(pageId, title) {
+            alert(`Show page: ${title}\n\nThis would display the wiki page content. API endpoint: /api/WikiPage/${pageId}`);
+        }
+
+        function filterByTag(tagId, tagName) {
+            alert(`Filter by tag: ${tagName}\n\nThis would show all pages with this tag. API endpoint: /api/WikiPage/tag/${tagId}`);
+        }
     </script>
 }
