@@ -189,13 +189,13 @@ RushtonRoots is a comprehensive family platform designed to serve multiple gener
 
 **Goal**: Create a comprehensive repository of family history, stories, and knowledge.
 
-### Phase 6.1: Family Wiki (Weeks 31-33)
-- [ ] Create wiki-style pages for family topics
-- [ ] Implement markdown editor for articles
-- [ ] Add wiki categories and tags
-- [ ] Create wiki search and navigation
-- [ ] Build wiki version history
-- [ ] Implement wiki templates (person template, place template, etc.)
+### Phase 6.1: Family Wiki (Weeks 31-33) ✅ COMPLETE
+- [x] Create wiki-style pages for family topics
+- [x] Implement markdown editor for articles
+- [x] Add wiki categories and tags
+- [x] Create wiki search and navigation
+- [x] Build wiki version history
+- [x] Implement wiki templates (person template, place template, etc.)
 
 **Success Criteria**: Family knowledge is organized in an easily accessible wiki format.
 
