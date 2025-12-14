@@ -54,6 +54,9 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<WikiCategory> WikiCategories { get; set; }
     public DbSet<WikiTag> WikiTags { get; set; }
     public DbSet<WikiTemplate> WikiTemplates { get; set; }
+    public DbSet<Story> Stories { get; set; }
+    public DbSet<StoryPerson> StoryPeople { get; set; }
+    public DbSet<StoryCollection> StoryCollections { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
