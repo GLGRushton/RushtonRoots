@@ -182,6 +182,12 @@ public class MediaService : IMediaService
 
     public async Task DeleteTimelineMarkerAsync(int markerId)
     {
+        var marker = await _mediaRepository.GetMarkerByIdAsync(markerId);
+        if (marker == null)
+        {
+            throw new KeyNotFoundException($"Timeline marker with ID {markerId} not found");
+        }
+        
         await _mediaRepository.DeleteMarkerAsync(markerId);
     }
 
@@ -193,7 +199,8 @@ public class MediaService : IMediaService
             // Example: https://account.blob.core.windows.net/container/blobname -> blobname
             var uri = new Uri(url);
             var segments = uri.Segments;
-            return segments.Length > 0 ? segments[^1] : string.Empty;
+            // Get the last segment and remove leading '/' if present
+            return segments.Length > 0 ? segments[^1].TrimStart('/') : string.Empty;
         }
         catch (UriFormatException)
         {

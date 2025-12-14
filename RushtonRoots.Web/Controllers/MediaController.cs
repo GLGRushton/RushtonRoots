@@ -180,6 +180,10 @@ public class MediaController : ControllerBase
             await _mediaService.DeleteTimelineMarkerAsync(markerId);
             return NoContent();
         }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
         catch (Exception ex)
         {
             return StatusCode(500, $"Error deleting timeline marker: {ex.Message}");
