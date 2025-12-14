@@ -112,10 +112,10 @@ public class WikiPageService : IWikiPageService
     public async Task<WikiPageViewModel> CreateAsync(CreateWikiPageRequest request, string userId)
     {
         // Validate
-        var validation = _validator.ValidateCreate(request);
+        var validation = await _validator.ValidateCreateAsync(request);
         if (!validation.IsValid)
         {
-            throw new ValidationException("Validation failed", validation.Errors);
+            throw new ValidationException(string.Join(", ", validation.Errors));
         }
 
         // Map to entity
@@ -164,10 +164,10 @@ public class WikiPageService : IWikiPageService
     public async Task<WikiPageViewModel> UpdateAsync(int id, UpdateWikiPageRequest request, string userId)
     {
         // Validate
-        var validation = _validator.ValidateUpdate(request);
+        var validation = await _validator.ValidateUpdateAsync(request);
         if (!validation.IsValid)
         {
-            throw new ValidationException("Validation failed", validation.Errors);
+            throw new ValidationException(string.Join(", ", validation.Errors));
         }
 
         // Get existing
@@ -274,15 +274,5 @@ public class WikiPageService : IWikiPageService
     {
         var version = await _versionRepository.GetVersionAsync(wikiPageId, versionNumber);
         return version == null ? null : _mapper.MapVersionToViewModel(version);
-    }
-}
-
-public class ValidationException : Exception
-{
-    public Dictionary<string, List<string>> Errors { get; }
-
-    public ValidationException(string message, Dictionary<string, List<string>> errors) : base(message)
-    {
-        Errors = errors;
     }
 }
