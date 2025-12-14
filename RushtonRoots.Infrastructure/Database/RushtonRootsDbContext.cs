@@ -39,6 +39,10 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<ChatRoomMember> ChatRoomMembers { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<NotificationPreference> NotificationPreferences { get; set; }
+    public DbSet<FamilyEvent> FamilyEvents { get; set; }
+    public DbSet<EventRsvp> EventRsvps { get; set; }
+    public DbSet<FamilyTask> FamilyTasks { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
