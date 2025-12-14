@@ -26,6 +26,10 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<BiographicalNote> BiographicalNotes { get; set; }
     public DbSet<Source> Sources { get; set; }
     public DbSet<Citation> Citations { get; set; }
+    public DbSet<Document> Documents { get; set; }
+    public DbSet<DocumentVersion> DocumentVersions { get; set; }
+    public DbSet<DocumentPerson> DocumentPeople { get; set; }
+    public DbSet<DocumentPermission> DocumentPermissions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
