@@ -1,0 +1,376 @@
+@{
+    ViewData["Title"] = "Family Traditions";
+}
+
+<div class="tradition-container">
+    <section class="tradition-header">
+        <h1>🎊 Family Traditions</h1>
+        <p class="tagline">Celebrating the customs that make us who we are</p>
+        <div class="description">
+            <p>
+                Discover the traditions that have been passed down through generations of the Rushton family. 
+                From holiday celebrations to unique family customs, these traditions connect us to our past 
+                and create lasting memories for future generations.
+            </p>
+        </div>
+    </section>
+
+    <section class="tradition-categories">
+        <h2>Browse by Category</h2>
+        <div id="categories-container" class="categories-grid">
+            <p>Loading categories...</p>
+        </div>
+    </section>
+
+    <section class="tradition-active">
+        <h2>✨ Active Traditions</h2>
+        <div id="active-traditions-container">
+            <p>Loading active traditions...</p>
+        </div>
+    </section>
+
+    <section class="tradition-recent">
+        <h2>Recently Added Traditions</h2>
+        <div id="recent-traditions-container">
+            <p>Loading recent traditions...</p>
+        </div>
+    </section>
+</div>
+
+<style>
+    .tradition-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .tradition-header {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+        border-left: 6px solid #4caf50;
+    }
+
+    .tradition-header h1 {
+        color: #2e7d32;
+        margin: 0 0 10px 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .tagline {
+        color: #66bb6a;
+        font-size: 1.3em;
+        font-style: italic;
+        margin: 0 0 20px 0;
+    }
+
+    .description {
+        color: #555;
+        line-height: 1.8;
+        font-size: 1.05em;
+    }
+
+    .tradition-categories,
+    .tradition-active,
+    .tradition-recent {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+    }
+
+    .tradition-categories h2,
+    .tradition-active h2,
+    .tradition-recent h2 {
+        color: #2e7d32;
+        margin: 0 0 20px 0;
+        font-size: 1.8em;
+        font-weight: 600;
+    }
+
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .category-card {
+        background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+        border: 2px solid #c8e6c9;
+        border-radius: 12px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        border-color: #81c784;
+    }
+
+    .category-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4caf50, #81c784);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .category-name {
+        color: #2e7d32;
+        font-weight: 600;
+        font-size: 1.1em;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .tradition-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+    }
+
+    .tradition-card {
+        background: #f9fdf9;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .tradition-card:hover {
+        background: #e8f5e9;
+        border-color: #81c784;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+    }
+
+    .tradition-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4em;
+    }
+
+    .tradition-content {
+        padding: 20px;
+    }
+
+    .tradition-title {
+        color: #2e7d32;
+        font-size: 1.3em;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .tradition-description {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        font-size: 0.95em;
+    }
+
+    .tradition-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        font-size: 0.85em;
+        color: #777;
+        margin-bottom: 10px;
+    }
+
+    .tradition-category-badge {
+        background: #4caf50;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .tradition-status-badge {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .tradition-status-active {
+        background: #66bb6a;
+        color: white;
+    }
+
+    .tradition-status-discontinued {
+        background: #ef5350;
+        color: white;
+    }
+
+    .tradition-status-evolving {
+        background: #ff9800;
+        color: white;
+    }
+
+    .tradition-frequency,
+    .tradition-started {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .tradition-timeline-count {
+        color: #4caf50;
+        font-weight: 600;
+    }
+
+    .loading-message {
+        text-align: center;
+        color: #66bb6a;
+        font-style: italic;
+        padding: 20px;
+    }
+
+    .error-message {
+        background: #ffebee;
+        border: 1px solid #ef5350;
+        color: #c62828;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        await loadCategories();
+        await loadActiveTraditions();
+        await loadRecentTraditions();
+    });
+
+    async function loadCategories() {
+        const container = document.getElementById('categories-container');
+        try {
+            const response = await fetch('/api/Tradition/categories');
+            if (!response.ok) throw new Error('Failed to load categories');
+            
+            const categories = await response.json();
+            
+            if (categories.length === 0) {
+                container.innerHTML = '<p class="loading-message">No categories yet. Start by documenting your first tradition!</p>';
+                return;
+            }
+
+            container.innerHTML = categories.map(category => `
+                <div class="category-card" onclick="filterByCategory('${escapeHtml(category)}')">
+                    <div class="category-name">${escapeHtml(category)}</div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading categories:', error);
+            container.innerHTML = '<div class="error-message">Failed to load categories</div>';
+        }
+    }
+
+    async function loadActiveTraditions() {
+        const container = document.getElementById('active-traditions-container');
+        try {
+            const response = await fetch('/api/Tradition/status/Active?publishedOnly=true');
+            if (!response.ok) throw new Error('Failed to load active traditions');
+            
+            const traditions = await response.json();
+            
+            if (traditions.length === 0) {
+                container.innerHTML = '<p class="loading-message">No active traditions documented yet.</p>';
+                return;
+            }
+
+            container.innerHTML = '<div class="tradition-list">' + traditions.slice(0, 6).map(renderTraditionCard).join('') + '</div>';
+        } catch (error) {
+            console.error('Error loading active traditions:', error);
+            container.innerHTML = '<div class="error-message">Failed to load active traditions</div>';
+        }
+    }
+
+    async function loadRecentTraditions() {
+        const container = document.getElementById('recent-traditions-container');
+        try {
+            const response = await fetch('/api/Tradition/recent?count=6&publishedOnly=true');
+            if (!response.ok) throw new Error('Failed to load traditions');
+            
+            const traditions = await response.json();
+            
+            if (traditions.length === 0) {
+                container.innerHTML = '<p class="loading-message">No traditions yet. Be the first to document a family tradition!</p>';
+                return;
+            }
+
+            container.innerHTML = '<div class="tradition-list">' + traditions.map(renderTraditionCard).join('') + '</div>';
+        } catch (error) {
+            console.error('Error loading traditions:', error);
+            container.innerHTML = '<div class="error-message">Failed to load traditions</div>';
+        }
+    }
+
+    function renderTraditionCard(tradition) {
+        const startedDisplay = tradition.startedDate 
+            ? `📅 Started ${new Date(tradition.startedDate).getFullYear()}` 
+            : '';
+        const timelineCount = tradition.timeline ? tradition.timeline.length : 0;
+        const statusClass = `tradition-status-${tradition.status.toLowerCase()}`;
+        
+        return `
+            <div class="tradition-card" onclick="viewTradition(${tradition.id})">
+                <div class="tradition-image">
+                    ${tradition.photoUrl ? `<img src="${tradition.photoUrl}" alt="${escapeHtml(tradition.name)}" style="width:100%; height:100%; object-fit:cover;">` : '🎊'}
+                </div>
+                <div class="tradition-content">
+                    <div class="tradition-title">${escapeHtml(tradition.name)}</div>
+                    <div class="tradition-description">${escapeHtml(tradition.description.substring(0, 120))}${tradition.description.length > 120 ? '...' : ''}</div>
+                    <div class="tradition-meta">
+                        <span class="tradition-category-badge">${escapeHtml(tradition.category)}</span>
+                        <span class="tradition-status-badge ${statusClass}">${escapeHtml(tradition.status)}</span>
+                        ${tradition.frequency ? `<span class="tradition-frequency">🔄 ${escapeHtml(tradition.frequency)}</span>` : ''}
+                    </div>
+                    <div class="tradition-meta">
+                        ${startedDisplay ? `<span class="tradition-started">${startedDisplay}</span>` : ''}
+                        ${timelineCount > 0 ? `<span class="tradition-timeline-count">📖 ${timelineCount} timeline ${timelineCount === 1 ? 'entry' : 'entries'}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function filterByCategory(category) {
+        // TODO: Implement category filtering or navigation
+        console.log('Filter by category:', category);
+        alert('Category filtering coming soon! Category: ' + category);
+    }
+
+    function viewTradition(traditionId) {
+        // TODO: Implement tradition view navigation
+        console.log('View tradition:', traditionId);
+        alert('Tradition view coming soon! Tradition ID: ' + traditionId);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+</script>

@@ -57,6 +57,10 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Story> Stories { get; set; }
     public DbSet<StoryPerson> StoryPeople { get; set; }
     public DbSet<StoryCollection> StoryCollections { get; set; }
+    public DbSet<Recipe> Recipes { get; set; }
+    public DbSet<RecipeRating> RecipeRatings { get; set; }
+    public DbSet<Tradition> Traditions { get; set; }
+    public DbSet<TraditionTimeline> TraditionTimelines { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
