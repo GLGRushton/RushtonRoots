@@ -101,11 +101,11 @@ public class MediaRepository : IMediaRepository
         {
             if (request.HasTranscription.Value)
             {
-                query = query.Where(m => m.Transcription != null && m.Transcription != string.Empty);
+                query = query.Where(m => !string.IsNullOrEmpty(m.Transcription));
             }
             else
             {
-                query = query.Where(m => m.Transcription == null || m.Transcription == string.Empty);
+                query = query.Where(m => string.IsNullOrEmpty(m.Transcription));
             }
         }
 

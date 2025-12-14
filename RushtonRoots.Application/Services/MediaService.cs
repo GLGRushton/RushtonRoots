@@ -61,26 +61,43 @@ public class MediaService : IMediaService
         var mediaUrl = await _blobStorageService.UploadFileAsync(file.FileName, file.ContentType, stream);
         var blobName = ExtractBlobNameFromUrl(mediaUrl);
 
-        // Create media entity
-        var media = _mapper.MapToEntity(request, userId, mediaUrl, blobName, file.Length, file.ContentType);
-        
-        // Save media
-        var savedMedia = await _mediaRepository.AddAsync(media);
-
-        // Add person associations
-        foreach (var personId in request.AssociatedPeople)
+        try
         {
-            var mediaPerson = new MediaPerson
-            {
-                MediaId = savedMedia.Id,
-                PersonId = personId
-            };
-            await _mediaRepository.AddMediaPersonAsync(mediaPerson);
-        }
+            // Create media entity
+            var media = _mapper.MapToEntity(request, userId, mediaUrl, blobName, file.Length, file.ContentType);
+            
+            // Save media
+            var savedMedia = await _mediaRepository.AddAsync(media);
 
-        // Reload media with all associations
-        var reloadedMedia = await _mediaRepository.GetByIdAsync(savedMedia.Id);
-        return _mapper.MapToViewModel(reloadedMedia!);
+            // Add person associations
+            foreach (var personId in request.AssociatedPeople)
+            {
+                var mediaPerson = new MediaPerson
+                {
+                    MediaId = savedMedia.Id,
+                    PersonId = personId
+                };
+                await _mediaRepository.AddMediaPersonAsync(mediaPerson);
+            }
+
+            // Reload media with all associations
+            var reloadedMedia = await _mediaRepository.GetByIdAsync(savedMedia.Id);
+            return _mapper.MapToViewModel(reloadedMedia!);
+        }
+        catch (Exception)
+        {
+            // If database operations fail, clean up the uploaded blob to prevent orphaned files
+            try
+            {
+                await _blobStorageService.DeleteFileAsync(blobName);
+            }
+            catch
+            {
+                // Log but don't throw - the original exception is more important
+                // In production, this should be logged for cleanup purposes
+            }
+            throw;
+        }
     }
 
     public async Task<MediaViewModel> UpdateMediaAsync(int id, UpdateMediaRequest request)
