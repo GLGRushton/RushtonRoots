@@ -47,6 +47,12 @@ public class AutofacModule : Module
             .AsImplementedInterfaces()
             .InstancePerLifetimeScope();
 
+        // Register infrastructure services (BlobStorageService, etc.)
+        builder.RegisterAssemblyTypes(typeof(RushtonRootsDbContext).Assembly)
+            .Where(t => t.Name.EndsWith("Service") && t.Namespace != null && t.Namespace.Contains("Infrastructure"))
+            .AsImplementedInterfaces()
+            .InstancePerLifetimeScope();
+
         // Register services from Application
         // Example: builder.RegisterType<PersonService>().As<IPersonService>().InstancePerLifetimeScope();
         builder.RegisterAssemblyTypes(typeof(RushtonRoots.Application.AssemblyMarker).Assembly)
