@@ -34,6 +34,11 @@ public class RushtonRootsDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<MediaTimelineMarker> MediaTimelineMarkers { get; set; }
     public DbSet<MediaPerson> MediaPeople { get; set; }
     public DbSet<MediaPermission> MediaPermissions { get; set; }
+    public DbSet<Message> Messages { get; set; }
+    public DbSet<ChatRoom> ChatRooms { get; set; }
+    public DbSet<ChatRoomMember> ChatRoomMembers { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<NotificationPreference> NotificationPreferences { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

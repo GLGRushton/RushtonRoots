@@ -47,4 +47,20 @@ public class EmailService : IEmailService
 
         return Task.CompletedTask;
     }
+
+    public Task SendNotificationEmailAsync(string email, string subject, string message)
+    {
+        // TODO: Replace with actual email sending logic
+        _logger.LogInformation(
+            "Notification email would be sent to {Email}. Subject: {Subject}, Message: {Message}",
+            email,
+            subject,
+            message);
+
+        // In a real implementation, you would:
+        // 1. Send an HTML email with the notification
+        // 2. Use a service like SendGrid, AWS SES, or SMTP
+
+        return Task.CompletedTask;
+    }
 }
