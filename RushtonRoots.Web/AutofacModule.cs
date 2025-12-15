@@ -25,15 +25,8 @@ public class AutofacModule : Module
             var optionsBuilder = new DbContextOptionsBuilder<RushtonRootsDbContext>();
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             
-            // Use SQLite if running in Linux/CI environment, otherwise use SQL Server
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                optionsBuilder.UseSqlite("Data Source=rushtonroots.db");
-            }
-            else
-            {
-                optionsBuilder.UseSqlServer(connectionString);
-            }
+            // Use SQL Server
+            optionsBuilder.UseSqlServer(connectionString);
             
             return new RushtonRootsDbContext(optionsBuilder.Options);
         })
