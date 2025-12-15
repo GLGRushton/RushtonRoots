@@ -1,0 +1,85 @@
+<div class="user-menu">
+  <button 
+    mat-button 
+    [matMenuTriggerFor]="userDropdown"
+    class="user-menu-trigger"
+    aria-label="User menu">
+    <div class="user-display">
+      <div class="user-avatar">
+        <span class="avatar-initial">{{ getUserInitial() }}</span>
+      </div>
+      <div class="user-info">
+        <span class="user-name">{{ userInfo.name }}</span>
+        <span 
+          class="user-role" 
+          [class.admin]="userInfo.isAdmin"
+          [class.household-admin]="userInfo.isHouseholdAdmin">
+          {{ userInfo.role }}
+        </span>
+      </div>
+      <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+    </div>
+  </button>
+
+  <mat-menu #userDropdown="matMenu" class="user-dropdown">
+    <!-- Profile Header -->
+    <div class="menu-header" mat-menu-item disabled>
+      <div class="menu-header-content">
+        <div class="large-avatar">
+          <span class="avatar-initial">{{ getUserInitial() }}</span>
+        </div>
+        <div class="menu-header-info">
+          <p class="menu-user-name">{{ userInfo.name }}</p>
+          <span 
+            class="role-badge"
+            [attr.data-role]="userInfo.isAdmin ? 'admin' : userInfo.isHouseholdAdmin ? 'household-admin' : 'member'">
+            {{ userInfo.role }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Menu Items -->
+    <button mat-menu-item (click)="navigateTo('/Account/Profile')">
+      <mat-icon>person</mat-icon>
+      <span>My Profile</span>
+    </button>
+
+    <button mat-menu-item (click)="navigateTo('/')">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </button>
+
+    <button 
+      mat-menu-item 
+      *ngIf="userInfo.isAdmin || userInfo.isHouseholdAdmin"
+      (click)="navigateTo('/Account/CreateUser')">
+      <mat-icon>person_add</mat-icon>
+      <span>Add User</span>
+    </button>
+
+    <button 
+      mat-menu-item 
+      *ngIf="userInfo.isAdmin"
+      (click)="navigateTo('/Admin')">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Admin Panel</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item (click)="onLogout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+
+  <!-- Hidden logout form for server-side logout -->
+  <form 
+    action="/Account/Logout" 
+    method="post" 
+    style="display: none;">
+  </form>
+</div>

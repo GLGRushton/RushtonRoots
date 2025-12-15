@@ -2,8 +2,11 @@
 
 // Responsive breakpoints
 @mixin respond-to($breakpoint) {
-  @if $breakpoint == 'sm' {
-    @media (min-width: $breakpoint-sm) { @content; }
+  @if $breakpoint == 'mobile' or $breakpoint == 'sm' {
+    @media (max-width: $breakpoint-sm - 1) { @content; }
+  }
+  @else if $breakpoint == 'tablet' {
+    @media (min-width: $breakpoint-sm) and (max-width: $breakpoint-md - 1) { @content; }
   }
   @else if $breakpoint == 'md' {
     @media (min-width: $breakpoint-md) { @content; }
