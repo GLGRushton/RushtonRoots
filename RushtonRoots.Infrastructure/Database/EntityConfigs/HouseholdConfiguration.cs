@@ -21,7 +21,7 @@ public class HouseholdConfiguration : IEntityTypeConfiguration<Household>
             .HasMaxLength(200);
             
         builder.Property(h => h.AnchorPersonId)
-            .IsRequired();
+            .IsRequired(false);
             
         builder.Property(h => h.CreatedDateTime)
             .IsRequired();

@@ -25,15 +25,18 @@ public class HouseholdValidator : IHouseholdValidator
             result.Errors.Add("Household name is required.");
         }
 
-        if (request.AnchorPersonId <= 0)
+        if (request.AnchorPersonId.HasValue)
         {
-            result.IsValid = false;
-            result.Errors.Add("Valid anchor person ID is required.");
-        }
-        else if (!await _personRepository.ExistsAsync(request.AnchorPersonId))
-        {
-            result.IsValid = false;
-            result.Errors.Add("Anchor person does not exist.");
+            if (request.AnchorPersonId.Value <= 0)
+            {
+                result.IsValid = false;
+                result.Errors.Add("Valid anchor person ID is required.");
+            }
+            else if (!await _personRepository.ExistsAsync(request.AnchorPersonId.Value))
+            {
+                result.IsValid = false;
+                result.Errors.Add("Anchor person does not exist.");
+            }
         }
 
         return result;
@@ -55,15 +58,18 @@ public class HouseholdValidator : IHouseholdValidator
             result.Errors.Add("Household name is required.");
         }
 
-        if (request.AnchorPersonId <= 0)
+        if (request.AnchorPersonId.HasValue)
         {
-            result.IsValid = false;
-            result.Errors.Add("Valid anchor person ID is required.");
-        }
-        else if (!await _personRepository.ExistsAsync(request.AnchorPersonId))
-        {
-            result.IsValid = false;
-            result.Errors.Add("Anchor person does not exist.");
+            if (request.AnchorPersonId.Value <= 0)
+            {
+                result.IsValid = false;
+                result.Errors.Add("Valid anchor person ID is required.");
+            }
+            else if (!await _personRepository.ExistsAsync(request.AnchorPersonId.Value))
+            {
+                result.IsValid = false;
+                result.Errors.Add("Anchor person does not exist.");
+            }
         }
 
         return result;

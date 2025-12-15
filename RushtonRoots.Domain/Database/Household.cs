@@ -6,7 +6,7 @@ namespace RushtonRoots.Domain.Database;
 public class Household : BaseEntity
 {
     public string HouseholdName { get; set; } = string.Empty;
-    public int AnchorPersonId { get; set; }
+    public int? AnchorPersonId { get; set; }
     
     // Navigation properties
     public Person? AnchorPerson { get; set; }
