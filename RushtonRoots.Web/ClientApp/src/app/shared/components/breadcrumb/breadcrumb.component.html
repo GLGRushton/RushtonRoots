@@ -1,0 +1,27 @@
+<nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-list">
+    <li 
+      *ngFor="let item of items; let i = index" 
+      class="breadcrumb-item"
+      [class.active]="isLast(i)">
+      
+      <a 
+        *ngIf="item.url && !isLast(i)" 
+        [href]="item.url"
+        class="breadcrumb-link"
+        [attr.aria-current]="isLast(i) ? 'page' : null">
+        <mat-icon *ngIf="item.icon" class="breadcrumb-icon">{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </a>
+
+      <span *ngIf="!item.url || isLast(i)" class="breadcrumb-text">
+        <mat-icon *ngIf="item.icon" class="breadcrumb-icon">{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </span>
+
+      <mat-icon *ngIf="!isLast(i)" class="breadcrumb-separator">
+        chevron_right
+      </mat-icon>
+    </li>
+  </ol>
+</nav>

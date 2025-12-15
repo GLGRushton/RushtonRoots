@@ -254,6 +254,159 @@
       </mat-card>
     </section>
 
+    <!-- Phase 1.2 Core Components Section -->
+    <section class="mb-xxl">
+      <h2 class="mb-lg">Phase 1.2: Core Reusable Components</h2>
+      <p class="mb-lg text-secondary">8 reusable Angular components for consistent UI patterns</p>
+
+      <!-- Person Card Component -->
+      <mat-card class="mb-lg">
+        <mat-card-header>
+          <mat-card-title>Person Card Component</mat-card-title>
+          <mat-card-subtitle>Display person summary in a card format</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <app-person-card
+              [firstName]="'John'"
+              [lastName]="'Doe'"
+              [birthDate]="'1980-01-15'"
+              [deathDate]="'2050-12-31'"
+              [showActions]="true">
+            </app-person-card>
+            <app-person-card
+              [firstName]="'Jane'"
+              [lastName]="'Smith'"
+              [birthDate]="'1985-05-20'"
+              [showActions]="true">
+            </app-person-card>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Search Bar Component -->
+      <mat-card class="mb-lg">
+        <mat-card-header>
+          <mat-card-title>Search Bar Component</mat-card-title>
+          <mat-card-subtitle>Reusable search interface with debouncing</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <app-search-bar 
+            [placeholder]="'Search people...'"
+            (searchChanged)="onSearchChanged($event)">
+          </app-search-bar>
+          <p *ngIf="searchResult" class="mt-md text-secondary">Search term: {{ searchResult }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Page Header Component -->
+      <mat-card class="mb-lg">
+        <mat-card-header>
+          <mat-card-title>Page Header Component</mat-card-title>
+          <mat-card-subtitle>Consistent page headers with breadcrumbs and actions</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <app-page-header 
+            [title]="'People Management'"
+            [subtitle]="'View and manage family members'"
+            [breadcrumbs]="sampleBreadcrumbs"
+            [showBackButton]="false">
+            <div actions>
+              <button mat-raised-button color="primary">
+                <mat-icon>add</mat-icon>
+                Add Person
+              </button>
+            </div>
+          </app-page-header>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Breadcrumb Component -->
+      <mat-card class="mb-lg">
+        <mat-card-header>
+          <mat-card-title>Breadcrumb Component</mat-card-title>
+          <mat-card-subtitle>Navigation breadcrumbs</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <app-breadcrumb [items]="sampleBreadcrumbs"></app-breadcrumb>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Empty State Component -->
+      <mat-card class="mb-lg">
+        <mat-card-header>
+          <mat-card-title>Empty State Component</mat-card-title>
+          <mat-card-subtitle>Display "no data" states</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <app-empty-state 
+            [icon]="'person_off'"
+            [message]="'No people found'"
+            [submessage]="'Try adjusting your search criteria or add a new person'"
+            [actionLabel]="'Add Person'"
+            (actionClick)="onEmptyStateAction()">
+          </app-empty-state>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Loading Spinner Component -->
+      <mat-card class="mb-lg">
+        <mat-card-header>
+          <mat-card-title>Loading Spinner Component</mat-card-title>
+          <mat-card-subtitle>Consistent loading states</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div style="display: flex; gap: 32px; justify-content: center; align-items: center;">
+            <div style="text-align: center;">
+              <app-loading-spinner [size]="'small'"></app-loading-spinner>
+              <p class="mt-sm text-secondary">Small</p>
+            </div>
+            <div style="text-align: center;">
+              <app-loading-spinner [size]="'medium'" [message]="'Loading...'"></app-loading-spinner>
+              <p class="mt-sm text-secondary">Medium</p>
+            </div>
+            <div style="text-align: center;">
+              <app-loading-spinner [size]="'large'"></app-loading-spinner>
+              <p class="mt-sm text-secondary">Large</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Confirm Dialog Component -->
+      <mat-card class="mb-lg">
+        <mat-card-header>
+          <mat-card-title>Confirm Dialog Component</mat-card-title>
+          <mat-card-subtitle>Confirmation dialogs for actions (uses MatDialog)</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <button mat-raised-button color="primary" (click)="showConfirmDialog()">
+              Show Confirm Dialog
+            </button>
+            <button mat-raised-button color="warn" (click)="showDeleteDialog()">
+              Show Delete Dialog
+            </button>
+          </div>
+          <p *ngIf="dialogResult" class="mt-md text-secondary">Last result: {{ dialogResult }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Person List Component -->
+      <mat-card class="mb-lg">
+        <mat-card-header>
+          <mat-card-title>Person List Component</mat-card-title>
+          <mat-card-subtitle>Display people in a table with sorting and pagination</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <app-person-list 
+            [people]="samplePeople"
+            [showPagination]="true">
+          </app-person-list>
+        </mat-card-content>
+      </mat-card>
+    </section>
+
     <!-- Footer -->
     <footer class="text-center mt-xxl pt-lg">
       <p class="text-secondary">

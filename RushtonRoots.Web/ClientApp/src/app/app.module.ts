@@ -11,6 +11,15 @@ import { FamilyTreeComponent } from './family-tree/family-tree.component';
 import { StyleGuideComponent } from './style-guide/style-guide.component';
 import { SharedModule } from './shared/shared.module';
 
+// Import core reusable components for Angular Elements registration
+import { PersonCardComponent } from './shared/components/person-card/person-card.component';
+import { PersonListComponent } from './shared/components/person-list/person-list.component';
+import { SearchBarComponent } from './shared/components/search-bar/search-bar.component';
+import { PageHeaderComponent } from './shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from './shared/components/empty-state/empty-state.component';
+import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
+import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,6 +47,28 @@ export class AppModule {
 
     const styleGuideElement = createCustomElement(StyleGuideComponent, { injector: this.injector });
     customElements.define('app-style-guide', styleGuideElement);
+
+    // Register Phase 1.2 core reusable components as Angular Elements
+    const personCardElement = createCustomElement(PersonCardComponent, { injector: this.injector });
+    customElements.define('app-person-card', personCardElement);
+
+    const personListElement = createCustomElement(PersonListComponent, { injector: this.injector });
+    customElements.define('app-person-list', personListElement);
+
+    const searchBarElement = createCustomElement(SearchBarComponent, { injector: this.injector });
+    customElements.define('app-search-bar', searchBarElement);
+
+    const pageHeaderElement = createCustomElement(PageHeaderComponent, { injector: this.injector });
+    customElements.define('app-page-header', pageHeaderElement);
+
+    const emptyStateElement = createCustomElement(EmptyStateComponent, { injector: this.injector });
+    customElements.define('app-empty-state', emptyStateElement);
+
+    const loadingSpinnerElement = createCustomElement(LoadingSpinnerComponent, { injector: this.injector });
+    customElements.define('app-loading-spinner', loadingSpinnerElement);
+
+    const breadcrumbElement = createCustomElement(BreadcrumbComponent, { injector: this.injector });
+    customElements.define('app-breadcrumb', breadcrumbElement);
   }
 
   ngDoBootstrap() {

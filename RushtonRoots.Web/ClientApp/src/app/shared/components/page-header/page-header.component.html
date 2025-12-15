@@ -1,0 +1,25 @@
+<div class="page-header">
+  <div class="header-top">
+    <button 
+      *ngIf="showBackButton" 
+      mat-icon-button 
+      (click)="goBack()"
+      aria-label="Go back"
+      class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <app-breadcrumb *ngIf="breadcrumbs.length > 0" [items]="breadcrumbs"></app-breadcrumb>
+  </div>
+
+  <div class="header-main">
+    <div class="header-content">
+      <h1 class="header-title">{{ title }}</h1>
+      <p *ngIf="subtitle" class="header-subtitle">{{ subtitle }}</p>
+    </div>
+
+    <div class="header-actions">
+      <ng-content select="[actions]"></ng-content>
+    </div>
+  </div>
+</div>
