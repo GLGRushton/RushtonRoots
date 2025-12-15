@@ -34,13 +34,30 @@ export interface UserInfo {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  @Input() userInfo: UserInfo = {
+  private _userInfo: UserInfo = {
     name: '',
     role: '',
     isAuthenticated: false,
     isAdmin: false,
     isHouseholdAdmin: false
   };
+
+  @Input() 
+  set userinfo(value: string | UserInfo) {
+    if (typeof value === 'string') {
+      try {
+        this._userInfo = JSON.parse(value);
+      } catch (e) {
+        console.error('Failed to parse userinfo:', e);
+      }
+    } else {
+      this._userInfo = value;
+    }
+  }
+  
+  get userInfo(): UserInfo {
+    return this._userInfo;
+  }
 
   @Input() showSearch = true;
   @Input() showNotifications = true;

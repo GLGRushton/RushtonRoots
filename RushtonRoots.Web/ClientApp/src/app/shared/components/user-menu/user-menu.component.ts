@@ -28,8 +28,8 @@ export class UserMenuComponent {
   @Output() logout = new EventEmitter<void>();
 
   onLogout(): void {
-    // Submit the logout form
-    const logoutForm = document.querySelector('form[action*="Logout"]') as HTMLFormElement;
+    // Submit the logout form using the form ID
+    const logoutForm = document.getElementById('logoutForm') as HTMLFormElement;
     if (logoutForm) {
       logoutForm.submit();
     } else {

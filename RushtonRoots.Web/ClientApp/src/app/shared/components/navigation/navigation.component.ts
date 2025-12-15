@@ -59,6 +59,9 @@ export class NavigationComponent {
   }
 
   isActive(url: string): boolean {
-    return window.location.pathname.startsWith(url) && url !== '/';
+    if (url === '/') {
+      return window.location.pathname === '/';
+    }
+    return window.location.pathname.startsWith(url);
   }
 }
