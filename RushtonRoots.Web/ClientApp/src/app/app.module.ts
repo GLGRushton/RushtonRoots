@@ -22,6 +22,8 @@ import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.c
 import { HeaderComponent } from './shared/components/header/header.component';
 import { NavigationComponent } from './shared/components/navigation/navigation.component';
 import { UserMenuComponent } from './shared/components/user-menu/user-menu.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
+import { PageLayoutComponent } from './shared/components/page-layout/page-layout.component';
 
 @NgModule({
   declarations: [
@@ -82,6 +84,13 @@ export class AppModule {
 
     const userMenuElement = createCustomElement(UserMenuComponent, { injector: this.injector });
     customElements.define('app-user-menu', userMenuElement);
+
+    // Register Phase 2.2 Footer & Page Layout components as Angular Elements
+    const footerElement = createCustomElement(FooterComponent, { injector: this.injector });
+    customElements.define('app-footer', footerElement);
+
+    const pageLayoutElement = createCustomElement(PageLayoutComponent, { injector: this.injector });
+    customElements.define('app-page-layout', pageLayoutElement);
   }
 
   ngDoBootstrap() {

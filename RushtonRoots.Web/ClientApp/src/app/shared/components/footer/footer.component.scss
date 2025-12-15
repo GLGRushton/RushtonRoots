@@ -1,0 +1,217 @@
+@import '../../../../styles/variables';
+
+.app-footer {
+  background: linear-gradient(135deg, $primary-dark 0%, $primary 50%, #388e3c 100%);
+  color: white;
+  margin-top: auto;
+  box-shadow: 0 -4px 12px rgba(46, 125, 50, 0.2);
+  animation: fadeInUp 0.4s ease-out;
+
+  .footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: $spacing-xxl $spacing-lg;
+
+    @media (max-width: $breakpoint-sm) {
+      padding: $spacing-xl $spacing-md;
+    }
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: 2fr repeat(4, 1fr);
+    gap: $spacing-xl;
+    margin-bottom: $spacing-xl;
+
+    @media (max-width: $breakpoint-lg) {
+      grid-template-columns: repeat(3, 1fr);
+      
+      .footer-brand {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: $breakpoint-md) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: $spacing-lg;
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      grid-template-columns: 1fr;
+      gap: $spacing-md;
+    }
+  }
+
+  .footer-section {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .footer-brand {
+    .footer-logo {
+      font-size: $font-size-xxl;
+      font-weight: $font-weight-bold;
+      margin: 0 0 $spacing-sm 0;
+      color: white;
+    }
+
+    .footer-tagline {
+      font-size: $font-size-md;
+      font-weight: $font-weight-medium;
+      margin: 0 0 $spacing-md 0;
+      opacity: 0.95;
+    }
+
+    .footer-description {
+      font-size: $font-size-sm;
+      line-height: $line-height-relaxed;
+      margin: 0;
+      opacity: 0.85;
+      max-width: 400px;
+    }
+  }
+
+  .footer-heading {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    margin: 0 0 $spacing-sm 0;
+    color: white;
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+
+    li {
+      margin: 0;
+    }
+  }
+
+  .footer-link {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: $font-size-sm;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
+
+    &:hover {
+      color: white;
+      transform: translateX(4px);
+    }
+
+    &:focus {
+      outline: 2px solid white;
+      outline-offset: 2px;
+      border-radius: $border-radius-sm;
+    }
+  }
+
+  .footer-contact {
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-sm;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      margin: 0;
+      font-size: $font-size-sm;
+      color: rgba(255, 255, 255, 0.9);
+
+      .contact-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: white;
+        }
+      }
+    }
+  }
+
+  .social-links {
+    display: flex;
+    gap: $spacing-md;
+    margin-top: $spacing-md;
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      color: white;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      &:focus {
+        outline: 2px solid white;
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: $spacing-lg;
+
+    .footer-bottom-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: $spacing-md;
+
+      @media (max-width: $breakpoint-sm) {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    .copyright {
+      margin: 0;
+      font-size: $font-size-sm;
+      opacity: 0.85;
+    }
+
+    .footer-bottom-links {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+      font-size: $font-size-sm;
+
+      .separator {
+        opacity: 0.5;
+      }
+    }
+  }
+}
