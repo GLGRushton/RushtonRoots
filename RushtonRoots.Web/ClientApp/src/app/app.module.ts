@@ -10,6 +10,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { FamilyTreeComponent } from './family-tree/family-tree.component';
 import { StyleGuideComponent } from './style-guide/style-guide.component';
 import { SharedModule } from './shared/shared.module';
+import { PersonModule } from './person/person.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -25,6 +26,11 @@ import { UserMenuComponent } from './shared/components/user-menu/user-menu.compo
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { PageLayoutComponent } from './shared/components/page-layout/page-layout.component';
 
+// Import Phase 3.1 Person Index & Search components for Angular Elements registration
+import { PersonIndexComponent } from './person/components/person-index/person-index.component';
+import { PersonTableComponent } from './person/components/person-table/person-table.component';
+import { PersonSearchComponent } from './person/components/person-search/person-search.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +43,8 @@ import { PageLayoutComponent } from './shared/components/page-layout/page-layout
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    PersonModule
   ],
   providers: []
 })
@@ -91,6 +98,16 @@ export class AppModule {
 
     const pageLayoutElement = createCustomElement(PageLayoutComponent, { injector: this.injector });
     customElements.define('app-page-layout', pageLayoutElement);
+
+    // Register Phase 3.1 Person Index & Search components as Angular Elements
+    const personIndexElement = createCustomElement(PersonIndexComponent, { injector: this.injector });
+    customElements.define('app-person-index', personIndexElement);
+
+    const personTableElement = createCustomElement(PersonTableComponent, { injector: this.injector });
+    customElements.define('app-person-table', personTableElement);
+
+    const personSearchElement = createCustomElement(PersonSearchComponent, { injector: this.injector });
+    customElements.define('app-person-search', personSearchElement);
   }
 
   ngDoBootstrap() {

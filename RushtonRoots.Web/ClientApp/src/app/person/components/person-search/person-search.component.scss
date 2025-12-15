@@ -1,0 +1,81 @@
+.search-card {
+  margin-bottom: 1.5rem;
+}
+
+.search-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  flex: 1 1 300px;
+  min-width: 200px;
+}
+
+.household-field,
+.status-field {
+  flex: 0 1 200px;
+  min-width: 150px;
+}
+
+.advanced-filters {
+  margin-top: 1rem;
+}
+
+.filter-divider {
+  margin: 1rem 0;
+}
+
+.advanced-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.advanced-row mat-form-field {
+  flex: 1 1 calc(50% - 0.5rem);
+  min-width: 200px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.filter-chips {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-count {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.875rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .search-row {
+    flex-direction: column;
+  }
+
+  .search-field,
+  .household-field,
+  .status-field {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .advanced-row {
+    flex-direction: column;
+  }
+
+  .advanced-row mat-form-field {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}

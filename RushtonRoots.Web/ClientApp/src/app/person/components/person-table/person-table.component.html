@@ -1,0 +1,170 @@
+<div class="table-container">
+  <!-- Desktop Table View -->
+  <div class="desktop-view">
+    <table mat-table 
+           [dataSource]="dataSource" 
+           matSort 
+           (matSortChange)="onSortChange($event)"
+           class="person-table">
+      
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select" *ngIf="showSelection">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRows() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? onSelectionToggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                        [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let person">
+          <div class="person-name">
+            <img *ngIf="person.photoUrl" 
+                 [src]="person.photoUrl" 
+                 [alt]="person.fullName"
+                 class="person-avatar">
+            <div class="person-avatar-placeholder" *ngIf="!person.photoUrl">
+              {{ person.firstName.charAt(0) }}{{ person.lastName.charAt(0) }}
+            </div>
+            <span class="name-text">{{ person.fullName }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Household Column -->
+      <ng-container matColumnDef="householdName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Household</th>
+        <td mat-cell *matCellDef="let person">{{ person.householdName }}</td>
+      </ng-container>
+
+      <!-- Date of Birth Column -->
+      <ng-container matColumnDef="dateOfBirth">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date of Birth</th>
+        <td mat-cell *matCellDef="let person">{{ formatDate(person.dateOfBirth) }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="isDeceased">Status</th>
+        <td mat-cell *matCellDef="let person">
+          <mat-chip *ngIf="person.isDeceased" class="status-chip deceased">
+            Deceased
+            <span *ngIf="person.dateOfDeath" class="death-date">
+              ({{ formatDate(person.dateOfDeath) }})
+            </span>
+          </mat-chip>
+          <mat-chip *ngIf="!person.isDeceased" class="status-chip living">
+            Living
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions" *ngIf="showActions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let person">
+          <button mat-icon-button 
+                  (click)="onView(person)" 
+                  matTooltip="View details"
+                  color="primary">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button 
+                  *ngIf="canEdit"
+                  (click)="onEdit(person)" 
+                  matTooltip="Edit"
+                  color="accent">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button 
+                  *ngIf="canDelete"
+                  (click)="onDelete(person)" 
+                  matTooltip="Delete"
+                  color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- No Data Row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+          No people found. Try adjusting your search filters.
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Mobile Card View -->
+  <div class="mobile-view">
+    <mat-card *ngFor="let person of dataSource.data" class="person-card">
+      <mat-card-header>
+        <div mat-card-avatar>
+          <img *ngIf="person.photoUrl" 
+               [src]="person.photoUrl" 
+               [alt]="person.fullName"
+               class="card-avatar">
+          <div class="card-avatar-placeholder" *ngIf="!person.photoUrl">
+            {{ person.firstName.charAt(0) }}{{ person.lastName.charAt(0) }}
+          </div>
+        </div>
+        <mat-card-title>{{ person.fullName }}</mat-card-title>
+        <mat-card-subtitle>{{ person.householdName }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="card-info">
+          <div class="info-row">
+            <mat-icon>cake</mat-icon>
+            <span>{{ formatDate(person.dateOfBirth) }}</span>
+          </div>
+          <div class="info-row">
+            <mat-chip *ngIf="person.isDeceased" class="status-chip deceased">
+              Deceased ({{ formatDate(person.dateOfDeath) }})
+            </mat-chip>
+            <mat-chip *ngIf="!person.isDeceased" class="status-chip living">
+              Living
+            </mat-chip>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions *ngIf="showActions">
+        <button mat-button (click)="onView(person)" color="primary">
+          <mat-icon>visibility</mat-icon> View
+        </button>
+        <button mat-button *ngIf="canEdit" (click)="onEdit(person)" color="accent">
+          <mat-icon>edit</mat-icon> Edit
+        </button>
+        <button mat-button *ngIf="canDelete" (click)="onDelete(person)" color="warn">
+          <mat-icon>delete</mat-icon> Delete
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <div *ngIf="dataSource.data.length === 0" class="no-data-mobile">
+      <mat-icon>search_off</mat-icon>
+      <p>No people found. Try adjusting your search filters.</p>
+    </div>
+  </div>
+
+  <!-- Paginator -->
+  <mat-paginator *ngIf="showPagination"
+                 [pageSize]="pageSize"
+                 [pageSizeOptions]="pageSizeOptions"
+                 (page)="onPageChange($event)"
+                 showFirstLastButtons>
+  </mat-paginator>
+</div>

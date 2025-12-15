@@ -1,0 +1,142 @@
+.table-container {
+  width: 100%;
+}
+
+.person-table {
+  width: 100%;
+}
+
+.person-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.person-avatar,
+.person-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.person-avatar-placeholder {
+  background-color: #2e7d32;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.name-text {
+  font-weight: 500;
+}
+
+.status-chip {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  height: auto !important;
+}
+
+.status-chip.living {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.status-chip.deceased {
+  background-color: #757575 !important;
+  color: white !important;
+}
+
+.death-date {
+  margin-left: 0.25rem;
+  font-size: 0.7rem;
+}
+
+.no-data {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+/* Mobile View */
+.mobile-view {
+  display: none;
+}
+
+.person-card {
+  margin-bottom: 1rem;
+}
+
+.card-avatar,
+.card-avatar-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.card-avatar-placeholder {
+  background-color: #2e7d32;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.card-info {
+  margin-top: 0.5rem;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.info-row mat-icon {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.no-data-mobile {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.no-data-mobile mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .desktop-view {
+    display: none;
+  }
+
+  .mobile-view {
+    display: block;
+  }
+}
+
+/* Desktop View (hide mobile on larger screens) */
+@media (min-width: 769px) {
+  .mobile-view {
+    display: none;
+  }
+
+  .desktop-view {
+    display: block;
+  }
+}
