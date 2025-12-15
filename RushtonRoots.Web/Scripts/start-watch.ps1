@@ -27,16 +27,25 @@ if (-not (Test-Path $clientAppDir)) {
 
 Set-Location $clientAppDir
 
-# Check if npm watch is already running
+# Check if npm watch is already running by checking for active node process running npm watch
+$existingProcess = $null
 if (Test-Path $pidFile) {
-    $pid = Get-Content $pidFile
-    $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
-    if ($process -and $process.ProcessName -eq "node") {
-        Write-Host "npm watch is already running (PID: $pid)"
-        exit 0
+    $pid = Get-Content $pidFile -ErrorAction SilentlyContinue
+    if ($pid) {
+        $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
+        if ($process) {
+            # Check if it's actually running npm watch by checking the command line
+            # TODO: Consider using Get-WmiObject or Get-Process.MainModule.FileName for better performance
+            $commandLine = (Get-CimInstance Win32_Process -Filter "ProcessId = $pid" -ErrorAction SilentlyContinue).CommandLine
+            if ($commandLine -and $commandLine -match "npm.*watch") {
+                $existingProcess = $process
+                Write-Host "npm watch is already running (PID: $pid)"
+                exit 0
+            }
+        }
     }
-    # Clean up stale PID file
-    Remove-Item $pidFile -Force
+    # Clean up stale PID file if process is not running or not the right process
+    Remove-Item $pidFile -Force -ErrorAction SilentlyContinue
 }
 
 # Run npm install if node_modules doesn't exist

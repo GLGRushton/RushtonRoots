@@ -49,7 +49,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # Angular
-/RushtonRoots.Web/wwwroot/dist/
+# The dist folder is preserved for deployment but its contents are ignored.
+# Only .gitkeep is committed to ensure the directory structure exists.
+/RushtonRoots.Web/wwwroot/dist/*
+!/RushtonRoots.Web/wwwroot/dist/.gitkeep
 /RushtonRoots.Web/ClientApp/dist/
 /RushtonRoots.Web/ClientApp/.angular/cache
 
