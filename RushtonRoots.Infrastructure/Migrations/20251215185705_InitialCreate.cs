@@ -2178,20 +2178,6 @@ namespace RushtonRoots.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Partnerships_PersonAId_PersonBId",
-                table: "Partnerships",
-                columns: new[] { "PersonAId", "PersonBId" },
-                unique: true,
-                filter: "[PersonAId] < [PersonBId]");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Partnerships_PersonBId_PersonAId",
-                table: "Partnerships",
-                columns: new[] { "PersonBId", "PersonAId" },
-                unique: true,
-                filter: "[PersonBId] < [PersonAId]");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_People_HouseholdId",
                 table: "People",
                 column: "HouseholdId");
