@@ -1,0 +1,111 @@
+<mat-card class="search-card">
+  <mat-card-content>
+    <form [formGroup]="searchForm">
+      <!-- Basic Search Row -->
+      <div class="search-row">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search by name</mat-label>
+          <input matInput 
+                 formControlName="searchTerm" 
+                 placeholder="Enter first or last name..."
+                 type="text">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="household-field">
+          <mat-label>Household</mat-label>
+          <mat-select formControlName="householdId">
+            <mat-option [value]="null">All Households</mat-option>
+            <mat-option *ngFor="let household of households" [value]="household.id">
+              {{ household.householdName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="status-field">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="isDeceased">
+            <mat-option [value]="null">All</mat-option>
+            <mat-option [value]="false">Living</mat-option>
+            <mat-option [value]="true">Deceased</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-icon-button 
+                type="button"
+                (click)="toggleAdvancedFilters()"
+                [color]="showAdvancedFilters ? 'primary' : undefined"
+                matTooltip="Advanced filters">
+          <mat-icon>filter_list</mat-icon>
+        </button>
+
+        <button mat-icon-button 
+                type="button"
+                (click)="clearFilters()"
+                *ngIf="activeFilterCount > 0"
+                color="warn"
+                matTooltip="Clear all filters">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+
+      <!-- Advanced Filters (Collapsible) -->
+      <div class="advanced-filters" *ngIf="showAdvancedFilters">
+        <mat-divider class="filter-divider"></mat-divider>
+        
+        <div class="advanced-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Surname</mat-label>
+            <input matInput formControlName="surname" placeholder="Filter by last name only">
+          </mat-form-field>
+        </div>
+
+        <div class="advanced-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Birth Date From</mat-label>
+            <input matInput [matDatepicker]="birthFromPicker" formControlName="birthDateFrom">
+            <mat-datepicker-toggle matIconSuffix [for]="birthFromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #birthFromPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Birth Date To</mat-label>
+            <input matInput [matDatepicker]="birthToPicker" formControlName="birthDateTo">
+            <mat-datepicker-toggle matIconSuffix [for]="birthToPicker"></mat-datepicker-toggle>
+            <mat-datepicker #birthToPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="advanced-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Death Date From</mat-label>
+            <input matInput [matDatepicker]="deathFromPicker" formControlName="deathDateFrom">
+            <mat-datepicker-toggle matIconSuffix [for]="deathFromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #deathFromPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Death Date To</mat-label>
+            <input matInput [matDatepicker]="deathToPicker" formControlName="deathDateTo">
+            <mat-datepicker-toggle matIconSuffix [for]="deathToPicker"></mat-datepicker-toggle>
+            <mat-datepicker #deathToPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Active Filter Chips -->
+      <div class="filter-chips" *ngIf="activeFilterCount > 0">
+        <mat-chip-set>
+          <mat-chip *ngFor="let chip of getActiveFilterChips()" 
+                    (removed)="removeFilter(chip.key)">
+            {{ chip.label }}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </mat-chip-set>
+        <span class="filter-count">{{ activeFilterCount }} filter(s) active</span>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
