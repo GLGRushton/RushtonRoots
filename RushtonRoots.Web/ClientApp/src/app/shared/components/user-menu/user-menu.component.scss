@@ -1,0 +1,184 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu-trigger {
+  color: white;
+  padding: $spacing-xs $spacing-md;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  ::ng-deep .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.user-display {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: $primary;
+  box-shadow: $shadow-sm;
+}
+
+.avatar-initial {
+  font-size: 16px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+
+  @include respond-to('mobile') {
+    display: none;
+  }
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.user-role {
+  font-size: 11px;
+  opacity: 0.9;
+  line-height: 1.2;
+
+  &.admin {
+    color: #ffeb3b;
+    font-weight: 600;
+  }
+
+  &.household-admin {
+    color: #a5d6a7;
+    font-weight: 600;
+  }
+}
+
+.dropdown-icon {
+  @include respond-to('mobile') {
+    display: none;
+  }
+}
+
+// Menu Dropdown Styles
+::ng-deep .user-dropdown {
+  margin-top: $spacing-sm;
+  border-radius: 12px;
+  box-shadow: $shadow-lg;
+
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+}
+
+.menu-header {
+  padding: $spacing-md !important;
+  cursor: default !important;
+
+  &:hover {
+    background: transparent !important;
+  }
+}
+
+.menu-header-content {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.large-avatar {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, $primary 0%, $accent 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+  box-shadow: $shadow-md;
+}
+
+.menu-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.menu-user-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 16px;
+  color: $text-primary;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  
+  &[data-role="admin"] {
+    background: rgba(211, 47, 47, 0.1);
+    color: #d32f2f;
+  }
+
+  &[data-role="household-admin"] {
+    background: rgba(102, 187, 106, 0.1);
+    color: #388e3c;
+  }
+
+  &[data-role="member"] {
+    background: rgba(46, 125, 50, 0.1);
+    color: $primary;
+  }
+}
+
+::ng-deep .mat-mdc-menu-item {
+  display: flex !important;
+  align-items: center;
+  gap: $spacing-md;
+  min-height: 48px;
+  padding: 0 $spacing-md;
+
+  .mat-icon {
+    margin-right: 0 !important;
+    color: $text-secondary;
+  }
+
+  &:hover .mat-icon {
+    color: $primary;
+  }
+}
+
+::ng-deep .mat-divider {
+  margin: $spacing-xs 0;
+}

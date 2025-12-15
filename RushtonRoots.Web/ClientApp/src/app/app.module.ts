@@ -19,6 +19,9 @@ import { PageHeaderComponent } from './shared/components/page-header/page-header
 import { EmptyStateComponent } from './shared/components/empty-state/empty-state.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 import { BreadcrumbComponent } from './shared/components/breadcrumb/breadcrumb.component';
+import { HeaderComponent } from './shared/components/header/header.component';
+import { NavigationComponent } from './shared/components/navigation/navigation.component';
+import { UserMenuComponent } from './shared/components/user-menu/user-menu.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +72,16 @@ export class AppModule {
 
     const breadcrumbElement = createCustomElement(BreadcrumbComponent, { injector: this.injector });
     customElements.define('app-breadcrumb', breadcrumbElement);
+
+    // Register Phase 2.1 Header & Navigation components as Angular Elements
+    const headerElement = createCustomElement(HeaderComponent, { injector: this.injector });
+    customElements.define('app-header', headerElement);
+
+    const navigationElement = createCustomElement(NavigationComponent, { injector: this.injector });
+    customElements.define('app-navigation', navigationElement);
+
+    const userMenuElement = createCustomElement(UserMenuComponent, { injector: this.injector });
+    customElements.define('app-user-menu', userMenuElement);
   }
 
   ngDoBootstrap() {

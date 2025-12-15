@@ -11,6 +11,9 @@ import { EmptyStateComponent } from './components/empty-state/empty-state.compon
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { HeaderComponent } from './components/header/header.component';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { UserMenuComponent } from './components/user-menu/user-menu.component';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -92,7 +95,10 @@ const materialModules = [
     EmptyStateComponent,
     ConfirmDialogComponent,
     LoadingSpinnerComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    HeaderComponent,
+    NavigationComponent,
+    UserMenuComponent
   ],
   imports: [
     CommonModule,
@@ -110,7 +116,10 @@ const materialModules = [
     EmptyStateComponent,
     ConfirmDialogComponent,
     LoadingSpinnerComponent,
-    BreadcrumbComponent
+    BreadcrumbComponent,
+    HeaderComponent,
+    NavigationComponent,
+    UserMenuComponent
   ]
 })
 export class SharedModule { }

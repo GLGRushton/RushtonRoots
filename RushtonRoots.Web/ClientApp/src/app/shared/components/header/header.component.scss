@@ -1,0 +1,174 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, $primary 0%, #388e3c 50%, #43a047 100%);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  padding: 0;
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 $spacing-md;
+  gap: $spacing-md;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.menu-button {
+  display: none;
+  color: white;
+
+  @include respond-to('mobile') {
+    display: inline-flex;
+  }
+}
+
+.site-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+
+  @include respond-to('mobile') {
+    font-size: 20px;
+  }
+}
+
+.title-link {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.leaf-icon {
+  font-size: 32px;
+
+  @include respond-to('mobile') {
+    font-size: 24px;
+  }
+}
+
+.title-text {
+  @include respond-to('mobile') {
+    display: none;
+  }
+
+  @include respond-to('tablet') {
+    display: inline;
+  }
+}
+
+.desktop-nav {
+  flex: 1;
+  display: flex;
+
+  @include respond-to('mobile') {
+    display: none;
+  }
+}
+
+.actions-section {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.search-container {
+  @include respond-to('mobile') {
+    display: none;
+  }
+}
+
+.search-field {
+  width: 300px;
+  
+  ::ng-deep {
+    .mat-mdc-form-field-wrapper {
+      padding-bottom: 0;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+    }
+
+    .mat-mdc-form-field-infix {
+      padding: 8px 0;
+      min-height: auto;
+    }
+
+    input {
+      color: white;
+      caret-color: white;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+
+    .mat-icon {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .mdc-notched-outline {
+      display: none;
+    }
+  }
+}
+
+.notification-button {
+  color: white;
+}
+
+.login-link {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.mobile-nav {
+  width: 100%;
+  padding: $spacing-md 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: $spacing-md;
+  display: none;
+
+  @include respond-to('mobile') {
+    display: block;
+  }
+}
+
+// Ensure proper Material toolbar height
+::ng-deep .mat-toolbar-row,
+::ng-deep .mat-toolbar-single-row {
+  height: auto;
+  padding: $spacing-md 0;
+}
