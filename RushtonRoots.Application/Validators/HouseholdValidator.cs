@@ -25,19 +25,7 @@ public class HouseholdValidator : IHouseholdValidator
             result.Errors.Add("Household name is required.");
         }
 
-        if (request.AnchorPersonId.HasValue)
-        {
-            if (request.AnchorPersonId.Value <= 0)
-            {
-                result.IsValid = false;
-                result.Errors.Add("Valid anchor person ID is required.");
-            }
-            else if (!await _personRepository.ExistsAsync(request.AnchorPersonId.Value))
-            {
-                result.IsValid = false;
-                result.Errors.Add("Anchor person does not exist.");
-            }
-        }
+        await ValidateAnchorPersonIdAsync(request.AnchorPersonId, result);
 
         return result;
     }
@@ -58,20 +46,25 @@ public class HouseholdValidator : IHouseholdValidator
             result.Errors.Add("Household name is required.");
         }
 
-        if (request.AnchorPersonId.HasValue)
+        await ValidateAnchorPersonIdAsync(request.AnchorPersonId, result);
+
+        return result;
+    }
+
+    private async Task ValidateAnchorPersonIdAsync(int? anchorPersonId, ValidationResult result)
+    {
+        if (anchorPersonId.HasValue)
         {
-            if (request.AnchorPersonId.Value <= 0)
+            if (anchorPersonId.Value <= 0)
             {
                 result.IsValid = false;
                 result.Errors.Add("Valid anchor person ID is required.");
             }
-            else if (!await _personRepository.ExistsAsync(request.AnchorPersonId.Value))
+            else if (!await _personRepository.ExistsAsync(anchorPersonId.Value))
             {
                 result.IsValid = false;
                 result.Errors.Add("Anchor person does not exist.");
             }
         }
-
-        return result;
     }
 }
