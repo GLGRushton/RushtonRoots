@@ -35,6 +35,7 @@ if (Test-Path $pidFile) {
         $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
         if ($process) {
             # Check if it's actually running npm watch by checking the command line
+            # TODO: Consider using Get-WmiObject or Get-Process.MainModule.FileName for better performance
             $commandLine = (Get-CimInstance Win32_Process -Filter "ProcessId = $pid" -ErrorAction SilentlyContinue).CommandLine
             if ($commandLine -and $commandLine -match "npm.*watch") {
                 $existingProcess = $process
