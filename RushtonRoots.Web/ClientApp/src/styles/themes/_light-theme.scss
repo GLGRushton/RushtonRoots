@@ -1,0 +1,96 @@
+// RushtonRoots Light Theme (Material Design)
+@use '@angular/material' as mat;
+
+// Define the RushtonRoots color palette
+$rushton-roots-primary: (
+  50: #e8f5e9,
+  100: #c8e6c9,
+  200: #a5d6a7,
+  300: #81c784,
+  400: #66bb6a,
+  500: #4caf50,
+  600: #43a047,
+  700: #388e3c,
+  800: #2e7d32,
+  900: #1b5e20,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+$rushton-roots-accent: (
+  50: #f1f8e9,
+  100: #dcedc8,
+  200: #c5e1a5,
+  300: #aed581,
+  400: #9ccc65,
+  500: #8bc34a,
+  600: #7cb342,
+  700: #689f38,
+  800: #558b2f,
+  900: #33691e,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: rgba(black, 0.87),
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+$rushton-roots-warn: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #f44336,
+  600: #e53935,
+  700: #d32f2f,
+  800: #c62828,
+  900: #b71c1c,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  )
+);
+
+// Create the theme object
+$rushton-roots-primary-palette: mat.define-palette($rushton-roots-primary, 800, 700, 900);
+$rushton-roots-accent-palette: mat.define-palette($rushton-roots-accent, 600);
+$rushton-roots-warn-palette: mat.define-palette($rushton-roots-warn, 700);
+
+// Define the light theme
+$rushton-roots-light-theme: mat.define-light-theme((
+  color: (
+    primary: $rushton-roots-primary-palette,
+    accent: $rushton-roots-accent-palette,
+    warn: $rushton-roots-warn-palette,
+  ),
+  typography: mat.define-typography-config(
+    $font-family: 'Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif',
+  ),
+  density: 0,
+));

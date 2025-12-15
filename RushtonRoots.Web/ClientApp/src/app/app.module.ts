@@ -1,5 +1,6 @@
 import { NgModule, Injector } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { createCustomElement } from '@angular/elements';
@@ -7,17 +8,22 @@ import { createCustomElement } from '@angular/elements';
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { FamilyTreeComponent } from './family-tree/family-tree.component';
+import { StyleGuideComponent } from './style-guide/style-guide.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     WelcomeComponent,
-    FamilyTreeComponent
+    FamilyTreeComponent,
+    StyleGuideComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    SharedModule
   ],
   providers: []
 })
@@ -29,6 +35,9 @@ export class AppModule {
 
     const familyTreeElement = createCustomElement(FamilyTreeComponent, { injector: this.injector });
     customElements.define('app-family-tree', familyTreeElement);
+
+    const styleGuideElement = createCustomElement(StyleGuideComponent, { injector: this.injector });
+    customElements.define('app-style-guide', styleGuideElement);
   }
 
   ngDoBootstrap() {
