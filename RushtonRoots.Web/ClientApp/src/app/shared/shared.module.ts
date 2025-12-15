@@ -14,6 +14,8 @@ import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.componen
 import { HeaderComponent } from './components/header/header.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { PageLayoutComponent } from './components/page-layout/page-layout.component';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -98,7 +100,9 @@ const materialModules = [
     BreadcrumbComponent,
     HeaderComponent,
     NavigationComponent,
-    UserMenuComponent
+    UserMenuComponent,
+    FooterComponent,
+    PageLayoutComponent
   ],
   imports: [
     CommonModule,
@@ -119,7 +123,9 @@ const materialModules = [
     BreadcrumbComponent,
     HeaderComponent,
     NavigationComponent,
-    UserMenuComponent
+    UserMenuComponent,
+    FooterComponent,
+    PageLayoutComponent
   ]
 })
 export class SharedModule { }

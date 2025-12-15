@@ -1,0 +1,89 @@
+@import '../../../../styles/variables';
+
+.page-container {
+  width: 100%;
+  margin: 0 auto;
+  min-height: 400px;
+
+  // Max-width variations
+  &.max-width-narrow {
+    max-width: 800px;
+  }
+
+  &.max-width-medium {
+    max-width: 1200px;
+  }
+
+  &.max-width-wide {
+    max-width: 1400px;
+  }
+
+  &.max-width-full {
+    max-width: 100%;
+  }
+
+  // Padding variations
+  &.padding-small {
+    padding: $spacing-md;
+
+    @media (max-width: $breakpoint-sm) {
+      padding: $spacing-sm;
+    }
+  }
+
+  &.padding-medium {
+    padding: $spacing-lg $spacing-md;
+
+    @media (max-width: $breakpoint-sm) {
+      padding: $spacing-md $spacing-sm;
+    }
+  }
+
+  &.padding-large {
+    padding: $spacing-xl $spacing-lg;
+
+    @media (max-width: $breakpoint-sm) {
+      padding: $spacing-lg $spacing-md;
+    }
+  }
+
+  // Background variations
+  &.background-gradient {
+    background: linear-gradient(to bottom, #e8f5e9, #f1f8e9);
+  }
+
+  &.background-pattern {
+    background: linear-gradient(to bottom, #e8f5e9, #f1f8e9);
+    background-image: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(46, 125, 50, 0.02) 10px,
+        rgba(46, 125, 50, 0.02) 20px
+      );
+  }
+
+  .page-content {
+    // Ensure content has proper spacing
+    > * + * {
+      margin-top: $spacing-lg;
+    }
+  }
+}
+
+// Page transition animations
+.animate-page-enter {
+  animation: pageEnter 0.4s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

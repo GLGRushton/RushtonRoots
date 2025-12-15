@@ -12,44 +12,23 @@
             padding: 0;
             background: linear-gradient(to bottom, #e8f5e9, #f1f8e9);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         main {
+            flex: 1 0 auto;
             max-width: 1400px;
             margin: 0 auto;
             padding: 30px 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        footer {
-            background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #388e3c 100%);
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-            margin-top: 60px;
-            box-shadow: 0 -4px 12px rgba(46, 125, 50, 0.2);
-        }
-
-        footer p {
-            margin: 10px 0;
-            opacity: 0.95;
-        }
-
-        footer .footer-links {
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        footer .footer-links a {
-            color: #a5d6a7;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        footer .footer-links a:hover {
-            color: white;
+        @@media (max-width: 600px) {
+            main {
+                padding: 20px 16px;
+            }
         }
     </style>
 </head>
@@ -75,15 +54,8 @@
         @RenderBody()
     </main>
     
-    <footer>
-        <p>&copy; @DateTime.Now.Year - Rushton Roots - Preserving Family Heritage</p>
-        <div class="footer-links">
-            <a href="/">Home</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
-            <a href="#">Privacy</a>
-        </div>
-    </footer>
+    @* Angular Footer Component - Phase 2.2 *@
+    <app-footer></app-footer>
     
     @* Angular Elements Scripts *@
     <script src="~/dist/runtime.js"></script>
