@@ -1,0 +1,40 @@
+// RushtonRoots Material Theme Configuration
+@use '@angular/material' as mat;
+@use '../themes/light-theme' as light;
+
+// Include the Angular Material core styles
+@include mat.core();
+
+// Apply the light theme
+@include mat.all-component-themes(light.$rushton-roots-light-theme);
+
+// Custom Material overrides for RushtonRoots
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button {
+  border-radius: 8px !important;
+}
+
+.mat-mdc-card {
+  border-radius: 12px !important;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+// Material Icons
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}

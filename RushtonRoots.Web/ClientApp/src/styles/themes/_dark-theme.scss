@@ -1,0 +1,18 @@
+// RushtonRoots Dark Theme (Material Design) - For future use
+@use '@angular/material' as mat;
+
+// Use the same color palettes as light theme
+@use './light-theme' as light;
+
+// Define the dark theme
+$rushton-roots-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: light.$rushton-roots-primary-palette,
+    accent: light.$rushton-roots-accent-palette,
+    warn: light.$rushton-roots-warn-palette,
+  ),
+  typography: mat.define-typography-config(
+    $font-family: 'Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif',
+  ),
+  density: 0,
+));

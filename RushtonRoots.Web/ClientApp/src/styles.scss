@@ -1,0 +1,97 @@
+// RushtonRoots Global Styles
+
+// Include Angular Material core styles
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+// Import custom SCSS partials
+@import 'styles/variables';
+@import 'styles/mixins';
+@import 'styles/typography';
+@import 'styles/layout';
+@import 'styles/animations';
+@import 'styles/utilities';
+
+// Global resets and base styles
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-family;
+  font-size: $font-size-base;
+  line-height: $line-height-normal;
+  color: $text-primary;
+  background: linear-gradient(to bottom, #e8f5e9, #f1f8e9);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Focus visible improvements
+*:focus-visible {
+  outline: 2px solid $primary;
+  outline-offset: 2px;
+}
+
+// Accessibility - Skip to main content link
+.skip-to-main {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background: $primary;
+  color: white;
+  padding: $spacing-sm $spacing-md;
+  z-index: $z-index-tooltip;
+  
+  &:focus {
+    top: 0;
+  }
+}
+
+// Override Material theme colors with RushtonRoots colors
+:root {
+  --mdc-theme-primary: #2e7d32;
+  --mdc-theme-secondary: #66bb6a;
+  --mdc-theme-error: #d32f2f;
+  --mat-app-primary: #2e7d32;
+  --mat-app-secondary: #66bb6a;
+  --mat-app-error: #d32f2f;
+}
+
+// Custom Material component overrides
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button {
+  border-radius: 8px !important;
+}
+
+.mat-mdc-card {
+  border-radius: 12px !important;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+// Override primary button colors
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-fab.mat-primary,
+.mat-mdc-mini-fab.mat-primary {
+  --mdc-filled-button-container-color: #2e7d32;
+  --mdc-protected-button-container-color: #2e7d32;
+}
+
+.mat-mdc-raised-button.mat-primary:hover,
+.mat-mdc-unelevated-button.mat-primary:hover {
+  --mdc-filled-button-container-color: #1b5e20;
+  --mdc-protected-button-container-color: #1b5e20;
+}
+
+
+
