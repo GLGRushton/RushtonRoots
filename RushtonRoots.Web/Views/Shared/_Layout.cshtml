@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Rushton Roots</title>
-    <link rel="stylesheet" href="~/styles.css" />
+    <link rel="stylesheet" href="~/dist/styles.css" />
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -86,9 +86,9 @@
     </footer>
     
     @* Angular Elements Scripts *@
-    <script src="~/runtime.js"></script>
-    <script src="~/polyfills.js"></script>
-    <script src="~/main.js"></script>
+    <script src="~/dist/runtime.js"></script>
+    <script src="~/dist/polyfills.js"></script>
+    <script src="~/dist/main.js"></script>
     
     @await RenderSectionAsync("Scripts", required: false)
 </body>

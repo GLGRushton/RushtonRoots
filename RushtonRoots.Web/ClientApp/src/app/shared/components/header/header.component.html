@@ -35,7 +35,7 @@
           <input 
             matInput 
             placeholder="Search..." 
-            (keyup.enter)="onSearch($event.target.value)"
+            (keyup.enter)="onSearch(($any($event.target)).value)"
             aria-label="Global search">
         </mat-form-field>
       </div>
