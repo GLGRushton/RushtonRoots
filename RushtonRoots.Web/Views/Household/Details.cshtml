@@ -27,7 +27,14 @@
 
                 <dt class="col-sm-3">Anchor Person</dt>
                 <dd class="col-sm-9">
-                    <a asp-controller="Person" asp-action="Details" asp-route-id="@Model.AnchorPersonId">@Model.AnchorPersonName</a>
+                    @if (Model.AnchorPersonId.HasValue)
+                    {
+                        <a asp-controller="Person" asp-action="Details" asp-route-id="@Model.AnchorPersonId">@Model.AnchorPersonName</a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Not set</span>
+                    }
                 </dd>
 
                 <dt class="col-sm-3">Members</dt>

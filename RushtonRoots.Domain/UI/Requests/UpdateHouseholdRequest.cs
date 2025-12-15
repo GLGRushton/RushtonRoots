@@ -14,6 +14,5 @@ public class UpdateHouseholdRequest
     [StringLength(200)]
     public string HouseholdName { get; set; } = string.Empty;
     
-    [Required]
-    public int AnchorPersonId { get; set; }
+    public int? AnchorPersonId { get; set; }
 }
