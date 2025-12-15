@@ -103,15 +103,11 @@ export class PersonIndexComponent implements OnInit {
     if (action.type === 'delete') {
       // Handle delete confirmation
       if (confirm(`Are you sure you want to delete ${action.person.fullName}?`)) {
-        // In a real app, you'd call an API to delete
-        console.log('Delete person:', action.personId);
+        // Using window.location.href because this component is used as an Angular Element
+        // within a traditional MVC application (not a full SPA)
         window.location.href = `/Person/Delete/${action.personId}`;
       }
     }
-  }
-
-  onExportCSV(): void {
-    // This will be handled by the PersonTableComponent
   }
 
   exportToCSV(): void {
@@ -120,6 +116,8 @@ export class PersonIndexComponent implements OnInit {
   }
 
   navigateToCreate(): void {
+    // Using window.location.href because this component is used as an Angular Element
+    // within a traditional MVC application (not a full SPA)
     window.location.href = '/Person/Create';
   }
 

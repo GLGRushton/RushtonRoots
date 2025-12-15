@@ -91,11 +91,15 @@ export class PersonTableComponent implements OnInit {
 
   onView(person: PersonTableRow): void {
     this.actionTriggered.emit({ type: 'view', personId: person.id, person });
+    // Using window.location.href because this component is used as an Angular Element
+    // within a traditional MVC application (not a full SPA)
     window.location.href = `/Person/Details/${person.id}`;
   }
 
   onEdit(person: PersonTableRow): void {
     this.actionTriggered.emit({ type: 'edit', personId: person.id, person });
+    // Using window.location.href because this component is used as an Angular Element
+    // within a traditional MVC application (not a full SPA)
     window.location.href = `/Person/Edit/${person.id}`;
   }
 
