@@ -1,0 +1,23 @@
+<mat-card class="person-card">
+  <mat-card-header>
+    <div mat-card-avatar class="person-avatar">
+      <img *ngIf="photoUrl" [src]="photoUrl" [alt]="fullName" />
+      <div *ngIf="!photoUrl" class="avatar-placeholder">
+        {{ initials }}
+      </div>
+    </div>
+    <mat-card-title>{{ fullName }}</mat-card-title>
+    <mat-card-subtitle>{{ lifeSpan }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-actions *ngIf="showActions">
+    <button mat-button color="primary" (click)="onViewDetails()" aria-label="View details">
+      <mat-icon>visibility</mat-icon>
+      View
+    </button>
+    <button mat-button (click)="onEdit()" aria-label="Edit person">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+  </mat-card-actions>
+</mat-card>

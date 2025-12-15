@@ -1,0 +1,52 @@
+@import '../../../../styles/variables';
+
+.person-card {
+  max-width: 400px;
+  margin: $spacing-md;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
+
+  .person-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $primary-light;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-placeholder {
+      font-size: 24px;
+      font-weight: $font-weight-bold;
+      color: white;
+    }
+  }
+
+  mat-card-title {
+    font-size: 1.25rem;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+  }
+
+  mat-card-subtitle {
+    color: $text-secondary;
+    font-size: 0.875rem;
+  }
+
+  mat-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: $spacing-sm $spacing-md;
+  }
+}

@@ -1,5 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+// Component imports
+import { PersonCardComponent } from './components/person-card/person-card.component';
+import { PersonListComponent } from './components/person-list/person-list.component';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { EmptyStateComponent } from './components/empty-state/empty-state.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -69,18 +80,37 @@ const materialModules = [
 ];
 
 /**
- * SharedModule - Provides common Angular Material components
- * Import this module in any feature module that needs Material components
+ * SharedModule - Provides common Angular Material components and reusable custom components
+ * Import this module in any feature module that needs Material components or shared components
  */
 @NgModule({
-  declarations: [],
+  declarations: [
+    PersonCardComponent,
+    PersonListComponent,
+    SearchBarComponent,
+    PageHeaderComponent,
+    EmptyStateComponent,
+    ConfirmDialogComponent,
+    LoadingSpinnerComponent,
+    BreadcrumbComponent
+  ],
   imports: [
     CommonModule,
+    FormsModule,
     ...materialModules
   ],
   exports: [
     CommonModule,
-    ...materialModules
+    FormsModule,
+    ...materialModules,
+    PersonCardComponent,
+    PersonListComponent,
+    SearchBarComponent,
+    PageHeaderComponent,
+    EmptyStateComponent,
+    ConfirmDialogComponent,
+    LoadingSpinnerComponent,
+    BreadcrumbComponent
   ]
 })
 export class SharedModule { }

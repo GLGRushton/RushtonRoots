@@ -1,0 +1,64 @@
+<div class="person-list-container">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2">
+    
+    <!-- First Name Column -->
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
+      <td mat-cell *matCellDef="let person">{{ person.firstName }}</td>
+    </ng-container>
+
+    <!-- Last Name Column -->
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
+      <td mat-cell *matCellDef="let person">{{ person.lastName }}</td>
+    </ng-container>
+
+    <!-- Birth Date Column -->
+    <ng-container matColumnDef="birthDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Birth Date</th>
+      <td mat-cell *matCellDef="let person">{{ formatDate(person.birthDate) }}</td>
+    </ng-container>
+
+    <!-- Death Date Column -->
+    <ng-container matColumnDef="deathDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Death Date</th>
+      <td mat-cell *matCellDef="let person">{{ formatDate(person.deathDate) }}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let person">
+        <button mat-icon-button color="primary" (click)="onView(person.id)" 
+                aria-label="View person details" matTooltip="View">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        <button mat-icon-button (click)="onEdit(person.id)" 
+                aria-label="Edit person" matTooltip="Edit">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- No Data Row -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <app-empty-state 
+          message="No people found"
+          icon="person_off">
+        </app-empty-state>
+      </td>
+    </tr>
+  </table>
+
+  <mat-paginator 
+    *ngIf="showPagination"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    [pageSize]="10"
+    showFirstLastButtons
+    aria-label="Select page of people">
+  </mat-paginator>
+</div>

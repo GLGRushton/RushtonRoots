@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { BreadcrumbItem } from '../shared/components/breadcrumb/breadcrumb.component';
+import { PersonListItem } from '../shared/components/person-list/person-list.component';
+import { ConfirmDialogService } from '../shared/components/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-style-guide',
@@ -7,6 +10,24 @@ import { Component } from '@angular/core';
   standalone: false
 })
 export class StyleGuideComponent {
+  searchResult: string = '';
+  dialogResult: string = '';
+
+  sampleBreadcrumbs: BreadcrumbItem[] = [
+    { label: 'Home', url: '/', icon: 'home' },
+    { label: 'People', url: '/Person' },
+    { label: 'John Doe' }
+  ];
+
+  samplePeople: PersonListItem[] = [
+    { id: 1, firstName: 'John', lastName: 'Doe', birthDate: '1980-01-15', deathDate: '2050-12-31' },
+    { id: 2, firstName: 'Jane', lastName: 'Smith', birthDate: '1985-05-20' },
+    { id: 3, firstName: 'Robert', lastName: 'Johnson', birthDate: '1975-08-10', deathDate: '2045-03-25' },
+    { id: 4, firstName: 'Emily', lastName: 'Williams', birthDate: '1990-11-30' },
+    { id: 5, firstName: 'Michael', lastName: 'Brown', birthDate: '1972-02-14' },
+    { id: 6, firstName: 'Sarah', lastName: 'Davis', birthDate: '1988-07-22' },
+  ];
+
   colors = {
     primary: [
       { name: 'Primary Dark', value: '#1b5e20' },
@@ -49,4 +70,32 @@ export class StyleGuideComponent {
     'add', 'close', 'menu', 'settings', 'favorite', 'star',
     'calendar_today', 'location_on', 'photo', 'email'
   ];
+
+  constructor(private confirmDialogService: ConfirmDialogService) {}
+
+  onSearchChanged(searchTerm: string): void {
+    this.searchResult = searchTerm;
+  }
+
+  onEmptyStateAction(): void {
+    alert('Add Person action clicked!');
+  }
+
+  showConfirmDialog(): void {
+    this.confirmDialogService.confirm({
+      title: 'Confirm Action',
+      message: 'Are you sure you want to proceed with this action?',
+      confirmText: 'Yes, Proceed',
+      cancelText: 'Cancel'
+    }).subscribe(result => {
+      this.dialogResult = result ? 'Confirmed' : 'Cancelled';
+    });
+  }
+
+  showDeleteDialog(): void {
+    this.confirmDialogService.confirmDelete('John Doe', 'Person')
+      .subscribe(result => {
+        this.dialogResult = result ? 'Delete confirmed' : 'Delete cancelled';
+      });
+  }
 }

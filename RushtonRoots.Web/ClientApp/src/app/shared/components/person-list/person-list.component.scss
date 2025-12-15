@@ -1,0 +1,51 @@
+@import '../../../../styles/variables';
+
+.person-list-container {
+  width: 100%;
+  overflow: auto;
+
+  table {
+    width: 100%;
+    background: white;
+    border-radius: $border-radius-md;
+
+    th {
+      font-weight: $font-weight-medium;
+      color: $text-primary;
+      background-color: $background;
+    }
+
+    td, th {
+      padding: $spacing-md;
+    }
+
+    tr:hover {
+      background-color: rgba($primary-light, 0.05);
+    }
+  }
+
+  mat-paginator {
+    background: white;
+    border-radius: 0 0 $border-radius-md $border-radius-md;
+  }
+
+  .mat-row.mat-no-data-row {
+    height: 200px;
+    
+    .mat-cell {
+      text-align: center;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .person-list-container {
+    table {
+      td, th {
+        padding: $spacing-sm;
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
