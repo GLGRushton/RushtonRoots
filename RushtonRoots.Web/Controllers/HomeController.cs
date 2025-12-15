@@ -17,6 +17,12 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult StyleGuide()
+    {
+        ViewData["Title"] = "Style Guide";
+        return View();
+    }
+
     public IActionResult Error()
     {
         return View();
