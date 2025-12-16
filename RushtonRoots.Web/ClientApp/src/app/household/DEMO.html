@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Household Components Demo</title>
+    
+    <!-- Angular and Material Design CSS (would be in actual app) -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .demo-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .demo-header {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .demo-header h1 {
+            color: #2e7d32;
+            margin: 0 0 10px 0;
+        }
+        
+        .demo-info {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .component-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .component-section h2 {
+            color: #2e7d32;
+            border-bottom: 2px solid #4caf50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .mock-data-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🏠 Household Components Demo - Phase 4.1</h1>
+            <p class="demo-info">
+                This demo showcases the <strong>HouseholdIndexComponent</strong> and <strong>HouseholdCardComponent</strong>
+                implemented as part of Phase 4.1 of the UI Design Plan.
+            </p>
+        </div>
+
+        <div class="component-section">
+            <h2>HouseholdIndexComponent with Grid Layout</h2>
+            
+            <div class="mock-data-info">
+                <strong>📊 Mock Data:</strong> The component below would display real household data from the server.
+                In this demo, it shows the full-featured component with:
+                <ul style="margin: 10px 0 0 20px;">
+                    <li>Search by household name or anchor person</li>
+                    <li>Sort by name, member count, or dates</li>
+                    <li>Responsive grid (1-4 columns based on screen size)</li>
+                    <li>Member count badges</li>
+                    <li>Quick action buttons</li>
+                </ul>
+            </div>
+
+            <div style="border: 2px dashed #4caf50; padding: 20px; border-radius: 8px; background: #fafafa;">
+                <p style="text-align: center; color: #666; font-style: italic;">
+                    ⚡ Angular Component: <code>&lt;app-household-index&gt;</code>
+                </p>
+                <p style="text-align: center; color: #999; font-size: 14px;">
+                    This component is registered as an Angular Element and can be used in Razor views.<br>
+                    In production, this would render the actual household cards with real data.
+                </p>
+                
+                <!-- Mock visualization of the component -->
+                <div style="background: white; padding: 24px; border-radius: 4px; margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h2 style="margin: 0; color: #2e7d32; display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 36px;">🏠</span>
+                            Households
+                        </h2>
+                        <button style="background: #2e7d32; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                            ➕ Create Household
+                        </button>
+                    </div>
+                    
+                    <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                        <div style="flex: 1; border: 1px solid #ccc; border-radius: 4px; padding: 12px;">
+                            🔍 Search households...
+                        </div>
+                        <div style="min-width: 200px; border: 1px solid #ccc; border-radius: 4px; padding: 12px;">
+                            ↕️ Sort by: Name (A-Z)
+                        </div>
+                    </div>
+                    
+                    <div style="color: #666; font-size: 14px; margin-bottom: 16px;">
+                        Showing 3 of 3 households
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                        <!-- Mock Card 1 -->
+                        <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #4caf50; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">JS</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 18px;">The Smith Family</div>
+                                    <div style="color: #666; font-size: 14px;">Anchor: John Smith</div>
+                                </div>
+                                <span style="background: #2e7d32; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">5</span>
+                            </div>
+                            <div style="color: #666; font-size: 14px; margin-bottom: 8px;">
+                                👥 John, Jane, Emily and 2 more
+                            </div>
+                            <div style="color: #999; font-size: 12px; margin-bottom: 12px;">
+                                📅 Created Jan 15, 2023
+                            </div>
+                            <div style="border-top: 1px solid #e0e0e0; padding-top: 8px; display: flex; gap: 8px;">
+                                <button style="background: transparent; color: #2e7d32; border: none; cursor: pointer; font-weight: 500;">👁️ View</button>
+                                <button style="background: transparent; color: #2e7d32; border: none; cursor: pointer; font-weight: 500;">✏️ Edit</button>
+                                <button style="background: transparent; color: #666; border: none; cursor: pointer;">⋮</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Mock Card 2 -->
+                        <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #ff9800; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">SJ</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 18px;">The Johnson Family</div>
+                                    <div style="color: #666; font-size: 14px;">Anchor: Sarah Johnson</div>
+                                </div>
+                                <span style="background: #2e7d32; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">3</span>
+                            </div>
+                            <div style="color: #666; font-size: 14px; margin-bottom: 8px;">
+                                👥 Sarah, Mark, Lucas
+                            </div>
+                            <div style="color: #999; font-size: 12px; margin-bottom: 12px;">
+                                📅 Created Jun 10, 2023
+                            </div>
+                            <div style="border-top: 1px solid #e0e0e0; padding-top: 8px; display: flex; gap: 8px;">
+                                <button style="background: transparent; color: #2e7d32; border: none; cursor: pointer; font-weight: 500;">👁️ View</button>
+                                <button style="background: transparent; color: #2e7d32; border: none; cursor: pointer; font-weight: 500;">✏️ Edit</button>
+                                <button style="background: transparent; color: #666; border: none; cursor: pointer;">⋮</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Mock Card 3 -->
+                        <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #2196f3; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">RB</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 18px;">The Brown Household</div>
+                                    <div style="color: #666; font-size: 14px;">Anchor: Robert Brown</div>
+                                </div>
+                                <span style="background: #2e7d32; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">7</span>
+                            </div>
+                            <div style="color: #666; font-size: 14px; margin-bottom: 8px;">
+                                👥 Robert, Mary, Tom and 4 more
+                            </div>
+                            <div style="color: #999; font-size: 12px; margin-bottom: 12px;">
+                                📅 Created Mar 22, 2024
+                            </div>
+                            <div style="border-top: 1px solid #e0e0e0; padding-top: 8px; display: flex; gap: 8px;">
+                                <button style="background: transparent; color: #2e7d32; border: none; cursor: pointer; font-weight: 500;">👁️ View</button>
+                                <button style="background: transparent; color: #2e7d32; border: none; cursor: pointer; font-weight: 500;">✏️ Edit</button>
+                                <button style="background: transparent; color: #666; border: none; cursor: pointer;">⋮</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2>Key Features Implemented</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 4px;">
+                    <h3 style="color: #2e7d32; margin: 0 0 10px 0;">✨ HouseholdCardComponent</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #666;">
+                        <li>Material Card design with elevation</li>
+                        <li>Member count badge (MatBadge)</li>
+                        <li>Anchor person with avatar</li>
+                        <li>Member preview (first 3)</li>
+                        <li>Quick actions (View, Edit)</li>
+                        <li>More menu (Manage, Settings, Delete)</li>
+                        <li>Hover animations</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 4px;">
+                    <h3 style="color: #2e7d32; margin: 0 0 10px 0;">✨ HouseholdIndexComponent</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #666;">
+                        <li>Responsive grid (1-4 columns)</li>
+                        <li>Search functionality</li>
+                        <li>Multiple sort options</li>
+                        <li>Filter by member count, dates</li>
+                        <li>Empty state handling</li>
+                        <li>Loading state support</li>
+                        <li>Permission-based features</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 4px;">
+                    <h3 style="color: #2e7d32; margin: 0 0 10px 0;">📱 Responsive Design</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #666;">
+                        <li>Mobile: 1 column grid</li>
+                        <li>Tablet: 2 column grid</li>
+                        <li>Desktop: 3-4 column grid</li>
+                        <li>Touch-friendly buttons</li>
+                        <li>Adaptive layouts</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 4px;">
+                    <h3 style="color: #2e7d32; margin: 0 0 10px 0;">🎨 Material Design</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #666;">
+                        <li>MatCard for cards</li>
+                        <li>MatBadge for counts</li>
+                        <li>MatButton for actions</li>
+                        <li>MatMenu for dropdowns</li>
+                        <li>MatIcon throughout</li>
+                        <li>MatFormField for inputs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h2>Usage in Razor Views</h2>
+            
+            <pre style="background: #263238; color: #aed581; padding: 20px; border-radius: 4px; overflow-x: auto;"><code>@model HouseholdIndexViewModel
+
+&lt;div class="container"&gt;
+    &lt;app-household-index
+        initial-households='@Json.Serialize(Model.Households)'
+        can-edit="@(User.IsInRole("Admin") ? "true" : "false")"
+        can-delete="@(User.IsInRole("Admin") ? "true" : "false")"
+        can-create="true"&gt;
+    &lt;/app-household-index&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+
+        <div style="background: #e8f5e9; border: 2px solid #4caf50; padding: 20px; border-radius: 8px; margin-top: 20px;">
+            <h3 style="color: #2e7d32; margin: 0 0 10px 0;">✅ Phase 4.1 Complete!</h3>
+            <p style="margin: 0; color: #1b5e20;">
+                All deliverables for Phase 4.1 have been successfully implemented:
+            </p>
+            <ul style="margin: 10px 0 0 20px; color: #2e7d32;">
+                <li><strong>HouseholdIndexComponent</strong> - Full-featured index page</li>
+                <li><strong>HouseholdCardComponent</strong> - Material Design cards</li>
+                <li><strong>Grid Layout</strong> - Responsive and adaptive</li>
+                <li><strong>Search & Filters</strong> - Comprehensive filtering</li>
+                <li><strong>Sorting Options</strong> - Multiple sort criteria</li>
+                <li><strong>Member Badges</strong> - Visual count indicators</li>
+                <li><strong>Quick Actions</strong> - Context-aware buttons</li>
+                <li><strong>Documentation</strong> - README and usage examples</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
