@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Material Modules
 import { MatCardModule } from '@angular/material/card';
@@ -19,6 +19,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Components - Phase 4.1
 import { HouseholdCardComponent } from './components/household-card/household-card.component';
@@ -31,6 +34,9 @@ import { MemberInviteDialogComponent } from './components/member-invite-dialog/m
 import { HouseholdSettingsComponent } from './components/household-settings/household-settings.component';
 import { HouseholdActivityTimelineComponent } from './components/household-activity-timeline/household-activity-timeline.component';
 
+// Components - Phase 3.3 (UpdateDesigns.md)
+import { HouseholdFormComponent } from './components/household-form/household-form.component';
+
 @NgModule({
   declarations: [
     // Phase 4.1
@@ -41,11 +47,14 @@ import { HouseholdActivityTimelineComponent } from './components/household-activ
     HouseholdMembersComponent,
     MemberInviteDialogComponent,
     HouseholdSettingsComponent,
-    HouseholdActivityTimelineComponent
+    HouseholdActivityTimelineComponent,
+    // Phase 3.3 (UpdateDesigns.md)
+    HouseholdFormComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -61,7 +70,10 @@ import { HouseholdActivityTimelineComponent } from './components/household-activ
     MatChipsModule,
     MatDialogModule,
     MatSlideToggleModule,
-    MatRadioModule
+    MatRadioModule,
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    MatSnackBarModule
   ],
   exports: [
     // Phase 4.1
@@ -72,7 +84,9 @@ import { HouseholdActivityTimelineComponent } from './components/household-activ
     HouseholdMembersComponent,
     MemberInviteDialogComponent,
     HouseholdSettingsComponent,
-    HouseholdActivityTimelineComponent
+    HouseholdActivityTimelineComponent,
+    // Phase 3.3 (UpdateDesigns.md)
+    HouseholdFormComponent
   ]
 })
 export class HouseholdModule { }

@@ -2,48 +2,140 @@
 @{
     ViewData["Title"] = "Edit Household";
     var people = ViewBag.People as IEnumerable<RushtonRoots.Domain.UI.Models.PersonViewModel>;
+    var household = ViewBag.Household as RushtonRoots.Domain.UI.Models.HouseholdViewModel;
 }
 
 <div class="container mt-4">
     <h2>Edit Household</h2>
 
-    <div class="row">
-        <div class="col-md-8">
-            <form asp-action="Edit" method="post">
-                <input type="hidden" asp-for="Id" />
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <!-- Angular Component -->
+    <app-household-form
+        id="householdForm"
+        household-id="@Model.Id"
+        people-list='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            (people ?? Enumerable.Empty<RushtonRoots.Domain.UI.Models.PersonViewModel>())
+            .Select(p => new {
+                id = p.Id,
+                fullName = p.FullName,
+                firstName = p.FirstName,
+                lastName = p.LastName,
+                dateOfBirth = p.DateOfBirth?.ToString("o"),
+                photoUrl = p.PhotoUrl,
+                householdName = p.HouseholdName
+            })
+        ))'
+        initial-data='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(new {
+            id = Model.Id,
+            householdName = Model.HouseholdName,
+            description = "",
+            anchorPersonId = Model.AnchorPersonId,
+            anchorPersonName = household?.AnchorPersonName ?? "",
+            privacyLevel = "family",
+            allowMemberInvites = true,
+            allowMemberEdits = true,
+            allowMemberUploads = true
+        }))'>
+    </app-household-form>
 
-                <div class="form-group mb-3">
-                    <label asp-for="HouseholdName" class="control-label"></label>
-                    <input asp-for="HouseholdName" class="form-control" />
-                    <span asp-validation-for="HouseholdName" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="AnchorPersonId" class="control-label">Anchor Person</label>
-                    <select asp-for="AnchorPersonId" class="form-control">
-                        <option value="">Select Anchor Person</option>
-                        @if (people != null)
-                        {
-                            foreach (var person in people)
-                            {
-                                <option value="@person.Id">@person.FullName</option>
-                            }
-                        }
-                    </select>
-                    <span asp-validation-for="AnchorPersonId" class="text-danger"></span>
-                    <small class="form-text text-muted">The anchor person is the direct descendant that this household is centered around.</small>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
+    <!-- Fallback for browsers without JavaScript -->
+    <noscript>
+        <div class="alert alert-warning">
+            <strong>JavaScript Required:</strong> This form requires JavaScript to function properly.
+            Please enable JavaScript in your browser or use the simplified form below.
         </div>
-    </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="HouseholdName" class="control-label"></label>
+                        <input asp-for="HouseholdName" class="form-control" />
+                        <span asp-validation-for="HouseholdName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="AnchorPersonId" class="control-label">Anchor Person</label>
+                        <select asp-for="AnchorPersonId" class="form-control">
+                            <option value="">Select Anchor Person</option>
+                            @if (people != null)
+                            {
+                                foreach (var person in people)
+                                {
+                                    <option value="@person.Id">@person.FullName</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="AnchorPersonId" class="text-danger"></span>
+                        <small class="form-text text-muted">The anchor person is the direct descendant that this household is centered around.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </noscript>
 </div>
 
 @section Scripts {
+    <script>
+        (function() {
+            const householdForm = document.getElementById('householdForm');
+            
+            if (householdForm) {
+                // Handle form submission
+                householdForm.addEventListener('formSubmit', function(event) {
+                    const formData = event.detail;
+                    
+                    // Prepare request data
+                    const requestData = {
+                        Id: formData.id,
+                        HouseholdName: formData.householdName,
+                        AnchorPersonId: formData.anchorPersonId || null
+                    };
+                    
+                    // Get anti-forgery token
+                    const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+                    const token = tokenElement ? tokenElement.value : '';
+                    
+                    // Submit to backend
+                    fetch('@Url.Action("Edit", "Household")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': token
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Failed to update household');
+                        }
+                    })
+                    .then(data => {
+                        // Redirect to household details
+                        window.location.href = '@Url.Action("Details", "Household")/' + formData.id;
+                    })
+                    .catch(error => {
+                        console.error('Error updating household:', error);
+                        alert('An error occurred while updating the household. Please try again.');
+                    });
+                });
+                
+                // Handle form cancellation
+                householdForm.addEventListener('formCancel', function() {
+                    window.location.href = '@Url.Action("Details", "Household")/' + @Model.Id;
+                });
+            }
+        })();
+    </script>
+    
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
