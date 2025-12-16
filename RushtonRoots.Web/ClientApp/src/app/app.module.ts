@@ -77,6 +77,13 @@ import { LoginComponent } from './auth/components/login/login.component';
 import { ForgotPasswordComponent } from './auth/components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './auth/components/reset-password/reset-password.component';
 
+// Import Phase 6.2 User Profile & Settings components for Angular Elements registration
+import { UserProfileComponent } from './auth/components/user-profile/user-profile.component';
+import { NotificationPreferencesComponent } from './auth/components/notification-preferences/notification-preferences.component';
+import { PrivacySettingsComponent } from './auth/components/privacy-settings/privacy-settings.component';
+import { ConnectedAccountsComponent } from './auth/components/connected-accounts/connected-accounts.component';
+import { AccountDeletionComponent } from './auth/components/account-deletion/account-deletion.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -249,6 +256,22 @@ export class AppModule {
 
     const resetPasswordElement = createCustomElement(ResetPasswordComponent, { injector: this.injector });
     customElements.define('app-reset-password', resetPasswordElement);
+
+    // Register Phase 6.2 User Profile & Settings components as Angular Elements
+    const userProfileElement = createCustomElement(UserProfileComponent, { injector: this.injector });
+    customElements.define('app-user-profile', userProfileElement);
+
+    const notificationPreferencesElement = createCustomElement(NotificationPreferencesComponent, { injector: this.injector });
+    customElements.define('app-notification-preferences', notificationPreferencesElement);
+
+    const privacySettingsElement = createCustomElement(PrivacySettingsComponent, { injector: this.injector });
+    customElements.define('app-privacy-settings', privacySettingsElement);
+
+    const connectedAccountsElement = createCustomElement(ConnectedAccountsComponent, { injector: this.injector });
+    customElements.define('app-connected-accounts', connectedAccountsElement);
+
+    const accountDeletionElement = createCustomElement(AccountDeletionComponent, { injector: this.injector });
+    customElements.define('app-account-deletion', accountDeletionElement);
   }
 
   ngDoBootstrap() {

@@ -1,10 +1,12 @@
-# Authentication Components - Phase 6.1
+# Authentication Components - Phases 6.1 & 6.2
 
 This directory contains the authentication and account management components for RushtonRoots, built with Angular 19 and Material Design.
 
-## Components
+## Phase 6.1: Login & Registration ✅
 
-### 1. LoginComponent (`app-login`)
+### Components
+
+#### 1. LoginComponent (`app-login`)
 
 Modern login form with professional UI and comprehensive features.
 
@@ -191,6 +193,308 @@ interface ResetPasswordFormData {
 
 ---
 
+## Phase 6.2: User Profile & Settings ✅
+
+### Components
+
+#### 4. UserProfileComponent (`app-user-profile`)
+
+Comprehensive user profile and settings management with tabbed interface.
+
+**Features:**
+- Profile header with avatar, name, and completeness indicator
+- Tabbed interface for different settings sections:
+  - Profile: View and edit personal information
+  - Notifications: Manage notification preferences
+  - Privacy: Control privacy settings
+  - Connected Accounts: Manage social account connections
+  - Security: Change password and delete account
+- Avatar upload with preview and validation
+- Profile completeness calculation with suggestions
+- Edit mode with comprehensive form validation
+- Responsive design for all screen sizes
+
+**Usage in Razor Views:**
+
+```html
+<app-user-profile 
+  [userProfile]="profileData"
+  [notificationPreferences]="notifications"
+  [privacySettings]="privacy"
+  [connectedAccounts]="accounts"
+  (profileUpdate)="handleProfileUpdate($event)"
+  (avatarUpload)="handleAvatarUpload($event)"
+  (notificationsUpdate)="handleNotificationsUpdate($event)"
+  (privacyUpdate)="handlePrivacyUpdate($event)"
+  (accountConnect)="handleAccountConnect($event)"
+  (accountDisconnect)="handleAccountDisconnect($event)"
+  (accountDelete)="handleAccountDelete($event)">
+</app-user-profile>
+
+<script>
+  const userProfileElement = document.querySelector('app-user-profile');
+  
+  // Example profile data
+  const profileData = {
+    id: '123',
+    email: 'john@example.com',
+    firstName: 'John',
+    lastName: 'Doe',
+    displayName: 'John Doe',
+    bio: 'Family genealogy enthusiast',
+    avatarUrl: '/images/avatars/john.jpg',
+    phoneNumber: '+1 234 567 8900',
+    dateOfBirth: new Date('1980-01-15'),
+    location: 'Seattle, WA',
+    website: 'https://example.com',
+    createdAt: new Date('2023-01-01'),
+    updatedAt: new Date('2025-12-01')
+  };
+  
+  userProfileElement.setAttribute('userProfile', JSON.stringify(profileData));
+  
+  // Handle profile updates
+  userProfileElement.addEventListener('profileUpdate', (event) => {
+    const formData = event.detail;
+    // Submit to server
+    fetch('/Account/UpdateProfile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+  });
+  
+  // Handle avatar upload
+  userProfileElement.addEventListener('avatarUpload', (event) => {
+    const file = event.detail;
+    const formData = new FormData();
+    formData.append('avatar', file);
+    
+    fetch('/Account/UploadAvatar', {
+      method: 'POST',
+      body: formData
+    });
+  });
+</script>
+```
+
+**TypeScript Interfaces:**
+
+```typescript
+interface UserProfile {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  bio?: string;
+  avatarUrl?: string;
+  phoneNumber?: string;
+  dateOfBirth?: Date;
+  location?: string;
+  website?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ProfileEditFormData {
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  bio?: string;
+  phoneNumber?: string;
+  dateOfBirth?: Date;
+  location?: string;
+  website?: string;
+}
+```
+
+---
+
+#### 5. NotificationPreferencesComponent (`app-notification-preferences`)
+
+Manage notification settings across email, push, and in-app channels.
+
+**Features:**
+- Email notification preferences (family updates, comments, mentions, digests)
+- Push notification preferences with master toggle
+- In-app notification preferences
+- Organized by notification type
+- Save and reset to defaults functionality
+- Real-time change tracking
+
+**Standalone Usage:**
+
+```html
+<app-notification-preferences 
+  [preferences]="notificationPreferences"
+  (preferencesUpdate)="handleUpdate($event)">
+</app-notification-preferences>
+```
+
+**TypeScript Interface:**
+
+```typescript
+interface NotificationPreferences {
+  emailNotifications: {
+    familyUpdates: boolean;
+    newMembers: boolean;
+    comments: boolean;
+    mentions: boolean;
+    weeklyDigest: boolean;
+    monthlyNewsletter: boolean;
+  };
+  pushNotifications: {
+    enabled: boolean;
+    familyUpdates: boolean;
+    newMembers: boolean;
+    comments: boolean;
+    mentions: boolean;
+  };
+  inAppNotifications: {
+    familyUpdates: boolean;
+    newMembers: boolean;
+    comments: boolean;
+    mentions: boolean;
+  };
+}
+```
+
+---
+
+#### 6. PrivacySettingsComponent (`app-privacy-settings`)
+
+Control privacy and visibility settings.
+
+**Features:**
+- Profile visibility settings (Public, Family Only, Private)
+- Information visibility toggles (email, phone, DOB, location)
+- Discoverability settings (family search, search engine indexing)
+- Radio group for visibility selection with descriptions
+- Save and reset functionality
+
+**Standalone Usage:**
+
+```html
+<app-privacy-settings 
+  [settings]="privacySettings"
+  (settingsUpdate)="handleUpdate($event)">
+</app-privacy-settings>
+```
+
+**TypeScript Interface:**
+
+```typescript
+interface PrivacySettings {
+  profileVisibility: 'public' | 'family' | 'private';
+  showEmail: boolean;
+  showPhoneNumber: boolean;
+  showDateOfBirth: boolean;
+  showLocation: boolean;
+  allowSearchEngineIndexing: boolean;
+  allowFamilyMemberSearch: boolean;
+}
+```
+
+---
+
+#### 7. ConnectedAccountsComponent (`app-connected-accounts`)
+
+Manage connected social accounts for easy sign-in.
+
+**Features:**
+- Connected account cards for Google, Facebook, Microsoft
+- Connection status indicators
+- Account information display (email, connected date, last used)
+- Connect/disconnect functionality
+- Provider-specific icons and colors
+- Help section explaining benefits
+
+**Standalone Usage:**
+
+```html
+<app-connected-accounts 
+  [connectedAccounts]="accounts"
+  (accountConnect)="handleConnect($event)"
+  (accountDisconnect)="handleDisconnect($event)">
+</app-connected-accounts>
+```
+
+**TypeScript Interface:**
+
+```typescript
+interface ConnectedAccount {
+  id: string;
+  provider: string; // 'google', 'facebook', 'microsoft'
+  providerAccountId: string;
+  email: string;
+  connectedAt: Date;
+  lastUsed?: Date;
+  status: 'active' | 'revoked' | 'expired';
+}
+```
+
+---
+
+#### 8. AccountDeletionComponent (`app-account-deletion`)
+
+Handle account security and deletion flow.
+
+**Features:**
+- Security actions section (change password, 2FA, active sessions)
+- Danger zone with account deletion
+- Deletion form with reason selection
+- Confirmation fields (email and password)
+- Optional feedback textarea
+- Delete immediately checkbox (vs 30-day grace period)
+- Warning messages and confirmation flow
+
+**Standalone Usage:**
+
+```html
+<app-account-deletion 
+  [canDelete]="true"
+  (accountDelete)="handleDelete($event)">
+</app-account-deletion>
+```
+
+**TypeScript Interface:**
+
+```typescript
+interface AccountDeletionRequest {
+  reason: string; // 'privacy', 'not_useful', 'alternative', 'temporary', 'other'
+  feedback?: string;
+  confirmEmail: string;
+  confirmPassword: string;
+  transferDataTo?: string;
+  deleteImmediately: boolean;
+}
+```
+
+---
+
+## Profile Completeness Calculation
+
+The UserProfileComponent includes a profile completeness calculator that evaluates:
+
+**Weighted Fields:**
+- First Name: 15%
+- Last Name: 15%
+- Display Name: 10%
+- Bio: 15%
+- Avatar: 15%
+- Phone Number: 10%
+- Date of Birth: 10%
+- Location: 10%
+
+**Features:**
+- Visual progress bar
+- Missing fields list
+- Contextual suggestions for improvement
+- Color-coded indicator (red < 50%, yellow 50-75%, green > 75%)
+
+---
+
 ## Password Strength Calculation
 
 The ResetPasswordComponent includes a sophisticated password strength calculator that checks:
@@ -294,7 +598,8 @@ Ensure your Account controller methods accept JSON and return appropriate respon
 auth/
 ├── auth.module.ts                           # AuthModule definition
 ├── models/
-│   └── auth.model.ts                        # TypeScript interfaces
+│   ├── auth.model.ts                        # TypeScript interfaces for auth
+│   └── user-profile.model.ts                # TypeScript interfaces for profile
 └── components/
     ├── login/
     │   ├── login.component.ts               # Component logic
@@ -304,10 +609,30 @@ auth/
     │   ├── forgot-password.component.ts     # Component logic
     │   ├── forgot-password.component.html   # Template
     │   └── forgot-password.component.scss   # Styles
-    └── reset-password/
-        ├── reset-password.component.ts      # Component logic
-        ├── reset-password.component.html    # Template
-        └── reset-password.component.scss    # Styles
+    ├── reset-password/
+    │   ├── reset-password.component.ts      # Component logic
+    │   ├── reset-password.component.html    # Template
+    │   └── reset-password.component.scss    # Styles
+    ├── user-profile/
+    │   ├── user-profile.component.ts        # Component logic
+    │   ├── user-profile.component.html      # Template
+    │   └── user-profile.component.scss      # Styles
+    ├── notification-preferences/
+    │   ├── notification-preferences.component.ts
+    │   ├── notification-preferences.component.html
+    │   └── notification-preferences.component.scss
+    ├── privacy-settings/
+    │   ├── privacy-settings.component.ts
+    │   ├── privacy-settings.component.html
+    │   └── privacy-settings.component.scss
+    ├── connected-accounts/
+    │   ├── connected-accounts.component.ts
+    │   ├── connected-accounts.component.html
+    │   └── connected-accounts.component.scss
+    └── account-deletion/
+        ├── account-deletion.component.ts
+        ├── account-deletion.component.html
+        └── account-deletion.component.scss
 ```
 
 ---
@@ -332,11 +657,22 @@ Consider adding:
 
 ### Additional Features
 
+**Phase 6.1 Components:**
 - Password strength meter on registration
 - Account lockout after failed attempts
 - Remember device option
 - Password history to prevent reuse
 - Email verification before password reset
+
+**Phase 6.2 Components:**
+- Avatar cropping and rotation tool
+- Export profile data (GDPR compliance)
+- Download account data archive
+- Advanced notification scheduling
+- Notification frequency controls
+- Privacy audit log
+- Data portability between platforms
+- Two-factor authentication settings
 
 ---
 
@@ -364,5 +700,5 @@ For questions or issues with these components, refer to:
 ---
 
 **Last Updated**: December 2025  
-**Phase**: 6.1 - Login & Registration  
-**Status**: ✅ Complete
+**Phases**: 6.1 (Login & Registration) & 6.2 (User Profile & Settings)  
+**Status**: ✅ Both Phases Complete

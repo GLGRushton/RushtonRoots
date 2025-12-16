@@ -1,0 +1,73 @@
+<div class="connected-accounts">
+  <div class="accounts-section">
+    <h3>
+      <mat-icon class="section-icon">link</mat-icon>
+      Connected Accounts
+    </h3>
+    <p class="section-description">
+      Connect your social accounts to sign in more easily and share content
+    </p>
+    
+    <div class="accounts-list">
+      <mat-card *ngFor="let provider of availableProviders" class="account-card">
+        <div class="account-header">
+          <div class="provider-info">
+            <mat-icon [style.color]="provider.color" class="provider-icon">{{ provider.icon }}</mat-icon>
+            <div class="provider-details">
+              <h4>{{ provider.name }}</h4>
+              <p>{{ provider.description }}</p>
+            </div>
+          </div>
+          
+          <div class="account-status">
+            <ng-container *ngIf="isConnected(provider.id); else notConnected">
+              <mat-chip class="status-chip connected">
+                <mat-icon>check_circle</mat-icon>
+                Connected
+              </mat-chip>
+            </ng-container>
+            <ng-template #notConnected>
+              <mat-chip class="status-chip">Not Connected</mat-chip>
+            </ng-template>
+          </div>
+        </div>
+        
+        <div class="account-info" *ngIf="isConnected(provider.id)">
+          <div class="info-row">
+            <span class="info-label">Email:</span>
+            <span class="info-value">{{ getConnectedAccount(provider.id)?.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Connected:</span>
+            <span class="info-value">{{ formatDate(getConnectedAccount(provider.id)?.connectedAt) }}</span>
+          </div>
+          <div class="info-row" *ngIf="getConnectedAccount(provider.id)?.lastUsed">
+            <span class="info-label">Last Used:</span>
+            <span class="info-value">{{ formatDate(getConnectedAccount(provider.id)?.lastUsed) }}</span>
+          </div>
+        </div>
+        
+        <div class="account-actions">
+          <button mat-raised-button 
+                  [color]="isConnected(provider.id) ? 'warn' : 'primary'"
+                  (click)="isConnected(provider.id) ? disconnect(provider.id) : connect(provider.id)">
+            <mat-icon>{{ isConnected(provider.id) ? 'link_off' : 'link' }}</mat-icon>
+            {{ isConnected(provider.id) ? 'Disconnect' : 'Connect' }}
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  
+  <div class="help-section">
+    <mat-card class="help-card">
+      <mat-icon class="help-icon">help_outline</mat-icon>
+      <h4>Why connect accounts?</h4>
+      <ul>
+        <li>Sign in more easily with one click</li>
+        <li>Never forget your password</li>
+        <li>Keep your account secure with two-factor authentication</li>
+      </ul>
+    </mat-card>
+  </div>
+</div>

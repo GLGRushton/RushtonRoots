@@ -1,0 +1,109 @@
+<div class="privacy-settings">
+  <form [formGroup]="privacyForm">
+    <div class="settings-section">
+      <h3>
+        <mat-icon class="section-icon">visibility</mat-icon>
+        Profile Visibility
+      </h3>
+      <p class="section-description">Control who can see your profile</p>
+      
+      <mat-radio-group formControlName="profileVisibility" class="visibility-options">
+        <mat-radio-button *ngFor="let option of visibilityOptions" [value]="option.value" class="visibility-option">
+          <div class="option-content">
+            <span class="option-label">{{ option.label }}</span>
+            <span class="option-description">{{ option.description }}</span>
+          </div>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+    
+    <mat-divider class="section-divider"></mat-divider>
+    
+    <div class="settings-section">
+      <h3>
+        <mat-icon class="section-icon">info</mat-icon>
+        Information Visibility
+      </h3>
+      <p class="section-description">Choose what information is visible to others</p>
+      
+      <div class="options-list">
+        <div class="option-item">
+          <mat-slide-toggle formControlName="showEmail">
+            <div class="option-content">
+              <span class="option-label">Show Email Address</span>
+              <span class="option-description">Display your email on your profile</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="showPhoneNumber">
+            <div class="option-content">
+              <span class="option-label">Show Phone Number</span>
+              <span class="option-description">Display your phone number on your profile</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="showDateOfBirth">
+            <div class="option-content">
+              <span class="option-label">Show Date of Birth</span>
+              <span class="option-description">Display your birthdate on your profile</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="showLocation">
+            <div class="option-content">
+              <span class="option-label">Show Location</span>
+              <span class="option-description">Display your location on your profile</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+    
+    <mat-divider class="section-divider"></mat-divider>
+    
+    <div class="settings-section">
+      <h3>
+        <mat-icon class="section-icon">search</mat-icon>
+        Discoverability
+      </h3>
+      <p class="section-description">Control how others can find you</p>
+      
+      <div class="options-list">
+        <div class="option-item">
+          <mat-slide-toggle formControlName="allowFamilyMemberSearch">
+            <div class="option-content">
+              <span class="option-label">Allow Family Member Search</span>
+              <span class="option-description">Let family members find you by searching</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="allowSearchEngineIndexing">
+            <div class="option-content">
+              <span class="option-label">Allow Search Engine Indexing</span>
+              <span class="option-description">Let search engines index your public profile</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+  </form>
+  
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="saveSettings()" [disabled]="!hasChanges">
+      <mat-icon>save</mat-icon>
+      Save Settings
+    </button>
+    <button mat-button (click)="resetToDefaults()">
+      <mat-icon>restore</mat-icon>
+      Reset to Defaults
+    </button>
+  </div>
+</div>

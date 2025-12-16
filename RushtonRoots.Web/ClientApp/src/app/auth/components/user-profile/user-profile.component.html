@@ -1,0 +1,268 @@
+<div class="user-profile-container">
+  <!-- Profile Header -->
+  <mat-card class="profile-header">
+    <div class="profile-header-content">
+      <div class="avatar-section">
+        <!-- Avatar Display -->
+        <div class="avatar-wrapper">
+          <div class="avatar-container" *ngIf="getAvatarUrl(); else avatarFallback">
+            <img [src]="getAvatarUrl()!" alt="{{ userProfile?.displayName }}'s avatar" class="avatar-image">
+          </div>
+          <ng-template #avatarFallback>
+            <div class="avatar-fallback">
+              <span class="avatar-initials">{{ getInitials() }}</span>
+            </div>
+          </ng-template>
+          
+          <!-- Avatar Upload Button (Edit Mode) -->
+          <button mat-mini-fab color="primary" class="avatar-edit-button" *ngIf="isEditMode" 
+                  (click)="fileInput.click()" matTooltip="Change avatar">
+            <mat-icon>photo_camera</mat-icon>
+          </button>
+          <input #fileInput type="file" accept="image/*" style="display: none" 
+                 (change)="onAvatarSelected($event)">
+        </div>
+      </div>
+      
+      <div class="profile-info">
+        <h1 class="profile-name">{{ userProfile?.displayName || 'User Profile' }}</h1>
+        <p class="profile-email">{{ userProfile?.email }}</p>
+        
+        <!-- Profile Completeness -->
+        <div class="profile-completeness" *ngIf="profileCompleteness.percentage < 100">
+          <div class="completeness-header">
+            <span class="completeness-label">Profile Completeness</span>
+            <span class="completeness-percentage">{{ profileCompleteness.percentage }}%</span>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="profileCompleteness.percentage" 
+                           [color]="profileCompleteness.percentage > 75 ? 'primary' : 'accent'">
+          </mat-progress-bar>
+          <div class="completeness-suggestions" *ngIf="profileCompleteness.suggestions.length > 0">
+            <mat-icon class="suggestion-icon">lightbulb</mat-icon>
+            <span>{{ profileCompleteness.suggestions[0] }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="profile-actions">
+        <button mat-raised-button color="primary" *ngIf="!isEditMode" (click)="toggleEditMode()">
+          <mat-icon>edit</mat-icon>
+          Edit Profile
+        </button>
+        <button mat-raised-button color="primary" *ngIf="isEditMode" (click)="saveProfile()" 
+                [disabled]="profileForm.invalid || actionState.loading">
+          <mat-icon>save</mat-icon>
+          Save Changes
+        </button>
+        <button mat-button *ngIf="isEditMode" (click)="toggleEditMode()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Tabbed Settings Interface -->
+  <mat-card class="settings-card">
+    <mat-tab-group [(selectedIndex)]="activeTab" animationDuration="300ms">
+      
+      <!-- Profile Tab -->
+      <mat-tab label="Profile">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">person</mat-icon>
+          Profile
+        </ng-template>
+        
+        <div class="tab-content">
+          <div class="profile-view" *ngIf="!isEditMode">
+            <div class="info-section">
+              <h3>Personal Information</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="info-label">First Name</span>
+                  <span class="info-value">{{ userProfile?.firstName || 'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Last Name</span>
+                  <span class="info-value">{{ userProfile?.lastName || 'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Display Name</span>
+                  <span class="info-value">{{ userProfile?.displayName || 'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Phone Number</span>
+                  <span class="info-value">{{ userProfile?.phoneNumber || 'Not provided' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Date of Birth</span>
+                  <span class="info-value">
+                    {{ userProfile?.dateOfBirth ? (userProfile!.dateOfBirth | date:'mediumDate') : 'Not provided' }}
+                  </span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">Location</span>
+                  <span class="info-value">{{ userProfile?.location || 'Not provided' }}</span>
+                </div>
+                <div class="info-item full-width">
+                  <span class="info-label">Website</span>
+                  <span class="info-value">
+                    <a *ngIf="userProfile?.website" [href]="userProfile!.website" target="_blank">
+                      {{ userProfile!.website }}
+                    </a>
+                    <span *ngIf="!userProfile?.website">Not provided</span>
+                  </span>
+                </div>
+                <div class="info-item full-width">
+                  <span class="info-label">Bio</span>
+                  <p class="info-value bio-text">{{ userProfile?.bio || 'No bio provided yet.' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Profile Edit Form -->
+          <div class="profile-edit" *ngIf="isEditMode">
+            <form [formGroup]="profileForm" class="profile-form">
+              <h3>Edit Personal Information</h3>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>First Name</mat-label>
+                  <input matInput formControlName="firstName" placeholder="Enter first name" required>
+                  <mat-icon matPrefix>person</mat-icon>
+                  <mat-error>{{ getFieldError('firstName') }}</mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Last Name</mat-label>
+                  <input matInput formControlName="lastName" placeholder="Enter last name" required>
+                  <mat-icon matPrefix>person</mat-icon>
+                  <mat-error>{{ getFieldError('lastName') }}</mat-error>
+                </mat-form-field>
+              </div>
+              
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>Display Name</mat-label>
+                <input matInput formControlName="displayName" placeholder="How should we display your name?" required>
+                <mat-icon matPrefix>badge</mat-icon>
+                <mat-error>{{ getFieldError('displayName') }}</mat-error>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>Bio</mat-label>
+                <textarea matInput formControlName="bio" rows="4" 
+                         placeholder="Tell your family about yourself..." maxlength="500"></textarea>
+                <mat-icon matPrefix>info</mat-icon>
+                <mat-hint align="end">{{ profileForm.get('bio')?.value?.length || 0 }} / 500</mat-hint>
+                <mat-error>{{ getFieldError('bio') }}</mat-error>
+              </mat-form-field>
+              
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Phone Number</mat-label>
+                  <input matInput formControlName="phoneNumber" placeholder="+1 234 567 8900">
+                  <mat-icon matPrefix>phone</mat-icon>
+                  <mat-error>{{ getFieldError('phoneNumber') }}</mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Date of Birth</mat-label>
+                  <input matInput [matDatepicker]="dobPicker" formControlName="dateOfBirth">
+                  <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #dobPicker></mat-datepicker>
+                  <mat-icon matPrefix>cake</mat-icon>
+                </mat-form-field>
+              </div>
+              
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>Location</mat-label>
+                <input matInput formControlName="location" placeholder="City, State, Country">
+                <mat-icon matPrefix>location_on</mat-icon>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" class="form-field-full">
+                <mat-label>Website</mat-label>
+                <input matInput formControlName="website" placeholder="https://example.com">
+                <mat-icon matPrefix>link</mat-icon>
+                <mat-error>{{ getFieldError('website') }}</mat-error>
+              </mat-form-field>
+            </form>
+          </div>
+        </div>
+      </mat-tab>
+      
+      <!-- Notifications Tab -->
+      <mat-tab label="Notifications">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">notifications</mat-icon>
+          Notifications
+        </ng-template>
+        
+        <div class="tab-content">
+          <app-notification-preferences 
+            [preferences]="notificationPreferences"
+            (preferencesUpdate)="notificationsUpdate.emit($event)">
+          </app-notification-preferences>
+        </div>
+      </mat-tab>
+      
+      <!-- Privacy Tab -->
+      <mat-tab label="Privacy">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">security</mat-icon>
+          Privacy
+        </ng-template>
+        
+        <div class="tab-content">
+          <app-privacy-settings 
+            [settings]="privacySettings"
+            (settingsUpdate)="privacyUpdate.emit($event)">
+          </app-privacy-settings>
+        </div>
+      </mat-tab>
+      
+      <!-- Connected Accounts Tab -->
+      <mat-tab label="Connected Accounts">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">link</mat-icon>
+          Accounts
+        </ng-template>
+        
+        <div class="tab-content">
+          <app-connected-accounts 
+            [connectedAccounts]="connectedAccounts"
+            (accountConnect)="accountConnect.emit($event)"
+            (accountDisconnect)="accountDisconnect.emit($event)">
+          </app-connected-accounts>
+        </div>
+      </mat-tab>
+      
+      <!-- Security Tab -->
+      <mat-tab label="Security">
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">shield</mat-icon>
+          Security
+        </ng-template>
+        
+        <div class="tab-content">
+          <app-account-deletion 
+            [canDelete]="canDeleteAccount"
+            (accountDelete)="accountDelete.emit($event)">
+          </app-account-deletion>
+        </div>
+      </mat-tab>
+      
+    </mat-tab-group>
+  </mat-card>
+  
+  <!-- Action State Messages -->
+  <div class="action-message" *ngIf="actionState.success">
+    <mat-icon class="success-icon">check_circle</mat-icon>
+    <span>{{ actionState.message || 'Changes saved successfully' }}</span>
+  </div>
+  
+  <div class="action-message error" *ngIf="actionState.error">
+    <mat-icon class="error-icon">error</mat-icon>
+    <span>{{ actionState.error }}</span>
+  </div>
+</div>
