@@ -9,7 +9,10 @@ import { SharedModule } from '../shared/shared.module';
 // Import auth components
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ForgotPasswordConfirmationComponent } from './components/forgot-password-confirmation/forgot-password-confirmation.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ResetPasswordConfirmationComponent } from './components/reset-password-confirmation/reset-password-confirmation.component';
+import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { NotificationPreferencesComponent } from './components/notification-preferences/notification-preferences.component';
 import { PrivacySettingsComponent } from './components/privacy-settings/privacy-settings.component';
@@ -22,7 +25,10 @@ import { AccountDeletionComponent } from './components/account-deletion/account-
  * This module contains all authentication-related components:
  * - LoginComponent: Modern login form with social login buttons
  * - ForgotPasswordComponent: Password reset request form
+ * - ForgotPasswordConfirmationComponent: Confirmation screen after password reset request
  * - ResetPasswordComponent: Password reset form with strength indicator
+ * - ResetPasswordConfirmationComponent: Confirmation screen after successful password reset
+ * - ConfirmEmailComponent: Email verification confirmation screen
  * - UserProfileComponent: Comprehensive user profile and settings management
  * - NotificationPreferencesComponent: Notification settings
  * - PrivacySettingsComponent: Privacy settings
@@ -35,7 +41,10 @@ import { AccountDeletionComponent } from './components/account-deletion/account-
   declarations: [
     LoginComponent,
     ForgotPasswordComponent,
+    ForgotPasswordConfirmationComponent,
     ResetPasswordComponent,
+    ResetPasswordConfirmationComponent,
+    ConfirmEmailComponent,
     UserProfileComponent,
     NotificationPreferencesComponent,
     PrivacySettingsComponent,
@@ -51,7 +60,10 @@ import { AccountDeletionComponent } from './components/account-deletion/account-
   exports: [
     LoginComponent,
     ForgotPasswordComponent,
+    ForgotPasswordConfirmationComponent,
     ResetPasswordComponent,
+    ResetPasswordConfirmationComponent,
+    ConfirmEmailComponent,
     UserProfileComponent,
     NotificationPreferencesComponent,
     PrivacySettingsComponent,
