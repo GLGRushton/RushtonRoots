@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Components - Phase 6.1 Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .component-demo {
+            margin-bottom: 60px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .component-demo h2 {
+            color: #1b5e20;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4caf50;
+        }
+        .component-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            border-radius: 4px;
+        }
+        .component-info h3 {
+            margin: 0 0 10px 0;
+            color: #2e7d32;
+            font-size: 16px;
+        }
+        .component-info ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        .component-info li {
+            margin: 5px 0;
+            color: #1b5e20;
+        }
+        .screenshot-placeholder {
+            width: 100%;
+            height: 600px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 2px dashed #4caf50;
+            color: #757575;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .code-example {
+            margin-top: 20px;
+            background-color: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .code-example pre {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🔐 Authentication Components - Phase 6.1</h1>
+        <p style="text-align: center; color: #757575; font-size: 18px;">
+            Modern, Material Design authentication forms for RushtonRoots
+        </p>
+
+        <!-- LoginComponent Demo -->
+        <div class="component-demo">
+            <h2>1. LoginComponent (app-login)</h2>
+            <div class="component-info">
+                <h3>✨ Key Features:</h3>
+                <ul>
+                    <li>Email and password fields with validation</li>
+                    <li>"Remember Me" checkbox</li>
+                    <li>Password visibility toggle (eye icon)</li>
+                    <li>Social login buttons (Google, Facebook, Microsoft) - ready for future implementation</li>
+                    <li>Loading spinner during authentication</li>
+                    <li>Error message display</li>
+                    <li>Links to forgot password and registration</li>
+                    <li>Fully responsive with gradient background</li>
+                </ul>
+            </div>
+            <div class="code-example">
+                <pre>&lt;!-- Usage in Razor View --&gt;
+&lt;app-login 
+  returnurl="/Dashboard"
+  (loginSubmit)="handleLogin($event)"
+  (socialLogin)="handleSocialLogin($event)"&gt;
+&lt;/app-login&gt;</pre>
+            </div>
+            <div class="screenshot-placeholder">
+                <div style="text-align: center;">
+                    <p>📸 LoginComponent Screenshot</p>
+                    <p style="font-size: 14px;">Professional login form with Material Card,<br/>email/password inputs, social login buttons</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ForgotPasswordComponent Demo -->
+        <div class="component-demo">
+            <h2>2. ForgotPasswordComponent (app-forgot-password)</h2>
+            <div class="component-info">
+                <h3>✨ Key Features:</h3>
+                <ul>
+                    <li>Email input with validation</li>
+                    <li>Loading state during password reset request</li>
+                    <li>Success state with check icon and confirmation message</li>
+                    <li>Error handling with visual alerts</li>
+                    <li>Back to login link with arrow icon</li>
+                    <li>Clean, centered card layout</li>
+                    <li>Responsive design for mobile</li>
+                </ul>
+            </div>
+            <div class="code-example">
+                <pre>&lt;!-- Usage in Razor View --&gt;
+&lt;app-forgot-password 
+  (forgotPasswordSubmit)="handleForgotPassword($event)"&gt;
+&lt;/app-forgot-password&gt;</pre>
+            </div>
+            <div class="screenshot-placeholder">
+                <div style="text-align: center;">
+                    <p>📸 ForgotPasswordComponent Screenshot</p>
+                    <p style="font-size: 14px;">Simple email form with success/error states<br/>and helpful instructions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ResetPasswordComponent Demo -->
+        <div class="component-demo">
+            <h2>3. ResetPasswordComponent (app-reset-password)</h2>
+            <div class="component-info">
+                <h3>✨ Key Features:</h3>
+                <ul>
+                    <li>Email, new password, and confirm password fields</li>
+                    <li>Password visibility toggles for both password fields</li>
+                    <li><strong>Real-time password strength indicator</strong> with progress bar</li>
+                    <li>Color-coded strength levels: Weak (red), Fair (orange), Good (light green), Strong (green)</li>
+                    <li>Password feedback suggestions (e.g., "Include uppercase letters")</li>
+                    <li>Password requirements checklist panel</li>
+                    <li>Password confirmation matching validation</li>
+                    <li>Loading state during password reset</li>
+                    <li>Comprehensive form validation</li>
+                </ul>
+            </div>
+            <div class="code-example">
+                <pre>&lt;!-- Usage in Razor View --&gt;
+&lt;app-reset-password 
+  code="@Model.Code"
+  (resetPasswordSubmit)="handleResetPassword($event)"&gt;
+&lt;/app-reset-password&gt;</pre>
+            </div>
+            <div class="screenshot-placeholder">
+                <div style="text-align: center;">
+                    <p>📸 ResetPasswordComponent Screenshot</p>
+                    <p style="font-size: 14px;">Advanced password reset with strength meter,<br/>real-time feedback, and requirement checklist</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design System -->
+        <div class="component-demo">
+            <h2>🎨 Design System</h2>
+            <div class="component-info">
+                <h3>Material Design Components Used:</h3>
+                <ul>
+                    <li><strong>MatCard</strong>: Form containers with elevation and shadows</li>
+                    <li><strong>MatFormField + MatInput</strong>: Text and password inputs</li>
+                    <li><strong>MatCheckbox</strong>: "Remember Me" toggle</li>
+                    <li><strong>MatIcon</strong>: Visual icons (account, email, lock, visibility, etc.)</li>
+                    <li><strong>MatButton</strong>: Primary raised buttons and stroked social buttons</li>
+                    <li><strong>MatProgressBar</strong>: Password strength indicator</li>
+                    <li><strong>MatProgressSpinner</strong>: Loading states</li>
+                    <li><strong>MatTooltip</strong>: Helpful hints on disabled social buttons</li>
+                </ul>
+            </div>
+            <div class="component-info">
+                <h3>Color Palette:</h3>
+                <ul>
+                    <li><strong>Primary Green:</strong> #2e7d32</li>
+                    <li><strong>Light Green:</strong> #4caf50</li>
+                    <li><strong>Dark Green:</strong> #1b5e20</li>
+                    <li><strong>Background Gradient:</strong> Linear from #f5f5f5 to #e8f5e9</li>
+                    <li><strong>Error Red:</strong> #d32f2f</li>
+                    <li><strong>Success Green:</strong> #4caf50</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Technical Details -->
+        <div class="component-demo">
+            <h2>⚙️ Technical Implementation</h2>
+            <div class="component-info">
+                <h3>Angular Elements Registration:</h3>
+                <ul>
+                    <li>All components registered as custom elements in app.module.ts</li>
+                    <li>Can be used directly in Razor views without additional setup</li>
+                    <li>Event emission for form submissions and interactions</li>
+                    <li>Input properties for configuration (returnUrl, code, error messages)</li>
+                </ul>
+            </div>
+            <div class="component-info">
+                <h3>Form Validation:</h3>
+                <ul>
+                    <li>Reactive Forms with comprehensive validators</li>
+                    <li>Required field validation</li>
+                    <li>Email format validation</li>
+                    <li>Password length validation (8+ characters)</li>
+                    <li>Password strength validation (custom validator)</li>
+                    <li>Password confirmation matching</li>
+                    <li>Real-time error messages</li>
+                    <li>Touched state tracking</li>
+                </ul>
+            </div>
+            <div class="component-info">
+                <h3>Password Strength Algorithm:</h3>
+                <ul>
+                    <li>Length: 8+ chars (20 pts), 12+ chars (+10 pts)</li>
+                    <li>Uppercase letters: +20 pts</li>
+                    <li>Lowercase letters: +20 pts</li>
+                    <li>Numbers: +20 pts</li>
+                    <li>Special characters: +10 pts</li>
+                    <li>Total score: 0-100 mapped to Weak/Fair/Good/Strong</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Files Created -->
+        <div class="component-demo">
+            <h2>📁 Files Created</h2>
+            <div class="code-example">
+                <pre>auth/
+├── auth.module.ts                           # AuthModule with imports/exports
+├── models/
+│   └── auth.model.ts                        # TypeScript interfaces
+│       - LoginFormData
+│       - ForgotPasswordFormData
+│       - ResetPasswordFormData
+│       - SocialLoginProvider
+│       - PasswordStrength enum
+│       - PasswordStrengthResult
+│       - AuthActionState
+└── components/
+    ├── login/
+    │   ├── login.component.ts               # 120 lines
+    │   ├── login.component.html             # 95 lines
+    │   └── login.component.scss             # 180 lines
+    ├── forgot-password/
+    │   ├── forgot-password.component.ts     # 95 lines
+    │   ├── forgot-password.component.html   # 70 lines
+    │   └── forgot-password.component.scss   # 170 lines
+    └── reset-password/
+        ├── reset-password.component.ts      # 240 lines (includes strength calculator)
+        ├── reset-password.component.html    # 130 lines
+        └── reset-password.component.scss    # 195 lines</pre>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="component-demo" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border: 2px solid #4caf50;">
+            <h2 style="color: #1b5e20;">✅ Phase 6.1 Status: COMPLETE</h2>
+            <div style="padding: 20px;">
+                <h3 style="color: #2e7d32; margin-top: 0;">All Success Criteria Met:</h3>
+                <ul style="font-size: 16px; color: #1b5e20;">
+                    <li>✅ LoginComponent created with modern Material Design</li>
+                    <li>✅ ForgotPasswordComponent with email validation</li>
+                    <li>✅ ResetPasswordComponent with password strength indicator</li>
+                    <li>✅ "Remember Me" toggle implemented</li>
+                    <li>✅ Password visibility toggles on all password fields</li>
+                    <li>✅ Social login buttons prepared (Google, Facebook, Microsoft)</li>
+                    <li>✅ Loading states for all auth actions</li>
+                    <li>✅ Comprehensive form validation</li>
+                    <li>✅ All components registered as Angular Elements</li>
+                    <li>✅ Professional, smooth login experience</li>
+                    <li>✅ Fully responsive mobile design</li>
+                    <li>✅ Documentation complete (README.md)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
