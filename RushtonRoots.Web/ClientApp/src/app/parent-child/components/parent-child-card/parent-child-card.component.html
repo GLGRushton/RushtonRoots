@@ -78,20 +78,20 @@
       <mat-icon>visibility</mat-icon>
       View
     </button>
-    <button mat-button color="accent" (click)="onEdit()" matTooltip="Edit Relationship">
+    <button *ngIf="canEdit" mat-button color="accent" (click)="onEdit()" matTooltip="Edit Relationship">
       <mat-icon>edit</mat-icon>
       Edit
     </button>
-    <button mat-icon-button [matMenuTriggerFor]="moreMenu" matTooltip="More Actions">
+    <button *ngIf="canEdit || canDelete" mat-icon-button [matMenuTriggerFor]="moreMenu" matTooltip="More Actions">
       <mat-icon>more_vert</mat-icon>
     </button>
 
     <mat-menu #moreMenu="matMenu">
-      <button mat-menu-item (click)="onVerify()" *ngIf="!relationship.isVerified">
+      <button mat-menu-item (click)="onVerify()" *ngIf="canEdit && !relationship.isVerified">
         <mat-icon>verified</mat-icon>
         <span>Mark as Verified</span>
       </button>
-      <button mat-menu-item (click)="onDelete()">
+      <button *ngIf="canDelete" mat-menu-item (click)="onDelete()">
         <mat-icon color="warn">delete</mat-icon>
         <span>Delete</span>
       </button>

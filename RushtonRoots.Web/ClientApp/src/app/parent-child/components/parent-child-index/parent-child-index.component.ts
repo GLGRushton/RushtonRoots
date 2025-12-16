@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import {
 
 /**
  * ParentChildIndexComponent - Main index page for parent-child relationships
- * Phase 5.2: Parent-Child Relationships
+ * Phase 5.1: Parent-Child Relationships
  */
 @Component({
   selector: 'app-parent-child-index',
@@ -23,6 +23,26 @@ import {
 })
 export class ParentChildIndexComponent implements OnInit, OnDestroy {
   /**
+   * All parent-child relationships from server
+   */
+  @Input() relationships: ParentChildCard[] = [];
+
+  /**
+   * Whether the current user can create relationships
+   */
+  @Input() canCreate: boolean = true;
+
+  /**
+   * Whether the current user can edit relationships
+   */
+  @Input() canEdit: boolean = true;
+
+  /**
+   * Whether the current user can delete relationships
+   */
+  @Input() canDelete: boolean = true;
+
+  /**
    * All parent-child relationships
    */
   allRelationships: ParentChildCard[] = [];
@@ -31,6 +51,16 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
    * Filtered relationships
    */
   filteredRelationships: ParentChildCard[] = [];
+
+  /**
+   * Event emitted when a relationship action is triggered
+   */
+  @Output() action = new EventEmitter<ParentChildActionEvent>();
+
+  /**
+   * Event emitted when create button is clicked
+   */
+  @Output() create = new EventEmitter<void>();
 
   /**
    * Loading state
@@ -103,19 +133,44 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Load parent-child relationships
-   * In a real app, this would call an API service
+   * Load parent-child relationships from input or use sample data
    */
   private loadRelationships(): void {
     this.isLoading = true;
 
-    // Sample data - replace with API call
-    setTimeout(() => {
+    // Use input data if available, otherwise use sample data
+    if (this.relationships && this.relationships.length > 0) {
+      // Transform input data to ensure dates are proper Date objects
+      this.allRelationships = this.relationships.map(r => {
+        try {
+          return {
+            ...r,
+            // Handle both Date objects and string dates
+            childBirthDate: r.childBirthDate 
+              ? (r.childBirthDate instanceof Date ? r.childBirthDate : new Date(r.childBirthDate as any)) 
+              : undefined,
+            createdDateTime: r.createdDateTime instanceof Date ? r.createdDateTime : new Date(r.createdDateTime as any),
+            updatedDateTime: r.updatedDateTime instanceof Date ? r.updatedDateTime : new Date(r.updatedDateTime as any)
+          };
+        } catch (error) {
+          console.error('Error parsing dates for relationship:', r.id, error);
+          // Return relationship with undefined dates if parsing fails
+          return {
+            ...r,
+            childBirthDate: undefined,
+            createdDateTime: new Date(), // Fallback to current date
+            updatedDateTime: new Date()
+          };
+        }
+      });
+    } else {
+      // Use sample data for demonstration/testing
       this.allRelationships = this.getSampleData();
-      this.filteredRelationships = [...this.allRelationships];
-      this.applyFilters();
-      this.isLoading = false;
-    }, 1000);
+    }
+    
+    this.filteredRelationships = [...this.allRelationships];
+    this.applyFilters();
+    this.isLoading = false;
   }
 
   /**
@@ -265,16 +320,14 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
    * Handle relationship action
    */
   onRelationshipAction(event: ParentChildActionEvent): void {
-    console.log('Relationship action:', event);
-    // Implement action handling (view, edit, delete, verify)
+    this.action.emit(event);
   }
 
   /**
    * Navigate to create relationship
    */
   onCreate(): void {
-    console.log('Create new relationship');
-    // Implement navigation to create form
+    this.create.emit();
   }
 
   /**

@@ -146,6 +146,18 @@ public class ParentChildService : IParentChildService
 
     private static ParentChildViewModel MapToViewModel(ParentChild parentChild)
     {
+        // Calculate child's age if birth date is available
+        int? childAge = null;
+        if (parentChild.ChildPerson?.DateOfBirth.HasValue == true)
+        {
+            var today = DateTime.Today;
+            var birthDate = parentChild.ChildPerson.DateOfBirth.Value;
+            var age = today.Year - birthDate.Year;
+            // Adjust age if birthday hasn't occurred yet this year
+            if (birthDate.AddYears(age) > today) age--;
+            childAge = age;
+        }
+
         return new ParentChildViewModel
         {
             Id = parentChild.Id,
@@ -157,7 +169,14 @@ public class ParentChildService : IParentChildService
             ChildName = parentChild.ChildPerson != null 
                 ? $"{parentChild.ChildPerson.FirstName} {parentChild.ChildPerson.LastName}" 
                 : "Unknown",
+            ParentPhotoUrl = parentChild.ParentPerson?.PhotoUrl,
+            ChildPhotoUrl = parentChild.ChildPerson?.PhotoUrl,
+            ChildBirthDate = parentChild.ChildPerson?.DateOfBirth,
+            ChildAge = childAge,
             RelationshipType = parentChild.RelationshipType,
+            // TODO: Implement verification logic when verification feature is added
+            // For now, all relationships are marked as verified by default
+            IsVerified = true,
             CreatedDateTime = parentChild.CreatedDateTime,
             UpdatedDateTime = parentChild.UpdatedDateTime
         };

@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="index-header">
     <h1>Parent-Child Relationships</h1>
-    <button mat-raised-button color="primary" (click)="onCreate()">
+    <button *ngIf="canCreate" mat-raised-button color="primary" (click)="onCreate()">
       <mat-icon>add</mat-icon>
       Add Relationship
     </button>
@@ -83,6 +83,8 @@
       [relationship]="relationship"
       [elevation]="2"
       [showActions]="true"
+      [canEdit]="canEdit"
+      [canDelete]="canDelete"
       (action)="onRelationshipAction($event)">
     </app-parent-child-card>
   </div>
