@@ -1,0 +1,128 @@
+<div class="confirmation-container">
+  <mat-card class="confirmation-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon [class]="iconColorClass">{{ statusIcon }}</mat-icon>
+        <h2>Email Verification</h2>
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Success state -->
+      <div class="status-message success-state" *ngIf="isSuccess">
+        <mat-icon class="status-icon">verified_user</mat-icon>
+        <h3>Email Confirmed Successfully!</h3>
+        <p class="primary-message">
+          Your email has been confirmed successfully. You can now access all features of your account.
+        </p>
+        <p class="email-info" *ngIf="email">
+          <mat-icon>email</mat-icon>
+          <span>{{ email }}</span>
+        </p>
+      </div>
+
+      <!-- Error state - Invalid/Expired Token -->
+      <div class="status-message error-state" *ngIf="isError && isTokenInvalid">
+        <mat-icon class="status-icon">link_off</mat-icon>
+        <h3>Invalid or Expired Link</h3>
+        <p class="primary-message">
+          The confirmation link you used is invalid or has expired. Confirmation links are only valid for 24 hours.
+        </p>
+        <div class="error-details" *ngIf="status?.message">
+          <mat-icon>info</mat-icon>
+          <p>{{ status?.message }}</p>
+        </div>
+      </div>
+
+      <!-- Error state - Other errors -->
+      <div class="status-message error-state" *ngIf="isError && !isTokenInvalid">
+        <mat-icon class="status-icon">error</mat-icon>
+        <h3>Verification Failed</h3>
+        <p class="primary-message">
+          We encountered an error while confirming your email. Please try again.
+        </p>
+        <div class="error-details" *ngIf="status?.message">
+          <mat-icon>info</mat-icon>
+          <p>{{ status?.message }}</p>
+        </div>
+      </div>
+
+      <!-- Resend email section (shown on error) -->
+      <div class="resend-section" *ngIf="isError">
+        <div class="resend-info">
+          <mat-icon>refresh</mat-icon>
+          <div class="resend-content">
+            <h4>Need a new confirmation link?</h4>
+            <p>We can send you a new confirmation email with a fresh link.</p>
+          </div>
+        </div>
+        
+        <button 
+          mat-raised-button 
+          color="primary"
+          (click)="onResendEmail()"
+          [disabled]="resendLoading || !email">
+          <mat-spinner 
+            *ngIf="resendLoading" 
+            diameter="20" 
+            class="button-spinner">
+          </mat-spinner>
+          <mat-icon *ngIf="!resendLoading">send</mat-icon>
+          <span *ngIf="!resendLoading">Resend Confirmation Email</span>
+          <span *ngIf="resendLoading">Sending...</span>
+        </button>
+        
+        <!-- Resend success message -->
+        <div class="resend-success" *ngIf="resendSuccess">
+          <mat-icon>check</mat-icon>
+          <span>Confirmation email sent successfully! Please check your inbox.</span>
+        </div>
+      </div>
+
+      <!-- Next steps (shown on success) -->
+      <div class="next-steps" *ngIf="isSuccess">
+        <h4>What's Next?</h4>
+        <ul>
+          <li>
+            <mat-icon>person</mat-icon>
+            <span>Complete your profile with additional information</span>
+          </li>
+          <li>
+            <mat-icon>family_restroom</mat-icon>
+            <span>Start building your family tree</span>
+          </li>
+          <li>
+            <mat-icon>photo_library</mat-icon>
+            <span>Upload photos and memories</span>
+          </li>
+          <li>
+            <mat-icon>groups</mat-icon>
+            <span>Connect with other family members</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="action-buttons">
+        <a 
+          routerLink="/Account/Login" 
+          mat-raised-button 
+          color="primary"
+          class="action-button">
+          <mat-icon>login</mat-icon>
+          <span>Go to Login</span>
+        </a>
+        
+        <a 
+          *ngIf="isSuccess"
+          routerLink="/Home/Index" 
+          mat-stroked-button 
+          color="primary"
+          class="action-button">
+          <mat-icon>home</mat-icon>
+          <span>Go to Home</span>
+        </a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
