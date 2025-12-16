@@ -199,24 +199,29 @@ export class PartnershipTimelineComponent implements OnInit {
     const start = new Date(this.partnership.startDate);
     const end = this.partnership.endDate ? new Date(this.partnership.endDate) : new Date();
 
-    const years = end.getFullYear() - start.getFullYear();
-    const months = end.getMonth() - start.getMonth();
-    const totalMonths = years * 12 + months;
+    // Calculate total months difference
+    let years = end.getFullYear() - start.getFullYear();
+    let months = end.getMonth() - start.getMonth();
 
-    const displayYears = Math.floor(totalMonths / 12);
-    const displayMonths = totalMonths % 12;
+    // Adjust for negative months
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
 
-    if (displayYears === 0) {
-      return `${displayMonths} ${displayMonths === 1 ? 'month' : 'months'}`;
-    } else if (displayMonths === 0) {
-      return `${displayYears} ${displayYears === 1 ? 'year' : 'years'}`;
+    if (years === 0 && months === 0) {
+      return 'Less than a month';
+    } else if (years === 0) {
+      return `${months} ${months === 1 ? 'month' : 'months'}`;
+    } else if (months === 0) {
+      return `${years} ${years === 1 ? 'year' : 'years'}`;
     } else {
-      return `${displayYears} ${displayYears === 1 ? 'year' : 'years'}, ${displayMonths} ${displayMonths === 1 ? 'month' : 'months'}`;
+      return `${years} ${years === 1 ? 'year' : 'years'}, ${months} ${months === 1 ? 'month' : 'months'}`;
     }
   }
 
   /**
-   * Calculate years active
+   * Calculate years active (more accurate with partial years)
    */
   private calculateYearsActive(): number {
     if (!this.partnership.startDate) {
@@ -226,7 +231,17 @@ export class PartnershipTimelineComponent implements OnInit {
     const start = new Date(this.partnership.startDate);
     const end = this.partnership.endDate ? new Date(this.partnership.endDate) : new Date();
 
-    return end.getFullYear() - start.getFullYear();
+    // Calculate total months and convert to years (rounded)
+    let years = end.getFullYear() - start.getFullYear();
+    let months = end.getMonth() - start.getMonth();
+    
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    const totalMonths = years * 12 + months;
+    return Math.max(0, Math.round(totalMonths / 12));
   }
 
   /**
