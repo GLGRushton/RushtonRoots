@@ -149,10 +149,21 @@ if (-not (Test-Path $nodeModules)) {
     try {
         if (Test-Path "package-lock.json") {
             npm ci
+            if ($LASTEXITCODE -ne 0) {
+                throw "npm ci failed with exit code $LASTEXITCODE"
+            }
         }
         else {
             npm install
+            if ($LASTEXITCODE -ne 0) {
+                throw "npm install failed with exit code $LASTEXITCODE"
+            }
         }
+    }
+    catch {
+        Pop-Location
+        Write-Error "Failed to install npm dependencies: $_"
+        exit 1
     }
     finally {
         Pop-Location
@@ -161,7 +172,7 @@ if (-not (Test-Path $nodeModules)) {
 
 # Quick check that npm is available
 try {
-    $null = npm -v 2>$null
+    $null = npm -v 2>&1 | Out-Null
 }
 catch {
     Write-Error "npm is not available on PATH in this session. Make sure Node/npm are installed and restart your shell/VS."
