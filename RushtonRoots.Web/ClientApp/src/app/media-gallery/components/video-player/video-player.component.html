@@ -13,10 +13,8 @@
         min="0" 
         [max]="duration" 
         step="0.1"
-        [value]="currentTime"
-        (input)="seek($any($event.value))"
         class="progress-slider">
-        <input matSliderThumb>
+        <input matSliderThumb [value]="currentTime" (input)="seek($any($event.target).value)">
       </mat-slider>
 
       <div class="controls-row">
@@ -36,10 +34,8 @@
             min="0" 
             max="1" 
             step="0.1"
-            [value]="volume"
-            (input)="setVolume($any($event.value))"
             class="volume-slider">
-            <input matSliderThumb>
+            <input matSliderThumb [value]="volume" (input)="setVolume($any($event.target).value)">
           </mat-slider>
         </div>
 

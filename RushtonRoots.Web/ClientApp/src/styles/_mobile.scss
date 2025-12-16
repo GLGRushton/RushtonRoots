@@ -1,5 +1,6 @@
 // RushtonRoots Mobile-First Utilities
 @use 'variables' as *;
+@use 'mixins' as *;
 
 // Touch-friendly button sizes (WCAG 2.1 minimum 44x44px)
 $touch-target-min: 44px;

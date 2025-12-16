@@ -33,24 +33,24 @@
         
         <div class="slider-control">
           <label>Brightness</label>
-          <mat-slider min="0" max="200" step="1" [value]="brightness" (input)="adjustBrightness($any($event.value))">
-            <input matSliderThumb>
+          <mat-slider min="0" max="200" step="1">
+            <input matSliderThumb [value]="brightness" (input)="adjustBrightness($any($event.target).value)">
           </mat-slider>
           <span class="slider-value">{{ brightness }}%</span>
         </div>
 
         <div class="slider-control">
           <label>Contrast</label>
-          <mat-slider min="0" max="200" step="1" [value]="contrast" (input)="adjustContrast($any($event.value))">
-            <input matSliderThumb>
+          <mat-slider min="0" max="200" step="1">
+            <input matSliderThumb [value]="contrast" (input)="adjustContrast($any($event.target).value)">
           </mat-slider>
           <span class="slider-value">{{ contrast }}%</span>
         </div>
 
         <div class="slider-control">
           <label>Saturation</label>
-          <mat-slider min="0" max="200" step="1" [value]="saturation" (input)="adjustSaturation($any($event.value))">
-            <input matSliderThumb>
+          <mat-slider min="0" max="200" step="1">
+            <input matSliderThumb [value]="saturation" (input)="adjustSaturation($any($event.target).value)">
           </mat-slider>
           <span class="slider-value">{{ saturation }}%</span>
         </div>
