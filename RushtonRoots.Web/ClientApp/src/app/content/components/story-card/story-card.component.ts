@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Story } from '../../models/content.model';
+import { Story, MediaType } from '../../models/content.model';
 
 /**
  * StoryCardComponent
@@ -119,13 +119,13 @@ export class StoryCardComponent {
    * Get photo count
    */
   getPhotoCount(): number {
-    return this.story.media.filter(m => m.type === 'photo').length;
+    return this.story.media.filter(m => m.type === MediaType.Photo).length;
   }
 
   /**
    * Get video count
    */
   getVideoCount(): number {
-    return this.story.media.filter(m => m.type === 'video').length;
+    return this.story.media.filter(m => m.type === MediaType.Video).length;
   }
 }

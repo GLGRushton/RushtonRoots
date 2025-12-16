@@ -139,12 +139,20 @@ export class ContentGridComponent implements OnInit {
     // Apply search filter
     if (this.filters.searchText) {
       const search = this.filters.searchText.toLowerCase();
-      filtered = filtered.filter(item => 
-        item.title.toLowerCase().includes(search) ||
-        (item as any).description?.toLowerCase().includes(search) ||
-        (item as any).summary?.toLowerCase().includes(search) ||
-        item.tags.some(tag => tag.toLowerCase().includes(search))
-      );
+      filtered = filtered.filter(item => {
+        const title = item.title.toLowerCase();
+        const tags = item.tags.some(tag => tag.toLowerCase().includes(search));
+        
+        // Type-safe property access
+        let description = '';
+        if ('description' in item) {
+          description = (item as Recipe | Tradition).description?.toLowerCase() || '';
+        } else if ('summary' in item) {
+          description = (item as Story).summary?.toLowerCase() || '';
+        }
+        
+        return title.includes(search) || description.includes(search) || tags;
+      });
     }
 
     // Apply category filter

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Tradition, TRADITION_FREQUENCY_CONFIG } from '../../models/content.model';
+import { Tradition, TRADITION_FREQUENCY_CONFIG, MediaType } from '../../models/content.model';
 
 /**
  * TraditionCardComponent
@@ -157,6 +157,6 @@ export class TraditionCardComponent {
    * Get photo count
    */
   getPhotoCount(): number {
-    return this.tradition.media.filter(m => m.type === 'photo').length;
+    return this.tradition.media.filter(m => m.type === MediaType.Photo).length;
   }
 }
