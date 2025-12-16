@@ -5,49 +5,170 @@
 }
 
 <div class="container mt-4">
-    <h2>Create Partnership</h2>
-    <hr />
+    <h2>Create New Partnership</h2>
 
-    <div class="row">
-        <div class="col-md-6">
-            <form asp-action="Create" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <!-- Angular Component -->
+    <app-partnership-form
+        id="partnershipForm"
+        available-people='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+            (people ?? Enumerable.Empty<RushtonRoots.Domain.UI.Models.PersonViewModel>())
+            .Select(p => new {
+                id = p.Id,
+                name = p.FullName,
+                photoUrl = p.PhotoUrl,
+                birthDate = p.DateOfBirth?.ToString("o"),
+                deathDate = p.DateOfDeath?.ToString("o"),
+                lifeSpan = p.DateOfBirth.HasValue && p.DateOfDeath.HasValue 
+                    ? $"{p.DateOfBirth.Value.Year}-{p.DateOfDeath.Value.Year}"
+                    : p.DateOfBirth.HasValue 
+                    ? $"{p.DateOfBirth.Value.Year}-Present"
+                    : ""
+            })
+        ))'>
+    </app-partnership-form>
+
+    <!-- Fallback for browsers without JavaScript -->
+    <noscript>
+        <div class="alert alert-warning">
+            <strong>JavaScript Required:</strong> This form requires JavaScript to function properly.
+            Please enable JavaScript in your browser or use the simplified form below.
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="form-group mb-3">
+                        <label asp-for="PersonAId" class="control-label">First Person</label>
+                        <select asp-for="PersonAId" class="form-control">
+                            <option value="">-- Select Person --</option>
+                            @if (people != null)
+                            {
+                                foreach (var person in people)
+                                {
+                                    <option value="@person.Id">@person.FullName</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="PersonAId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="PersonBId" class="control-label">Second Person</label>
+                        <select asp-for="PersonBId" class="form-control">
+                            <option value="">-- Select Person --</option>
+                            @if (people != null)
+                            {
+                                foreach (var person in people)
+                                {
+                                    <option value="@person.Id">@person.FullName</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="PersonBId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="PartnershipType" class="control-label">Partnership Type</label>
+                        <select asp-for="PartnershipType" class="form-control">
+                            <option value="">-- Select Type --</option>
+                            <option value="Married">Married</option>
+                            <option value="Partnered">Partnered</option>
+                            <option value="Engaged">Engaged</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Separated">Separated</option>
+                        </select>
+                        <span asp-validation-for="PartnershipType" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="StartDate" class="control-label">Start Date</label>
+                        <input asp-for="StartDate" type="date" class="form-control" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="EndDate" class="control-label">End Date</label>
+                        <input asp-for="EndDate" type="date" class="form-control" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </noscript>
+</div>
+
+@section Scripts {
+    <script>
+        (function() {
+            const partnershipForm = document.getElementById('partnershipForm');
+            
+            if (partnershipForm) {
+                // Handle form submission
+                partnershipForm.addEventListener('submitted', function(event) {
+                    const formData = event.detail;
+                    
+                    // Prepare request data
+                    const requestData = {
+                        PersonAId: formData.personAId,
+                        PersonBId: formData.personBId,
+                        PartnershipType: formData.partnershipType,
+                        StartDate: formData.startDate ? new Date(formData.startDate).toISOString() : null,
+                        EndDate: formData.endDate ? new Date(formData.endDate).toISOString() : null,
+                        Location: formData.location || '',
+                        Notes: formData.notes || ''
+                    };
+                    
+                    // Get anti-forgery token
+                    const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+                    const token = tokenElement ? tokenElement.value : '';
+                    
+                    // Submit to backend
+                    fetch('@Url.Action("Create", "Partnership")', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': token
+                        },
+                        body: JSON.stringify(requestData)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Failed to create partnership');
+                        }
+                    })
+                    .then(data => {
+                        // Redirect to partnership index or details
+                        if (data.id) {
+                            window.location.href = '@Url.Action("Details", "Partnership")/' + data.id;
+                        } else {
+                            window.location.href = '@Url.Action("Index", "Partnership")';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error creating partnership:', error);
+                        alert('An error occurred while creating the partnership. Please try again.');
+                    });
+                });
                 
-                <div class="form-group mb-3">
-                    <label asp-for="PersonAId" class="control-label">First Person</label>
-                    <select asp-for="PersonAId" class="form-control">
-                        <option value="">-- Select Person --</option>
-                        @if (people != null)
-                        {
-                            foreach (var person in people)
-                            {
-                                <option value="@person.Id">@person.FullName</option>
-                            }
-                        }
-                    </select>
-                    <span asp-validation-for="PersonAId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="PersonBId" class="control-label">Second Person</label>
-                    <select asp-for="PersonBId" class="form-control">
-                        <option value="">-- Select Person --</option>
-                        @if (people != null)
-                        {
-                            foreach (var person in people)
-                            {
-                                <option value="@person.Id">@person.FullName</option>
-                            }
-                        }
-                    </select>
-                    <span asp-validation-for="PersonBId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="PartnershipType" class="control-label">Partnership Type</label>
-                    <select asp-for="PartnershipType" class="form-control">
-                        <option value="">-- Select Type --</option>
-                        <option value="Married">Married</option>
+                // Handle form cancellation
+                partnershipForm.addEventListener('cancelled', function() {
+                    window.location.href = '@Url.Action("Index", "Partnership")';
+                });
+            }
+        })();
+    </script>
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
                         <option value="Partnered">Partnered</option>
                         <option value="Engaged">Engaged</option>
                         <option value="Divorced">Divorced</option>
