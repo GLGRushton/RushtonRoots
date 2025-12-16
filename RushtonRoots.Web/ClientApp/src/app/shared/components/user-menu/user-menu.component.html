@@ -9,12 +9,12 @@
         <span class="avatar-initial">{{ getUserInitial() }}</span>
       </div>
       <div class="user-info">
-        <span class="user-name">{{ userInfo.name }}</span>
+        <span class="user-name">{{ userInfo?.name }}</span>
         <span 
           class="user-role" 
-          [class.admin]="userInfo.isAdmin"
-          [class.household-admin]="userInfo.isHouseholdAdmin">
-          {{ userInfo.role }}
+          [class.admin]="userInfo?.isAdmin"
+          [class.household-admin]="userInfo?.isHouseholdAdmin">
+          {{ userInfo?.role }}
         </span>
       </div>
       <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
@@ -29,11 +29,11 @@
           <span class="avatar-initial">{{ getUserInitial() }}</span>
         </div>
         <div class="menu-header-info">
-          <p class="menu-user-name">{{ userInfo.name }}</p>
+          <p class="menu-user-name">{{ userInfo?.name }}</p>
           <span 
             class="role-badge"
-            [attr.data-role]="userInfo.isAdmin ? 'admin' : userInfo.isHouseholdAdmin ? 'household-admin' : 'member'">
-            {{ userInfo.role }}
+            [attr.data-role]="userInfo?.isAdmin ? 'admin' : userInfo?.isHouseholdAdmin ? 'household-admin' : 'member'">
+            {{ userInfo?.role }}
           </span>
         </div>
       </div>
@@ -54,7 +54,7 @@
 
     <button 
       mat-menu-item 
-      *ngIf="userInfo.isAdmin || userInfo.isHouseholdAdmin"
+      *ngIf="userInfo?.isAdmin || userInfo?.isHouseholdAdmin"
       (click)="navigateTo('/Account/CreateUser')">
       <mat-icon>person_add</mat-icon>
       <span>Add User</span>
@@ -62,7 +62,7 @@
 
     <button 
       mat-menu-item 
-      *ngIf="userInfo.isAdmin"
+      *ngIf="userInfo?.isAdmin"
       (click)="navigateTo('/Admin')">
       <mat-icon>admin_panel_settings</mat-icon>
       <span>Admin Panel</span>

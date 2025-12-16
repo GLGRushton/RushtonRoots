@@ -160,258 +160,129 @@ import { AccessibilityStatementComponent } from './accessibility/components/acce
 })
 export class AppModule {
   constructor(private injector: Injector) {
+    // Helper function to safely define custom elements
+    const safeDefine = (name: string, component: any) => {
+      if (!customElements.get(name)) {
+        const element = createCustomElement(component, { injector: this.injector });
+        customElements.define(name, element);
+      }
+    };
+
     // Register Angular Elements for use in Razor views
-    const welcomeElement = createCustomElement(WelcomeComponent, { injector: this.injector });
-    customElements.define('app-welcome', welcomeElement);
-
-    const familyTreeElement = createCustomElement(FamilyTreeComponent, { injector: this.injector });
-    customElements.define('app-family-tree', familyTreeElement);
-
-    const styleGuideElement = createCustomElement(StyleGuideComponent, { injector: this.injector });
-    customElements.define('app-style-guide', styleGuideElement);
+    safeDefine('app-welcome', WelcomeComponent);
+    safeDefine('app-family-tree', FamilyTreeComponent);
+    safeDefine('app-style-guide', StyleGuideComponent);
 
     // Register Phase 1.2 core reusable components as Angular Elements
-    const personCardElement = createCustomElement(PersonCardComponent, { injector: this.injector });
-    customElements.define('app-person-card', personCardElement);
-
-    const personListElement = createCustomElement(PersonListComponent, { injector: this.injector });
-    customElements.define('app-person-list', personListElement);
-
-    const searchBarElement = createCustomElement(SearchBarComponent, { injector: this.injector });
-    customElements.define('app-search-bar', searchBarElement);
-
-    const pageHeaderElement = createCustomElement(PageHeaderComponent, { injector: this.injector });
-    customElements.define('app-page-header', pageHeaderElement);
-
-    const emptyStateElement = createCustomElement(EmptyStateComponent, { injector: this.injector });
-    customElements.define('app-empty-state', emptyStateElement);
-
-    const loadingSpinnerElement = createCustomElement(LoadingSpinnerComponent, { injector: this.injector });
-    customElements.define('app-loading-spinner', loadingSpinnerElement);
-
-    const breadcrumbElement = createCustomElement(BreadcrumbComponent, { injector: this.injector });
-    customElements.define('app-breadcrumb', breadcrumbElement);
+    safeDefine('app-person-card', PersonCardComponent);
+    safeDefine('app-person-list', PersonListComponent);
+    safeDefine('app-search-bar', SearchBarComponent);
+    safeDefine('app-page-header', PageHeaderComponent);
+    safeDefine('app-empty-state', EmptyStateComponent);
+    safeDefine('app-loading-spinner', LoadingSpinnerComponent);
+    safeDefine('app-breadcrumb', BreadcrumbComponent);
 
     // Register Phase 2.1 Header & Navigation components as Angular Elements
-    const headerElement = createCustomElement(HeaderComponent, { injector: this.injector });
-    customElements.define('app-header', headerElement);
-
-    const navigationElement = createCustomElement(NavigationComponent, { injector: this.injector });
-    customElements.define('app-navigation', navigationElement);
-
-    const userMenuElement = createCustomElement(UserMenuComponent, { injector: this.injector });
-    customElements.define('app-user-menu', userMenuElement);
+    safeDefine('app-header', HeaderComponent);
+    safeDefine('app-navigation', NavigationComponent);
+    safeDefine('app-user-menu', UserMenuComponent);
 
     // Register Phase 2.2 Footer & Page Layout components as Angular Elements
-    const footerElement = createCustomElement(FooterComponent, { injector: this.injector });
-    customElements.define('app-footer', footerElement);
-
-    const pageLayoutElement = createCustomElement(PageLayoutComponent, { injector: this.injector });
-    customElements.define('app-page-layout', pageLayoutElement);
+    safeDefine('app-footer', FooterComponent);
+    safeDefine('app-page-layout', PageLayoutComponent);
 
     // Register Phase 3.1 Person Index & Search components as Angular Elements
-    const personIndexElement = createCustomElement(PersonIndexComponent, { injector: this.injector });
-    customElements.define('app-person-index', personIndexElement);
-
-    const personTableElement = createCustomElement(PersonTableComponent, { injector: this.injector });
-    customElements.define('app-person-table', personTableElement);
-
-    const personSearchElement = createCustomElement(PersonSearchComponent, { injector: this.injector });
-    customElements.define('app-person-search', personSearchElement);
+    safeDefine('app-person-index', PersonIndexComponent);
+    safeDefine('app-person-table', PersonTableComponent);
+    safeDefine('app-person-search', PersonSearchComponent);
 
     // Register Phase 3.2 Person Details & Timeline components as Angular Elements
-    const personDetailsElement = createCustomElement(PersonDetailsComponent, { injector: this.injector });
-    customElements.define('app-person-details', personDetailsElement);
-
-    const personTimelineElement = createCustomElement(PersonTimelineComponent, { injector: this.injector });
-    customElements.define('app-person-timeline', personTimelineElement);
-
-    const relationshipVisualizerElement = createCustomElement(RelationshipVisualizerComponent, { injector: this.injector });
-    customElements.define('app-relationship-visualizer', relationshipVisualizerElement);
-
-    const photoGalleryElement = createCustomElement(PhotoGalleryComponent, { injector: this.injector });
-    customElements.define('app-photo-gallery', photoGalleryElement);
+    safeDefine('app-person-details', PersonDetailsComponent);
+    safeDefine('app-person-timeline', PersonTimelineComponent);
+    safeDefine('app-relationship-visualizer', RelationshipVisualizerComponent);
+    safeDefine('app-photo-gallery', PhotoGalleryComponent);
 
     // Register Phase 3.3 Person Create & Edit Forms components as Angular Elements
-    const personFormElement = createCustomElement(PersonFormComponent, { injector: this.injector });
-    customElements.define('app-person-form', personFormElement);
-
-    const datePickerElement = createCustomElement(DatePickerComponent, { injector: this.injector });
-    customElements.define('app-date-picker', datePickerElement);
-
-    const locationAutocompleteElement = createCustomElement(LocationAutocompleteComponent, { injector: this.injector });
-    customElements.define('app-location-autocomplete', locationAutocompleteElement);
+    safeDefine('app-person-form', PersonFormComponent);
+    safeDefine('app-date-picker', DatePickerComponent);
+    safeDefine('app-location-autocomplete', LocationAutocompleteComponent);
 
     // Register Phase 4.1 Household Index & Cards components as Angular Elements
-    const householdIndexElement = createCustomElement(HouseholdIndexComponent, { injector: this.injector });
-    customElements.define('app-household-index', householdIndexElement);
-
-    const householdCardElement = createCustomElement(HouseholdCardComponent, { injector: this.injector });
-    customElements.define('app-household-card', householdCardElement);
+    safeDefine('app-household-index', HouseholdIndexComponent);
+    safeDefine('app-household-card', HouseholdCardComponent);
 
     // Register Phase 4.2 Household Details & Members components as Angular Elements
-    const householdDetailsElement = createCustomElement(HouseholdDetailsComponent, { injector: this.injector });
-    customElements.define('app-household-details', householdDetailsElement);
-
-    const householdMembersElement = createCustomElement(HouseholdMembersComponent, { injector: this.injector });
-    customElements.define('app-household-members', householdMembersElement);
-
-    const memberInviteDialogElement = createCustomElement(MemberInviteDialogComponent, { injector: this.injector });
-    customElements.define('app-member-invite-dialog', memberInviteDialogElement);
-
-    const householdSettingsElement = createCustomElement(HouseholdSettingsComponent, { injector: this.injector });
-    customElements.define('app-household-settings', householdSettingsElement);
-
-    const householdActivityTimelineElement = createCustomElement(HouseholdActivityTimelineComponent, { injector: this.injector });
-    customElements.define('app-household-activity-timeline', householdActivityTimelineElement);
+    safeDefine('app-household-details', HouseholdDetailsComponent);
+    safeDefine('app-household-members', HouseholdMembersComponent);
+    safeDefine('app-member-invite-dialog', MemberInviteDialogComponent);
+    safeDefine('app-household-settings', HouseholdSettingsComponent);
+    safeDefine('app-household-activity-timeline', HouseholdActivityTimelineComponent);
 
     // Register Phase 5.1 Partnership Management components as Angular Elements
-    const partnershipIndexElement = createCustomElement(PartnershipIndexComponent, { injector: this.injector });
-    customElements.define('app-partnership-index', partnershipIndexElement);
-
-    const partnershipCardElement = createCustomElement(PartnershipCardComponent, { injector: this.injector });
-    customElements.define('app-partnership-card', partnershipCardElement);
-
-    const partnershipFormElement = createCustomElement(PartnershipFormComponent, { injector: this.injector });
-    customElements.define('app-partnership-form', partnershipFormElement);
-
-    const partnershipTimelineElement = createCustomElement(PartnershipTimelineComponent, { injector: this.injector });
-    customElements.define('app-partnership-timeline', partnershipTimelineElement);
+    safeDefine('app-partnership-index', PartnershipIndexComponent);
+    safeDefine('app-partnership-card', PartnershipCardComponent);
+    safeDefine('app-partnership-form', PartnershipFormComponent);
+    safeDefine('app-partnership-timeline', PartnershipTimelineComponent);
 
     // Register Phase 5.2 Parent-Child Relationships components as Angular Elements
-    const parentChildIndexElement = createCustomElement(ParentChildIndexComponent, { injector: this.injector });
-    customElements.define('app-parent-child-index', parentChildIndexElement);
-
-    const parentChildCardElement = createCustomElement(ParentChildCardComponent, { injector: this.injector });
-    customElements.define('app-parent-child-card', parentChildCardElement);
-
-    const parentChildFormElement = createCustomElement(ParentChildFormComponent, { injector: this.injector });
-    customElements.define('app-parent-child-form', parentChildFormElement);
-
-    const familyTreeMiniElement = createCustomElement(FamilyTreeMiniComponent, { injector: this.injector });
-    customElements.define('app-family-tree-mini', familyTreeMiniElement);
-
-    const relationshipValidationElement = createCustomElement(RelationshipValidationComponent, { injector: this.injector });
-    customElements.define('app-relationship-validation', relationshipValidationElement);
-
-    const relationshipSuggestionsElement = createCustomElement(RelationshipSuggestionsComponent, { injector: this.injector });
-    customElements.define('app-relationship-suggestions', relationshipSuggestionsElement);
-
-    const bulkRelationshipImportElement = createCustomElement(BulkRelationshipImportComponent, { injector: this.injector });
-    customElements.define('app-bulk-relationship-import', bulkRelationshipImportElement);
+    safeDefine('app-parent-child-index', ParentChildIndexComponent);
+    safeDefine('app-parent-child-card', ParentChildCardComponent);
+    safeDefine('app-parent-child-form', ParentChildFormComponent);
+    safeDefine('app-family-tree-mini', FamilyTreeMiniComponent);
+    safeDefine('app-relationship-validation', RelationshipValidationComponent);
+    safeDefine('app-relationship-suggestions', RelationshipSuggestionsComponent);
+    safeDefine('app-bulk-relationship-import', BulkRelationshipImportComponent);
 
     // Register Phase 6.1 Login & Registration components as Angular Elements
-    const loginElement = createCustomElement(LoginComponent, { injector: this.injector });
-    customElements.define('app-login', loginElement);
-
-    const forgotPasswordElement = createCustomElement(ForgotPasswordComponent, { injector: this.injector });
-    customElements.define('app-forgot-password', forgotPasswordElement);
-
-    const resetPasswordElement = createCustomElement(ResetPasswordComponent, { injector: this.injector });
-    customElements.define('app-reset-password', resetPasswordElement);
+    safeDefine('app-login', LoginComponent);
+    safeDefine('app-forgot-password', ForgotPasswordComponent);
+    safeDefine('app-reset-password', ResetPasswordComponent);
 
     // Register Phase 6.2 User Profile & Settings components as Angular Elements
-    const userProfileElement = createCustomElement(UserProfileComponent, { injector: this.injector });
-    customElements.define('app-user-profile', userProfileElement);
-
-    const notificationPreferencesElement = createCustomElement(NotificationPreferencesComponent, { injector: this.injector });
-    customElements.define('app-notification-preferences', notificationPreferencesElement);
-
-    const privacySettingsElement = createCustomElement(PrivacySettingsComponent, { injector: this.injector });
-    customElements.define('app-privacy-settings', privacySettingsElement);
-
-    const connectedAccountsElement = createCustomElement(ConnectedAccountsComponent, { injector: this.injector });
-    customElements.define('app-connected-accounts', connectedAccountsElement);
-
-    const accountDeletionElement = createCustomElement(AccountDeletionComponent, { injector: this.injector });
-    customElements.define('app-account-deletion', accountDeletionElement);
+    safeDefine('app-user-profile', UserProfileComponent);
+    safeDefine('app-notification-preferences', NotificationPreferencesComponent);
+    safeDefine('app-privacy-settings', PrivacySettingsComponent);
+    safeDefine('app-connected-accounts', ConnectedAccountsComponent);
+    safeDefine('app-account-deletion', AccountDeletionComponent);
 
     // Register Phase 7.1 Wiki & Knowledge Base components as Angular Elements
-    const wikiIndexElement = createCustomElement(WikiIndexComponent, { injector: this.injector });
-    customElements.define('app-wiki-index', wikiIndexElement);
-
-    const wikiArticleElement = createCustomElement(WikiArticleComponent, { injector: this.injector });
-    customElements.define('app-wiki-article', wikiArticleElement);
-
-    const markdownEditorElement = createCustomElement(MarkdownEditorComponent, { injector: this.injector });
-    customElements.define('app-markdown-editor', markdownEditorElement);
+    safeDefine('app-wiki-index', WikiIndexComponent);
+    safeDefine('app-wiki-article', WikiArticleComponent);
+    safeDefine('app-markdown-editor', MarkdownEditorComponent);
 
     // Register Phase 7.2 Recipes, Stories, & Traditions components as Angular Elements
-    const recipeCardElement = createCustomElement(RecipeCardComponent, { injector: this.injector });
-    customElements.define('app-recipe-card', recipeCardElement);
-
-    const recipeDetailsElement = createCustomElement(RecipeDetailsComponent, { injector: this.injector });
-    customElements.define('app-recipe-details', recipeDetailsElement);
-
-    const storyCardElement = createCustomElement(StoryCardComponent, { injector: this.injector });
-    customElements.define('app-story-card', storyCardElement);
-
-    const traditionCardElement = createCustomElement(TraditionCardComponent, { injector: this.injector });
-    customElements.define('app-tradition-card', traditionCardElement);
-
-    const contentGridElement = createCustomElement(ContentGridComponent, { injector: this.injector });
-    customElements.define('app-content-grid', contentGridElement);
+    safeDefine('app-recipe-card', RecipeCardComponent);
+    safeDefine('app-recipe-details', RecipeDetailsComponent);
+    safeDefine('app-story-card', StoryCardComponent);
+    safeDefine('app-tradition-card', TraditionCardComponent);
+    safeDefine('app-content-grid', ContentGridComponent);
 
     // Register Phase 8.1 Media Gallery Enhancements components as Angular Elements
-    const mediaGalleryElement = createCustomElement(MediaGalleryComponent, { injector: this.injector });
-    customElements.define('app-media-gallery', mediaGalleryElement);
-
-    const photoLightboxElement = createCustomElement(PhotoLightboxComponent, { injector: this.injector });
-    customElements.define('app-photo-lightbox', photoLightboxElement);
-
-    const photoTaggingElement = createCustomElement(PhotoTaggingComponent, { injector: this.injector });
-    customElements.define('app-photo-tagging', photoTaggingElement);
-
-    const albumManagerElement = createCustomElement(AlbumManagerComponent, { injector: this.injector });
-    customElements.define('app-album-manager', albumManagerElement);
-
-    const photoUploadElement = createCustomElement(PhotoUploadComponent, { injector: this.injector });
-    customElements.define('app-photo-upload', photoUploadElement);
-
-    const photoEditorElement = createCustomElement(PhotoEditorComponent, { injector: this.injector });
-    customElements.define('app-photo-editor', photoEditorElement);
-
-    const videoPlayerElement = createCustomElement(VideoPlayerComponent, { injector: this.injector });
-    customElements.define('app-video-player', videoPlayerElement);
+    safeDefine('app-media-gallery', MediaGalleryComponent);
+    safeDefine('app-photo-lightbox', PhotoLightboxComponent);
+    safeDefine('app-photo-tagging', PhotoTaggingComponent);
+    safeDefine('app-album-manager', AlbumManagerComponent);
+    safeDefine('app-photo-upload', PhotoUploadComponent);
+    safeDefine('app-photo-editor', PhotoEditorComponent);
+    safeDefine('app-video-player', VideoPlayerComponent);
 
     // Register Phase 8.2 Calendar & Events components as Angular Elements
-    const calendarElement = createCustomElement(CalendarComponent, { injector: this.injector });
-    customElements.define('app-calendar', calendarElement);
-
-    const eventCardElement = createCustomElement(EventCardComponent, { injector: this.injector });
-    customElements.define('app-event-card', eventCardElement);
-
-    const eventFormDialogElement = createCustomElement(EventFormDialogComponent, { injector: this.injector });
-    customElements.define('app-event-form-dialog', eventFormDialogElement);
-
-    const eventRsvpDialogElement = createCustomElement(EventRsvpDialogComponent, { injector: this.injector });
-    customElements.define('app-event-rsvp-dialog', eventRsvpDialogElement);
-
-    const eventDetailsDialogElement = createCustomElement(EventDetailsDialogComponent, { injector: this.injector });
-    customElements.define('app-event-details-dialog', eventDetailsDialogElement);
+    safeDefine('app-calendar', CalendarComponent);
+    safeDefine('app-event-card', EventCardComponent);
+    safeDefine('app-event-form-dialog', EventFormDialogComponent);
+    safeDefine('app-event-rsvp-dialog', EventRsvpDialogComponent);
+    safeDefine('app-event-details-dialog', EventDetailsDialogComponent);
 
     // Register Phase 8.3 Messaging & Notifications components as Angular Elements
-    const messageThreadElement = createCustomElement(MessageThreadComponent, { injector: this.injector });
-    customElements.define('app-message-thread', messageThreadElement);
-
-    const chatInterfaceElement = createCustomElement(ChatInterfaceComponent, { injector: this.injector });
-    customElements.define('app-chat-interface', chatInterfaceElement);
-
-    const notificationPanelElement = createCustomElement(NotificationPanelComponent, { injector: this.injector });
-    customElements.define('app-notification-panel', notificationPanelElement);
-
-    const messageCompositionDialogElement = createCustomElement(MessageCompositionDialogComponent, { injector: this.injector });
-    customElements.define('app-message-composition-dialog', messageCompositionDialogElement);
+    safeDefine('app-message-thread', MessageThreadComponent);
+    safeDefine('app-chat-interface', ChatInterfaceComponent);
+    safeDefine('app-notification-panel', NotificationPanelComponent);
+    safeDefine('app-message-composition-dialog', MessageCompositionDialogComponent);
 
     // Register Phase 10.1 Accessibility components as Angular Elements
-    const skipNavigationElement = createCustomElement(SkipNavigationComponent, { injector: this.injector });
-    customElements.define('app-skip-navigation', skipNavigationElement);
-
-    const keyboardShortcutsDialogElement = createCustomElement(KeyboardShortcutsDialogComponent, { injector: this.injector });
-    customElements.define('app-keyboard-shortcuts-dialog', keyboardShortcutsDialogElement);
-
-    const accessibilityStatementElement = createCustomElement(AccessibilityStatementComponent, { injector: this.injector });
-    customElements.define('app-accessibility-statement', accessibilityStatementElement);
+    safeDefine('app-skip-navigation', SkipNavigationComponent);
+    safeDefine('app-keyboard-shortcuts-dialog', KeyboardShortcutsDialogComponent);
+    safeDefine('app-accessibility-statement', AccessibilityStatementComponent);
   }
 
   ngDoBootstrap() {

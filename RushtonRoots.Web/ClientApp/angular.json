@@ -67,7 +67,8 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true,
-              "outputHashing": "none"
+              "outputHashing": "none",
+              "serviceWorker": false
             }
           },
           "defaultConfiguration": "production"
