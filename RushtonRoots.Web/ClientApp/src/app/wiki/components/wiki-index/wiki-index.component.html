@@ -1,0 +1,188 @@
+<div class="wiki-index">
+  <!-- Page Header -->
+  <div class="wiki-header">
+    <div class="wiki-header__title">
+      <mat-icon class="wiki-header__icon">library_books</mat-icon>
+      <h1>Knowledge Base</h1>
+    </div>
+    <button mat-raised-button color="primary" (click)="onCreateArticle()">
+      <mat-icon>add</mat-icon>
+      Create Article
+    </button>
+  </div>
+
+  <!-- Filters and Search -->
+  <mat-card class="wiki-filters">
+    <div class="wiki-filters__row">
+      <mat-form-field class="wiki-filters__search" appearance="outline">
+        <mat-label>Search articles...</mat-label>
+        <input matInput
+               [value]="searchFilters.query"
+               (input)="onSearchChange($any($event.target).value)"
+               placeholder="Search by title, content, or tags">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field class="wiki-filters__field" appearance="outline">
+        <mat-label>Category</mat-label>
+        <mat-select [value]="searchFilters.categoryId"
+                    (selectionChange)="onCategoryChange($event.value)">
+          <mat-option [value]="undefined">All Categories</mat-option>
+          <mat-option *ngFor="let category of categories" [value]="category.id">
+            <mat-icon [style.color]="category.color">{{category.icon}}</mat-icon>
+            {{ category.name }} ({{ category.articleCount }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="wiki-filters__field" appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [value]="searchFilters.status"
+                    (selectionChange)="onStatusChange($event.value)">
+          <mat-option [value]="undefined">All Status</mat-option>
+          <mat-option value="published">Published</mat-option>
+          <mat-option value="draft">Draft</mat-option>
+          <mat-option value="archived">Archived</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="wiki-filters__field" appearance="outline">
+        <mat-label>Sort By</mat-label>
+        <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange($event.value)">
+          <mat-option *ngFor="let option of sortOptions" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-icon-button
+              class="wiki-filters__view-toggle"
+              (click)="toggleViewMode()"
+              [matTooltip]="viewMode === 'grid' ? 'Switch to list view' : 'Switch to grid view'">
+        <mat-icon>{{ viewMode === 'grid' ? 'view_list' : 'view_module' }}</mat-icon>
+      </button>
+    </div>
+
+    <div class="wiki-filters__results">
+      <span>{{ filteredArticles.length }} article{{ filteredArticles.length !== 1 ? 's' : '' }} found</span>
+    </div>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="wiki-loading">
+    <mat-spinner></mat-spinner>
+    <p>Loading articles...</p>
+  </div>
+
+  <!-- Articles Grid/List -->
+  <div *ngIf="!loading && filteredArticles.length > 0"
+       class="wiki-articles"
+       [class.wiki-articles--grid]="viewMode === 'grid'"
+       [class.wiki-articles--list]="viewMode === 'list'">
+    <mat-card *ngFor="let article of filteredArticles"
+              class="article-card"
+              [class.article-card--locked]="article.isLocked">
+      <mat-card-header>
+        <mat-icon mat-card-avatar [style.color]="getCategoryById(article.categoryId)?.color || '#2e7d32'">
+          {{ getCategoryById(article.categoryId)?.icon || 'article' }}
+        </mat-icon>
+        <mat-card-title>
+          <a (click)="onViewArticle(article)" class="article-card__title-link">
+            {{ article.title }}
+          </a>
+          <mat-icon *ngIf="article.isLocked"
+                    class="article-card__lock-icon"
+                    matTooltip="Locked by {{ article.lockedBy }}">
+            lock
+          </mat-icon>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip [color]="getStatusColor(article.status)" selected>
+            {{ article.status }}
+          </mat-chip>
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="article-card__meta">
+          <span class="article-card__meta-item">
+            <mat-icon>person</mat-icon>
+            {{ article.authorName }}
+          </span>
+          <span class="article-card__meta-item">
+            <mat-icon>event</mat-icon>
+            {{ formatDate(article.updatedDate) }}
+          </span>
+          <span class="article-card__meta-item">
+            <mat-icon>visibility</mat-icon>
+            {{ article.viewCount }} views
+          </span>
+          <span class="article-card__meta-item">
+            <mat-icon>history</mat-icon>
+            v{{ article.version }}
+          </span>
+        </div>
+
+        <div class="article-card__category">
+          <mat-chip>
+            <mat-icon [style.color]="getCategoryById(article.categoryId)?.color">
+              {{ getCategoryById(article.categoryId)?.icon }}
+            </mat-icon>
+            {{ article.categoryName }}
+          </mat-chip>
+        </div>
+
+        <div class="article-card__tags" *ngIf="article.tags.length > 0">
+          <mat-chip *ngFor="let tag of article.tags">
+            {{ tag }}
+          </mat-chip>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="onViewArticle(article)">
+          <mat-icon>visibility</mat-icon>
+          View
+        </button>
+        <button mat-button (click)="onEditArticle(article)" [disabled]="article.isLocked">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onViewArticle(article)">
+            <mat-icon>visibility</mat-icon>
+            <span>View Article</span>
+          </button>
+          <button mat-menu-item (click)="onEditArticle(article)" [disabled]="article.isLocked">
+            <mat-icon>edit</mat-icon>
+            <span>Edit Article</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="onDeleteArticle(article)">
+            <mat-icon color="warn">delete</mat-icon>
+            <span>Delete Article</span>
+          </button>
+        </mat-menu>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredArticles.length === 0" class="wiki-empty">
+    <mat-icon class="wiki-empty__icon">article</mat-icon>
+    <h2>No articles found</h2>
+    <p *ngIf="searchFilters.query || searchFilters.categoryId || searchFilters.status">
+      Try adjusting your filters or search terms.
+    </p>
+    <p *ngIf="!searchFilters.query && !searchFilters.categoryId && !searchFilters.status">
+      Get started by creating your first article.
+    </p>
+    <button mat-raised-button color="primary" (click)="onCreateArticle()">
+      <mat-icon>add</mat-icon>
+      Create Article
+    </button>
+  </div>
+</div>
