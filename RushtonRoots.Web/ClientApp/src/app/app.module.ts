@@ -31,6 +31,12 @@ import { PersonIndexComponent } from './person/components/person-index/person-in
 import { PersonTableComponent } from './person/components/person-table/person-table.component';
 import { PersonSearchComponent } from './person/components/person-search/person-search.component';
 
+// Import Phase 3.2 Person Details & Timeline components for Angular Elements registration
+import { PersonDetailsComponent } from './person/components/person-details/person-details.component';
+import { PersonTimelineComponent } from './person/components/person-timeline/person-timeline.component';
+import { RelationshipVisualizerComponent } from './person/components/relationship-visualizer/relationship-visualizer.component';
+import { PhotoGalleryComponent } from './person/components/photo-gallery/photo-gallery.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -108,6 +114,19 @@ export class AppModule {
 
     const personSearchElement = createCustomElement(PersonSearchComponent, { injector: this.injector });
     customElements.define('app-person-search', personSearchElement);
+
+    // Register Phase 3.2 Person Details & Timeline components as Angular Elements
+    const personDetailsElement = createCustomElement(PersonDetailsComponent, { injector: this.injector });
+    customElements.define('app-person-details', personDetailsElement);
+
+    const personTimelineElement = createCustomElement(PersonTimelineComponent, { injector: this.injector });
+    customElements.define('app-person-timeline', personTimelineElement);
+
+    const relationshipVisualizerElement = createCustomElement(RelationshipVisualizerComponent, { injector: this.injector });
+    customElements.define('app-relationship-visualizer', relationshipVisualizerElement);
+
+    const photoGalleryElement = createCustomElement(PhotoGalleryComponent, { injector: this.injector });
+    customElements.define('app-photo-gallery', photoGalleryElement);
   }
 
   ngDoBootstrap() {

@@ -1,0 +1,202 @@
+<div class="person-details-container">
+  <!-- Header Section with Photo and Basic Info -->
+  <div class="person-header">
+    <div class="person-photo">
+      <img 
+        [src]="getPrimaryPhoto()" 
+        [alt]="person.fullName"
+        (error)="handleImageError($event)">
+      <div class="deceased-badge" *ngIf="person.isDeceased">
+        <mat-icon>sentiment_dissatisfied</mat-icon>
+        Deceased
+      </div>
+    </div>
+
+    <div class="person-info">
+      <h1>{{ person.fullName }}</h1>
+      
+      <div class="info-row" *ngIf="person.dateOfBirth || person.dateOfDeath">
+        <mat-icon>cake</mat-icon>
+        <span>
+          {{ formatDate(person.dateOfBirth) }}
+          <span *ngIf="person.isDeceased"> - {{ formatDate(person.dateOfDeath) }}</span>
+        </span>
+        <span class="age-badge" *ngIf="getLifespan()">{{ getLifespan() }}</span>
+      </div>
+
+      <div class="info-row" *ngIf="person.placeOfBirth">
+        <mat-icon>location_on</mat-icon>
+        <span>Born in {{ person.placeOfBirth }}</span>
+      </div>
+
+      <div class="info-row" *ngIf="person.isDeceased && person.placeOfDeath">
+        <mat-icon>location_on</mat-icon>
+        <span>Died in {{ person.placeOfDeath }}</span>
+      </div>
+
+      <div class="info-row" *ngIf="person.householdName">
+        <mat-icon>home</mat-icon>
+        <span>{{ person.householdName }}</span>
+      </div>
+
+      <div class="info-row" *ngIf="person.occupation">
+        <mat-icon>work</mat-icon>
+        <span>{{ person.occupation }}</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="copyShareLink()">
+          <mat-icon>share</mat-icon>
+          <span>Share</span>
+        </button>
+        <button mat-menu-item *ngIf="canDelete" (click)="onDelete()">
+          <mat-icon color="warn">delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Tabbed Content -->
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="300ms">
+    <!-- Overview Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">person</mat-icon>
+        Overview
+      </ng-template>
+      
+      <div class="tab-content">
+        <!-- Biography Section -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>
+              Biography
+              <button 
+                mat-icon-button 
+                *ngIf="canEdit && !isEditingBio" 
+                (click)="startEditingBio()"
+                matTooltip="Edit biography">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="!isEditingBio">
+              <p *ngIf="person.biography">{{ person.biography }}</p>
+              <p class="no-data" *ngIf="!person.biography">No biography available.</p>
+            </div>
+            <div *ngIf="isEditingBio" class="edit-section">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Biography</mat-label>
+                <textarea 
+                  matInput 
+                  [(ngModel)]="editedBio" 
+                  rows="6"
+                  placeholder="Enter biography..."></textarea>
+              </mat-form-field>
+              <div class="edit-actions">
+                <button mat-raised-button color="primary" (click)="saveBio()">
+                  <mat-icon>save</mat-icon>
+                  Save
+                </button>
+                <button mat-button (click)="cancelEditingBio()">Cancel</button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Additional Info -->
+        <div class="info-grid">
+          <mat-card class="info-card" *ngIf="person.education">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>school</mat-icon>
+                Education
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ person.education }}</p>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="info-card" *ngIf="person.notes">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>notes</mat-icon>
+                Notes
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ person.notes }}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Timeline Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">timeline</mat-icon>
+        Timeline
+      </ng-template>
+      
+      <div class="tab-content">
+        <app-person-timeline
+          [personId]="person.id"
+          [events]="timelineEvents"
+          [dateOfBirth]="person.dateOfBirth"
+          [dateOfDeath]="person.dateOfDeath"
+          [isDeceased]="person.isDeceased">
+        </app-person-timeline>
+      </div>
+    </mat-tab>
+
+    <!-- Relationships Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">people</mat-icon>
+        Relationships
+      </ng-template>
+      
+      <div class="tab-content">
+        <app-relationship-visualizer
+          [personId]="person.id"
+          [personName]="person.fullName"
+          [relationships]="relationships"
+          (personClicked)="onRelationshipPersonClick($event)">
+        </app-relationship-visualizer>
+      </div>
+    </mat-tab>
+
+    <!-- Photos Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">photo_library</mat-icon>
+        Photos ({{ photos.length }})
+      </ng-template>
+      
+      <div class="tab-content">
+        <app-photo-gallery
+          [personId]="person.id"
+          [photos]="photos"
+          [canEdit]="canEdit"
+          (photoUploaded)="onPhotoUpload($event)"
+          (photoDeleted)="onPhotoDelete($event)"
+          (photoPrimaryChanged)="onPhotoPrimaryChange($event)">
+        </app-photo-gallery>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

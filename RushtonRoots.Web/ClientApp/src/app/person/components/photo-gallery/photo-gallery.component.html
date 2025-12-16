@@ -1,0 +1,115 @@
+<div class="photo-gallery-container">
+  <!-- Upload Section -->
+  <div class="upload-section" *ngIf="canEdit">
+    <button mat-raised-button color="primary" (click)="triggerFileInput()">
+      <mat-icon>add_photo_alternate</mat-icon>
+      Upload Photo
+    </button>
+    <input 
+      #fileInput 
+      type="file" 
+      accept="image/*" 
+      (change)="onFileSelected($event)"
+      style="display: none;">
+  </div>
+
+  <!-- Photo Grid -->
+  <div class="photo-grid" *ngIf="photos.length > 0; else noPhotos">
+    <div class="photo-item" *ngFor="let photo of photos; let i = index">
+      <div class="photo-wrapper" (click)="onPhotoClick(photo, i)">
+        <img 
+          [src]="photo.thumbnailUrl || photo.photoUrl" 
+          [alt]="photo.title || 'Photo'"
+          (error)="handleImageError($event)">
+        
+        <div class="photo-overlay">
+          <mat-icon>zoom_in</mat-icon>
+        </div>
+
+        <div class="primary-badge" *ngIf="photo.isPrimary">
+          <mat-icon>star</mat-icon>
+          <span>Primary</span>
+        </div>
+      </div>
+
+      <div class="photo-info">
+        <h4 *ngIf="photo.title">{{ photo.title }}</h4>
+        <p class="photo-date">{{ formatDate(photo.uploadDate) }}</p>
+        
+        <div class="photo-actions" *ngIf="canEdit">
+          <button 
+            mat-icon-button 
+            *ngIf="!photo.isPrimary"
+            (click)="onSetPrimaryPhoto(photo.id)"
+            matTooltip="Set as primary photo"
+            aria-label="Set as primary photo">
+            <mat-icon>star_border</mat-icon>
+          </button>
+          <button 
+            mat-icon-button 
+            color="warn"
+            (click)="onDeletePhoto(photo.id)"
+            matTooltip="Delete photo"
+            aria-label="Delete photo">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noPhotos>
+    <div class="no-photos">
+      <mat-icon>photo_library</mat-icon>
+      <p>No photos available</p>
+      <button mat-raised-button color="primary" *ngIf="canEdit" (click)="triggerFileInput()">
+        <mat-icon>add_photo_alternate</mat-icon>
+        Add First Photo
+      </button>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox-overlay" *ngIf="isLightboxOpen" (click)="closeLightbox()">
+  <div class="lightbox-container" (click)="$event.stopPropagation()">
+    <button 
+      mat-icon-button 
+      class="lightbox-close" 
+      (click)="closeLightbox()"
+      aria-label="Close lightbox">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <button 
+      mat-icon-button 
+      class="lightbox-nav lightbox-prev" 
+      *ngIf="canNavigatePrevious()"
+      (click)="previousPhoto()"
+      aria-label="Previous photo">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="lightbox-content" *ngIf="getCurrentPhoto() as photo">
+      <img 
+        [src]="photo.photoUrl" 
+        [alt]="photo.title || 'Photo'"
+        (error)="handleImageError($event)">
+      
+      <div class="lightbox-info" *ngIf="photo.title || photo.description">
+        <h3 *ngIf="photo.title">{{ photo.title }}</h3>
+        <p *ngIf="photo.description">{{ photo.description }}</p>
+        <p class="lightbox-date">{{ formatDate(photo.uploadDate) }}</p>
+      </div>
+    </div>
+
+    <button 
+      mat-icon-button 
+      class="lightbox-nav lightbox-next" 
+      *ngIf="canNavigateNext()"
+      (click)="nextPhoto()"
+      aria-label="Next photo">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>

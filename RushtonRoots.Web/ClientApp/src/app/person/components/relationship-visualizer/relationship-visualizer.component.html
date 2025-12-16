@@ -1,0 +1,122 @@
+<div class="relationships-container">
+  <!-- Parents Section -->
+  <div class="relationship-section" *ngIf="parents.length > 0">
+    <div class="section-header">
+      <mat-icon>supervisor_account</mat-icon>
+      <h3>Parents</h3>
+    </div>
+    <div class="relationship-grid">
+      <mat-card 
+        class="person-card" 
+        *ngFor="let relationship of parents"
+        (click)="onPersonClick(relationship.relatedPerson.id)"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="onPersonClick(relationship.relatedPerson.id)">
+        <div class="person-avatar">
+          <img 
+            [src]="relationship.relatedPerson.photoUrl || getDefaultPhotoUrl()" 
+            [alt]="relationship.relatedPerson.fullName"
+            (error)="handleImageError($event)">
+        </div>
+        <mat-card-content>
+          <h4>{{ relationship.relatedPerson.fullName }}</h4>
+          <p class="life-span">{{ getLifeSpan(relationship.relatedPerson) }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Spouses/Partners Section -->
+  <div class="relationship-section" *ngIf="spouses.length > 0">
+    <div class="section-header">
+      <mat-icon>favorite</mat-icon>
+      <h3>Spouses & Partners</h3>
+    </div>
+    <div class="relationship-grid">
+      <mat-card 
+        class="person-card" 
+        *ngFor="let relationship of spouses"
+        (click)="onPersonClick(relationship.relatedPerson.id)"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="onPersonClick(relationship.relatedPerson.id)">
+        <div class="person-avatar">
+          <img 
+            [src]="relationship.relatedPerson.photoUrl || getDefaultPhotoUrl()" 
+            [alt]="relationship.relatedPerson.fullName"
+            (error)="handleImageError($event)">
+        </div>
+        <mat-card-content>
+          <h4>{{ relationship.relatedPerson.fullName }}</h4>
+          <p class="life-span">{{ getLifeSpan(relationship.relatedPerson) }}</p>
+          <p class="relationship-duration" *ngIf="getRelationshipDuration(relationship)">
+            {{ getRelationshipDuration(relationship) }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Children Section -->
+  <div class="relationship-section" *ngIf="children.length > 0">
+    <div class="section-header">
+      <mat-icon>child_care</mat-icon>
+      <h3>Children</h3>
+    </div>
+    <div class="relationship-grid">
+      <mat-card 
+        class="person-card" 
+        *ngFor="let relationship of children"
+        (click)="onPersonClick(relationship.relatedPerson.id)"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="onPersonClick(relationship.relatedPerson.id)">
+        <div class="person-avatar">
+          <img 
+            [src]="relationship.relatedPerson.photoUrl || getDefaultPhotoUrl()" 
+            [alt]="relationship.relatedPerson.fullName"
+            (error)="handleImageError($event)">
+        </div>
+        <mat-card-content>
+          <h4>{{ relationship.relatedPerson.fullName }}</h4>
+          <p class="life-span">{{ getLifeSpan(relationship.relatedPerson) }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Siblings Section -->
+  <div class="relationship-section" *ngIf="siblings.length > 0">
+    <div class="section-header">
+      <mat-icon>people</mat-icon>
+      <h3>Siblings</h3>
+    </div>
+    <div class="relationship-grid">
+      <mat-card 
+        class="person-card" 
+        *ngFor="let relationship of siblings"
+        (click)="onPersonClick(relationship.relatedPerson.id)"
+        role="button"
+        tabindex="0"
+        (keyup.enter)="onPersonClick(relationship.relatedPerson.id)">
+        <div class="person-avatar">
+          <img 
+            [src]="relationship.relatedPerson.photoUrl || getDefaultPhotoUrl()" 
+            [alt]="relationship.relatedPerson.fullName"
+            (error)="handleImageError($event)">
+        </div>
+        <mat-card-content>
+          <h4>{{ relationship.relatedPerson.fullName }}</h4>
+          <p class="life-span">{{ getLifeSpan(relationship.relatedPerson) }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- No Relationships Message -->
+  <div class="no-relationships" *ngIf="relationships.length === 0">
+    <mat-icon>group_off</mat-icon>
+    <p>No relationships recorded</p>
+  </div>
+</div>
