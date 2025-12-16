@@ -3,15 +3,15 @@
 // Include Angular Material core styles
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-// Import custom SCSS partials
-@import 'styles/variables';
-@import 'styles/mixins';
-@import 'styles/typography';
-@import 'styles/layout';
-@import 'styles/animations';
-@import 'styles/utilities';
-@import 'styles/mobile';
-@import 'styles/accessibility';
+// Import custom SCSS partials using @use
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+@use 'styles/typography' as *;
+@use 'styles/layout' as *;
+@use 'styles/animations' as *;
+@use 'styles/utilities' as *;
+@use 'styles/mobile' as *;
+@use 'styles/accessibility' as *;
 
 // Global resets and base styles
 * {

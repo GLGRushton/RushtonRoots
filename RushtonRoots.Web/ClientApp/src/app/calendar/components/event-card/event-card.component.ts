@@ -198,4 +198,11 @@ export class EventCardComponent {
   onCardClick(): void {
     this.viewClick.emit(this.event);
   }
+
+  /**
+   * Get elevation CSS class
+   */
+  getElevationClass(): string {
+    return `mat-elevation-z${this.elevation}`;
+  }
 }

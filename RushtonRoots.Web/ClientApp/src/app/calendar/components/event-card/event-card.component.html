@@ -3,7 +3,7 @@
   [class.event-card--upcoming]="isUpcoming()"
   [class.event-card--past]="isPast()"
   [class.event-card--today]="isToday()"
-  [elevation]="elevation"
+  [ngClass]="getElevationClass()"
   (click)="onCardClick()"
   class="event-card">
   

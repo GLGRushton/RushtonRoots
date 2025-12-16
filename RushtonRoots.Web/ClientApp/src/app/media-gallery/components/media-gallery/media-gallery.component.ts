@@ -65,6 +65,9 @@ export class MediaGalleryComponent implements OnInit, OnDestroy {
   selectedItems: Set<number> = new Set();
   selectionMode = false;
 
+  // Expose Object for template use
+  Object = Object;
+
   ngOnInit(): void {
     this.setupSearch();
     this.applyFiltersAndSort();
