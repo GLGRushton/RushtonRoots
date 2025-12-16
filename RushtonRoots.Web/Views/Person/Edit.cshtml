@@ -1,80 +1,22 @@
-@model RushtonRoots.Domain.UI.Requests.UpdatePersonRequest
+@model RushtonRoots.Domain.UI.Models.PersonViewModel
+
 @{
     ViewData["Title"] = "Edit Person";
-    var households = ViewBag.Households as IEnumerable<RushtonRoots.Domain.UI.Models.HouseholdViewModel>;
 }
 
 <div class="container mt-4">
-    <h2>Edit Person</h2>
-
-    <div class="row">
-        <div class="col-md-8">
-            <form asp-action="Edit" method="post">
-                <input type="hidden" asp-for="Id" />
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="FirstName" class="control-label"></label>
-                    <input asp-for="FirstName" class="form-control" />
-                    <span asp-validation-for="FirstName" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="LastName" class="control-label"></label>
-                    <input asp-for="LastName" class="form-control" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="HouseholdId" class="control-label">Household</label>
-                    <select asp-for="HouseholdId" class="form-control">
-                        <option value="">Select Household</option>
-                        @if (households != null)
-                        {
-                            foreach (var household in households)
-                            {
-                                <option value="@household.Id">@household.HouseholdName</option>
-                            }
-                        }
-                    </select>
-                    <span asp-validation-for="HouseholdId" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="DateOfBirth" class="control-label"></label>
-                    <input asp-for="DateOfBirth" type="date" class="form-control" />
-                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <div class="form-check">
-                        <input asp-for="IsDeceased" class="form-check-input" type="checkbox" />
-                        <label asp-for="IsDeceased" class="form-check-label"></label>
-                    </div>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="DateOfDeath" class="control-label"></label>
-                    <input asp-for="DateOfDeath" type="date" class="form-control" />
-                    <span asp-validation-for="DateOfDeath" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="PhotoUrl" class="control-label">Photo URL</label>
-                    <input asp-for="PhotoUrl" class="form-control" />
-                    <span asp-validation-for="PhotoUrl" class="text-danger"></span>
-                    <small class="form-text text-muted">Enter a URL to a photo (optional)</small>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- PersonFormComponent - Angular-based form for editing people -->
+    <app-person-form 
+        id="personEditForm"
+        person-id="@Model.Id"
+        initial-data='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(new {
+            firstName = Model.FirstName,
+            lastName = Model.LastName,
+            dateOfBirth = Model.DateOfBirth?.ToString("yyyy-MM-dd"),
+            isDeceased = Model.IsDeceased,
+            dateOfDeath = Model.DateOfDeath?.ToString("yyyy-MM-dd"),
+            photoUrl = Model.PhotoUrl
+        }))'>
+    </app-person-form>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
