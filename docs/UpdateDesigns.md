@@ -1,0 +1,1695 @@
+# RushtonRoots - C# Views to Angular Components Migration Plan
+
+## Document Overview
+
+**Purpose**: This document provides a phased plan to migrate all C# Razor views to fully styled and functioning Angular components. Each phase corresponds to a view directory and is broken into sub-phases when necessary to ensure manageable PR sizes.
+
+**Last Updated**: December 2025  
+**Document Owner**: Development Team  
+**Status**: Planning Phase
+
+---
+
+## Table of Contents
+
+1. [Migration Overview](#migration-overview)
+2. [Phase Structure](#phase-structure)
+3. [Phase 1: Account Views](#phase-1-account-views)
+4. [Phase 2: Person Views](#phase-2-person-views)
+5. [Phase 3: Household Views](#phase-3-household-views)
+6. [Phase 4: Partnership Views](#phase-4-partnership-views)
+7. [Phase 5: ParentChild Views](#phase-5-parentchild-views)
+8. [Phase 6: Home Views](#phase-6-home-views)
+9. [Phase 7: Wiki Views](#phase-7-wiki-views)
+10. [Phase 8: Recipe Views](#phase-8-recipe-views)
+11. [Phase 9: StoryView Views](#phase-9-storyview-views)
+12. [Phase 10: Tradition Views](#phase-10-tradition-views)
+13. [Phase 11: Shared Infrastructure](#phase-11-shared-infrastructure)
+14. [Phase 12: Navigation Integration](#phase-12-navigation-integration)
+15. [Testing Strategy](#testing-strategy)
+16. [Rollback Plan](#rollback-plan)
+
+---
+
+## Migration Overview
+
+### Current State
+
+**Total Razor Views**: 40 .cshtml files across 11 directories
+
+**View Directory Breakdown**:
+- Account: 9 views (authentication and user management)
+- Person: 5 views (CRUD operations)
+- Household: 6 views (CRUD + Members management)
+- Partnership: 5 views (CRUD operations)
+- ParentChild: 5 views (CRUD operations)
+- Home: 2 views (landing page + style guide)
+- Recipe: 1 view (index page)
+- StoryView: 1 view (index page)
+- Tradition: 1 view (index page)
+- Wiki: 1 view (index page)
+- Shared: 2 views (layout and validation partials)
+
+### Migration Principles
+
+1. **Incremental Migration**: Migrate one feature area at a time
+2. **Backward Compatibility**: Old and new UI can coexist during migration
+3. **Feature Parity**: New components must match or exceed functionality
+4. **User Testing**: Test each migration before full rollout
+5. **Small PRs**: Break large phases into manageable sub-phases
+6. **Angular Elements**: Use Angular Elements for embedding components in Razor views during transition
+
+### Success Criteria
+
+- ✅ All .cshtml views replaced with Angular components
+- ✅ No loss of functionality
+- ✅ Improved UI/UX with Material Design
+- ✅ Mobile responsive across all components
+- ✅ WCAG 2.1 AA accessibility compliance
+- ✅ Comprehensive test coverage
+
+---
+
+## Phase Structure
+
+Each phase follows this template:
+
+- **Phase Number**: Clear sequential numbering with sub-phases
+- **Directory**: View directory being migrated
+- **Duration**: Estimated time (weeks)
+- **Priority**: High/Medium/Low
+- **Dependencies**: Previous phases or prerequisites
+- **Sub-Phases**: Breaking down work into manageable PRs
+- **Deliverables**: What will be completed
+- **Testing**: Required test coverage
+- **Rollback**: How to revert if issues arise
+
+---
+
+## Phase 1: Account Views
+
+**Directory**: `/Views/Account/`  
+**Total Views**: 9  
+**Priority**: High (authentication is critical)  
+**Duration**: 6 weeks  
+**Dependencies**: Angular Material setup (already complete ✅)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 6.1 & 6.2 of UI_DesignPlan.md):
+- ✅ LoginComponent (Phase 6.1 - Complete)
+- ✅ ForgotPasswordComponent (Phase 6.1 - Complete)
+- ✅ ResetPasswordComponent (Phase 6.1 - Complete)
+- ✅ UserProfileComponent (Phase 6.2 - Complete)
+
+**Remaining Views to Migrate**:
+- AccessDenied.cshtml
+- ConfirmEmail.cshtml
+- CreateUser.cshtml
+- ForgotPasswordConfirmation.cshtml
+- ResetPasswordConfirmation.cshtml
+
+### Phase 1.1: Login and Password Recovery (Week 1-2)
+
+**Status**: ✅ COMPLETE (Phase 6.1)
+
+**Razor Views**:
+- ✅ Login.cshtml → LoginComponent
+- ✅ ForgotPassword.cshtml → ForgotPasswordComponent
+- ✅ ResetPassword.cshtml → ResetPasswordComponent
+
+**Implementation Notes**:
+- Components already created with Material Design
+- Password visibility toggles implemented
+- Form validation and error handling complete
+- Social login placeholders for future use
+
+### Phase 1.2: Password Confirmation and Email Verification (Week 3)
+
+**Razor Views**:
+- ForgotPasswordConfirmation.cshtml → ForgotPasswordConfirmationComponent
+- ResetPasswordConfirmation.cshtml → ResetPasswordConfirmationComponent
+- ConfirmEmail.cshtml → ConfirmEmailComponent
+
+**Tasks**:
+- [ ] Create ForgotPasswordConfirmationComponent
+  - Success message display
+  - Email sent indicator
+  - Link to login page
+  - Resend email functionality
+- [ ] Create ResetPasswordConfirmationComponent
+  - Password reset success message
+  - Auto-redirect to login after 5 seconds
+  - Manual login link
+- [ ] Create ConfirmEmailComponent
+  - Email verification status display
+  - Success/error states
+  - Token validation feedback
+  - Resend confirmation email option
+- [ ] Register all components as Angular Elements
+- [ ] Update Razor views to use new components
+- [ ] Create unit tests for each component
+- [ ] Test email confirmation flow end-to-end
+
+**Deliverables**:
+- 3 new Angular components
+- Updated Razor views using Angular Elements
+- Unit tests for confirmation flows
+- Integration tests for email workflows
+
+### Phase 1.3: User Management (Week 4)
+
+**Razor Views**:
+- CreateUser.cshtml → CreateUserComponent (admin function)
+
+**Tasks**:
+- [ ] Create CreateUserComponent (Angular)
+  - Admin-only user creation form
+  - Role selection dropdown
+  - Household assignment
+  - Email invitation option
+  - Person linkage (optional)
+- [ ] Implement form validation
+  - Email uniqueness check
+  - Password requirements
+  - Role-based field visibility
+- [ ] Create admin authorization directive
+- [ ] Register component as Angular Element
+- [ ] Update Razor view
+- [ ] Create unit tests
+- [ ] Test admin user creation workflow
+
+**Deliverables**:
+- CreateUserComponent with admin controls
+- Authorization directive for admin-only features
+- Unit and integration tests
+
+### Phase 1.4: Access Control and Profile (Week 5-6)
+
+**Status**: ✅ Profile Component COMPLETE (Phase 6.2)
+
+**Razor Views**:
+- AccessDenied.cshtml → AccessDeniedComponent
+- ✅ Profile.cshtml → UserProfileComponent (COMPLETE)
+
+**Tasks**:
+- [ ] Create AccessDeniedComponent
+  - Clear access denied message
+  - Reason for denial (if available)
+  - Link to request access
+  - Link back to safe page (home)
+  - Contact administrator option
+- [ ] Register component as Angular Element
+- [ ] Update Razor view
+- [ ] Create unit tests
+- [ ] Test various access denied scenarios
+
+**Deliverables**:
+- AccessDeniedComponent with clear messaging
+- Request access workflow (basic)
+- Unit tests for access control
+
+### Phase 1 Acceptance Criteria
+
+- ✅ All 9 Account views migrated to Angular components
+- ✅ Authentication flows work end-to-end
+- ✅ Email verification and password reset fully functional
+- ✅ Admin user creation works correctly
+- ✅ Access denied page provides clear guidance
+- ✅ All components mobile-responsive
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 2: Person Views
+
+**Directory**: `/Views/Person/`  
+**Total Views**: 5  
+**Priority**: High (core genealogy feature)  
+**Duration**: 8 weeks  
+**Dependencies**: Phase 1 (user authentication)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 3 of UI_DesignPlan.md):
+- ✅ PersonIndexComponent with search and table (Phase 3.1 - Complete)
+- ✅ PersonDetailsComponent with timeline and relationships (Phase 3.2 - Complete)
+- ✅ PersonFormComponent with wizard (Phase 3.3 - Complete)
+- ✅ PersonSearchComponent (Phase 3.1 - Complete)
+- ✅ PersonTableComponent (Phase 3.1 - Complete)
+- ✅ PersonTimelineComponent (Phase 3.2 - Complete)
+- ✅ RelationshipVisualizerComponent (Phase 3.2 - Complete)
+- ✅ PhotoGalleryComponent (Phase 3.2 - Complete)
+- ✅ DatePickerComponent (Phase 3.3 - Complete)
+- ✅ LocationAutocompleteComponent (Phase 3.3 - Complete)
+
+**All Person views already have Angular component equivalents!**
+
+### Phase 2.1: Person Index and Search (Week 1-2)
+
+**Status**: ✅ COMPLETE (Phase 3.1)
+
+**Razor Views**:
+- ✅ Index.cshtml → PersonIndexComponent
+
+**Implementation Notes**:
+- Advanced search with filters complete
+- Sortable, paginated table complete
+- Mobile responsive card view complete
+- CSV export functionality complete
+
+### Phase 2.2: Person Details View (Week 3-4)
+
+**Status**: ✅ COMPLETE (Phase 3.2)
+
+**Razor Views**:
+- ✅ Details.cshtml → PersonDetailsComponent
+
+**Implementation Notes**:
+- Tabbed interface with overview, timeline, relationships, photos complete
+- Edit-in-place functionality complete
+- Timeline with life events complete
+- Relationship visualizer complete
+- Photo gallery with lightbox complete
+
+### Phase 2.3: Person Create and Edit Forms (Week 5-7)
+
+**Status**: ✅ COMPLETE (Phase 3.3)
+
+**Razor Views**:
+- ✅ Create.cshtml → PersonFormComponent (create mode)
+- ✅ Edit.cshtml → PersonFormComponent (edit mode)
+
+**Implementation Notes**:
+- 4-step wizard form complete
+- Comprehensive validation complete
+- Autosave functionality complete
+- Photo upload with preview complete
+- Date and location pickers complete
+
+### Phase 2.4: Person Delete Confirmation (Week 8)
+
+**Razor Views**:
+- Delete.cshtml → PersonDeleteDialogComponent
+
+**Tasks**:
+- [ ] Create PersonDeleteDialogComponent (Material Dialog)
+  - Display person summary (name, dates, photo)
+  - Warning about cascade deletes
+  - List of related data that will be affected:
+    - Relationships (parents, children, spouses)
+    - Household memberships
+    - Photos and media
+    - Stories and documents
+    - Life events
+  - Confirmation checkbox: "I understand this action cannot be undone"
+  - Optional: Transfer relationships to another person
+  - Optional: Archive instead of delete
+  - Delete button (destructive action, red)
+  - Cancel button
+- [ ] Implement soft delete functionality (mark as deleted, hide from UI)
+- [ ] Create cascade delete logic with safety checks
+- [ ] Add admin-only hard delete option
+- [ ] Register component as Angular Element
+- [ ] Update Delete.cshtml to use dialog
+- [ ] Create unit tests for delete component
+- [ ] Test cascade delete scenarios
+- [ ] Test archive functionality
+
+**Deliverables**:
+- PersonDeleteDialogComponent with safety checks
+- Soft delete and archive options
+- Cascade delete warnings
+- Unit and integration tests
+
+### Phase 2 Acceptance Criteria
+
+- ✅ All 5 Person views migrated to Angular components
+- ✅ Person CRUD operations work end-to-end
+- ✅ Search and filtering functional
+- ✅ Timeline and relationship visualization working
+- ✅ Photo gallery integrated
+- ✅ Delete confirmation with safety checks
+- ✅ All components mobile-responsive
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 3: Household Views
+
+**Directory**: `/Views/Household/`  
+**Total Views**: 6  
+**Priority**: High (family organization)  
+**Duration**: 6 weeks  
+**Dependencies**: Phase 2 (Person views for member selection)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 4 of UI_DesignPlan.md):
+- ✅ HouseholdIndexComponent with card grid (Phase 4.1 - Complete)
+- ✅ HouseholdCardComponent (Phase 4.1 - Complete)
+- ✅ HouseholdDetailsComponent with tabs (Phase 4.2 - Complete)
+- ✅ HouseholdMembersComponent (Phase 4.2 - Complete)
+- ✅ MemberInviteDialogComponent (Phase 4.2 - Complete)
+- ✅ HouseholdSettingsComponent (Phase 4.2 - Complete)
+- ✅ HouseholdActivityTimelineComponent (Phase 4.2 - Complete)
+
+**All Household views already have Angular component equivalents!**
+
+### Phase 3.1: Household Index (Week 1-2)
+
+**Status**: ✅ COMPLETE (Phase 4.1)
+
+**Razor Views**:
+- ✅ Index.cshtml → HouseholdIndexComponent
+
+**Implementation Notes**:
+- Card grid layout complete
+- Search and filtering complete
+- Sorting by multiple criteria complete
+- Member count badges complete
+
+### Phase 3.2: Household Details and Members (Week 3-4)
+
+**Status**: ✅ COMPLETE (Phase 4.2)
+
+**Razor Views**:
+- ✅ Details.cshtml → HouseholdDetailsComponent
+- ✅ Members.cshtml → HouseholdMembersComponent (integrated in Details)
+
+**Implementation Notes**:
+- Tabbed interface with overview, members, settings, activity complete
+- Member management with roles and permissions complete
+- Member invitation flow complete
+- Activity timeline complete
+
+### Phase 3.3: Household Create and Edit Forms (Week 5)
+
+**Razor Views**:
+- Create.cshtml → HouseholdFormComponent
+- Edit.cshtml → HouseholdFormComponent (edit mode)
+
+**Tasks**:
+- [ ] Create HouseholdFormComponent
+  - Basic information section (name, description)
+  - Anchor person selection (autocomplete)
+  - Initial members selection (multiple person autocomplete)
+  - Privacy settings (public, family only, private)
+  - Household permissions defaults
+  - Form validation
+  - Create/Update mode support
+- [ ] Implement household creation workflow
+  - Create household
+  - Add creator as admin member
+  - Add selected members with default permissions
+  - Send invitation emails to members
+- [ ] Register component as Angular Element
+- [ ] Update Create.cshtml and Edit.cshtml
+- [ ] Create unit tests
+- [ ] Test household creation and editing workflows
+
+**Deliverables**:
+- HouseholdFormComponent for create/edit
+- Member selection and invitation
+- Privacy settings integration
+- Unit and integration tests
+
+### Phase 3.4: Household Delete Confirmation (Week 6)
+
+**Razor Views**:
+- Delete.cshtml → HouseholdDeleteDialogComponent
+
+**Tasks**:
+- [ ] Create HouseholdDeleteDialogComponent
+  - Display household summary (name, member count, anchor person)
+  - Warning about impacts:
+    - Members will lose household access
+    - Events associated with household
+    - Shared media and documents
+  - Confirmation checkbox
+  - Option to notify all members
+  - Delete button (destructive, red)
+  - Cancel button
+- [ ] Implement soft delete for households
+- [ ] Handle member notifications
+- [ ] Create cascade impact analysis
+- [ ] Register component as Angular Element
+- [ ] Update Delete.cshtml
+- [ ] Create unit tests
+- [ ] Test delete and notification workflows
+
+**Deliverables**:
+- HouseholdDeleteDialogComponent with impact analysis
+- Member notification system
+- Soft delete implementation
+- Unit and integration tests
+
+### Phase 3 Acceptance Criteria
+
+- ✅ All 6 Household views migrated to Angular components
+- ✅ Household CRUD operations work end-to-end
+- ✅ Member management functional
+- ✅ Invitation and permission system working
+- ✅ Delete confirmation with member notification
+- ✅ All components mobile-responsive
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 4: Partnership Views
+
+**Directory**: `/Views/Partnership/`  
+**Total Views**: 5  
+**Priority**: Medium (relationship management)  
+**Duration**: 5 weeks  
+**Dependencies**: Phase 2 (Person views for partner selection)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 5.1 of UI_DesignPlan.md):
+- ✅ PartnershipIndexComponent (Phase 5.1 - Complete)
+- ✅ PartnershipCardComponent (Phase 5.1 - Complete)
+- ✅ PartnershipFormComponent (Phase 5.1 - Complete)
+- ✅ PartnershipTimelineComponent (Phase 5.1 - Complete)
+
+**All Partnership views already have Angular component equivalents!**
+
+### Phase 4.1: Partnership Index and Cards (Week 1-2)
+
+**Status**: ✅ COMPLETE (Phase 5.1)
+
+**Razor Views**:
+- ✅ Index.cshtml → PartnershipIndexComponent
+
+**Implementation Notes**:
+- Card grid layout complete
+- Advanced filtering by type, status, person complete
+- Sorting options complete
+- Partnership status and type chips complete
+
+### Phase 4.2: Partnership Details (Week 2-3)
+
+**Razor Views**:
+- Details.cshtml → PartnershipDetailsComponent
+
+**Tasks**:
+- [ ] Create PartnershipDetailsComponent
+  - Partnership summary section:
+    - Both partners with avatars and links
+    - Partnership type and status
+    - Date information (start, end, duration)
+    - Location(s)
+  - Notes and description display
+  - Timeline tab (use existing PartnershipTimelineComponent)
+  - Children tab:
+    - List of children from this partnership
+    - Links to person details
+    - Birth dates and ages
+  - Media tab:
+    - Photos and videos from partnership
+    - Wedding photos, anniversary celebrations
+  - Events tab:
+    - Marriage/partnership ceremony
+    - Anniversaries
+    - Related family events
+  - Edit button (opens PartnershipFormComponent in edit mode)
+  - Delete button (opens delete dialog)
+- [ ] Register component as Angular Element
+- [ ] Update Details.cshtml
+- [ ] Create unit tests
+- [ ] Test details view with various partnership types
+
+**Deliverables**:
+- PartnershipDetailsComponent with comprehensive tabs
+- Integration with existing timeline component
+- Unit and integration tests
+
+### Phase 4.3: Partnership Create and Edit Forms (Week 3-4)
+
+**Status**: ✅ COMPLETE (Phase 5.1)
+
+**Razor Views**:
+- ✅ Create.cshtml → PartnershipFormComponent
+- ✅ Edit.cshtml → PartnershipFormComponent (edit mode)
+
+**Implementation Notes**:
+- Partner selection with autocomplete complete
+- Partnership type selector complete
+- Date and location pickers complete
+- Form validation complete
+
+### Phase 4.4: Partnership Delete Confirmation (Week 5)
+
+**Razor Views**:
+- Delete.cshtml → PartnershipDeleteDialogComponent
+
+**Tasks**:
+- [ ] Create PartnershipDeleteDialogComponent
+  - Display partnership summary
+  - Warning about impacts:
+    - Loss of partnership history
+    - Children will lose parent partnership reference
+    - Shared events may be affected
+  - Option to mark as "ended" instead of delete
+  - Confirmation checkbox
+  - Delete button (destructive, red)
+  - Cancel button
+- [ ] Implement soft delete for partnerships
+- [ ] Handle "ended" status as alternative to deletion
+- [ ] Register component as Angular Element
+- [ ] Update Delete.cshtml
+- [ ] Create unit tests
+- [ ] Test delete vs. end partnership workflows
+
+**Deliverables**:
+- PartnershipDeleteDialogComponent with end option
+- Soft delete and end date functionality
+- Unit and integration tests
+
+### Phase 4 Acceptance Criteria
+
+- ✅ All 5 Partnership views migrated to Angular components
+- ✅ Partnership CRUD operations work end-to-end
+- ✅ Timeline visualization functional
+- ✅ Children and media associations working
+- ✅ Delete vs. end partnership options clear
+- ✅ All components mobile-responsive
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 5: ParentChild Views
+
+**Directory**: `/Views/ParentChild/`  
+**Total Views**: 5  
+**Priority**: Medium (family lineage)  
+**Duration**: 5 weeks  
+**Dependencies**: Phase 2 (Person views for parent/child selection)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 5.2 of UI_DesignPlan.md):
+- ✅ ParentChildIndexComponent (Phase 5.2 - Complete)
+- ✅ ParentChildCardComponent (Phase 5.2 - Complete)
+- ✅ ParentChildFormComponent (Phase 5.2 - Complete)
+- ✅ FamilyTreeMiniComponent (Phase 5.2 - Complete)
+- ✅ RelationshipValidationComponent (Phase 5.2 - Complete)
+- ✅ RelationshipSuggestionsComponent (Phase 5.2 - Complete)
+- ✅ BulkRelationshipImportComponent (Phase 5.2 - Complete)
+
+**All ParentChild views already have Angular component equivalents!**
+
+### Phase 5.1: ParentChild Index (Week 1-2)
+
+**Status**: ✅ COMPLETE (Phase 5.2)
+
+**Razor Views**:
+- ✅ Index.cshtml → ParentChildIndexComponent
+
+**Implementation Notes**:
+- Card grid layout complete
+- Search and filtering by relationship type complete
+- Verified relationships filter complete
+- Sorting options complete
+
+### Phase 5.2: ParentChild Details (Week 2-3)
+
+**Razor Views**:
+- Details.cshtml → ParentChildDetailsComponent
+
+**Tasks**:
+- [ ] Create ParentChildDetailsComponent
+  - Relationship summary:
+    - Parent information with avatar and link
+    - Child information with avatar and link
+    - Relationship type with icon and description
+    - Verification status badge
+  - Mini family tree section (use FamilyTreeMiniComponent)
+    - Show parent's parents (grandparents)
+    - Show parent's other children (siblings)
+  - Relationship notes and documentation
+  - Evidence section:
+    - Source citations
+    - Supporting documents
+    - DNA evidence (if applicable)
+  - Timeline:
+    - Child's birth event
+    - Key life events showing parent-child interactions
+  - Edit button (opens ParentChildFormComponent in edit mode)
+  - Delete button (opens delete dialog)
+  - Verify relationship button (if unverified)
+- [ ] Register component as Angular Element
+- [ ] Update Details.cshtml
+- [ ] Create unit tests
+- [ ] Test details view with various relationship types
+
+**Deliverables**:
+- ParentChildDetailsComponent with family context
+- Integration with FamilyTreeMiniComponent
+- Evidence tracking section
+- Unit and integration tests
+
+### Phase 5.3: ParentChild Create and Edit Forms (Week 3-4)
+
+**Status**: ✅ COMPLETE (Phase 5.2)
+
+**Razor Views**:
+- ✅ Create.cshtml → ParentChildFormComponent
+- ✅ Edit.cshtml → ParentChildFormComponent (edit mode)
+
+**Implementation Notes**:
+- Parent and child autocomplete selection complete
+- Relationship type selector complete
+- Validation with error/warning detection complete
+- Verification option complete
+
+### Phase 5.4: ParentChild Delete Confirmation (Week 5)
+
+**Razor Views**:
+- Delete.cshtml → ParentChildDeleteDialogComponent
+
+**Tasks**:
+- [ ] Create ParentChildDeleteDialogComponent
+  - Display relationship summary
+  - Warning about impacts:
+    - Loss of lineage connection
+    - Impact on family tree visualization
+    - May affect relationship calculations
+    - Sibling relationships may be affected
+  - Show family tree context (mini tree)
+  - Confirmation checkbox
+  - Option to mark as "disputed" instead of delete
+  - Delete button (destructive, red)
+  - Cancel button
+- [ ] Implement soft delete for parent-child relationships
+- [ ] Handle "disputed" status as alternative
+- [ ] Register component as Angular Element
+- [ ] Update Delete.cshtml
+- [ ] Create unit tests
+- [ ] Test delete and disputed workflows
+
+**Deliverables**:
+- ParentChildDeleteDialogComponent with context
+- Soft delete and disputed status option
+- Family tree impact visualization
+- Unit and integration tests
+
+### Phase 5 Acceptance Criteria
+
+- ✅ All 5 ParentChild views migrated to Angular components
+- ✅ ParentChild CRUD operations work end-to-end
+- ✅ Family tree context displayed
+- ✅ Relationship validation functional
+- ✅ Delete vs. disputed options clear
+- ✅ All components mobile-responsive
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 6: Home Views
+
+**Directory**: `/Views/Home/`  
+**Total Views**: 2  
+**Priority**: High (landing page and style guide)  
+**Duration**: 3 weeks  
+**Dependencies**: All component phases (showcase components)
+
+### Phase 6.1: Home Landing Page (Week 1-2)
+
+**Razor Views**:
+- Index.cshtml → HomePageComponent
+
+**Tasks**:
+- [ ] Create HomePageComponent
+  - Hero section:
+    - Welcome message (use existing app-welcome component)
+    - Family tagline or motto
+    - Search bar (quick family member search)
+    - Action buttons (View Tree, Add Person, Browse Photos)
+  - Family overview section:
+    - Total family members count
+    - Recent additions
+    - Upcoming birthdays
+    - Upcoming anniversaries
+    - Recent events
+  - Family tree preview section (use existing app-family-tree component)
+    - Interactive family tree visualization
+    - "Explore Full Tree" button
+  - Recent activity feed:
+    - New members added
+    - Photos uploaded
+    - Stories published
+    - Comments and discussions
+  - Quick links section:
+    - Browse People
+    - View Households
+    - Photo Gallery
+    - Family Wiki
+    - Calendar
+    - Recipes
+  - Statistics dashboard:
+    - Oldest ancestor
+    - Newest family member
+    - Total photos
+    - Total stories
+    - Active households
+- [ ] Implement responsive design (mobile, tablet, desktop)
+- [ ] Add skeleton loaders for async content
+- [ ] Register component as Angular Element
+- [ ] Update Index.cshtml
+- [ ] Create unit tests
+- [ ] Test with various data loads
+
+**Deliverables**:
+- HomePageComponent with dashboard layout
+- Integration with existing welcome and family tree components
+- Activity feed with real-time updates
+- Unit and integration tests
+
+### Phase 6.2: Style Guide (Week 3)
+
+**Razor Views**:
+- StyleGuide.cshtml → StyleGuideComponent (or keep as standalone page)
+
+**Status**: ✅ Style Guide component already exists (Phase 1.1 of UI_DesignPlan.md)
+
+**Tasks**:
+- [ ] Review existing StyleGuideComponent
+- [ ] Add any missing component examples from new phases
+- [ ] Update color palette and design tokens documentation
+- [ ] Add interactive component playground sections
+- [ ] Document Angular Material theme customization
+- [ ] Add code examples for component usage
+- [ ] Update StyleGuide.cshtml to use enhanced component
+- [ ] Create navigation to style guide from main menu (admin/developer only)
+
+**Deliverables**:
+- Enhanced StyleGuideComponent with all components documented
+- Interactive examples
+- Developer documentation
+
+### Phase 6 Acceptance Criteria
+
+- ✅ Home landing page provides family overview
+- ✅ Quick access to all major features
+- ✅ Activity feed shows recent updates
+- ✅ Style guide documents all components
+- ✅ Mobile-responsive design
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 7: Wiki Views
+
+**Directory**: `/Views/Wiki/`  
+**Total Views**: 1  
+**Priority**: Medium (knowledge base)  
+**Duration**: 2 weeks  
+**Dependencies**: Phase 6 (Home for navigation)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 7.1 of UI_DesignPlan.md):
+- ✅ WikiIndexComponent (Phase 7.1 - Complete)
+- ✅ WikiArticleComponent (Phase 7.1 - Complete)
+- ✅ MarkdownEditorComponent (Phase 7.1 - Complete)
+
+**All Wiki views already have Angular component equivalents!**
+
+### Phase 7.1: Wiki Index and Articles (Week 1-2)
+
+**Status**: ✅ COMPLETE (Phase 7.1)
+
+**Razor Views**:
+- ✅ Index.cshtml → WikiIndexComponent (for listing) + WikiArticleComponent (for viewing)
+
+**Implementation Notes**:
+- Wiki index with grid/list views complete
+- Article search and filtering complete
+- Markdown article rendering complete
+- Table of contents generation complete
+- Markdown editor with toolbar complete
+
+**Additional Tasks**:
+- [ ] Review integration between index and article views
+- [ ] Ensure proper routing between list and article detail
+- [ ] Add breadcrumb navigation (Home > Wiki > Category > Article)
+- [ ] Update Index.cshtml to handle both listing and article display
+- [ ] Test wiki workflows end-to-end
+
+**Deliverables**:
+- Integration of existing wiki components
+- Routing configuration
+- Breadcrumb navigation
+- End-to-end tests
+
+### Phase 7 Acceptance Criteria
+
+- ✅ Wiki index displays article categories
+- ✅ Article viewing with markdown rendering works
+- ✅ Article editing with markdown editor functional
+- ✅ Table of contents auto-generated
+- ✅ Search and filtering operational
+- ✅ Mobile-responsive design
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 8: Recipe Views
+
+**Directory**: `/Views/Recipe/`  
+**Total Views**: 1  
+**Priority**: Low (content feature)  
+**Duration**: 2 weeks  
+**Dependencies**: Phase 7 (similar content structure)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 7.2 of UI_DesignPlan.md):
+- ✅ RecipeCardComponent (Phase 7.2 - Complete)
+- ✅ RecipeDetailsComponent (Phase 7.2 - Complete)
+- ✅ ContentGridComponent (Phase 7.2 - Complete) - supports recipes
+
+**All Recipe views already have Angular component equivalents!**
+
+### Phase 8.1: Recipe Index and Details (Week 1-2)
+
+**Status**: ✅ COMPLETE (Phase 7.2)
+
+**Razor Views**:
+- ✅ Index.cshtml → ContentGridComponent (with recipe cards) + RecipeDetailsComponent
+
+**Implementation Notes**:
+- Recipe card grid with masonry layout complete
+- Recipe details with tabs (recipe, ratings, comments) complete
+- Serving size adjuster complete
+- Print-friendly view complete
+- Recipe rating and comments system complete
+
+**Additional Tasks**:
+- [ ] Review recipe listing and detail integration
+- [ ] Ensure proper routing between grid and recipe detail
+- [ ] Add recipe category navigation
+- [ ] Update Index.cshtml to handle both listing and detail views
+- [ ] Add recipe search by ingredients
+- [ ] Test recipe workflows end-to-end
+
+**Deliverables**:
+- Integration of existing recipe components
+- Recipe routing configuration
+- Ingredient-based search
+- End-to-end tests
+
+### Phase 8 Acceptance Criteria
+
+- ✅ Recipe grid displays recipe cards
+- ✅ Recipe details shows full recipe information
+- ✅ Serving size adjustment works correctly
+- ✅ Print view formats properly
+- ✅ Rating and comment system functional
+- ✅ Mobile-responsive design
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 9: StoryView Views
+
+**Directory**: `/Views/StoryView/`  
+**Total Views**: 1  
+**Priority**: Low (content feature)  
+**Duration**: 2 weeks  
+**Dependencies**: Phase 8 (similar content structure)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 7.2 of UI_DesignPlan.md):
+- ✅ StoryCardComponent (Phase 7.2 - Complete)
+- ✅ ContentGridComponent (Phase 7.2 - Complete) - supports stories
+
+**Remaining Work**:
+- Need StoryDetailsComponent for full story viewing
+
+### Phase 9.1: Story Index and Details (Week 1-2)
+
+**Razor Views**:
+- Index.cshtml → ContentGridComponent (with story cards) + StoryDetailsComponent
+
+**Tasks**:
+- [ ] Create StoryDetailsComponent
+  - Story header:
+    - Title and summary
+    - Event date and location
+    - Related people with avatars
+    - Author and publication date
+  - Full story content:
+    - Rich text with formatting
+    - Embedded images and videos
+    - Pull quotes
+  - Media section:
+    - Photo gallery from story
+    - Video player
+    - Audio clips
+  - Comments section:
+    - User comments on story
+    - Reply threading
+  - Related stories:
+    - Stories from same time period
+    - Stories about same people
+    - Stories from same location
+  - Actions:
+    - Edit button (for author or admin)
+    - Share button
+    - Print button
+    - Like/favorite button
+- [ ] Register component as Angular Element
+- [ ] Update Index.cshtml for listing and detail views
+- [ ] Add story search and filtering
+- [ ] Create unit tests
+- [ ] Test story workflows end-to-end
+
+**Deliverables**:
+- StoryDetailsComponent with rich content display
+- Integration with ContentGridComponent
+- Story routing configuration
+- Unit and integration tests
+
+### Phase 9 Acceptance Criteria
+
+- ✅ Story grid displays story cards
+- ✅ Story details shows full content with media
+- ✅ Related people and stories linked correctly
+- ✅ Comments system functional
+- ✅ Mobile-responsive design
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 10: Tradition Views
+
+**Directory**: `/Views/Tradition/`  
+**Total Views**: 1  
+**Priority**: Low (content feature)  
+**Duration**: 2 weeks  
+**Dependencies**: Phase 9 (similar content structure)
+
+### Current State Assessment
+
+**Existing Components** (from Phase 7.2 of UI_DesignPlan.md):
+- ✅ TraditionCardComponent (Phase 7.2 - Complete)
+- ✅ ContentGridComponent (Phase 7.2 - Complete) - supports traditions
+
+**Remaining Work**:
+- Need TraditionDetailsComponent for full tradition viewing
+
+### Phase 10.1: Tradition Index and Details (Week 1-2)
+
+**Razor Views**:
+- Index.cshtml → ContentGridComponent (with tradition cards) + TraditionDetailsComponent
+
+**Tasks**:
+- [ ] Create TraditionDetailsComponent
+  - Tradition header:
+    - Title and description
+    - Frequency (daily, weekly, monthly, yearly, occasional)
+    - Season and months celebrated
+    - Years active (started, ended if applicable)
+    - Location(s)
+  - Tradition details:
+    - Full description with history
+    - How it's celebrated
+    - Who participates
+    - Why it's important
+  - Participants section:
+    - List of family members who participate
+    - Links to person profiles
+    - Role in tradition (host, organizer, participant)
+  - Related content:
+    - Related recipes (holiday dishes, etc.)
+    - Related stories (memories of celebrations)
+    - Photos and videos from celebrations
+  - Calendar section:
+    - Next occurrence
+    - Past occurrences with attendance
+    - Link to create calendar event
+  - Actions:
+    - Edit button
+    - Mark as favorite
+    - Share tradition
+    - Print tradition card
+- [ ] Register component as Angular Element
+- [ ] Update Index.cshtml for listing and detail views
+- [ ] Add tradition search and filtering by frequency
+- [ ] Create unit tests
+- [ ] Test tradition workflows end-to-end
+
+**Deliverables**:
+- TraditionDetailsComponent with comprehensive information
+- Integration with ContentGridComponent
+- Tradition routing configuration
+- Calendar integration
+- Unit and integration tests
+
+### Phase 10 Acceptance Criteria
+
+- ✅ Tradition grid displays tradition cards
+- ✅ Tradition details shows full information
+- ✅ Participants and related content linked
+- ✅ Frequency and calendar integration working
+- ✅ Mobile-responsive design
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 11: Shared Infrastructure
+
+**Directory**: `/Views/Shared/`  
+**Total Views**: 2  
+**Priority**: High (core infrastructure)  
+**Duration**: 4 weeks  
+**Dependencies**: All view phases (1-10) should be complete first
+
+### Current State Assessment
+
+**Existing Components** (from Phase 2 of UI_DesignPlan.md):
+- ✅ HeaderComponent (Phase 2.1 - Complete)
+- ✅ NavigationComponent (Phase 2.1 - Complete)
+- ✅ UserMenuComponent (Phase 2.1 - Complete)
+- ✅ FooterComponent (Phase 2.2 - Complete)
+- ✅ PageLayoutComponent (Phase 2.2 - Complete)
+- ✅ BreadcrumbComponent (Phase 1.2 - Complete)
+
+### Phase 11.1: Layout Migration (Week 1-3)
+
+**Razor Views**:
+- _Layout.cshtml → Integrate existing Angular layout components
+
+**Tasks**:
+- [ ] Review current _Layout.cshtml structure
+- [ ] Plan integration of Angular layout components
+- [ ] Create LayoutWrapperComponent to orchestrate:
+  - HeaderComponent
+  - NavigationComponent (sidebar or hamburger menu)
+  - BreadcrumbComponent
+  - Main content area (router-outlet or content projection)
+  - FooterComponent
+- [ ] Migrate header section:
+  - Replace Razor header with HeaderComponent
+  - Ensure user menu integration
+  - Test authentication state display
+- [ ] Migrate navigation:
+  - Replace navigation links with NavigationComponent
+  - Implement responsive mobile menu
+  - Test active route highlighting
+- [ ] Migrate footer:
+  - Replace Razor footer with FooterComponent
+  - Test footer links
+- [ ] Handle authenticated vs. anonymous layouts
+- [ ] Test layout across all migrated views
+- [ ] Update _Layout.cshtml to use LayoutWrapperComponent
+- [ ] Ensure smooth transition (feature flag support)
+- [ ] Create unit tests for layout integration
+
+**Deliverables**:
+- LayoutWrapperComponent integrating all layout components
+- Migrated _Layout.cshtml using Angular components
+- Responsive navigation working
+- Unit and integration tests
+
+### Phase 11.2: Validation Scripts (Week 4)
+
+**Razor Views**:
+- _ValidationScriptsPartial.cshtml → Angular form validation
+
+**Tasks**:
+- [ ] Review current validation scripts usage
+- [ ] Document all places _ValidationScriptsPartial is used
+- [ ] Verify Angular forms have equivalent validation:
+  - Required field validation
+  - Email validation
+  - Pattern validation
+  - Custom validators
+- [ ] Remove _ValidationScriptsPartial references from migrated views
+- [ ] Add Angular form validation documentation
+- [ ] Test form validation across all forms
+- [ ] Create form validation utilities if needed
+
+**Deliverables**:
+- Angular form validation fully replacing jQuery validation
+- Documentation for form validation patterns
+- Validation utility functions
+
+### Phase 11 Acceptance Criteria
+
+- ✅ _Layout.cshtml uses Angular layout components
+- ✅ Header, navigation, and footer fully functional
+- ✅ Responsive design works across all screen sizes
+- ✅ Authentication state properly displayed
+- ✅ All validation migrated to Angular forms
+- ✅ No jQuery validation dependencies remain
+- ✅ WCAG 2.1 AA compliant
+- ✅ 90%+ test coverage
+
+---
+
+## Phase 12: Navigation Integration
+
+**Priority**: High (enables access to all features)  
+**Duration**: 3 weeks  
+**Dependencies**: All phases 1-11 complete
+
+### Overview
+
+This final phase ensures all parts of the site are accessible through proper navigation, routing, and linking. It connects all the migrated components into a cohesive application experience.
+
+### Phase 12.1: Primary Navigation (Week 1)
+
+**Tasks**:
+- [ ] Create comprehensive navigation menu structure:
+  - Home
+  - People
+    - Browse People
+    - Add Person
+    - Search People
+  - Households
+    - View Households
+    - Create Household
+  - Relationships
+    - Partnerships
+    - Parent-Child
+    - Add Relationship
+  - Media
+    - Photo Gallery
+    - Upload Photos
+    - Videos
+  - Content
+    - Wiki
+    - Recipes
+    - Stories
+    - Traditions
+  - Calendar
+    - View Events
+    - Create Event
+  - Account
+    - Profile
+    - Settings
+    - Notifications
+    - Logout
+  - Admin (admin only)
+    - User Management
+    - System Settings
+    - Style Guide
+- [ ] Implement navigation in HeaderComponent/NavigationComponent
+- [ ] Add responsive mobile hamburger menu
+- [ ] Implement active route highlighting
+- [ ] Add keyboard navigation support
+- [ ] Test navigation across all user roles
+- [ ] Ensure proper authorization (hide/disable unauthorized items)
+
+**Deliverables**:
+- Complete navigation menu with all features
+- Mobile-responsive menu
+- Role-based menu visibility
+- Keyboard accessible navigation
+
+### Phase 12.2: Routing Configuration (Week 2)
+
+**Tasks**:
+- [ ] Define Angular routing module for application
+- [ ] Configure routes for all major features:
+  - Home routes (/, /home)
+  - Account routes (/login, /register, /profile, /forgot-password, etc.)
+  - Person routes (/people, /people/:id, /people/new, /people/:id/edit)
+  - Household routes (/households, /households/:id, /households/new, etc.)
+  - Partnership routes (/partnerships, /partnerships/:id, etc.)
+  - ParentChild routes (/relationships, /relationships/:id, etc.)
+  - Wiki routes (/wiki, /wiki/:slug)
+  - Recipe routes (/recipes, /recipes/:id)
+  - Story routes (/stories, /stories/:id)
+  - Tradition routes (/traditions, /traditions/:id)
+  - Calendar routes (/calendar, /events/:id)
+  - Media routes (/gallery, /media/:id)
+- [ ] Implement route guards:
+  - AuthGuard (require authentication)
+  - RoleGuard (require specific roles)
+  - UnsavedChangesGuard (warn before leaving forms)
+- [ ] Configure lazy loading for feature modules
+- [ ] Set up 404 Not Found page
+- [ ] Implement route resolvers for data pre-loading
+- [ ] Add route animations/transitions
+- [ ] Test all routes and guards
+- [ ] Document routing patterns
+
+**Deliverables**:
+- Complete Angular routing configuration
+- Route guards for authorization
+- Lazy loading for performance
+- 404 page
+- Routing documentation
+
+### Phase 12.3: Breadcrumbs and Context (Week 3)
+
+**Tasks**:
+- [ ] Enhance BreadcrumbComponent (already exists from Phase 1.2)
+- [ ] Configure breadcrumbs for all routes:
+  - Home
+  - Home > People
+  - Home > People > John Doe
+  - Home > People > John Doe > Edit
+  - Home > Households > Smith Family
+  - Home > Wiki > Category > Article
+  - etc.
+- [ ] Add dynamic breadcrumb labels (person names, household names, etc.)
+- [ ] Implement page title service (set browser tab title)
+- [ ] Add contextual help links
+- [ ] Create "quick actions" floating button on relevant pages
+- [ ] Add "back to top" button on long pages
+- [ ] Implement keyboard shortcuts for common navigation:
+  - Alt+H: Home
+  - Alt+P: People
+  - Alt+S: Search
+  - /: Focus search
+- [ ] Test breadcrumbs across all pages
+- [ ] Test keyboard shortcuts
+
+**Deliverables**:
+- Enhanced breadcrumb navigation
+- Dynamic page titles
+- Keyboard shortcuts
+- Contextual help system
+- Quick actions and navigation helpers
+
+### Phase 12.4: Deep Linking and Sharing (Week 3)
+
+**Tasks**:
+- [ ] Ensure all major pages support deep linking
+- [ ] Test URL sharing (copy link to person, household, article, etc.)
+- [ ] Implement social media meta tags (Open Graph, Twitter Cards)
+- [ ] Add share functionality to key pages:
+  - Person profiles
+  - Stories
+  - Recipes
+  - Traditions
+  - Photos
+- [ ] Create shareable family tree views (public links)
+- [ ] Test deep links from email notifications
+- [ ] Implement URL shortening for long links (optional)
+
+**Deliverables**:
+- Deep linking for all resources
+- Social media sharing support
+- Public sharing options
+- URL testing suite
+
+### Phase 12 Acceptance Criteria
+
+- ✅ All features accessible through navigation
+- ✅ Routing works for all views
+- ✅ Route guards protect unauthorized access
+- ✅ Breadcrumbs provide context on all pages
+- ✅ Keyboard shortcuts improve navigation
+- ✅ Deep linking works for sharing
+- ✅ Mobile navigation fully functional
+- ✅ No orphaned pages (all pages accessible)
+- ✅ WCAG 2.1 AA compliant navigation
+- ✅ 90%+ test coverage
+
+---
+
+## Testing Strategy
+
+### Unit Testing
+
+**Framework**: Jasmine + Karma (Angular default)  
+**Coverage Goal**: 90%+ for all new components
+
+**What to Test**:
+- Component initialization
+- Input/Output properties
+- User interactions (clicks, form submissions)
+- Data binding
+- Conditional rendering
+- Error states
+- Accessibility (ARIA attributes, roles)
+
+**Example Test Structure**:
+```typescript
+describe('PersonFormComponent', () => {
+  let component: PersonFormComponent;
+  let fixture: ComponentFixture<PersonFormComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [PersonFormComponent],
+      imports: [ReactiveFormsModule, MaterialModule]
+    });
+    fixture = TestBed.createComponent(PersonFormComponent);
+    component = fixture.componentInstance;
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should validate required fields', () => {
+    component.form.controls['firstName'].setValue('');
+    expect(component.form.controls['firstName'].invalid).toBeTruthy();
+  });
+
+  // More tests...
+});
+```
+
+### Integration Testing
+
+**Framework**: Angular TestBed with real services
+
+**What to Test**:
+- Component interaction with services
+- API calls (mocked)
+- Navigation flows
+- Form submission workflows
+- Authorization checks
+
+### End-to-End Testing
+
+**Framework**: Playwright or Cypress
+
+**Test Scenarios**:
+1. **User Authentication Flow**
+   - Register new user
+   - Verify email
+   - Login
+   - Logout
+
+2. **Person Management Flow**
+   - Create new person
+   - Edit person details
+   - Add relationships
+   - Upload photo
+   - Delete person
+
+3. **Household Management Flow**
+   - Create household
+   - Add members
+   - Manage permissions
+   - Delete household
+
+4. **Content Creation Flow**
+   - Create wiki article
+   - Create recipe
+   - Create story
+   - Upload media
+
+5. **Navigation Flow**
+   - Navigate through all menu items
+   - Use breadcrumbs
+   - Use keyboard shortcuts
+   - Test deep links
+
+### Accessibility Testing
+
+**Tools**:
+- axe-core (automated)
+- WAVE browser extension
+- Screen readers (NVDA, JAWS, VoiceOver)
+- Keyboard-only navigation
+
+**Checklist**:
+- [ ] All interactive elements keyboard accessible
+- [ ] Proper heading hierarchy (h1, h2, h3, etc.)
+- [ ] ARIA labels on all interactive elements
+- [ ] Alt text on all images
+- [ ] Color contrast meets WCAG AA standards (4.5:1 minimum)
+- [ ] Focus indicators visible
+- [ ] No keyboard traps
+- [ ] Screen reader announces all content correctly
+- [ ] Forms have associated labels
+- [ ] Error messages are accessible
+
+### Visual Regression Testing
+
+**Tools**: Percy, Chromatic, or BackstopJS
+
+**What to Test**:
+- Component snapshots at various screen sizes
+- Theme variations (light/dark mode)
+- State variations (loading, error, empty, success)
+- Browser compatibility (Chrome, Firefox, Safari, Edge)
+
+---
+
+## Rollback Plan
+
+### Per-Phase Rollback
+
+Each phase should be deployed behind a feature flag to allow easy rollback if issues are discovered.
+
+**Feature Flag Pattern**:
+```csharp
+// In controller
+if (_featureFlags.IsEnabled("UseAngularPersonViews"))
+{
+    // Return view with Angular components
+    return View("Index");
+}
+else
+{
+    // Return original Razor view
+    return View("IndexLegacy");
+}
+```
+
+**Feature Flag Service**:
+```csharp
+public interface IFeatureFlags
+{
+    bool IsEnabled(string featureName);
+}
+
+public class FeatureFlagService : IFeatureFlags
+{
+    private readonly IConfiguration _configuration;
+
+    public bool IsEnabled(string featureName)
+    {
+        return _configuration.GetValue<bool>($"FeatureFlags:{featureName}", false);
+    }
+}
+```
+
+**Configuration** (appsettings.json):
+```json
+{
+  "FeatureFlags": {
+    "UseAngularAccountViews": true,
+    "UseAngularPersonViews": true,
+    "UseAngularHouseholdViews": false,
+    "UseAngularPartnershipViews": false
+  }
+}
+```
+
+### Rollback Procedure
+
+1. **Immediate Rollback** (Critical Issues):
+   - Disable feature flag in production
+   - Deploy configuration change
+   - Monitor for resolution
+   - Investigate issue in staging
+
+2. **Gradual Rollback** (Non-Critical Issues):
+   - Fix issues in development
+   - Deploy fix to staging
+   - Test thoroughly
+   - Re-enable feature flag
+   - Monitor production
+
+3. **Complete Rollback** (Major Issues):
+   - Disable all new feature flags
+   - Revert to previous deployment
+   - Conduct post-mortem
+   - Plan remediation
+
+### Data Migration Rollback
+
+If database schema changes are made:
+- Always support backward compatibility
+- Use database migrations that can be rolled back
+- Test rollback in staging first
+- Have database backup before deployment
+
+### Monitoring and Alerts
+
+**Key Metrics to Monitor**:
+- Page load times
+- JavaScript errors (Sentry, Application Insights)
+- API error rates
+- User engagement (bounce rate, time on page)
+- Accessibility errors (automated scanning)
+
+**Alert Conditions**:
+- Page load time > 5 seconds
+- JavaScript error rate > 5%
+- API error rate > 10%
+- Accessibility score < 90
+
+---
+
+## Success Metrics
+
+### Technical Metrics
+
+| Metric | Target | How to Measure |
+|--------|--------|----------------|
+| Test Coverage | 90%+ | Code coverage reports |
+| Page Load Time | < 2 seconds | Lighthouse, WebPageTest |
+| Time to Interactive | < 3 seconds | Lighthouse |
+| Accessibility Score | 90+ | Lighthouse, axe-core |
+| Bundle Size | < 500KB initial | webpack-bundle-analyzer |
+| Mobile Performance | 90+ | Lighthouse mobile |
+
+### User Experience Metrics
+
+| Metric | Target | How to Measure |
+|--------|--------|----------------|
+| Task Completion Rate | 95%+ | User testing sessions |
+| User Satisfaction | 4.5/5 | User surveys (NPS) |
+| Error Rate | < 2% | Error tracking, user reports |
+| Mobile Usage | 40%+ | Analytics |
+| Accessibility Compliance | WCAG AA | Automated + manual testing |
+
+### Business Metrics
+
+| Metric | Target | How to Measure |
+|--------|--------|----------------|
+| User Adoption | 80%+ | Feature usage analytics |
+| Support Tickets | -30% | Support system |
+| Development Velocity | +20% | Sprint velocity |
+| Code Maintainability | A rating | Code quality tools |
+
+---
+
+## Timeline Summary
+
+| Phase | Duration | Priority | Start Week | End Week |
+|-------|----------|----------|------------|----------|
+| Phase 1: Account | 6 weeks | High | Week 1 | Week 6 |
+| Phase 2: Person | 8 weeks | High | Week 7 | Week 14 |
+| Phase 3: Household | 6 weeks | High | Week 15 | Week 20 |
+| Phase 4: Partnership | 5 weeks | Medium | Week 21 | Week 25 |
+| Phase 5: ParentChild | 5 weeks | Medium | Week 26 | Week 30 |
+| Phase 6: Home | 3 weeks | High | Week 31 | Week 33 |
+| Phase 7: Wiki | 2 weeks | Medium | Week 34 | Week 35 |
+| Phase 8: Recipe | 2 weeks | Low | Week 36 | Week 37 |
+| Phase 9: StoryView | 2 weeks | Low | Week 38 | Week 39 |
+| Phase 10: Tradition | 2 weeks | Low | Week 40 | Week 41 |
+| Phase 11: Shared | 4 weeks | High | Week 42 | Week 45 |
+| Phase 12: Navigation | 3 weeks | High | Week 46 | Week 48 |
+
+**Total Duration**: 48 weeks (~11 months)
+
+**Note**: Many components already exist from UI_DesignPlan.md phases, so actual implementation time will be significantly reduced. Focus will be on integration, testing, and completing missing views.
+
+---
+
+## Conclusion
+
+This migration plan provides a structured approach to transitioning all C# Razor views to fully styled Angular components with Material Design. By breaking the work into manageable phases and sub-phases, we ensure:
+
+1. **Manageable PRs**: Each sub-phase represents a reasonable PR size
+2. **Clear Dependencies**: Each phase builds on previous work
+3. **Rollback Safety**: Feature flags enable quick rollback if needed
+4. **Incremental Value**: Users see improvements throughout the process
+5. **Quality Assurance**: Comprehensive testing at each stage
+6. **Accessibility**: WCAG 2.1 AA compliance built into every phase
+
+The plan leverages existing work from the UI_DesignPlan.md document, where many components have already been built. The focus now is on completing the missing pieces, integrating everything cohesively, and ensuring all views are migrated.
+
+---
+
+## Appendix: Quick Reference
+
+### View to Component Mapping
+
+| Razor View | Angular Component | Phase | Status |
+|------------|-------------------|-------|--------|
+| Account/Login.cshtml | LoginComponent | 1.1 | ✅ Complete |
+| Account/ForgotPassword.cshtml | ForgotPasswordComponent | 1.1 | ✅ Complete |
+| Account/ResetPassword.cshtml | ResetPasswordComponent | 1.1 | ✅ Complete |
+| Account/ForgotPasswordConfirmation.cshtml | ForgotPasswordConfirmationComponent | 1.2 | ⏳ Pending |
+| Account/ResetPasswordConfirmation.cshtml | ResetPasswordConfirmationComponent | 1.2 | ⏳ Pending |
+| Account/ConfirmEmail.cshtml | ConfirmEmailComponent | 1.2 | ⏳ Pending |
+| Account/CreateUser.cshtml | CreateUserComponent | 1.3 | ⏳ Pending |
+| Account/AccessDenied.cshtml | AccessDeniedComponent | 1.4 | ⏳ Pending |
+| Account/Profile.cshtml | UserProfileComponent | 1.4 | ✅ Complete |
+| Person/Index.cshtml | PersonIndexComponent | 2.1 | ✅ Complete |
+| Person/Details.cshtml | PersonDetailsComponent | 2.2 | ✅ Complete |
+| Person/Create.cshtml | PersonFormComponent (create) | 2.3 | ✅ Complete |
+| Person/Edit.cshtml | PersonFormComponent (edit) | 2.3 | ✅ Complete |
+| Person/Delete.cshtml | PersonDeleteDialogComponent | 2.4 | ⏳ Pending |
+| Household/Index.cshtml | HouseholdIndexComponent | 3.1 | ✅ Complete |
+| Household/Details.cshtml | HouseholdDetailsComponent | 3.2 | ✅ Complete |
+| Household/Members.cshtml | HouseholdMembersComponent | 3.2 | ✅ Complete |
+| Household/Create.cshtml | HouseholdFormComponent (create) | 3.3 | ⏳ Pending |
+| Household/Edit.cshtml | HouseholdFormComponent (edit) | 3.3 | ⏳ Pending |
+| Household/Delete.cshtml | HouseholdDeleteDialogComponent | 3.4 | ⏳ Pending |
+| Partnership/Index.cshtml | PartnershipIndexComponent | 4.1 | ✅ Complete |
+| Partnership/Details.cshtml | PartnershipDetailsComponent | 4.2 | ⏳ Pending |
+| Partnership/Create.cshtml | PartnershipFormComponent (create) | 4.3 | ✅ Complete |
+| Partnership/Edit.cshtml | PartnershipFormComponent (edit) | 4.3 | ✅ Complete |
+| Partnership/Delete.cshtml | PartnershipDeleteDialogComponent | 4.4 | ⏳ Pending |
+| ParentChild/Index.cshtml | ParentChildIndexComponent | 5.1 | ✅ Complete |
+| ParentChild/Details.cshtml | ParentChildDetailsComponent | 5.2 | ⏳ Pending |
+| ParentChild/Create.cshtml | ParentChildFormComponent (create) | 5.3 | ✅ Complete |
+| ParentChild/Edit.cshtml | ParentChildFormComponent (edit) | 5.3 | ✅ Complete |
+| ParentChild/Delete.cshtml | ParentChildDeleteDialogComponent | 5.4 | ⏳ Pending |
+| Home/Index.cshtml | HomePageComponent | 6.1 | ⏳ Pending |
+| Home/StyleGuide.cshtml | StyleGuideComponent | 6.2 | ✅ Complete |
+| Wiki/Index.cshtml | WikiIndexComponent + WikiArticleComponent | 7.1 | ✅ Complete |
+| Recipe/Index.cshtml | ContentGridComponent + RecipeDetailsComponent | 8.1 | ✅ Complete |
+| StoryView/Index.cshtml | ContentGridComponent + StoryDetailsComponent | 9.1 | ⏳ Pending |
+| Tradition/Index.cshtml | ContentGridComponent + TraditionDetailsComponent | 10.1 | ⏳ Pending |
+| Shared/_Layout.cshtml | LayoutWrapperComponent | 11.1 | ⏳ Pending |
+| Shared/_ValidationScriptsPartial.cshtml | Angular Form Validation | 11.2 | ⏳ Pending |
+
+### Components Already Built
+
+From UI_DesignPlan.md, these components are already complete:
+- ✅ All Phase 1 (Foundation) components
+- ✅ All Phase 2 (Layout & Navigation) components
+- ✅ All Phase 3 (Person Management) components
+- ✅ All Phase 4 (Household Management) components
+- ✅ All Phase 5 (Relationship Management) components
+- ✅ All Phase 6 (Account & Authentication) components
+- ✅ All Phase 7 (Content Pages) components
+- ✅ All Phase 8 (Advanced Components) components
+- ✅ All Phase 9 (Mobile Optimization) components
+- ✅ All Phase 10 (Accessibility) components
+
+### Remaining Components to Build
+
+Focus on these missing pieces:
+1. Confirmation components (email, password reset)
+2. Delete dialog components (Person, Household, Partnership, ParentChild)
+3. Form components (Household, create user)
+4. Detail components (Partnership, ParentChild, Story, Tradition)
+5. Home page component
+6. Layout wrapper integration
+
+**Estimated Remaining Work**: ~12-15 new components + integration work
+
+---
+
+**Document Version**: 1.0  
+**Last Updated**: December 2025  
+**Next Review**: January 2026
