@@ -146,6 +146,17 @@ public class ParentChildService : IParentChildService
 
     private static ParentChildViewModel MapToViewModel(ParentChild parentChild)
     {
+        // Calculate child's age if birth date is available
+        int? childAge = null;
+        if (parentChild.ChildPerson?.DateOfBirth.HasValue == true)
+        {
+            var today = DateTime.Today;
+            var birthDate = parentChild.ChildPerson.DateOfBirth.Value;
+            var age = today.Year - birthDate.Year;
+            if (birthDate.Date > today.AddYears(-age)) age--;
+            childAge = age;
+        }
+
         return new ParentChildViewModel
         {
             Id = parentChild.Id,
@@ -157,7 +168,12 @@ public class ParentChildService : IParentChildService
             ChildName = parentChild.ChildPerson != null 
                 ? $"{parentChild.ChildPerson.FirstName} {parentChild.ChildPerson.LastName}" 
                 : "Unknown",
+            ParentPhotoUrl = parentChild.ParentPerson?.PhotoUrl,
+            ChildPhotoUrl = parentChild.ChildPerson?.PhotoUrl,
+            ChildBirthDate = parentChild.ChildPerson?.DateOfBirth,
+            ChildAge = childAge,
             RelationshipType = parentChild.RelationshipType,
+            IsVerified = true, // Default to true for now; can be enhanced with verification logic later
             CreatedDateTime = parentChild.CreatedDateTime,
             UpdatedDateTime = parentChild.UpdatedDateTime
         };

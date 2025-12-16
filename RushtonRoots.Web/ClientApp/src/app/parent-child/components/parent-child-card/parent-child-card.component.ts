@@ -28,6 +28,16 @@ export class ParentChildCardComponent {
   @Input() showActions: boolean = true;
 
   /**
+   * Whether the current user can edit relationships
+   */
+  @Input() canEdit: boolean = true;
+
+  /**
+   * Whether the current user can delete relationships
+   */
+  @Input() canDelete: boolean = true;
+
+  /**
    * Event emitted when an action is clicked
    */
   @Output() action = new EventEmitter<ParentChildActionEvent>();
