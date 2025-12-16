@@ -3,9 +3,11 @@
   [class.event-card--upcoming]="isUpcoming()"
   [class.event-card--past]="isPast()"
   [class.event-card--today]="isToday()"
-  [elevation]="elevation"
+  [class.mat-elevation-z2]="elevation === 2"
+  [class.mat-elevation-z4]="elevation === 4"
+  [class.mat-elevation-z8]="elevation === 8"
   (click)="onCardClick()"
-  class="event-card">
+  class="event-card mat-elevation-z2">
   
   <!-- Event Header -->
   <mat-card-header>

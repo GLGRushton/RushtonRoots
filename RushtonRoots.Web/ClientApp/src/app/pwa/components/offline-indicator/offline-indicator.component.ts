@@ -9,6 +9,7 @@ import { NetworkStatus, OfflineIndicatorConfig } from '../../models/pwa.model';
  */
 @Component({
   selector: 'app-offline-indicator',
+  standalone: false,
   templateUrl: './offline-indicator.component.html',
   styleUrls: ['./offline-indicator.component.scss']
 })

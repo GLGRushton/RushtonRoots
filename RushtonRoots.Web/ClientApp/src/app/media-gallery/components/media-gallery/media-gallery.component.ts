@@ -41,6 +41,9 @@ export class MediaGalleryComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   private searchSubject$ = new Subject<string>();
 
+  // Expose Object to template
+  Object = Object;
+
   // View state
   viewMode: GalleryViewMode = 'grid';
   selectedAlbumId?: number;
