@@ -12,6 +12,7 @@ import { StyleGuideComponent } from './style-guide/style-guide.component';
 import { SharedModule } from './shared/shared.module';
 import { PersonModule } from './person/person.module';
 import { HouseholdModule } from './household/household.module';
+import { PartnershipModule } from './partnership/partnership.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -54,6 +55,12 @@ import { MemberInviteDialogComponent } from './household/components/member-invit
 import { HouseholdSettingsComponent } from './household/components/household-settings/household-settings.component';
 import { HouseholdActivityTimelineComponent } from './household/components/household-activity-timeline/household-activity-timeline.component';
 
+// Import Phase 5.1 Partnership Management components for Angular Elements registration
+import { PartnershipIndexComponent } from './partnership/components/partnership-index/partnership-index.component';
+import { PartnershipCardComponent } from './partnership/components/partnership-card/partnership-card.component';
+import { PartnershipFormComponent } from './partnership/components/partnership-form/partnership-form.component';
+import { PartnershipTimelineComponent } from './partnership/components/partnership-timeline/partnership-timeline.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,7 +75,8 @@ import { HouseholdActivityTimelineComponent } from './household/components/house
     FormsModule,
     SharedModule,
     PersonModule,
-    HouseholdModule
+    HouseholdModule,
+    PartnershipModule
   ],
   providers: []
 })
@@ -178,6 +186,19 @@ export class AppModule {
 
     const householdActivityTimelineElement = createCustomElement(HouseholdActivityTimelineComponent, { injector: this.injector });
     customElements.define('app-household-activity-timeline', householdActivityTimelineElement);
+
+    // Register Phase 5.1 Partnership Management components as Angular Elements
+    const partnershipIndexElement = createCustomElement(PartnershipIndexComponent, { injector: this.injector });
+    customElements.define('app-partnership-index', partnershipIndexElement);
+
+    const partnershipCardElement = createCustomElement(PartnershipCardComponent, { injector: this.injector });
+    customElements.define('app-partnership-card', partnershipCardElement);
+
+    const partnershipFormElement = createCustomElement(PartnershipFormComponent, { injector: this.injector });
+    customElements.define('app-partnership-form', partnershipFormElement);
+
+    const partnershipTimelineElement = createCustomElement(PartnershipTimelineComponent, { injector: this.injector });
+    customElements.define('app-partnership-timeline', partnershipTimelineElement);
   }
 
   ngDoBootstrap() {

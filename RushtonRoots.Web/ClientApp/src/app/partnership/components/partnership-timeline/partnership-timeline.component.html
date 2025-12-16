@@ -1,0 +1,108 @@
+<div class="partnership-timeline-container" *ngIf="timeline">
+  <!-- Timeline Header -->
+  <div class="timeline-header">
+    <h2 class="timeline-title">Partnership Timeline</h2>
+    <div class="timeline-summary">
+      <div class="summary-item">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ timeline.duration }}</span>
+      </div>
+      <div class="summary-item" *ngIf="timeline.yearsActive">
+        <mat-icon>event</mat-icon>
+        <span>{{ timeline.yearsActive }} {{ timeline.yearsActive === 1 ? 'year' : 'years' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline Events -->
+  <div class="timeline-events">
+    <div class="timeline-event" *ngFor="let event of timeline.events; let isLast = last">
+      <!-- Event Marker -->
+      <div class="event-marker">
+        <div class="marker-line" *ngIf="!isLast"></div>
+        <div class="marker-icon" [style.background-color]="event.color">
+          <mat-icon>{{ event.icon }}</mat-icon>
+        </div>
+      </div>
+
+      <!-- Event Content -->
+      <div class="event-content">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ event.title }}</mat-card-title>
+            <mat-card-subtitle>
+              <div class="event-meta">
+                <mat-chip class="event-type-chip" [style.background-color]="event.color + '20'">
+                  {{ event.eventTypeDisplay }}
+                </mat-chip>
+                <span class="event-date">{{ event.dateDisplay }}</span>
+              </div>
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content *ngIf="event.location || event.description">
+            <div class="event-details">
+              <!-- Location -->
+              <div class="detail-item" *ngIf="event.location">
+                <mat-icon class="detail-icon">place</mat-icon>
+                <span>{{ event.location }}</span>
+              </div>
+
+              <!-- Description -->
+              <div class="detail-item" *ngIf="event.description">
+                <mat-icon class="detail-icon">description</mat-icon>
+                <span>{{ event.description }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Partnership Summary -->
+  <div class="partnership-summary">
+    <mat-card>
+      <mat-card-content>
+        <div class="summary-content">
+          <div class="partner-info">
+            <div class="partner">
+              <div class="partner-avatar">
+                <img 
+                  *ngIf="partnership.personAPhotoUrl" 
+                  [src]="partnership.personAPhotoUrl" 
+                  [alt]="partnership.personAName">
+                <div *ngIf="!partnership.personAPhotoUrl" class="avatar-fallback">
+                  {{ partnership.personAName.charAt(0) }}
+                </div>
+              </div>
+              <span class="partner-name">{{ partnership.personAName }}</span>
+            </div>
+
+            <mat-icon class="partnership-icon">favorite</mat-icon>
+
+            <div class="partner">
+              <div class="partner-avatar">
+                <img 
+                  *ngIf="partnership.personBPhotoUrl" 
+                  [src]="partnership.personBPhotoUrl" 
+                  [alt]="partnership.personBName">
+                <div *ngIf="!partnership.personBPhotoUrl" class="avatar-fallback">
+                  {{ partnership.personBName.charAt(0) }}
+                </div>
+              </div>
+              <span class="partner-name">{{ partnership.personBName }}</span>
+            </div>
+          </div>
+
+          <div class="partnership-type">
+            <mat-chip>{{ partnership.partnershipTypeDisplay }}</mat-chip>
+            <mat-chip [class]="'status-chip status-' + partnership.status">
+              {{ partnership.statusDisplay }}
+            </mat-chip>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,119 @@
+<mat-card [class]="'partnership-card elevation-' + elevation">
+  <!-- Card Header -->
+  <mat-card-header>
+    <div class="partnership-header">
+      <!-- Person A Avatar -->
+      <div class="person-avatar">
+        <img 
+          *ngIf="partnership.personAPhotoUrl" 
+          [src]="partnership.personAPhotoUrl" 
+          [alt]="partnership.personAName"
+          class="avatar-image">
+        <div *ngIf="!partnership.personAPhotoUrl" class="avatar-fallback">
+          {{ getInitials(partnership.personAName) }}
+        </div>
+      </div>
+
+      <!-- Partnership Icon -->
+      <div class="partnership-icon">
+        <mat-icon [style.color]="getStatusConfig().color">favorite</mat-icon>
+      </div>
+
+      <!-- Person B Avatar -->
+      <div class="person-avatar">
+        <img 
+          *ngIf="partnership.personBPhotoUrl" 
+          [src]="partnership.personBPhotoUrl" 
+          [alt]="partnership.personBName"
+          class="avatar-image">
+        <div *ngIf="!partnership.personBPhotoUrl" class="avatar-fallback">
+          {{ getInitials(partnership.personBName) }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Names -->
+    <mat-card-title class="partnership-names">
+      {{ partnership.personAName }} & {{ partnership.personBName }}
+    </mat-card-title>
+
+    <mat-card-subtitle>
+      <div class="partnership-meta">
+        <!-- Partnership Type -->
+        <mat-chip class="partnership-type-chip">
+          {{ partnership.partnershipTypeDisplay }}
+        </mat-chip>
+
+        <!-- Status Badge -->
+        <mat-chip [class]="'status-chip status-' + partnership.status">
+          <mat-icon class="chip-icon">{{ getStatusConfig().icon }}</mat-icon>
+          {{ partnership.statusDisplay }}
+        </mat-chip>
+      </div>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <!-- Card Content -->
+  <mat-card-content>
+    <!-- Date Information -->
+    <div class="partnership-dates">
+      <div class="date-row">
+        <mat-icon class="date-icon">event</mat-icon>
+        <span class="date-label">Started:</span>
+        <span class="date-value">{{ formatDate(partnership.startDate) }}</span>
+      </div>
+
+      <div class="date-row" *ngIf="partnership.endDate">
+        <mat-icon class="date-icon">event_busy</mat-icon>
+        <span class="date-label">Ended:</span>
+        <span class="date-value">{{ formatDate(partnership.endDate) }}</span>
+      </div>
+
+      <div class="duration" *ngIf="partnership.duration">
+        <mat-icon class="duration-icon">schedule</mat-icon>
+        <span>{{ partnership.duration }}</span>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="partnership-location" *ngIf="partnership.location">
+      <mat-icon class="location-icon">place</mat-icon>
+      <span>{{ partnership.location }}</span>
+    </div>
+
+    <!-- Notes Preview -->
+    <div class="partnership-notes" *ngIf="partnership.notes">
+      <p class="notes-text">{{ partnership.notes }}</p>
+    </div>
+  </mat-card-content>
+
+  <mat-divider></mat-divider>
+
+  <!-- Card Actions -->
+  <mat-card-actions *ngIf="showActions">
+    <button mat-button color="primary" (click)="onView()">
+      <mat-icon>visibility</mat-icon>
+      View
+    </button>
+
+    <button mat-button color="accent" (click)="onTimeline()">
+      <mat-icon>timeline</mat-icon>
+      Timeline
+    </button>
+
+    <button mat-icon-button [matMenuTriggerFor]="actionMenu" class="more-actions">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #actionMenu="matMenu">
+      <button mat-menu-item (click)="onEdit()" *ngIf="canEdit">
+        <mat-icon>edit</mat-icon>
+        <span>Edit Partnership</span>
+      </button>
+      <button mat-menu-item (click)="onDelete()" *ngIf="canDelete" class="delete-action">
+        <mat-icon color="warn">delete</mat-icon>
+        <span>Delete Partnership</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>
