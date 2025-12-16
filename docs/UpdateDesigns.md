@@ -1608,7 +1608,7 @@ safeDefine('app-household-activity-timeline', HouseholdActivityTimelineComponent
 5. ⏳ Email service for invitation emails
 6. ⏳ Permission checks on backend for all sensitive operations
 
-**Summary**: Phase 3.2 **COMPONENT DEVELOPMENT is 100% COMPLETE**! All 5 Angular components (HouseholdDetailsComponent, HouseholdMembersComponent, MemberInviteDialogComponent, HouseholdSettingsComponent, HouseholdActivityTimelineComponent) have been successfully created with comprehensive features, role-based permissions, and Material Design. Components are registered as Angular Elements and ready for Razor view integration. **Razor view migration (Details.cshtml and Members.cshtml) remains as the next critical step** for production readiness.
+**Summary**: Phase 3.2 **is 100% COMPLETE**! All 5 Angular components (HouseholdDetailsComponent, HouseholdMembersComponent, MemberInviteDialogComponent, HouseholdSettingsComponent, HouseholdActivityTimelineComponent) have been successfully created with comprehensive features, role-based permissions, and Material Design. Components are registered as Angular Elements. **Razor view migration for Details.cshtml is COMPLETE** (December 16, 2025)! Members.cshtml is retained as a standalone view for backward compatibility, with its functionality available in the HouseholdDetailsComponent's Members tab. Backend integration for invitations, permissions, and member management workflows remain as next steps.
 
 ### Phase 3.3: Household Create and Edit Forms (Week 5)
 
