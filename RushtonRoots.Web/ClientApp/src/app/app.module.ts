@@ -67,6 +67,9 @@ import { MemberInviteDialogComponent } from './household/components/member-invit
 import { HouseholdSettingsComponent } from './household/components/household-settings/household-settings.component';
 import { HouseholdActivityTimelineComponent } from './household/components/household-activity-timeline/household-activity-timeline.component';
 
+// Import Phase 3.3 (UpdateDesigns.md) Household Form component for Angular Elements registration
+import { HouseholdFormComponent } from './household/components/household-form/household-form.component';
+
 // Import Phase 5.1 Partnership Management components for Angular Elements registration
 import { PartnershipIndexComponent } from './partnership/components/partnership-index/partnership-index.component';
 import { PartnershipCardComponent } from './partnership/components/partnership-card/partnership-card.component';
@@ -234,6 +237,9 @@ export class AppModule {
     safeDefine('app-member-invite-dialog', MemberInviteDialogComponent);
     safeDefine('app-household-settings', HouseholdSettingsComponent);
     safeDefine('app-household-activity-timeline', HouseholdActivityTimelineComponent);
+
+    // Register Phase 3.3 (UpdateDesigns.md) Household Form component as Angular Element
+    safeDefine('app-household-form', HouseholdFormComponent);
 
     // Register Phase 5.1 Partnership Management components as Angular Elements
     safeDefine('app-partnership-index', PartnershipIndexComponent);
