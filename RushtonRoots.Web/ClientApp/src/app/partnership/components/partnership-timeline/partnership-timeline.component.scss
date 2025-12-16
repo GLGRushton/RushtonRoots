@@ -1,0 +1,320 @@
+.partnership-timeline-container {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.timeline-header {
+  margin-bottom: 32px;
+  text-align: center;
+
+  .timeline-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #212121;
+    margin: 0 0 16px 0;
+  }
+
+  .timeline-summary {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    align-items: center;
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      color: #666;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: #2e7d32;
+      }
+    }
+  }
+}
+
+.timeline-events {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+.timeline-event {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.event-marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 60px;
+
+  .marker-line {
+    position: absolute;
+    top: 60px;
+    width: 3px;
+    height: calc(100% + 32px);
+    background: linear-gradient(to bottom, #2e7d32, #e0e0e0);
+  }
+
+  .marker-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2e7d32;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+
+    mat-icon {
+      color: white;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+  }
+}
+
+.event-content {
+  flex: 1;
+
+  mat-card {
+    mat-card-header {
+      margin-bottom: 16px;
+
+      mat-card-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #212121;
+        margin-bottom: 8px;
+      }
+
+      mat-card-subtitle {
+        .event-meta {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+
+          .event-type-chip {
+            font-size: 12px;
+            height: 24px;
+            padding: 0 12px;
+            font-weight: 500;
+          }
+
+          .event-date {
+            font-size: 14px;
+            color: #666;
+          }
+        }
+      }
+    }
+
+    mat-card-content {
+      .event-details {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .detail-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          color: #666;
+
+          .detail-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            color: #2e7d32;
+          }
+        }
+      }
+    }
+  }
+}
+
+.partnership-summary {
+  margin-top: 32px;
+
+  mat-card {
+    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+
+    mat-card-content {
+      padding: 24px;
+
+      .summary-content {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+
+        .partner-info {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+
+          .partner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+
+            .partner-avatar {
+              width: 80px;
+              height: 80px;
+              border-radius: 50%;
+              overflow: hidden;
+              border: 3px solid #2e7d32;
+
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+
+              .avatar-fallback {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+                color: white;
+                font-size: 32px;
+                font-weight: 600;
+              }
+            }
+
+            .partner-name {
+              font-size: 16px;
+              font-weight: 600;
+              color: #212121;
+              text-align: center;
+            }
+          }
+
+          .partnership-icon {
+            font-size: 40px;
+            width: 40px;
+            height: 40px;
+            color: #2e7d32;
+          }
+        }
+
+        .partnership-type {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+          justify-content: center;
+
+          mat-chip {
+            font-size: 14px;
+            font-weight: 500;
+          }
+
+          .status-chip {
+            &.status-current {
+              background-color: #e8f5e9 !important;
+              color: #2e7d32 !important;
+            }
+
+            &.status-ended, &.status-widowed, &.status-separated, &.status-unknown {
+              background-color: #fff3e0 !important;
+              color: #f57c00 !important;
+            }
+
+            &.status-divorced {
+              background-color: #ffebee !important;
+              color: #c62828 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .partnership-timeline-container {
+    padding: 16px;
+  }
+
+  .timeline-header {
+    .timeline-title {
+      font-size: 24px;
+    }
+
+    .timeline-summary {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+
+  .timeline-event {
+    gap: 16px;
+  }
+
+  .event-marker {
+    width: 40px;
+
+    .marker-icon {
+      width: 40px;
+      height: 40px;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .marker-line {
+      top: 40px;
+      width: 2px;
+    }
+  }
+
+  .partnership-summary {
+    mat-card-content {
+      .summary-content {
+        .partner-info {
+          flex-direction: column;
+          gap: 16px;
+
+          .partner-avatar {
+            width: 60px;
+            height: 60px;
+
+            .avatar-fallback {
+              font-size: 24px;
+            }
+          }
+
+          .partnership-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+          }
+        }
+      }
+    }
+  }
+}

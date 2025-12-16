@@ -1,0 +1,261 @@
+.partnership-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  &.elevation-0 {
+    box-shadow: none;
+  }
+
+  &.elevation-2 {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &.elevation-4 {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  &.elevation-8 {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.partnership-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.person-avatar {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #4caf50;
+
+  .avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .avatar-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+  }
+}
+
+.partnership-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.partnership-names {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  text-align: center;
+  margin: 8px 0 !important;
+  line-height: 1.4 !important;
+}
+
+.partnership-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.partnership-type-chip {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+  font-size: 12px;
+  height: 28px;
+  font-weight: 500;
+}
+
+.status-chip {
+  font-size: 12px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .chip-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &.status-current {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+  }
+
+  &.status-ended, &.status-widowed, &.status-separated, &.status-unknown {
+    background-color: #fff3e0 !important;
+    color: #f57c00 !important;
+  }
+
+  &.status-divorced {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+  }
+}
+
+mat-card-content {
+  flex: 1;
+  padding: 16px;
+}
+
+.partnership-dates {
+  margin-bottom: 12px;
+
+  .date-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+
+    .date-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #666;
+    }
+
+    .date-label {
+      font-weight: 500;
+      color: #666;
+    }
+
+    .date-value {
+      color: #212121;
+    }
+  }
+
+  .duration {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2e7d32;
+    margin-top: 8px;
+
+    .duration-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.partnership-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+
+  .location-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.partnership-notes {
+  margin-top: 12px;
+
+  .notes-text {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+mat-card-actions {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 8px;
+
+  button {
+    margin: 0 !important;
+  }
+
+  .more-actions {
+    margin-left: auto !important;
+  }
+}
+
+.delete-action {
+  color: #d32f2f !important;
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .partnership-header {
+    gap: 12px;
+  }
+
+  .person-avatar {
+    width: 50px;
+    height: 50px;
+
+    .avatar-fallback {
+      font-size: 18px;
+    }
+  }
+
+  .partnership-icon {
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  .partnership-names {
+    font-size: 16px !important;
+  }
+
+  mat-card-actions {
+    flex-wrap: wrap;
+  }
+}
