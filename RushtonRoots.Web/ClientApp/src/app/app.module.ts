@@ -82,6 +82,9 @@ import { PartnershipTimelineComponent } from './partnership/components/partnersh
 // Import Phase 4.2 Partnership Details component for Angular Elements registration
 import { PartnershipDetailsComponent } from './partnership/components/partnership-details/partnership-details.component';
 
+// Import Phase 4.4 Partnership Delete Dialog component for Angular Elements registration
+import { PartnershipDeleteDialogComponent } from './partnership/components/partnership-delete-dialog/partnership-delete-dialog.component';
+
 // Import Phase 5.2 Parent-Child Relationships components for Angular Elements registration
 import { ParentChildIndexComponent } from './parent-child/components/parent-child-index/parent-child-index.component';
 import { ParentChildCardComponent } from './parent-child/components/parent-child-card/parent-child-card.component';
@@ -258,6 +261,9 @@ export class AppModule {
 
     // Register Phase 4.2 Partnership Details component as Angular Element
     safeDefine('app-partnership-details', PartnershipDetailsComponent);
+
+    // Register Phase 4.4 Partnership Delete Dialog component as Angular Element
+    safeDefine('app-partnership-delete-dialog', PartnershipDeleteDialogComponent);
 
     // Register Phase 5.2 Parent-Child Relationships components as Angular Elements
     safeDefine('app-parent-child-index', ParentChildIndexComponent);

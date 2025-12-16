@@ -4,33 +4,148 @@
 }
 
 <div class="container mt-4">
-    <h2>Delete Partnership</h2>
-    <hr />
+    <app-partnership-delete-dialog
+        partnership-id="@Model.Id"
+        person-a-id="@Model.PersonAId"
+        person-a-name="@Model.PersonAName"
+        person-a-photo-url="@Model.PersonAPhotoUrl"
+        person-a-birth-date="@Model.PersonABirthDate?.ToString("o")"
+        person-a-death-date="@Model.PersonADeathDate?.ToString("o")"
+        person-a-is-deceased="@Model.PersonAIsDeceased.ToString().ToLower()"
+        person-b-id="@Model.PersonBId"
+        person-b-name="@Model.PersonBName"
+        person-b-photo-url="@Model.PersonBPhotoUrl"
+        person-b-birth-date="@Model.PersonBBirthDate?.ToString("o")"
+        person-b-death-date="@Model.PersonBDeathDate?.ToString("o")"
+        person-b-is-deceased="@Model.PersonBIsDeceased.ToString().ToLower()"
+        partnership-type="@Model.PartnershipType"
+        start-date="@Model.StartDate?.ToString("o")"
+        end-date="@Model.EndDate?.ToString("o")"
+        location="@Model.Location"
+        notes="@Model.Notes"
+        related-data='@Html.Raw(Json.Serialize(new {
+            children = Model.RelatedData?.Children ?? 0,
+            sharedEvents = Model.RelatedData?.SharedEvents ?? 0,
+            photos = Model.RelatedData?.Photos ?? 0,
+            stories = Model.RelatedData?.Stories ?? 0,
+            documents = Model.RelatedData?.Documents ?? 0
+        }))'
+        is-admin="@User.IsInRole("Admin").ToString().ToLower()">
+    </app-partnership-delete-dialog>
 
-    <div class="alert alert-warning">
-        <h4>Are you sure you want to delete this partnership?</h4>
-    </div>
+    <noscript>
+        <div class="alert alert-warning">
+            <strong>JavaScript Required:</strong> This page requires JavaScript to function properly.
+            Please enable JavaScript in your browser or use the fallback form below.
+        </div>
+        
+        <!-- Fallback Bootstrap form for non-JavaScript browsers -->
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h3 class="mb-0">Delete Partnership</h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h4>Are you sure you want to delete this partnership?</h4>
+                </div>
 
-    <dl class="row">
-        <dt class="col-sm-3">Person A</dt>
-        <dd class="col-sm-9">@Model.PersonAName</dd>
+                <dl class="row">
+                    <dt class="col-sm-3">Person A</dt>
+                    <dd class="col-sm-9">@Model.PersonAName</dd>
 
-        <dt class="col-sm-3">Person B</dt>
-        <dd class="col-sm-9">@Model.PersonBName</dd>
+                    <dt class="col-sm-3">Person B</dt>
+                    <dd class="col-sm-9">@Model.PersonBName</dd>
 
-        <dt class="col-sm-3">Partnership Type</dt>
-        <dd class="col-sm-9">@Model.PartnershipType</dd>
+                    <dt class="col-sm-3">Partnership Type</dt>
+                    <dd class="col-sm-9">@Model.PartnershipType</dd>
 
-        <dt class="col-sm-3">Start Date</dt>
-        <dd class="col-sm-9">@(Model.StartDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+                    <dt class="col-sm-3">Start Date</dt>
+                    <dd class="col-sm-9">@(Model.StartDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
 
-        <dt class="col-sm-3">End Date</dt>
-        <dd class="col-sm-9">@(Model.EndDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
-    </dl>
+                    <dt class="col-sm-3">End Date</dt>
+                    <dd class="col-sm-9">@(Model.EndDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+                </dl>
 
-    <form asp-action="Delete" method="post">
-        <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </form>
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="Id" />
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </noscript>
 </div>
+
+@section Scripts {
+    <script>
+        (function() {
+            const deleteDialog = document.querySelector('app-partnership-delete-dialog');
+            
+            if (!deleteDialog) {
+                console.error('Partnership delete dialog element not found');
+                return;
+            }
+
+            // Handle delete confirmed event
+            deleteDialog.addEventListener('deleteConfirmed', function(event) {
+                const options = event.detail;
+                console.log('Delete confirmed with options:', options);
+                
+                // Create form for submission
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("Delete", "Partnership", new { id = Model.Id })';
+                
+                // Add delete type
+                const deleteTypeInput = document.createElement('input');
+                deleteTypeInput.type = 'hidden';
+                deleteTypeInput.name = 'deleteType';
+                deleteTypeInput.value = options.deleteType;
+                form.appendChild(deleteTypeInput);
+                
+                // Add end date if present (for "end partnership" option)
+                if (options.endDate) {
+                    const endDateInput = document.createElement('input');
+                    endDateInput.type = 'hidden';
+                    endDateInput.name = 'endDate';
+                    endDateInput.value = new Date(options.endDate).toISOString();
+                    form.appendChild(endDateInput);
+                }
+                
+                // Add transfer children to partnership if present
+                if (options.transferChildrenTo) {
+                    const transferInput = document.createElement('input');
+                    transferInput.type = 'hidden';
+                    transferInput.name = 'transferChildrenTo';
+                    transferInput.value = options.transferChildrenTo;
+                    form.appendChild(transferInput);
+                }
+                
+                // Add confirmation flag
+                const confirmedInput = document.createElement('input');
+                confirmedInput.type = 'hidden';
+                confirmedInput.name = 'confirmed';
+                confirmedInput.value = 'true';
+                form.appendChild(confirmedInput);
+                
+                // Add anti-forgery token
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '__RequestVerificationToken';
+                tokenInput.value = '@Html.AntiForgeryToken().ToString().Replace("<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"", "").Replace("\" />", "")';
+                form.appendChild(tokenInput);
+                
+                // Submit form
+                document.body.appendChild(form);
+                form.submit();
+            });
+            
+            // Handle delete cancelled event
+            deleteDialog.addEventListener('deleteCancelled', function() {
+                console.log('Delete cancelled, redirecting to index');
+                window.location.href = '@Url.Action("Index", "Partnership")';
+            });
+        })();
+    </script>
+}
