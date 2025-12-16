@@ -1,0 +1,37 @@
+<div class="update-prompt" *ngIf="showPrompt">
+  <mat-card class="update-prompt__card">
+    <mat-card-content>
+      <div class="update-prompt__content">
+        <div class="update-prompt__icon">
+          <mat-icon>system_update</mat-icon>
+        </div>
+        
+        <div class="update-prompt__text">
+          <h3 class="update-prompt__title">Update Available</h3>
+          <p class="update-prompt__message">{{ options.message }}</p>
+          <p class="update-prompt__version" *ngIf="updateAvailable">
+            Version: {{ updateAvailable.current }} → {{ updateAvailable.available }}
+          </p>
+        </div>
+
+        <div class="update-prompt__actions">
+          <button mat-raised-button 
+                  color="primary" 
+                  (click)="onUpdate()"
+                  [disabled]="updating"
+                  class="update-prompt__update-btn">
+            <mat-spinner *ngIf="updating" diameter="20"></mat-spinner>
+            <span *ngIf="!updating">{{ options.updateButtonText }}</span>
+          </button>
+
+          <button mat-button 
+                  *ngIf="!options.force"
+                  (click)="onDismiss()"
+                  class="update-prompt__dismiss-btn">
+            {{ options.dismissButtonText }}
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

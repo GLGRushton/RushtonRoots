@@ -1,0 +1,90 @@
+.notification-prompt {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  z-index: 1000;
+  max-width: 400px;
+
+  @media (max-width: 767px) {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    max-width: none;
+  }
+
+  &__card {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &__content {
+    padding: 16px;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-color: #2e7d32;
+    color: white;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  &__text {
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #212121;
+    text-align: center;
+  }
+
+  &__message {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #757575;
+    text-align: center;
+  }
+
+  &__benefits {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 13px;
+    color: #616161;
+
+    li {
+      margin-bottom: 4px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__enable-btn,
+  &__dismiss-btn {
+    width: 100%;
+  }
+
+  &__enable-btn mat-spinner {
+    display: inline-block;
+    margin: 0 auto;
+  }
+}

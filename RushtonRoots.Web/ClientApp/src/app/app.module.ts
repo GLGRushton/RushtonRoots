@@ -20,6 +20,7 @@ import { ContentModule } from './content/content.module';
 import { MediaGalleryModule } from './media-gallery/media-gallery.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { MessagingModule } from './messaging/messaging.module';
+import { PwaModule } from './pwa/pwa.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -145,7 +146,8 @@ import { MessageCompositionDialogComponent } from './messaging/components/messag
     ContentModule,
     MediaGalleryModule,
     CalendarModule,
-    MessagingModule
+    MessagingModule,
+    PwaModule
   ],
   providers: []
 })
