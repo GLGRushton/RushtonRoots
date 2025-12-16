@@ -1,0 +1,327 @@
+<div class="partnership-details-container">
+  <!-- Header Section with Partners and Basic Info -->
+  <div class="partnership-header">
+    <div class="partners-section">
+      <div class="partner" (click)="onPersonAClick()" role="button" tabindex="0">
+        <div class="partner-photo">
+          <img 
+            [src]="partnership.personAPhotoUrl || '/assets/images/default-avatar.png'" 
+            [alt]="partnership.personAName">
+        </div>
+        <div class="partner-name">{{ partnership.personAName }}</div>
+      </div>
+
+      <div class="partnership-icon">
+        <mat-icon [color]="getStatusColor()">{{ getPartnershipTypeIcon() }}</mat-icon>
+      </div>
+
+      <div class="partner" (click)="onPersonBClick()" role="button" tabindex="0">
+        <div class="partner-photo">
+          <img 
+            [src]="partnership.personBPhotoUrl || '/assets/images/default-avatar.png'" 
+            [alt]="partnership.personBName">
+        </div>
+        <div class="partner-name">{{ partnership.personBName }}</div>
+      </div>
+    </div>
+
+    <div class="partnership-info">
+      <div class="info-row">
+        <mat-icon>{{ getPartnershipTypeIcon() }}</mat-icon>
+        <span class="label">Type:</span>
+        <span>{{ partnership.partnershipTypeDisplay }}</span>
+      </div>
+
+      <div class="info-row">
+        <mat-icon [color]="getStatusColor()">{{ getStatusIcon() }}</mat-icon>
+        <span class="label">Status:</span>
+        <mat-chip [color]="getStatusColor()" selected>{{ partnership.statusDisplay }}</mat-chip>
+      </div>
+
+      <div class="info-row" *ngIf="partnership.startDate">
+        <mat-icon>event</mat-icon>
+        <span class="label">Started:</span>
+        <span>{{ formatDate(partnership.startDate) }}</span>
+      </div>
+
+      <div class="info-row" *ngIf="partnership.endDate">
+        <mat-icon>event_busy</mat-icon>
+        <span class="label">Ended:</span>
+        <span>{{ formatDate(partnership.endDate) }}</span>
+      </div>
+
+      <div class="info-row" *ngIf="partnership.startDate">
+        <mat-icon>schedule</mat-icon>
+        <span class="label">Duration:</span>
+        <span>{{ getDuration() }}</span>
+      </div>
+
+      <div class="info-row" *ngIf="partnership.location">
+        <mat-icon>location_on</mat-icon>
+        <span class="label">Location:</span>
+        <span>{{ partnership.location }}</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-raised-button color="warn" *ngIf="canDelete" (click)="onDelete()">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabbed Content -->
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="300ms">
+    <!-- Overview Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">favorite</mat-icon>
+        Overview
+      </ng-template>
+      
+      <div class="tab-content">
+        <!-- Description Section -->
+        <mat-card class="info-card" *ngIf="partnership.description || canEdit">
+          <mat-card-header>
+            <mat-card-title>
+              Description
+              <button 
+                mat-icon-button 
+                *ngIf="canEdit && !isEditingDescription" 
+                (click)="startEditingDescription()"
+                matTooltip="Edit description">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="!isEditingDescription">
+              <p *ngIf="partnership.description">{{ partnership.description }}</p>
+              <p class="no-data" *ngIf="!partnership.description">No description available.</p>
+            </div>
+            <div *ngIf="isEditingDescription" class="edit-section">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea 
+                  matInput 
+                  [(ngModel)]="editedDescription" 
+                  rows="5"
+                  placeholder="Enter partnership description..."></textarea>
+              </mat-form-field>
+              <div class="edit-actions">
+                <button mat-raised-button color="primary" (click)="saveDescription()">
+                  <mat-icon>save</mat-icon>
+                  Save
+                </button>
+                <button mat-button (click)="cancelEditingDescription()">Cancel</button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Notes Section -->
+        <mat-card class="info-card" *ngIf="partnership.notes || canEdit">
+          <mat-card-header>
+            <mat-card-title>
+              Notes
+              <button 
+                mat-icon-button 
+                *ngIf="canEdit && !isEditingNotes" 
+                (click)="startEditingNotes()"
+                matTooltip="Edit notes">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="!isEditingNotes">
+              <p *ngIf="partnership.notes">{{ partnership.notes }}</p>
+              <p class="no-data" *ngIf="!partnership.notes">No notes available.</p>
+            </div>
+            <div *ngIf="isEditingNotes" class="edit-section">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Notes</mat-label>
+                <textarea 
+                  matInput 
+                  [(ngModel)]="editedNotes" 
+                  rows="5"
+                  placeholder="Enter notes..."></textarea>
+              </mat-form-field>
+              <div class="edit-actions">
+                <button mat-raised-button color="primary" (click)="saveNotes()">
+                  <mat-icon>save</mat-icon>
+                  Save
+                </button>
+                <button mat-button (click)="cancelEditingNotes()">Cancel</button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Summary Info Card -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>Partnership Information</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <dl class="info-list">
+              <dt>Created</dt>
+              <dd>{{ formatDate(partnership.createdDateTime) }}</dd>
+              
+              <dt>Last Updated</dt>
+              <dd>{{ formatDate(partnership.updatedDateTime) }}</dd>
+            </dl>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Timeline Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">timeline</mat-icon>
+        Timeline
+      </ng-template>
+      
+      <div class="tab-content">
+        <app-partnership-timeline 
+          [partnership]="partnership">
+        </app-partnership-timeline>
+      </div>
+    </mat-tab>
+
+    <!-- Children Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">family_restroom</mat-icon>
+        Children
+        <span class="badge" *ngIf="children.length > 0">{{ children.length }}</span>
+      </ng-template>
+      
+      <div class="tab-content">
+        <div class="children-grid" *ngIf="children.length > 0">
+          <mat-card 
+            *ngFor="let child of children" 
+            class="child-card"
+            (click)="onChildClick(child.id)"
+            role="button"
+            tabindex="0">
+            <div class="child-photo">
+              <img 
+                [src]="child.photoUrl || '/assets/images/default-avatar.png'" 
+                [alt]="child.fullName">
+            </div>
+            <mat-card-header>
+              <mat-card-title>{{ child.fullName }}</mat-card-title>
+              <mat-card-subtitle *ngIf="child.dateOfBirth">
+                Born: {{ formatDate(child.dateOfBirth) }}
+                <span *ngIf="child.age"> ({{ child.age }} years old)</span>
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-chip *ngIf="child.isDeceased" color="accent" selected>
+                <mat-icon>sentiment_dissatisfied</mat-icon>
+                Deceased
+              </mat-chip>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="no-data-message" *ngIf="children.length === 0">
+          <mat-icon>family_restroom</mat-icon>
+          <p>No children recorded for this partnership.</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Media Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">photo_library</mat-icon>
+        Media
+        <span class="badge" *ngIf="photos.length > 0">{{ photos.length }}</span>
+      </ng-template>
+      
+      <div class="tab-content">
+        <div class="media-grid" *ngIf="photos.length > 0">
+          <mat-card *ngFor="let photo of photos" class="photo-card">
+            <img 
+              mat-card-image 
+              [src]="photo.photoUrl" 
+              [alt]="photo.title || 'Partnership photo'">
+            <mat-card-header>
+              <mat-card-title *ngIf="photo.title">{{ photo.title }}</mat-card-title>
+              <mat-card-subtitle>{{ formatDate(photo.uploadDate) }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content *ngIf="photo.description">
+              <p>{{ photo.description }}</p>
+            </mat-card-content>
+            <mat-card-actions *ngIf="canEdit">
+              <button 
+                mat-icon-button 
+                *ngIf="!photo.isPrimary"
+                (click)="onPhotoPrimaryChange(photo.id)"
+                matTooltip="Set as primary photo">
+                <mat-icon>star_border</mat-icon>
+              </button>
+              <button 
+                mat-icon-button 
+                color="warn"
+                (click)="onPhotoDelete(photo.id)"
+                matTooltip="Delete photo">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+        <div class="no-data-message" *ngIf="photos.length === 0">
+          <mat-icon>photo_library</mat-icon>
+          <p>No photos available for this partnership.</p>
+          <button mat-raised-button color="primary" *ngIf="canEdit">
+            <mat-icon>upload</mat-icon>
+            Upload Photo
+          </button>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Events Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">event</mat-icon>
+        Events
+        <span class="badge" *ngIf="events.length > 0">{{ events.length }}</span>
+      </ng-template>
+      
+      <div class="tab-content">
+        <div class="events-list" *ngIf="events.length > 0">
+          <mat-card *ngFor="let event of events" class="event-card">
+            <mat-card-header>
+              <div mat-card-avatar>
+                <mat-icon>{{ event.icon || 'event' }}</mat-icon>
+              </div>
+              <mat-card-title>{{ event.title }}</mat-card-title>
+              <mat-card-subtitle>{{ formatDate(event.date) }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p *ngIf="event.description">{{ event.description }}</p>
+              <div class="event-details" *ngIf="event.location">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ event.location }}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="no-data-message" *ngIf="events.length === 0">
+          <mat-icon>event</mat-icon>
+          <p>No events recorded for this partnership.</p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
