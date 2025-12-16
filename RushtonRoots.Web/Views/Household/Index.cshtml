@@ -4,7 +4,7 @@
     ViewData["Title"] = "Households";
     
     // Transform server-side data to match Angular component interface
-    var householdsJson = JsonSerializer.Serialize(Model.Select(h => new 
+    var households = Model.Select(h => new 
     {
         id = h.Id,
         householdName = h.HouseholdName,
@@ -13,7 +13,9 @@
         memberCount = h.MemberCount,
         createdDateTime = h.CreatedDateTime.ToString("o"), // ISO 8601 format
         updatedDateTime = h.UpdatedDateTime.ToString("o")
-    }));
+    }).ToList();
+    
+    var householdsJson = JsonSerializer.Serialize(households);
     
     // User permissions
     var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
@@ -23,24 +25,20 @@
 
 <!-- Angular Household Index Component -->
 <app-household-index 
-    initial-households='@Html.Raw(householdsJson)'
+    id="household-index-component"
     can-edit="@canEdit.ToString().ToLower()"
     can-delete="@canDelete.ToString().ToLower()"
     can-create="@canCreate.ToString().ToLower()">
 </app-household-index>
 
 <script>
-    // Parse and pass data to Angular component
+    // Pass data to Angular component via JavaScript (safer than inline HTML attributes)
     document.addEventListener('DOMContentLoaded', function() {
-        const component = document.querySelector('app-household-index');
+        const component = document.getElementById('household-index-component');
         if (component) {
-            const householdsData = @Html.Raw(householdsJson);
-            
-            // Set properties on the custom element
-            component.setAttribute('initial-households', JSON.stringify(householdsData));
-            component.setAttribute('can-edit', '@canEdit.ToString().ToLower()');
-            component.setAttribute('can-delete', '@canDelete.ToString().ToLower()');
-            component.setAttribute('can-create', '@canCreate.ToString().ToLower()');
+            // Pass JSON string directly to avoid double-serialization
+            const householdsJsonString = '@Html.Raw(householdsJson)';
+            component.setAttribute('initial-households', householdsJsonString);
         }
     });
 </script>
