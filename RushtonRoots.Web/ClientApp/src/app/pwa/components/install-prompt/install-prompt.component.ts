@@ -9,6 +9,7 @@ import { InstallPromptState, InstallInstructions } from '../../models/pwa.model'
  */
 @Component({
   selector: 'app-install-prompt',
+  standalone: false,
   templateUrl: './install-prompt.component.html',
   styleUrls: ['./install-prompt.component.scss']
 })

@@ -9,6 +9,7 @@ import { ServiceWorkerUpdate, UpdatePromptOptions } from '../../models/pwa.model
  */
 @Component({
   selector: 'app-update-prompt',
+  standalone: false,
   templateUrl: './update-prompt.component.html',
   styleUrls: ['./update-prompt.component.scss']
 })

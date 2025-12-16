@@ -24,6 +24,9 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "axe-core"
+            ],
             "assets": [
               {
                 "glob": "**/*",
