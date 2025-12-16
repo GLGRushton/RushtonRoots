@@ -52,9 +52,8 @@ public class PersonController : Controller
 
     // GET: Person/Create
     [Authorize(Roles = "Admin,HouseholdAdmin")]
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
-        ViewBag.Households = await _householdService.GetAllAsync();
         return View();
     }
 
@@ -93,20 +92,7 @@ public class PersonController : Controller
             return NotFound();
         }
 
-        var request = new UpdatePersonRequest
-        {
-            Id = person.Id,
-            HouseholdId = person.HouseholdId,
-            FirstName = person.FirstName,
-            LastName = person.LastName,
-            DateOfBirth = person.DateOfBirth,
-            DateOfDeath = person.DateOfDeath,
-            IsDeceased = person.IsDeceased,
-            PhotoUrl = person.PhotoUrl
-        };
-
-        ViewBag.Households = await _householdService.GetAllAsync();
-        return View(request);
+        return View(person);
     }
 
     // POST: Person/Edit/5

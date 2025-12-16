@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PersonFormData, FormDraft } from '../../models/person-form.model';
@@ -44,7 +45,8 @@ export class PersonFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -259,7 +261,7 @@ export class PersonFormComponent implements OnInit, OnDestroy {
     };
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     // Validate all forms
     if (!this.basicInfoForm.valid) {
       this.showSnackbar('Please complete the required fields in Basic Information', 'error', 4000);
@@ -269,23 +271,86 @@ export class PersonFormComponent implements OnInit, OnDestroy {
     this.isSubmitting = true;
     const formData = this.gatherFormData();
 
-    // Emit the form data
-    this.formSubmit.emit(formData);
+    try {
+      // Get CSRF token
+      const token = this.getAntiForgeryToken();
+      
+      // Determine if we need multipart for photo upload
+      if (formData.photoFile) {
+        // Create FormData for multipart upload
+        const uploadData = new FormData();
+        uploadData.append('photo', formData.photoFile);
+        
+        // Append other fields
+        Object.keys(formData).forEach(key => {
+          if (key !== 'photoFile' && key !== 'photoUrl' && (formData as any)[key] !== undefined && (formData as any)[key] !== null) {
+            uploadData.append(key, (formData as any)[key]);
+          }
+        });
 
-    // Clear draft after successful submit
-    this.clearDraft();
+        const url = this.personId ? `/api/person/${this.personId}` : '/api/person';
+        const method = this.personId ? 'PUT' : 'POST';
 
-    // Show success message
-    this.showSnackbar(
-      this.personId ? 'Person updated successfully!' : 'Person created successfully!',
-      'success',
-      3000
-    );
+        const response = await fetch(url, {
+          method: method,
+          body: uploadData,
+          headers: token ? { 'RequestVerificationToken': token } : {}
+        });
 
-    // Reset submitting state
-    setTimeout(() => {
+        if (response.ok) {
+          const person = await response.json();
+          this.clearDraft();
+          this.showSnackbar(
+            this.personId ? 'Person updated successfully!' : 'Person created successfully!',
+            'dismiss',
+            3000
+          );
+          // Redirect to person details page
+          window.location.href = `/Person/Details/${person.id}`;
+        } else {
+          const error = await response.text();
+          this.showSnackbar(`Failed to ${this.personId ? 'update' : 'create'} person: ${error}`, 'error', 4000);
+          this.isSubmitting = false;
+        }
+      } else {
+        // JSON submission without photo
+        const url = this.personId ? `/api/person/${this.personId}` : '/api/person';
+        const method = this.personId ? 'PUT' : 'POST';
+
+        const headers: any = {
+          'Content-Type': 'application/json'
+        };
+        if (token) {
+          headers['RequestVerificationToken'] = token;
+        }
+
+        const response = await fetch(url, {
+          method: method,
+          headers: headers,
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          const person = await response.json();
+          this.clearDraft();
+          this.showSnackbar(
+            this.personId ? 'Person updated successfully!' : 'Person created successfully!',
+            'dismiss',
+            3000
+          );
+          // Redirect to person details page
+          window.location.href = `/Person/Details/${person.id}`;
+        } else {
+          const error = await response.text();
+          this.showSnackbar(`Failed to ${this.personId ? 'update' : 'create'} person: ${error}`, 'error', 4000);
+          this.isSubmitting = false;
+        }
+      }
+    } catch (error) {
+      console.error('Error submitting person form:', error);
+      this.showSnackbar('An error occurred. Please try again.', 'error', 4000);
       this.isSubmitting = false;
-    }, 1000);
+    }
   }
 
   onCancel(): void {
@@ -296,7 +361,17 @@ export class PersonFormComponent implements OnInit, OnDestroy {
       }
     }
     
-    this.formCancel.emit();
+    // Navigate back based on context
+    if (this.personId) {
+      window.location.href = `/Person/Details/${this.personId}`;
+    } else {
+      window.location.href = '/Person/Index';
+    }
+  }
+
+  private getAntiForgeryToken(): string | null {
+    const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
+    return tokenInput ? tokenInput.value : null;
   }
 
   private showSnackbar(message: string, action: string, duration: number): void {

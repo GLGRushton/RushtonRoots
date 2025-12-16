@@ -1,118 +1,56 @@
 @model IEnumerable<RushtonRoots.Domain.UI.Models.PersonViewModel>
+@using System.Text.Json
 @{
     ViewData["Title"] = "People";
     var searchRequest = ViewBag.SearchRequest as RushtonRoots.Domain.UI.Requests.SearchPersonRequest;
     var households = ViewBag.Households as IEnumerable<RushtonRoots.Domain.UI.Models.HouseholdViewModel>;
+    var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    
+    // Transform PersonViewModel to PersonTableRow format for Angular component
+    var peopleData = Model.Select(p => new
+    {
+        id = p.Id,
+        firstName = p.FirstName,
+        lastName = p.LastName,
+        fullName = p.FullName,
+        householdName = p.HouseholdName,
+        dateOfBirth = p.DateOfBirth,
+        dateOfDeath = p.DateOfDeath,
+        isDeceased = p.IsDeceased,
+        photoUrl = p.PhotoUrl
+    }).ToArray();
+    
+    // Transform households for Angular component
+    var householdsData = households?.Select(h => new
+    {
+        id = h.Id,
+        householdName = h.HouseholdName
+    }).ToArray() ?? Array.Empty<object>();
+    
+    // Transform initial filters
+    var initialFilters = new
+    {
+        searchTerm = searchRequest?.SearchTerm,
+        householdId = searchRequest?.HouseholdId,
+        isDeceased = searchRequest?.IsDeceased,
+        birthDateFrom = searchRequest?.BirthDateFrom,
+        birthDateTo = searchRequest?.BirthDateTo,
+        deathDateFrom = searchRequest?.DeathDateFrom,
+        deathDateTo = searchRequest?.DeathDateTo,
+        surname = searchRequest?.Surname
+    };
+    
+    var peopleJson = JsonSerializer.Serialize(peopleData);
+    var householdsJson = JsonSerializer.Serialize(householdsData);
+    var filtersJson = JsonSerializer.Serialize(initialFilters);
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>People</h2>
-        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
-        {
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Add New Person
-            </a>
-        }
-    </div>
+<!-- Angular PersonIndexComponent -->
+<app-person-index 
+    initial-people='@Html.Raw(peopleJson)'
+    households='@Html.Raw(householdsJson)'
+    initial-filters='@Html.Raw(filtersJson)'
+    can-edit="@canEdit.ToString().ToLower()"
+    can-delete="@canEdit.ToString().ToLower()">
+</app-person-index>
 
-    <!-- Search Form -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <form method="get" asp-action="Index">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Search by Name</label>
-                            <input type="text" name="SearchTerm" class="form-control" value="@searchRequest?.SearchTerm" placeholder="First or last name...">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Household</label>
-                            <select name="HouseholdId" class="form-control">
-                                <option value="">All Households</option>
-                                @if (households != null)
-                                {
-                                    foreach (var household in households)
-                                    {
-                                        <option value="@household.Id" selected="@(searchRequest?.HouseholdId == household.Id)">@household.HouseholdName</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <select name="IsDeceased" class="form-control">
-                                <option value="">All</option>
-                                <option value="false" selected="@(searchRequest?.IsDeceased == false)">Living</option>
-                                <option value="true" selected="@(searchRequest?.IsDeceased == true)">Deceased</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-secondary w-100">Search</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Person List -->
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Household</th>
-                    <th>Date of Birth</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var person in Model)
-                {
-                    <tr>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@person.Id">@person.FullName</a>
-                        </td>
-                        <td>@person.HouseholdName</td>
-                        <td>@(person.DateOfBirth?.ToString("MM/dd/yyyy") ?? "N/A")</td>
-                        <td>
-                            @if (person.IsDeceased)
-                            {
-                                <span class="badge bg-secondary">Deceased</span>
-                                @if (person.DateOfDeath.HasValue)
-                                {
-                                    <small>(@person.DateOfDeath.Value.ToString("MM/dd/yyyy"))</small>
-                                }
-                            }
-                            else
-                            {
-                                <span class="badge bg-success">Living</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@person.Id" class="btn btn-sm btn-info">Details</a>
-                            @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
-                            {
-                                <a asp-action="Edit" asp-route-id="@person.Id" class="btn btn-sm btn-warning">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@person.Id" class="btn btn-sm btn-danger">Delete</a>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info">
-            No people found.
-        </div>
-    }
-</div>
