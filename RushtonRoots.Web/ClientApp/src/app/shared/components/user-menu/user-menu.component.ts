@@ -42,13 +42,13 @@ export class UserMenuComponent {
   }
 
   getUserInitial(): string {
-    return this.userInfo.name ? this.userInfo.name.charAt(0).toUpperCase() : '?';
+    return this.userInfo?.name ? this.userInfo.name.charAt(0).toUpperCase() : '?';
   }
 
   getRoleBadgeColor(): string {
-    if (this.userInfo.isAdmin) {
+    if (this.userInfo?.isAdmin) {
       return 'warn';
-    } else if (this.userInfo.isHouseholdAdmin) {
+    } else if (this.userInfo?.isHouseholdAdmin) {
       return 'accent';
     }
     return 'primary';
