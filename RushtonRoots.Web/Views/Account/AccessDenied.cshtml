@@ -2,17 +2,27 @@
     ViewData["Title"] = "Access Denied";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-8 col-lg-6">
-        <h2 class="text-danger">@ViewData["Title"]</h2>
-        <div class="alert alert-warning" role="alert">
-            <h4 class="alert-heading">Access Denied</h4>
-            <p>You do not have permission to access this resource.</p>
-            <hr>
-            <p class="mb-0">If you believe you should have access, please contact your household administrator.</p>
+<!-- Angular Access Denied Component -->
+<app-access-denied 
+    reason="@ViewData["Reason"]?.ToString()"
+    resource-name="@ViewData["ResourceName"]?.ToString()"
+    contact-email="@ViewData["ContactEmail"]?.ToString()">
+</app-access-denied>
+
+<!-- Fallback content (shown if Angular component fails to load) -->
+<noscript>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-lg-6">
+            <h2 class="text-danger">@ViewData["Title"]</h2>
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Access Denied</h4>
+                <p>You do not have permission to access this resource.</p>
+                <hr>
+                <p class="mb-0">If you believe you should have access, please contact your household administrator.</p>
+            </div>
+            <p>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Return to Home</a>
+            </p>
         </div>
-        <p>
-            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Return to Home</a>
-        </p>
     </div>
-</div>
+</noscript>

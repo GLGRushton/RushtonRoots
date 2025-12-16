@@ -19,6 +19,7 @@ import { PrivacySettingsComponent } from './components/privacy-settings/privacy-
 import { ConnectedAccountsComponent } from './components/connected-accounts/connected-accounts.component';
 import { AccountDeletionComponent } from './components/account-deletion/account-deletion.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
+import { AccessDeniedComponent } from './components/access-denied/access-denied.component';
 
 // Import auth directives
 import { AdminOnlyDirective, RoleGuardDirective } from './directives/admin-only.directive';
@@ -39,6 +40,7 @@ import { AdminOnlyDirective, RoleGuardDirective } from './directives/admin-only.
  * - ConnectedAccountsComponent: Connected social accounts management
  * - AccountDeletionComponent: Account deletion flow
  * - CreateUserComponent: Admin-only user creation form
+ * - AccessDeniedComponent: Access denied page with clear messaging and request access option
  * 
  * Directives:
  * - AdminOnlyDirective: Show/hide content for admin users
@@ -60,6 +62,7 @@ import { AdminOnlyDirective, RoleGuardDirective } from './directives/admin-only.
     ConnectedAccountsComponent,
     AccountDeletionComponent,
     CreateUserComponent,
+    AccessDeniedComponent,
     AdminOnlyDirective,
     RoleGuardDirective
   ],
@@ -82,6 +85,7 @@ import { AdminOnlyDirective, RoleGuardDirective } from './directives/admin-only.
     ConnectedAccountsComponent,
     AccountDeletionComponent,
     CreateUserComponent,
+    AccessDeniedComponent,
     AdminOnlyDirective,
     RoleGuardDirective
   ]
