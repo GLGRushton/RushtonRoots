@@ -1,0 +1,84 @@
+<div class="photo-editor">
+  <div class="editor-header">
+    <h2>Edit Photo</h2>
+    <div class="header-actions">
+      <button mat-button (click)="resetAll()">Reset</button>
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="save()">Save</button>
+    </div>
+  </div>
+
+  <div class="editor-content">
+    <div class="editor-sidebar">
+      <!-- Filters -->
+      <div class="editor-section">
+        <h3>Filters</h3>
+        <div class="filter-grid">
+          <div 
+            *ngFor="let filter of filters"
+            class="filter-option"
+            [class.selected]="selectedFilter.id === filter.id"
+            (click)="applyFilter(filter)">
+            <div class="filter-preview" [style.filter]="filter.cssFilter">
+              <div class="filter-sample"></div>
+            </div>
+            <span class="filter-name">{{ filter.name }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Adjustments -->
+      <div class="editor-section">
+        <h3>Adjustments</h3>
+        
+        <div class="slider-control">
+          <label>Brightness</label>
+          <mat-slider min="0" max="200" step="1" [value]="brightness" (input)="adjustBrightness($any($event.value))">
+            <input matSliderThumb>
+          </mat-slider>
+          <span class="slider-value">{{ brightness }}%</span>
+        </div>
+
+        <div class="slider-control">
+          <label>Contrast</label>
+          <mat-slider min="0" max="200" step="1" [value]="contrast" (input)="adjustContrast($any($event.value))">
+            <input matSliderThumb>
+          </mat-slider>
+          <span class="slider-value">{{ contrast }}%</span>
+        </div>
+
+        <div class="slider-control">
+          <label>Saturation</label>
+          <mat-slider min="0" max="200" step="1" [value]="saturation" (input)="adjustSaturation($any($event.value))">
+            <input matSliderThumb>
+          </mat-slider>
+          <span class="slider-value">{{ saturation }}%</span>
+        </div>
+      </div>
+
+      <!-- Rotate -->
+      <div class="editor-section">
+        <h3>Rotate</h3>
+        <div class="rotate-buttons">
+          <button mat-icon-button (click)="rotate(-90)">
+            <mat-icon>rotate_left</mat-icon>
+          </button>
+          <span>{{ rotation }}°</span>
+          <button mat-icon-button (click)="rotate(90)">
+            <mat-icon>rotate_right</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="editor-preview">
+      <div class="preview-container">
+        <img 
+          [src]="photo.url" 
+          [alt]="photo.title || 'Photo'"
+          [ngStyle]="getImageStyle()"
+          class="preview-image">
+      </div>
+    </div>
+  </div>
+</div>

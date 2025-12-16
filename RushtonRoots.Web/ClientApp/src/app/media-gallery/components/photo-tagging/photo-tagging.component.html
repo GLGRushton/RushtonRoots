@@ -1,0 +1,164 @@
+<div class="photo-tagging-dialog">
+  <div class="dialog-header">
+    <h2>Tag People in Photo</h2>
+    <button mat-icon-button (click)="onClose()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <!-- Photo Display with Tags -->
+    <div class="photo-container">
+      <div 
+        class="photo-wrapper"
+        (click)="onPhotoClick($event)"
+        (drop)="onPhotoDrop($event)"
+        (dragover)="onPhotoDragOver($event)">
+        
+        <img 
+          #photoImage
+          [src]="photo.url" 
+          [alt]="photo.title || 'Photo'"
+          class="tagging-photo">
+
+        <!-- Existing Tags -->
+        <div 
+          *ngFor="let tag of tags"
+          class="photo-tag"
+          [style.left]="tag.x + '%'"
+          [style.top]="tag.y + '%'"
+          [draggable]="true"
+          (dragstart)="onTagDragStart($event, tag)">
+          
+          <div class="tag-marker">
+            <mat-icon>person_pin</mat-icon>
+          </div>
+          
+          <div class="tag-label">
+            {{ tag.name }}
+            <button 
+              mat-icon-button 
+              class="remove-tag-btn"
+              (click)="removeTag(tag); $event.stopPropagation()"
+              aria-label="Remove tag">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- New Tag Position Indicator -->
+        <div 
+          *ngIf="isAddingTag && newTagPosition"
+          class="photo-tag new-tag"
+          [style.left]="newTagPosition.x + '%'"
+          [style.top]="newTagPosition.y + '%'">
+          <div class="tag-marker pulse">
+            <mat-icon>add</mat-icon>
+          </div>
+        </div>
+
+        <!-- Instruction Overlay -->
+        <div class="instruction-overlay" *ngIf="isAddingTag && !newTagPosition">
+          <mat-icon>touch_app</mat-icon>
+          <p>Click on the photo where the person's face is</p>
+        </div>
+      </div>
+
+      <!-- Add Tag Form -->
+      <div class="add-tag-form" *ngIf="isAddingTag && newTagPosition">
+        <mat-card>
+          <mat-card-content>
+            <h3>Who is this?</h3>
+            
+            <mat-form-field appearance="outline" class="person-search">
+              <mat-label>Search for person</mat-label>
+              <input 
+                matInput 
+                [formControl]="personControl"
+                [matAutocomplete]="auto"
+                placeholder="Start typing a name...">
+              <mat-icon matPrefix>search</mat-icon>
+              <mat-autocomplete 
+                #auto="matAutocomplete"
+                [displayWith]="displayPersonName"
+                (optionSelected)="selectPerson($event.option.value)">
+                <mat-option *ngFor="let person of filteredPeople$ | async" [value]="person">
+                  <div class="person-option">
+                    <img 
+                      *ngIf="person.avatarUrl" 
+                      [src]="person.avatarUrl" 
+                      [alt]="person.name"
+                      class="person-avatar">
+                    <div *ngIf="!person.avatarUrl" class="person-avatar-placeholder">
+                      {{ person.name.charAt(0) }}
+                    </div>
+                    <span>{{ person.name }}</span>
+                  </div>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-button (click)="cancelAddingTag()">Cancel</button>
+              <button 
+                mat-raised-button 
+                color="primary" 
+                (click)="confirmTag()"
+                [disabled]="!selectedPerson">
+                Add Tag
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Tag List Sidebar -->
+    <div class="tag-sidebar" [class.collapsed]="!showTagList">
+      <div class="sidebar-header">
+        <h3>Tagged People ({{ tags.length }})</h3>
+        <button mat-icon-button (click)="toggleTagList()" aria-label="Toggle tag list">
+          <mat-icon>{{ showTagList ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+        </button>
+      </div>
+
+      <div class="tag-list" *ngIf="showTagList">
+        <div class="tag-item" *ngFor="let tag of tags">
+          <mat-icon class="tag-icon">person</mat-icon>
+          <span class="tag-name">{{ tag.name }}</span>
+          <button 
+            mat-icon-button 
+            (click)="removeTag(tag)"
+            matTooltip="Remove tag"
+            aria-label="Remove tag">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div class="empty-state" *ngIf="tags.length === 0">
+          <mat-icon>person_add</mat-icon>
+          <p>No people tagged yet</p>
+        </div>
+      </div>
+
+      <div class="sidebar-actions" *ngIf="showTagList">
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="startAddingTag()"
+          [disabled]="isAddingTag">
+          <mat-icon>add</mat-icon>
+          Add Person Tag
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Section -->
+  <div class="dialog-footer">
+    <div class="help-text">
+      <mat-icon>info</mat-icon>
+      <span>Click on a face to tag a person. Drag tags to reposition them.</span>
+    </div>
+  </div>
+</div>
