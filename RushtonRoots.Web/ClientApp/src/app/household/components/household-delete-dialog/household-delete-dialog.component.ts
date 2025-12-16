@@ -38,6 +38,9 @@ export class HouseholdDeleteDialogComponent implements OnInit {
   @Input('anchor-person-id') anchorPersonId?: number;
   @Input('member-count') memberCount: number = 0;
   @Input('created-date') createdDate?: string;
+  
+  // Note: isAdmin is typed as string because Angular Elements pass attributes as strings from HTML
+  // The ngOnInit method converts this to boolean for use in the component
   @Input('is-admin') isAdmin: string = 'false';
   @Input('related-data') relatedDataJson: string = '{}';
   
@@ -90,21 +93,43 @@ export class HouseholdDeleteDialogComponent implements OnInit {
   }
   
   /**
-   * Parse related data JSON string
+   * Parse related data JSON string with validation
    */
   private parseRelatedData(): HouseholdRelatedData {
     try {
-      return JSON.parse(this.relatedDataJson);
+      const parsed = JSON.parse(this.relatedDataJson);
+      
+      // Validate that parsed object has expected structure
+      if (typeof parsed === 'object' && parsed !== null) {
+        // Ensure all required properties exist and are numbers
+        const members = typeof parsed.members === 'number' ? parsed.members : 0;
+        const events = typeof parsed.events === 'number' ? parsed.events : 0;
+        const sharedMedia = typeof parsed.sharedMedia === 'number' ? parsed.sharedMedia : 0;
+        const documents = typeof parsed.documents === 'number' ? parsed.documents : 0;
+        const permissions = typeof parsed.permissions === 'number' ? parsed.permissions : 0;
+        
+        return { members, events, sharedMedia, documents, permissions };
+      }
+      
+      console.warn('Related data JSON has unexpected structure:', parsed);
+      return this.getDefaultRelatedData();
     } catch (e) {
       console.error('Failed to parse related data JSON:', e);
-      return {
-        members: 0,
-        events: 0,
-        sharedMedia: 0,
-        documents: 0,
-        permissions: 0
-      };
+      return this.getDefaultRelatedData();
     }
+  }
+  
+  /**
+   * Get default related data structure
+   */
+  private getDefaultRelatedData(): HouseholdRelatedData {
+    return {
+      members: 0,
+      events: 0,
+      sharedMedia: 0,
+      documents: 0,
+      permissions: 0
+    };
   }
 
   /**
