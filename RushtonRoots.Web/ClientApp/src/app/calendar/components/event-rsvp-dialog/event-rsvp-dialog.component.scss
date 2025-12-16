@@ -1,0 +1,174 @@
+@import '../../../../styles/variables';
+
+.rsvp-dialog {
+  &__event-summary {
+    margin-bottom: 24px;
+
+    h3 {
+      margin: 0 0 16px 0;
+      font-size: 20px;
+      font-weight: 500;
+      color: $text-primary;
+    }
+  }
+
+  &__event-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__event-info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: $text-secondary;
+    font-size: 14px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 4px;
+    margin-top: 16px;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    strong {
+      color: $text-primary;
+    }
+  }
+}
+
+.rsvp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-primary;
+  }
+
+  &__status-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__status-option {
+    padding: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    &.mat-mdc-radio-checked {
+      border-color: $primary;
+      background-color: rgba(76, 175, 80, 0.05);
+    }
+  }
+
+  &__status-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+
+    span {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  &__field--full {
+    width: 100%;
+  }
+}
+
+mat-dialog-content {
+  max-width: 600px;
+  padding: 24px;
+  overflow-y: auto;
+
+  mat-divider {
+    margin: 24px 0;
+  }
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+
+  button {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .rsvp-dialog {
+    &__event-summary {
+      h3 {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .rsvp-form {
+    &__status-content {
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      span {
+        font-size: 14px;
+      }
+    }
+  }
+
+  mat-dialog-content {
+    padding: 16px;
+  }
+
+  mat-dialog-actions {
+    button {
+      flex: 1;
+      margin: 0;
+      
+      &:first-child {
+        margin-right: 8px;
+      }
+    }
+  }
+}

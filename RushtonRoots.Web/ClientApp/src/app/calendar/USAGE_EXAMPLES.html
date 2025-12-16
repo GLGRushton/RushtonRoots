@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Component - Usage Example</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #757575;
+            margin-bottom: 30px;
+        }
+
+        .demo-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .demo-section h2 {
+            color: #2e7d32;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .code-block {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        .code-block .comment {
+            color: #607d8b;
+        }
+
+        .code-block .tag {
+            color: #82aaff;
+        }
+
+        .code-block .attribute {
+            color: #c792ea;
+        }
+
+        .code-block .value {
+            color: #c3e88d;
+        }
+
+        .event-card-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calendar & Events Components</h1>
+        <p class="subtitle">Phase 8.2 Implementation - Interactive Calendar with FullCalendar Integration</p>
+
+        <!-- Calendar Component -->
+        <div class="demo-section">
+            <h2>1. Calendar Component</h2>
+            <p>Main calendar component with FullCalendar integration supporting multiple views, event filtering, and interactive event management.</p>
+            
+            <div class="info-box">
+                <strong>Note:</strong> This component uses FullCalendar library and requires Angular Material. It supports month, week, day, and list views with drag-and-drop functionality.
+            </div>
+
+            <h3>Usage in Razor View (.cshtml)</h3>
+            <div class="code-block">
+<span class="comment">&lt;!-- Basic usage --&gt;</span>
+<span class="tag">&lt;app-calendar&gt;&lt;/app-calendar&gt;</span>
+
+<span class="comment">&lt;!-- With custom configuration --&gt;</span>
+<span class="tag">&lt;app-calendar</span>
+    <span class="attribute">initial-view</span>=<span class="value">"timeGridWeek"</span>
+    <span class="attribute">can-edit</span>=<span class="value">"true"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/app-calendar&gt;</span>
+            </div>
+
+            <h3>Usage in TypeScript</h3>
+            <div class="code-block">
+<span class="comment">// In component</span>
+events: CalendarEvent[] = SAMPLE_EVENTS;
+
+handleEventClick(event: CalendarEvent) {
+  console.log('Event clicked:', event);
+  <span class="comment">// Open event details dialog</span>
+}
+
+handleEventCreate(date: Date) {
+  console.log('Create event on:', date);
+  <span class="comment">// Open event creation dialog</span>
+}
+            </div>
+
+            <div class="warning-box">
+                <strong>Prerequisites:</strong> Ensure FullCalendar dependencies are installed and the CalendarModule is imported in your app.module.ts
+            </div>
+        </div>
+
+        <!-- Event Card Component -->
+        <div class="demo-section">
+            <h2>2. Event Card Component</h2>
+            <p>Displays event information in a card format with RSVP status, attendee information, and quick actions.</p>
+
+            <h3>Usage Example</h3>
+            <div class="code-block">
+<span class="tag">&lt;app-event-card</span>
+    <span class="attribute">[event]</span>=<span class="value">"event"</span>
+    <span class="attribute">[canEdit]</span>=<span class="value">"true"</span>
+    <span class="attribute">[compact]</span>=<span class="value">"false"</span>
+    <span class="attribute">(viewClick)</span>=<span class="value">"handleViewClick($event)"</span>
+    <span class="attribute">(rsvpClick)</span>=<span class="value">"handleRsvpClick($event)"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/app-event-card&gt;</span>
+            </div>
+
+            <h3>Features</h3>
+            <ul>
+                <li>Event category badge with color coding</li>
+                <li>RSVP status indicator</li>
+                <li>Attendee count statistics</li>
+                <li>Recurring event indicator</li>
+                <li>Private event indicator</li>
+                <li>Quick action buttons (View, RSVP, Edit, Delete)</li>
+                <li>Responsive design for mobile</li>
+            </ul>
+        </div>
+
+        <!-- Event Form Dialog -->
+        <div class="demo-section">
+            <h2>3. Event Form Dialog Component</h2>
+            <p>Comprehensive dialog for creating and editing calendar events with form validation.</p>
+
+            <h3>Opening the Dialog</h3>
+            <div class="code-block">
+<span class="comment">// In TypeScript component</span>
+import { MatDialog } from '@angular/material/dialog';
+import { EventFormDialogComponent } from './calendar/components/event-form-dialog/event-form-dialog.component';
+
+constructor(private dialog: MatDialog) {}
+
+openEventDialog(event?: CalendarEvent) {
+  const dialogRef = this.dialog.open(EventFormDialogComponent, {
+    width: '900px',
+    maxHeight: '90vh',
+    data: { event }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      <span class="comment">// Handle event creation/update</span>
+      this.saveEvent(result);
+    }
+  });
+}
+            </div>
+
+            <h3>Features</h3>
+            <ul>
+                <li>Title, description, and category fields</li>
+                <li>Date and time pickers with all-day option</li>
+                <li>Location and attendee selection</li>
+                <li>Recurring event configuration (daily, weekly, monthly, yearly)</li>
+                <li>Multiple reminder settings</li>
+                <li>Privacy settings</li>
+                <li>Form validation with error messages</li>
+            </ul>
+        </div>
+
+        <!-- RSVP Dialog -->
+        <div class="demo-section">
+            <h2>4. Event RSVP Dialog Component</h2>
+            <p>Dialog for responding to event invitations with RSVP status, comment, and guest count.</p>
+
+            <h3>Opening the Dialog</h3>
+            <div class="code-block">
+<span class="comment">// In TypeScript component</span>
+import { EventRsvpDialogComponent } from './calendar/components/event-rsvp-dialog/event-rsvp-dialog.component';
+
+openRsvpDialog(event: CalendarEvent) {
+  const dialogRef = this.dialog.open(EventRsvpDialogComponent, {
+    width: '600px',
+    data: { event }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      <span class="comment">// Handle RSVP submission</span>
+      this.submitRsvp(result);
+    }
+  });
+}
+            </div>
+
+            <h3>RSVP Status Options</h3>
+            <ul>
+                <li><strong>Attending</strong> - Confirmed attendance</li>
+                <li><strong>Maybe</strong> - Tentative attendance</li>
+                <li><strong>Declined</strong> - Not attending</li>
+                <li><strong>Not Responded</strong> - No response yet</li>
+            </ul>
+        </div>
+
+        <!-- Event Details Dialog -->
+        <div class="demo-section">
+            <h2>5. Event Details Dialog Component</h2>
+            <p>Comprehensive dialog for viewing full event details with attendee list and export functionality.</p>
+
+            <h3>Opening the Dialog</h3>
+            <div class="code-block">
+<span class="comment">// In TypeScript component</span>
+import { EventDetailsDialogComponent } from './calendar/components/event-details-dialog/event-details-dialog.component';
+
+openEventDetails(event: CalendarEvent) {
+  const dialogRef = this.dialog.open(EventDetailsDialogComponent, {
+    width: '700px',
+    maxHeight: '90vh',
+    data: { event, canEdit: true }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      <span class="comment">// Handle actions (edit, delete, rsvp, export)</span>
+      this.handleAction(result.action, result.data);
+    }
+  });
+}
+            </div>
+
+            <h3>Features</h3>
+            <ul>
+                <li>Full event information display</li>
+                <li>Attendee list with RSVP status and avatars</li>
+                <li>Attendee statistics (attending count)</li>
+                <li>Recurrence information</li>
+                <li>Reminder details</li>
+                <li>Export to iCal (.ics file)</li>
+                <li>Quick RSVP button</li>
+                <li>Edit and delete actions</li>
+            </ul>
+        </div>
+
+        <!-- Data Models -->
+        <div class="demo-section">
+            <h2>6. Data Models</h2>
+            <p>All components use TypeScript interfaces for type safety.</p>
+
+            <h3>CalendarEvent Interface</h3>
+            <div class="code-block">
+interface CalendarEvent {
+  id: string;
+  title: string;
+  description?: string;
+  start: Date;
+  end: Date;
+  allDay?: boolean;
+  location?: string;
+  organizer: EventAttendee;
+  attendees: EventAttendee[];
+  recurrence?: RecurrenceRule;
+  reminders: EventReminder[];
+  color?: string;
+  category?: EventCategory;
+  isPrivate?: boolean;
+  rsvpRequired?: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+            </div>
+
+            <h3>Sample Event Data</h3>
+            <div class="code-block">
+<span class="comment">// Sample events are available in calendar.model.ts</span>
+import { SAMPLE_EVENTS } from './calendar/models/calendar.model';
+
+<span class="comment">// Use sample events for demonstration</span>
+this.events = SAMPLE_EVENTS;
+            </div>
+        </div>
+
+        <!-- Integration Guide -->
+        <div class="demo-section">
+            <h2>7. Integration with C# Backend</h2>
+            <p>Example of passing event data from ASP.NET Core to Angular components.</p>
+
+            <h3>Controller Example</h3>
+            <div class="code-block">
+<span class="comment">// In EventsController.cs</span>
+public IActionResult Calendar()
+{
+    var events = _eventService.GetUpcomingEvents();
+    ViewData["Events"] = JsonConvert.SerializeObject(events);
+    return View();
+}
+            </div>
+
+            <h3>Razor View Example</h3>
+            <div class="code-block">
+<span class="comment">@* In Calendar.cshtml *@</span>
+<span class="tag">&lt;app-calendar&gt;&lt;/app-calendar&gt;</span>
+
+<span class="tag">&lt;script&gt;</span>
+  const eventsData = @Html.Raw(ViewData["Events"]);
+  const calendarElement = document.querySelector('app-calendar');
+  if (calendarElement) {
+    calendarElement.setAttribute('events', JSON.stringify(eventsData));
+  }
+<span class="tag">&lt;/script&gt;</span>
+            </div>
+        </div>
+
+        <!-- Dependencies -->
+        <div class="demo-section">
+            <h2>8. Dependencies</h2>
+            <p>The Calendar module requires the following npm packages:</p>
+            <ul>
+                <li><code>@fullcalendar/core</code> - Core FullCalendar functionality</li>
+                <li><code>@fullcalendar/angular</code> - Angular integration</li>
+                <li><code>@fullcalendar/daygrid</code> - Day grid views</li>
+                <li><code>@fullcalendar/timegrid</code> - Time grid views</li>
+                <li><code>@fullcalendar/list</code> - List view</li>
+                <li><code>@fullcalendar/interaction</code> - Drag and drop, selection</li>
+                <li><code>ical-generator</code> - iCal export (optional)</li>
+            </ul>
+
+            <h3>Installation</h3>
+            <div class="code-block">
+npm install --save @fullcalendar/core @fullcalendar/angular @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction @fullcalendar/list ical-generator
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="demo-section">
+            <h2>9. Next Steps</h2>
+            <div class="info-box">
+                <p><strong>For more detailed documentation, see:</strong></p>
+                <ul>
+                    <li><code>/RushtonRoots.Web/ClientApp/src/app/calendar/README.md</code> - Comprehensive component documentation</li>
+                    <li><code>/RushtonRoots.Web/ClientApp/src/app/calendar/models/calendar.model.ts</code> - Complete TypeScript models and interfaces</li>
+                    <li><code>/docs/UI_DesignPlan.md</code> - Overall UI design plan and implementation notes</li>
+                </ul>
+            </div>
+
+            <h3>Testing the Components</h3>
+            <ol>
+                <li>Build the Angular application: <code>npm run build</code></li>
+                <li>Run the ASP.NET Core application: <code>dotnet run</code></li>
+                <li>Create a Razor view that uses the calendar component</li>
+                <li>Test all interactive features (create, edit, delete, RSVP, export)</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

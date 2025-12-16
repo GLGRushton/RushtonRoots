@@ -1,0 +1,127 @@
+<mat-card 
+  [class.event-card--compact]="compact"
+  [class.event-card--upcoming]="isUpcoming()"
+  [class.event-card--past]="isPast()"
+  [class.event-card--today]="isToday()"
+  [elevation]="elevation"
+  (click)="onCardClick()"
+  class="event-card">
+  
+  <!-- Event Header -->
+  <mat-card-header>
+    <div class="event-card__header">
+      <div class="event-card__title-section">
+        <!-- Category Icon -->
+        <div class="event-card__category-icon" *ngIf="getCategoryConfig()" [style.background-color]="getCategoryConfig()!.color">
+          <mat-icon>{{ getCategoryConfig()!.icon }}</mat-icon>
+        </div>
+        
+        <!-- Title and Category -->
+        <div class="event-card__title-content">
+          <h3 class="event-card__title">{{ event.title }}</h3>
+          <mat-chip *ngIf="getCategoryConfig()" class="event-card__category-chip">
+            <mat-icon [style.color]="getCategoryConfig()!.color">{{ getCategoryConfig()!.icon }}</mat-icon>
+            {{ getCategoryConfig()!.label }}
+          </mat-chip>
+        </div>
+      </div>
+
+      <!-- RSVP Status Badge -->
+      <div class="event-card__rsvp-badge" *ngIf="event.rsvpRequired && getRsvpStatusConfig()">
+        <mat-chip [style.background-color]="getRsvpStatusConfig()!.color + '20'" [style.color]="getRsvpStatusConfig()!.color">
+          <mat-icon>{{ getRsvpStatusConfig()!.icon }}</mat-icon>
+          {{ getRsvpStatusConfig()!.label }}
+        </mat-chip>
+      </div>
+    </div>
+  </mat-card-header>
+
+  <!-- Event Content -->
+  <mat-card-content>
+    <!-- Date and Time -->
+    <div class="event-card__info-row">
+      <mat-icon>schedule</mat-icon>
+      <span>{{ getDateRange() }}</span>
+    </div>
+
+    <!-- Location -->
+    <div class="event-card__info-row" *ngIf="event.location">
+      <mat-icon>place</mat-icon>
+      <span>{{ event.location }}</span>
+    </div>
+
+    <!-- Description (in non-compact mode) -->
+    <div class="event-card__description" *ngIf="!compact && event.description">
+      <p>{{ event.description }}</p>
+    </div>
+
+    <!-- Organizer -->
+    <div class="event-card__info-row">
+      <mat-icon>person</mat-icon>
+      <span>Organized by {{ event.organizer.name }}</span>
+    </div>
+
+    <!-- Attendee Summary -->
+    <div class="event-card__attendees" *ngIf="event.attendees.length > 0">
+      <div class="event-card__attendee-stats">
+        <div class="event-card__attendee-stat" *ngIf="getAttendingCount() > 0">
+          <mat-icon class="event-card__attendee-stat-icon event-card__attendee-stat-icon--attending">check_circle</mat-icon>
+          <span>{{ getAttendingCount() }} attending</span>
+        </div>
+        <div class="event-card__attendee-stat" *ngIf="getMaybeCount() > 0">
+          <mat-icon class="event-card__attendee-stat-icon event-card__attendee-stat-icon--maybe">help</mat-icon>
+          <span>{{ getMaybeCount() }} maybe</span>
+        </div>
+        <div class="event-card__attendee-stat" *ngIf="getDeclinedCount() > 0">
+          <mat-icon class="event-card__attendee-stat-icon event-card__attendee-stat-icon--declined">cancel</mat-icon>
+          <span>{{ getDeclinedCount() }} declined</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recurring Event Indicator -->
+    <div class="event-card__recurring" *ngIf="event.recurrence">
+      <mat-chip>
+        <mat-icon>repeat</mat-icon>
+        Recurring Event
+      </mat-chip>
+    </div>
+
+    <!-- Private Event Indicator -->
+    <div class="event-card__private" *ngIf="event.isPrivate">
+      <mat-chip>
+        <mat-icon>lock</mat-icon>
+        Private
+      </mat-chip>
+    </div>
+  </mat-card-content>
+
+  <!-- Event Actions -->
+  <mat-card-actions>
+    <button mat-button (click)="onViewClick($event)" color="primary">
+      <mat-icon>visibility</mat-icon>
+      View Details
+    </button>
+    
+    <button mat-button (click)="onRsvpClick($event)" *ngIf="event.rsvpRequired" color="accent">
+      <mat-icon>{{ getRsvpStatusConfig()?.icon || 'how_to_reg' }}</mat-icon>
+      RSVP
+    </button>
+
+    <!-- More Actions Menu -->
+    <button mat-icon-button [matMenuTriggerFor]="actionsMenu" *ngIf="canEdit" (click)="$event.stopPropagation()">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #actionsMenu="matMenu">
+      <button mat-menu-item (click)="onEditClick($event)">
+        <mat-icon>edit</mat-icon>
+        <span>Edit Event</span>
+      </button>
+      <button mat-menu-item (click)="onDeleteClick($event)" class="event-card__delete-action">
+        <mat-icon>delete</mat-icon>
+        <span>Delete Event</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>

@@ -18,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
 import { WikiModule } from './wiki/wiki.module';
 import { ContentModule } from './content/content.module';
 import { MediaGalleryModule } from './media-gallery/media-gallery.module';
+import { CalendarModule } from './calendar/calendar.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -108,6 +109,13 @@ import { PhotoUploadComponent } from './media-gallery/components/photo-upload/ph
 import { PhotoEditorComponent } from './media-gallery/components/photo-editor/photo-editor.component';
 import { VideoPlayerComponent } from './media-gallery/components/video-player/video-player.component';
 
+// Import Phase 8.2 Calendar & Events components for Angular Elements registration
+import { CalendarComponent } from './calendar/components/calendar/calendar.component';
+import { EventCardComponent } from './calendar/components/event-card/event-card.component';
+import { EventFormDialogComponent } from './calendar/components/event-form-dialog/event-form-dialog.component';
+import { EventRsvpDialogComponent } from './calendar/components/event-rsvp-dialog/event-rsvp-dialog.component';
+import { EventDetailsDialogComponent } from './calendar/components/event-details-dialog/event-details-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -128,7 +136,8 @@ import { VideoPlayerComponent } from './media-gallery/components/video-player/vi
     AuthModule,
     WikiModule,
     ContentModule,
-    MediaGalleryModule
+    MediaGalleryModule,
+    CalendarModule
   ],
   providers: []
 })
@@ -347,6 +356,22 @@ export class AppModule {
 
     const videoPlayerElement = createCustomElement(VideoPlayerComponent, { injector: this.injector });
     customElements.define('app-video-player', videoPlayerElement);
+
+    // Register Phase 8.2 Calendar & Events components as Angular Elements
+    const calendarElement = createCustomElement(CalendarComponent, { injector: this.injector });
+    customElements.define('app-calendar', calendarElement);
+
+    const eventCardElement = createCustomElement(EventCardComponent, { injector: this.injector });
+    customElements.define('app-event-card', eventCardElement);
+
+    const eventFormDialogElement = createCustomElement(EventFormDialogComponent, { injector: this.injector });
+    customElements.define('app-event-form-dialog', eventFormDialogElement);
+
+    const eventRsvpDialogElement = createCustomElement(EventRsvpDialogComponent, { injector: this.injector });
+    customElements.define('app-event-rsvp-dialog', eventRsvpDialogElement);
+
+    const eventDetailsDialogElement = createCustomElement(EventDetailsDialogComponent, { injector: this.injector });
+    customElements.define('app-event-details-dialog', eventDetailsDialogElement);
   }
 
   ngDoBootstrap() {
