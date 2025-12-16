@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Starts or manages the npm watch build process for Angular development.
+    Manages the npm watch build process for Angular development (starts/stops based on parameters).
 
 .DESCRIPTION
     This script manages an Angular watch build process (npm run watch) in a separate terminal window.
@@ -268,9 +268,12 @@ else {
     # Last resort: cmd.exe
     Write-Host "Using cmd.exe (PowerShell not found)..."
     
+    # Use /k to keep window open, /c for cd command, then chain with npm
+    # The path is already validated to not contain dangerous characters
+    $cdCommand = "cd /d `"$clientAppPath`""
     $cmdArgs = @(
         '/k',
-        "cd /d `"$clientAppPath`" && npm run watch"
+        "$cdCommand && npm run watch"
     )
     
     $startedProcess = Start-Process -FilePath 'cmd.exe' -ArgumentList $cmdArgs -PassThru -WindowStyle Normal
