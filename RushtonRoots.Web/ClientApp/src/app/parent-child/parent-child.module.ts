@@ -23,11 +23,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatListModule } from '@angular/material/list';
 
 // Components - Phase 5.2
 import { ParentChildIndexComponent } from './components/parent-child-index/parent-child-index.component';
 import { ParentChildCardComponent } from './components/parent-child-card/parent-child-card.component';
 import { ParentChildFormComponent } from './components/parent-child-form/parent-child-form.component';
+import { ParentChildDetailsComponent } from './components/parent-child-details/parent-child-details.component';
 import { FamilyTreeMiniComponent } from './components/family-tree-mini/family-tree-mini.component';
 import { RelationshipValidationComponent } from './components/relationship-validation/relationship-validation.component';
 import { RelationshipSuggestionsComponent } from './components/relationship-suggestions/relationship-suggestions.component';
@@ -39,6 +42,7 @@ import { BulkRelationshipImportComponent } from './components/bulk-relationship-
     ParentChildIndexComponent,
     ParentChildCardComponent,
     ParentChildFormComponent,
+    ParentChildDetailsComponent,
     FamilyTreeMiniComponent,
     RelationshipValidationComponent,
     RelationshipSuggestionsComponent,
@@ -67,13 +71,16 @@ import { BulkRelationshipImportComponent } from './components/bulk-relationship-
     MatDialogModule,
     MatStepperModule,
     MatSlideToggleModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTabsModule,
+    MatListModule
   ],
   exports: [
     // Phase 5.2
     ParentChildIndexComponent,
     ParentChildCardComponent,
     ParentChildFormComponent,
+    ParentChildDetailsComponent,
     FamilyTreeMiniComponent,
     RelationshipValidationComponent,
     RelationshipSuggestionsComponent,

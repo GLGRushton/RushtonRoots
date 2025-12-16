@@ -1,0 +1,320 @@
+<div class="parent-child-details-container">
+  <!-- Header Section with Parent and Child Info -->
+  <div class="relationship-header">
+    <div class="persons-section">
+      <!-- Parent -->
+      <div class="person parent" (click)="onParentClick()" role="button" tabindex="0">
+        <div class="person-photo">
+          <img 
+            [src]="relationship.parentPhotoUrl || '/assets/images/default-avatar.png'" 
+            [alt]="relationship.parentName">
+        </div>
+        <div class="person-info">
+          <div class="person-name">{{ relationship.parentName }}</div>
+          <div class="person-role">Parent</div>
+          <div class="person-dates" *ngIf="relationship.parentBirthDate">
+            {{ formatDate(relationship.parentBirthDate) }}
+            <span *ngIf="relationship.parentDeathDate"> - {{ formatDate(relationship.parentDeathDate) }}</span>
+            {{ getAge(relationship.parentBirthDate, relationship.parentDeathDate) }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Relationship Icon -->
+      <div class="relationship-icon">
+        <mat-icon [color]="relationship.relationshipTypeColor">{{ relationship.relationshipTypeIcon }}</mat-icon>
+        <div class="relationship-label">{{ relationship.relationshipTypeDisplay }}</div>
+      </div>
+
+      <!-- Child -->
+      <div class="person child" (click)="onChildClick()" role="button" tabindex="0">
+        <div class="person-photo">
+          <img 
+            [src]="relationship.childPhotoUrl || '/assets/images/default-avatar.png'" 
+            [alt]="relationship.childName">
+        </div>
+        <div class="person-info">
+          <div class="person-name">{{ relationship.childName }}</div>
+          <div class="person-role">Child</div>
+          <div class="person-dates" *ngIf="relationship.childBirthDate">
+            {{ formatDate(relationship.childBirthDate) }}
+            <span *ngIf="relationship.childDeathDate"> - {{ formatDate(relationship.childDeathDate) }}</span>
+            {{ getAge(relationship.childBirthDate, relationship.childDeathDate) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Relationship Info -->
+    <div class="relationship-info">
+      <div class="info-row">
+        <mat-icon [color]="relationship.relationshipTypeColor">{{ relationship.relationshipTypeIcon }}</mat-icon>
+        <span class="label">Type:</span>
+        <mat-chip [color]="relationship.relationshipTypeColor" selected>
+          {{ relationship.relationshipTypeDisplay }}
+        </mat-chip>
+      </div>
+
+      <div class="info-row">
+        <mat-icon [color]="getVerificationStatusColor()">{{ getVerificationStatusIcon() }}</mat-icon>
+        <span class="label">Status:</span>
+        <mat-chip [color]="getVerificationStatusColor()" selected>
+          {{ getVerificationStatusText() }}
+        </mat-chip>
+      </div>
+
+      <div class="info-row" *ngIf="relationship.confidence !== undefined">
+        <mat-icon [color]="getConfidenceColor()">analytics</mat-icon>
+        <span class="label">Confidence:</span>
+        <span>{{ relationship.confidence }}%</span>
+      </div>
+
+      <div class="info-row">
+        <mat-icon>schedule</mat-icon>
+        <span class="label">Created:</span>
+        <span>{{ formatDate(relationship.createdDateTime) }}</span>
+      </div>
+
+      <div class="info-row">
+        <mat-icon>update</mat-icon>
+        <span class="label">Updated:</span>
+        <span>{{ formatDate(relationship.updatedDateTime) }}</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-raised-button color="warn" *ngIf="canDelete" (click)="onDelete()">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+      <button mat-raised-button color="accent" *ngIf="canVerify && !relationship.isVerified" (click)="onVerify()">
+        <mat-icon>verified</mat-icon>
+        Verify Relationship
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabbed Content -->
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="300ms">
+    <!-- Overview Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">{{ tabs[0].icon }}</mat-icon>
+        {{ tabs[0].label }}
+      </ng-template>
+
+      <div class="tab-content">
+        <!-- Relationship Type Description -->
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>Relationship Type</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ relationship.relationshipTypeDescription }}</p>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Notes Section -->
+        <mat-card class="notes-card">
+          <mat-card-header>
+            <mat-card-title>Notes</mat-card-title>
+            <button mat-icon-button *ngIf="canEdit && !isEditingNotes" (click)="onEditNotes()">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <p *ngIf="!isEditingNotes && relationship.notes">{{ relationship.notes }}</p>
+            <p *ngIf="!isEditingNotes && !relationship.notes" class="no-notes">No notes available.</p>
+
+            <div *ngIf="isEditingNotes" class="notes-editor">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Notes</mat-label>
+                <textarea matInput [(ngModel)]="editedNotes" rows="5" maxlength="2000"></textarea>
+                <mat-hint align="end">{{ editedNotes.length }}/2000</mat-hint>
+              </mat-form-field>
+              <div class="notes-actions">
+                <button mat-raised-button color="primary" (click)="onSaveNotes()">
+                  <mat-icon>save</mat-icon>
+                  Save
+                </button>
+                <button mat-button (click)="onCancelEditNotes()">Cancel</button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Family Context Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">{{ tabs[1].icon }}</mat-icon>
+        {{ tabs[1].label }}
+        <span class="badge" *ngIf="tabs[1].badge && tabs[1].badge > 0">{{ tabs[1].badge }}</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <!-- Mini Family Tree -->
+        <mat-card class="family-tree-card">
+          <mat-card-header>
+            <mat-card-title>Family Tree Context</mat-card-title>
+            <mat-card-subtitle>Shows parent's parents (grandparents) and parent's other children (siblings)</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <app-family-tree-mini
+              [focusPersonId]="relationship.parentPersonId"
+              [generations]="2"
+              [showSpouses]="true"
+              [compact]="false"
+              (personClicked)="onPersonFromTreeClick($event)">
+            </app-family-tree-mini>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Grandparents Section -->
+        <mat-card class="relatives-card" *ngIf="grandparents && grandparents.length > 0">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>elderly</mat-icon>
+              Grandparents
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="relatives-grid">
+              <div class="relative-card" *ngFor="let grandparent of grandparents" 
+                   (click)="onPersonFromTreeClick(grandparent.id)" 
+                   role="button" tabindex="0">
+                <img [src]="grandparent.photoUrl || '/assets/images/default-avatar.png'" 
+                     [alt]="grandparent.name" class="relative-photo">
+                <div class="relative-name">{{ grandparent.name }}</div>
+                <div class="relative-dates" *ngIf="grandparent.birthDate">
+                  {{ formatDate(grandparent.birthDate) }}
+                  <span *ngIf="grandparent.deathDate"> - {{ formatDate(grandparent.deathDate) }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Siblings Section -->
+        <mat-card class="relatives-card" *ngIf="siblings && siblings.length > 0">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>group</mat-icon>
+              Siblings
+            </mat-card-title>
+            <mat-card-subtitle>{{ relationship.childName }}'s siblings</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="relatives-grid">
+              <div class="relative-card" *ngFor="let sibling of siblings" 
+                   (click)="onPersonFromTreeClick(sibling.id)" 
+                   role="button" tabindex="0">
+                <img [src]="sibling.photoUrl || '/assets/images/default-avatar.png'" 
+                     [alt]="sibling.name" class="relative-photo">
+                <div class="relative-name">{{ sibling.name }}</div>
+                <div class="relative-dates" *ngIf="sibling.birthDate">
+                  {{ formatDate(sibling.birthDate) }}
+                  <span *ngIf="sibling.deathDate"> - {{ formatDate(sibling.deathDate) }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- No Family Context -->
+        <div class="empty-state" *ngIf="(!grandparents || grandparents.length === 0) && (!siblings || siblings.length === 0)">
+          <mat-icon>account_tree</mat-icon>
+          <p>No additional family context available.</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Evidence Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">{{ tabs[2].icon }}</mat-icon>
+        {{ tabs[2].label }}
+        <span class="badge" *ngIf="tabs[2].badge && tabs[2].badge > 0">{{ tabs[2].badge }}</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <mat-card class="evidence-card" *ngIf="evidence && evidence.length > 0">
+          <mat-card-header>
+            <mat-card-title>Supporting Evidence</mat-card-title>
+            <mat-card-subtitle>Sources, documents, and other evidence for this relationship</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-list>
+              <mat-list-item *ngFor="let item of evidence">
+                <mat-icon matListItemIcon [color]="'primary'">{{ getEvidenceTypeIcon(item.type) }}</mat-icon>
+                <div matListItemTitle>{{ item.title }}</div>
+                <div matListItemLine *ngIf="item.description">{{ item.description }}</div>
+                <div matListItemMeta>
+                  <span class="evidence-date">{{ formatDate(item.addedDate) }}</span>
+                  <button mat-icon-button *ngIf="item.url || item.documentUrl" 
+                          [attr.href]="item.url || item.documentUrl" target="_blank">
+                    <mat-icon>open_in_new</mat-icon>
+                  </button>
+                </div>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Empty Evidence State -->
+        <div class="empty-state" *ngIf="!evidence || evidence.length === 0">
+          <mat-icon>fact_check</mat-icon>
+          <p>No evidence has been added yet.</p>
+          <button mat-raised-button color="primary" *ngIf="canEdit">
+            <mat-icon>add</mat-icon>
+            Add Evidence
+          </button>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Timeline Tab -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">{{ tabs[3].icon }}</mat-icon>
+        {{ tabs[3].label }}
+        <span class="badge" *ngIf="tabs[3].badge && tabs[3].badge > 0">{{ tabs[3].badge }}</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <mat-card class="timeline-card" *ngIf="events && events.length > 0">
+          <mat-card-header>
+            <mat-card-title>Timeline</mat-card-title>
+            <mat-card-subtitle>Key events in the relationship</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="timeline">
+              <div class="timeline-item" *ngFor="let event of events">
+                <div class="timeline-icon">
+                  <mat-icon [color]="event.color">{{ event.icon }}</mat-icon>
+                </div>
+                <div class="timeline-content">
+                  <div class="timeline-date">{{ formatDate(event.date) }}</div>
+                  <div class="timeline-title">{{ event.title }}</div>
+                  <div class="timeline-description" *ngIf="event.description">{{ event.description }}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Empty Timeline State -->
+        <div class="empty-state" *ngIf="!events || events.length === 0">
+          <mat-icon>timeline</mat-icon>
+          <p>No timeline events available.</p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

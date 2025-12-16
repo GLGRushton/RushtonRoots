@@ -1,35 +1,187 @@
 @model RushtonRoots.Domain.UI.Models.ParentChildViewModel
+@using System.Text.Json
+@using RushtonRoots.Domain.Database
 @{
     ViewData["Title"] = "Relationship Details";
+    
+    // Transform relationship type to include icon and color
+    var relationshipTypeConfig = Model.RelationshipType.ToLower() switch
+    {
+        "biological" => new { Display = "Biological", Icon = "bloodtype", Color = "primary", Description = "Biological parent-child relationship" },
+        "adopted" => new { Display = "Adopted", Icon = "volunteer_activism", Color = "accent", Description = "Legal adoption" },
+        "step" => new { Display = "Step", Icon = "family_restroom", Color = "accent", Description = "Step-parent relationship" },
+        "guardian" => new { Display = "Guardian", Icon = "shield", Color = "accent", Description = "Legal guardian" },
+        "foster" => new { Display = "Foster", Icon = "home", Color = "accent", Description = "Foster care relationship" },
+        _ => new { Display = "Unknown", Icon = "help_outline", Color = "warn", Description = "Relationship type unknown" }
+    };
+    
+    // Build relationship details object
+    var relationshipDetails = new
+    {
+        id = Model.Id,
+        parentPersonId = Model.ParentPersonId,
+        childPersonId = Model.ChildPersonId,
+        parentName = Model.ParentName,
+        childName = Model.ChildName,
+        parentPhotoUrl = Model.ParentPhotoUrl,
+        childPhotoUrl = Model.ChildPhotoUrl,
+        parentBirthDate = (object?)null, // TODO: Add to ViewModel
+        parentDeathDate = (object?)null, // TODO: Add to ViewModel
+        childBirthDate = Model.ChildBirthDate,
+        childDeathDate = (object?)null, // TODO: Add to ViewModel
+        relationshipType = Model.RelationshipType,
+        relationshipTypeDisplay = relationshipTypeConfig.Display,
+        relationshipTypeIcon = relationshipTypeConfig.Icon,
+        relationshipTypeColor = relationshipTypeConfig.Color,
+        relationshipTypeDescription = relationshipTypeConfig.Description,
+        isVerified = Model.IsVerified,
+        confidence = (int?)null, // TODO: Add AI confidence score if applicable
+        notes = (string?)null, // TODO: Add notes field to ParentChild entity
+        createdDateTime = Model.CreatedDateTime,
+        updatedDateTime = Model.UpdatedDateTime
+    };
+    
+    var relationshipJson = JsonSerializer.Serialize(relationshipDetails);
+    
+    // TODO: Fetch actual evidence, events, grandparents, and siblings from backend
+    var evidenceJson = "[]"; // Empty array for now
+    var eventsJson = JsonSerializer.Serialize(new[] {
+        new {
+            id = 1,
+            title = $"{Model.ChildName} was born",
+            date = Model.ChildBirthDate ?? DateTime.Now,
+            description = "Birth event",
+            type = "birth",
+            icon = "cake",
+            color = "primary"
+        }
+    });
+    var grandparentsJson = "[]"; // TODO: Fetch parent's parents
+    var siblingsJson = "[]"; // TODO: Fetch parent's other children
+    
+    var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    var canDelete = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    var canVerify = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
 }
 
 <div class="container mt-4">
     <h2>Parent-Child Relationship Details</h2>
     <hr />
 
-    <dl class="row">
-        <dt class="col-sm-3">Parent</dt>
-        <dd class="col-sm-9">@Model.ParentName</dd>
+    <!-- Angular Element -->
+    <app-parent-child-details
+        relationship='@Html.Raw(relationshipJson)'
+        evidence='@evidenceJson'
+        events='@Html.Raw(eventsJson)'
+        grandparents='@grandparentsJson'
+        siblings='@siblingsJson'
+        can-edit="@(canEdit ? "true" : "false")"
+        can-delete="@(canDelete ? "true" : "false")"
+        can-verify="@(canVerify && !Model.IsVerified ? "true" : "false")"
+        initial-tab="0">
+    </app-parent-child-details>
 
-        <dt class="col-sm-3">Child</dt>
-        <dd class="col-sm-9">@Model.ChildName</dd>
+    <!-- Fallback content for when Angular fails to load -->
+    <noscript>
+        <div class="alert alert-warning">
+            <strong>JavaScript Required:</strong> This page requires JavaScript to be enabled for the best experience.
+        </div>
+        
+        <dl class="row">
+            <dt class="col-sm-3">Parent</dt>
+            <dd class="col-sm-9">@Model.ParentName</dd>
 
-        <dt class="col-sm-3">Relationship Type</dt>
-        <dd class="col-sm-9">@Model.RelationshipType</dd>
+            <dt class="col-sm-3">Child</dt>
+            <dd class="col-sm-9">@Model.ChildName</dd>
 
-        <dt class="col-sm-3">Created</dt>
-        <dd class="col-sm-9">@Model.CreatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
+            <dt class="col-sm-3">Relationship Type</dt>
+            <dd class="col-sm-9">@Model.RelationshipType</dd>
 
-        <dt class="col-sm-3">Last Updated</dt>
-        <dd class="col-sm-9">@Model.UpdatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
-    </dl>
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">@Model.CreatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
 
-    <div>
-        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
-        {
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
-        }
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
+            <dt class="col-sm-3">Last Updated</dt>
+            <dd class="col-sm-9">@Model.UpdatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
+        </dl>
+
+        <div>
+            @if (canEdit)
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+            }
+            @if (canDelete)
+            {
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            }
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </noscript>
 </div>
+
+@section Scripts {
+    <script>
+        // Event handlers for Angular component outputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const detailsComponent = document.querySelector('app-parent-child-details');
+            
+            if (detailsComponent) {
+                // Handle edit click
+                detailsComponent.addEventListener('editClicked', function(event) {
+                    const relationshipId = event.detail;
+                    window.location.href = '@Url.Action("Edit", "ParentChild")/' + relationshipId;
+                });
+                
+                // Handle delete click
+                detailsComponent.addEventListener('deleteClicked', function(event) {
+                    const relationshipId = event.detail;
+                    window.location.href = '@Url.Action("Delete", "ParentChild")/' + relationshipId;
+                });
+                
+                // Handle verify click
+                detailsComponent.addEventListener('verifyClicked', function(event) {
+                    const relationshipId = event.detail;
+                    // TODO: Implement verification endpoint
+                    console.log('Verify relationship:', relationshipId);
+                    alert('Verification feature coming soon!');
+                });
+                
+                // Handle person click - navigate to person details
+                detailsComponent.addEventListener('personClicked', function(event) {
+                    const personId = event.detail;
+                    window.location.href = '@Url.Action("Details", "Person")/' + personId;
+                });
+                
+                // Handle note update
+                detailsComponent.addEventListener('noteUpdated', function(event) {
+                    const notes = event.detail;
+                    // TODO: Implement update notes endpoint
+                    console.log('Update notes:', notes);
+                    
+                    // For now, make a simple AJAX call
+                    fetch('@Url.Action("UpdateNotes", "ParentChild")/' + @Model.Id, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                        },
+                        body: JSON.stringify({ notes: notes })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Notes updated successfully!');
+                        } else {
+                            alert('Failed to update notes. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating notes:', error);
+                        alert('An error occurred while updating notes.');
+                    });
+                });
+            }
+        });
+    </script>
+    
+    <!-- Anti-forgery token for AJAX requests -->
+    @Html.AntiForgeryToken()
+}
