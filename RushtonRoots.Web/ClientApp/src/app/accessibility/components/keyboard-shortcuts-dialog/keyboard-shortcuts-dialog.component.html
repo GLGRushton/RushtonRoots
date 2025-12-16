@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>Keyboard Shortcuts</h2>
+
+<mat-dialog-content>
+  <p class="dialog-description">
+    The following keyboard shortcuts are available to help you navigate the application more efficiently.
+  </p>
+
+  <div class="shortcuts-list" *ngIf="shortcuts.length > 0">
+    <div class="shortcut-item" *ngFor="let shortcut of shortcuts">
+      <div class="shortcut-key">
+        <kbd>{{ formatShortcut(shortcut) }}</kbd>
+      </div>
+      <div class="shortcut-description">
+        {{ shortcut.description }}
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="help-section">
+    <h3>General Tips</h3>
+    <ul>
+      <li>Use <kbd>Tab</kbd> to move forward through interactive elements</li>
+      <li>Use <kbd>Shift + Tab</kbd> to move backward through interactive elements</li>
+      <li>Use <kbd>Enter</kbd> or <kbd>Space</kbd> to activate buttons and links</li>
+      <li>Use arrow keys to navigate within menus and dropdowns</li>
+      <li>Press <kbd>Esc</kbd> to close dialogs and menus</li>
+    </ul>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" aria-label="Close keyboard shortcuts dialog">
+    Close
+  </button>
+</mat-dialog-actions>

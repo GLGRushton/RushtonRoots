@@ -1,0 +1,407 @@
+/*
+ * Global Accessibility Styles
+ * WCAG 2.1 AA Compliant Focus Indicators and Accessibility Features
+ */
+
+/* ===== Focus Indicators ===== */
+
+/* Default focus style for all interactive elements */
+*:focus {
+  outline: 3px solid #ffeb3b; /* High visibility yellow outline */
+  outline-offset: 2px;
+}
+
+/* Use :focus-visible for modern browsers (keyboard-only focus) */
+*:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
+}
+
+/* Hide outline for mouse/touch interactions in modern browsers */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Enhanced focus for buttons */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(255, 235, 59, 0.2);
+}
+
+/* Material buttons focus override */
+.mat-mdc-button:focus-visible,
+.mat-mdc-raised-button:focus-visible,
+.mat-mdc-flat-button:focus-visible,
+.mat-mdc-stroked-button:focus-visible,
+.mat-mdc-icon-button:focus-visible,
+.mat-mdc-fab:focus-visible,
+.mat-mdc-mini-fab:focus-visible {
+  outline: 3px solid #ffeb3b !important;
+  outline-offset: 2px !important;
+}
+
+/* Form field focus */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
+  border-color: #2e7d32;
+}
+
+/* Material form field focus override */
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+  opacity: 0.2;
+}
+
+/* Card focus for clickable cards */
+.mat-mdc-card[tabindex]:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Chip focus */
+.mat-mdc-chip:focus-visible {
+  outline: 3px solid #ffeb3b;
+  outline-offset: 2px;
+}
+
+/* ===== Skip Links ===== */
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  padding: 12px 16px;
+  background-color: #2e7d32;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  z-index: 10000;
+  transition: top 0.3s ease-in-out;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ===== Screen Reader Only Content ===== */
+
+.sr-only,
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Make screen reader only content visible when focused */
+.sr-only:focus,
+.screen-reader-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ===== High Contrast Mode Support ===== */
+
+@media (prefers-contrast: high) {
+  *:focus-visible {
+    outline-width: 4px;
+    outline-color: currentColor;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline-width: 4px;
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.3);
+  }
+
+  /* Increase border contrast */
+  .mat-mdc-card,
+  .mat-mdc-form-field {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ===== Reduced Motion Support ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== Color Contrast Improvements ===== */
+
+/* Ensure sufficient color contrast for text */
+.text-muted,
+.mat-mdc-form-field-hint,
+.mat-mdc-form-field-error {
+  color: #666666 !important; /* Meets 4.5:1 contrast ratio on white background */
+}
+
+/* Dark backgrounds need lighter text */
+.dark-background,
+.mat-toolbar.mat-primary {
+  color: #ffffff !important;
+}
+
+/* Ensure link color contrast */
+a {
+  color: #1565c0; /* Meets WCAG AA contrast ratio */
+  text-decoration-skip-ink: auto;
+}
+
+a:visited {
+  color: #6a1b9a;
+}
+
+/* ===== Touch Target Size ===== */
+
+/* Ensure minimum 44x44px touch target size (WCAG 2.1 AAA) */
+button,
+a,
+input[type="checkbox"],
+input[type="radio"],
+.mat-mdc-button,
+.mat-mdc-icon-button,
+.clickable {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Exception for inline text links */
+a:not(.mat-mdc-button):not(.mat-mdc-icon-button) {
+  min-width: auto;
+  min-height: auto;
+}
+
+/* ===== Keyboard Navigation Helpers ===== */
+
+/* Highlight currently focused table row */
+tr:focus-within {
+  background-color: rgba(46, 125, 50, 0.1);
+  outline: 2px solid #2e7d32;
+  outline-offset: -2px;
+}
+
+/* Highlight currently focused list item */
+li:focus-within {
+  background-color: rgba(46, 125, 50, 0.05);
+}
+
+/* ===== ARIA Live Regions ===== */
+
+[aria-live] {
+  position: relative;
+}
+
+/* Visually indicate live regions in development mode */
+[data-dev-mode] [aria-live="polite"]::before,
+[data-dev-mode] [aria-live="assertive"]::before {
+  content: "LIVE: " attr(aria-live);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #ff9800;
+  color: #000;
+  padding: 2px 4px;
+  font-size: 10px;
+  font-weight: bold;
+  z-index: 10000;
+}
+
+/* ===== Form Accessibility ===== */
+
+/* Required field indicator */
+.required::after,
+[required]::after,
+[aria-required="true"]::after {
+  content: " *";
+  color: #d32f2f;
+  font-weight: bold;
+}
+
+/* Error messages should be clearly visible */
+.error-message,
+[role="alert"],
+.mat-mdc-form-field-error {
+  color: #d32f2f;
+  font-weight: 500;
+}
+
+/* Success messages */
+.success-message,
+[role="status"].success {
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+/* ===== Modal/Dialog Accessibility ===== */
+
+/* Prevent background scrolling when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Ensure modal content is scrollable */
+.mat-mdc-dialog-container {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* ===== Dark Mode Accessibility ===== */
+
+@media (prefers-color-scheme: dark) {
+  *:focus-visible {
+    outline-color: #ffd54f; /* Lighter yellow for dark backgrounds */
+  }
+
+  .text-muted,
+  .mat-mdc-form-field-hint {
+    color: #b0b0b0 !important; /* Lighter gray for dark mode */
+  }
+
+  a {
+    color: #64b5f6; /* Lighter blue for better contrast on dark background */
+  }
+
+  a:visited {
+    color: #ba68c8; /* Lighter purple for dark mode */
+  }
+
+  .error-message,
+  [role="alert"] {
+    color: #ef5350; /* Lighter red for dark mode */
+  }
+
+  .success-message,
+  [role="status"].success {
+    color: #66bb6a; /* Lighter green for dark mode */
+  }
+}
+
+/* ===== Print Accessibility ===== */
+
+@media print {
+  /* Show all hidden content that might be important */
+  .sr-only,
+  .screen-reader-only {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+  }
+
+  /* Remove interactive focus styles for print */
+  *:focus {
+    outline: none;
+  }
+
+  /* Ensure good contrast for printing */
+  * {
+    background: white !important;
+    color: black !important;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+/* ===== Utility Classes ===== */
+
+/* Hide visually but keep accessible to screen readers */
+.visually-hidden {
+  @extend .sr-only;
+}
+
+/* Skip to specific section */
+[id]::before {
+  content: "";
+  display: block;
+  height: 60px;
+  margin-top: -60px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Ensure images have proper alt text (development warning) */
+img:not([alt]) {
+  outline: 5px solid red !important;
+}
+
+/* ===== Focus Management for SPAs ===== */
+
+/* Ensure main content area can receive focus */
+main,
+[role="main"] {
+  outline: none;
+}
+
+main:focus,
+[role="main"]:focus {
+  outline: none;
+}
+
+/* ===== Table Accessibility ===== */
+
+/* Highlight table header on hover/focus */
+th:hover,
+th:focus {
+  background-color: rgba(46, 125, 50, 0.1);
+}
+
+/* Zebra striping for better readability */
+tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* ===== List Accessibility ===== */
+
+/* Ensure lists are properly announced */
+ul[role="list"],
+ol[role="list"] {
+  list-style: disc;
+  padding-left: 24px;
+}
+
+/* ===== Custom Focus Trap for Modals ===== */
+
+.focus-trap-enabled {
+  isolation: isolate;
+}
+
+/* ===== Landmarks ===== */
+
+/* Ensure landmarks are visually distinct in development */
+[data-dev-mode] main,
+[data-dev-mode] [role="main"],
+[data-dev-mode] nav,
+[data-dev-mode] [role="navigation"],
+[data-dev-mode] aside,
+[data-dev-mode] [role="complementary"] {
+  outline: 2px dashed #2e7d32;
+  outline-offset: 4px;
+}
