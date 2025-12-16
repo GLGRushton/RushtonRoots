@@ -1,0 +1,32 @@
+.location-autocomplete-field {
+  width: 100%;
+}
+
+.location-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.location-icon {
+  color: #2e7d32;
+  flex-shrink: 0;
+}
+
+.location-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.location-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+}
+
+.location-description {
+  font-size: 12px;
+  color: #757575;
+}

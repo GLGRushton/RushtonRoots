@@ -21,6 +21,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 // Components
 import { PersonIndexComponent } from './components/person-index/person-index.component';
@@ -30,6 +33,9 @@ import { PersonDetailsComponent } from './components/person-details/person-detai
 import { PersonTimelineComponent } from './components/person-timeline/person-timeline.component';
 import { RelationshipVisualizerComponent } from './components/relationship-visualizer/relationship-visualizer.component';
 import { PhotoGalleryComponent } from './components/photo-gallery/photo-gallery.component';
+import { PersonFormComponent } from './components/person-form/person-form.component';
+import { DatePickerComponent } from './components/date-picker/date-picker.component';
+import { LocationAutocompleteComponent } from './components/location-autocomplete/location-autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +45,10 @@ import { PhotoGalleryComponent } from './components/photo-gallery/photo-gallery.
     PersonDetailsComponent,
     PersonTimelineComponent,
     RelationshipVisualizerComponent,
-    PhotoGalleryComponent
+    PhotoGalleryComponent,
+    PersonFormComponent,
+    DatePickerComponent,
+    LocationAutocompleteComponent
   ],
   imports: [
     CommonModule,
@@ -62,7 +71,10 @@ import { PhotoGalleryComponent } from './components/photo-gallery/photo-gallery.
     MatDividerModule,
     MatProgressSpinnerModule,
     MatTabsModule,
-    MatMenuModule
+    MatMenuModule,
+    MatStepperModule,
+    MatSnackBarModule,
+    MatAutocompleteModule
   ],
   exports: [
     PersonIndexComponent,
@@ -71,7 +83,10 @@ import { PhotoGalleryComponent } from './components/photo-gallery/photo-gallery.
     PersonDetailsComponent,
     PersonTimelineComponent,
     RelationshipVisualizerComponent,
-    PhotoGalleryComponent
+    PhotoGalleryComponent,
+    PersonFormComponent,
+    DatePickerComponent,
+    LocationAutocompleteComponent
   ]
 })
 export class PersonModule { }

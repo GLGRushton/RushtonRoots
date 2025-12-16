@@ -1,0 +1,27 @@
+<mat-form-field appearance="outline" class="location-autocomplete-field">
+  <mat-label>{{ label }}</mat-label>
+  <input type="text"
+         matInput
+         [placeholder]="placeholder"
+         [formControl]="searchControl"
+         [matAutocomplete]="auto"
+         [required]="required"
+         [disabled]="disabled"
+         (blur)="onTouched()"
+         (input)="onInputChange($any($event.target).value)">
+  <mat-icon matSuffix>place</mat-icon>
+  <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+  <mat-autocomplete #auto="matAutocomplete" 
+                    [displayWith]="displayFn"
+                    (optionSelected)="onOptionSelected($event.option.value)">
+    <mat-option *ngFor="let location of filteredLocations$ | async" [value]="location">
+      <div class="location-option">
+        <mat-icon class="location-icon">place</mat-icon>
+        <div class="location-details">
+          <div class="location-name">{{ location.name }}</div>
+          <div class="location-description" *ngIf="location.country">{{ location.country }}</div>
+        </div>
+      </div>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

@@ -1,0 +1,105 @@
+@model RushtonRoots.Domain.UI.Models.PersonViewModel
+
+@{
+    ViewData["Title"] = "Edit Person";
+}
+
+<div class="container mt-4">
+    <!-- PersonFormComponent - Phase 3.3 Implementation (Edit Mode) -->
+    <app-person-form 
+        id="personEditForm"
+        person-id="@Model.Id"
+        initial-data='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(new {
+            firstName = Model.FirstName,
+            lastName = Model.LastName,
+            dateOfBirth = Model.DateOfBirth?.ToString("yyyy-MM-dd"),
+            isDeceased = Model.IsDeceased,
+            dateOfDeath = Model.DateOfDeath?.ToString("yyyy-MM-dd"),
+            photoUrl = Model.PhotoUrl
+        }))'>
+    </app-person-form>
+</div>
+
+@section Scripts {
+    <script>
+        // Wait for the component to be defined
+        customElements.whenDefined('app-person-form').then(() => {
+            const formElement = document.getElementById('personEditForm');
+
+            if (formElement) {
+                // Handle successful form submission
+                formElement.addEventListener('formSubmit', async (event) => {
+                    const formData = event.detail;
+                    const personId = @Model.Id;
+                    console.log('Person form updated:', formData);
+
+                    try {
+                        // Determine if we need multipart for photo upload
+                        if (formData.photoFile) {
+                            // Create FormData for multipart upload
+                            const uploadData = new FormData();
+                            uploadData.append('photo', formData.photoFile);
+                            
+                            // Append other fields
+                            Object.keys(formData).forEach(key => {
+                                if (key !== 'photoFile' && key !== 'photoUrl' && formData[key] !== undefined && formData[key] !== null) {
+                                    uploadData.append(key, formData[key]);
+                                }
+                            });
+
+                            const response = await fetch(`/api/person/${personId}`, {
+                                method: 'PUT',
+                                body: uploadData,
+                                headers: {
+                                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                                }
+                            });
+
+                            if (response.ok) {
+                                const person = await response.json();
+                                // Show success message
+                                alert('Person updated successfully!');
+                                // Redirect to person details page
+                                window.location.href = `/Person/Details/${person.id}`;
+                            } else {
+                                const error = await response.text();
+                                alert('Failed to update person: ' + error);
+                            }
+                        } else {
+                            // JSON submission without photo
+                            const response = await fetch(`/api/person/${personId}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                                },
+                                body: JSON.stringify(formData)
+                            });
+
+                            if (response.ok) {
+                                const person = await response.json();
+                                // Show success message
+                                alert('Person updated successfully!');
+                                // Redirect to person details page
+                                window.location.href = `/Person/Details/${person.id}`;
+                            } else {
+                                const error = await response.text();
+                                alert('Failed to update person: ' + error);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error updating person:', error);
+                        alert('An error occurred while updating the person. Please try again.');
+                    }
+                });
+
+                // Handle form cancellation
+                formElement.addEventListener('formCancel', () => {
+                    console.log('Person form cancelled');
+                    // Navigate back to person details
+                    window.location.href = '/Person/Details/@Model.Id';
+                });
+            }
+        });
+    </script>
+}
