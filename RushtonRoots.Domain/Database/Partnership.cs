@@ -11,6 +11,10 @@ public class Partnership : BaseEntity
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     
+    // Soft delete fields
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedDateTime { get; set; }
+    
     // Navigation properties
     public Person? PersonA { get; set; }
     public Person? PersonB { get; set; }

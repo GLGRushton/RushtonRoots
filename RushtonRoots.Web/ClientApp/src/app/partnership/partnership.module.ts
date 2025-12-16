@@ -18,6 +18,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatListModule } from '@angular/material/list';
 
 // Components - Phase 5.1
 import { PartnershipIndexComponent } from './components/partnership-index/partnership-index.component';
@@ -28,6 +31,9 @@ import { PartnershipTimelineComponent } from './components/partnership-timeline/
 // Components - Phase 4.2
 import { PartnershipDetailsComponent } from './components/partnership-details/partnership-details.component';
 
+// Components - Phase 4.4
+import { PartnershipDeleteDialogComponent } from './components/partnership-delete-dialog/partnership-delete-dialog.component';
+
 @NgModule({
   declarations: [
     // Phase 5.1
@@ -36,7 +42,9 @@ import { PartnershipDetailsComponent } from './components/partnership-details/pa
     PartnershipFormComponent,
     PartnershipTimelineComponent,
     // Phase 4.2
-    PartnershipDetailsComponent
+    PartnershipDetailsComponent,
+    // Phase 4.4
+    PartnershipDeleteDialogComponent
   ],
   imports: [
     CommonModule,
@@ -56,7 +64,10 @@ import { PartnershipDetailsComponent } from './components/partnership-details/pa
     MatDatepickerModule,
     MatNativeDateModule,
     MatAutocompleteModule,
-    MatTabsModule
+    MatTabsModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    MatListModule
   ],
   exports: [
     // Phase 5.1
@@ -65,7 +76,9 @@ import { PartnershipDetailsComponent } from './components/partnership-details/pa
     PartnershipFormComponent,
     PartnershipTimelineComponent,
     // Phase 4.2
-    PartnershipDetailsComponent
+    PartnershipDetailsComponent,
+    // Phase 4.4
+    PartnershipDeleteDialogComponent
   ]
 })
 export class PartnershipModule { }

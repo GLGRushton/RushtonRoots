@@ -1,0 +1,219 @@
+<div class="partnership-delete-dialog">
+  <!-- Dialog Header -->
+  <div class="dialog-header">
+    <mat-icon class="warning-icon">warning</mat-icon>
+    <h2 class="dialog-title">Delete Partnership</h2>
+  </div>
+
+  <div class="dialog-content">
+    <form [formGroup]="deleteForm">
+      <!-- Partnership Summary Section -->
+      <section class="partnership-summary">
+        <div class="partners-display">
+          <!-- Person A -->
+          <div class="partner-card">
+            <div class="partner-photo">
+              <img *ngIf="personAPhotoUrl" [src]="personAPhotoUrl" [alt]="personAName" class="avatar">
+              <div *ngIf="!personAPhotoUrl" class="avatar-placeholder">
+                <mat-icon>person</mat-icon>
+              </div>
+            </div>
+            <div class="partner-info">
+              <h3 class="partner-name">{{ personAName }}</h3>
+              <div class="partner-dates" *ngIf="personABirthDate">
+                <span>{{ getPersonLifespan(personABirthDate, personADeathDate, personAIsDeceased) }}</span>
+              </div>
+              <mat-chip *ngIf="personAIsDeceased" class="status-chip deceased">Deceased</mat-chip>
+            </div>
+          </div>
+
+          <!-- Heart Separator -->
+          <div class="partnership-icon">
+            <mat-icon [class.ended]="endDate">favorite</mat-icon>
+          </div>
+
+          <!-- Person B -->
+          <div class="partner-card">
+            <div class="partner-photo">
+              <img *ngIf="personBPhotoUrl" [src]="personBPhotoUrl" [alt]="personBName" class="avatar">
+              <div *ngIf="!personBPhotoUrl" class="avatar-placeholder">
+                <mat-icon>person</mat-icon>
+              </div>
+            </div>
+            <div class="partner-info">
+              <h3 class="partner-name">{{ personBName }}</h3>
+              <div class="partner-dates" *ngIf="personBBirthDate">
+                <span>{{ getPersonLifespan(personBBirthDate, personBDeathDate, personBIsDeceased) }}</span>
+              </div>
+              <mat-chip *ngIf="personBIsDeceased" class="status-chip deceased">Deceased</mat-chip>
+            </div>
+          </div>
+        </div>
+
+        <!-- Partnership Details -->
+        <div class="partnership-details">
+          <div class="detail-row">
+            <mat-icon>favorite</mat-icon>
+            <span><strong>Type:</strong> {{ partnershipType }}</span>
+          </div>
+          <div class="detail-row" *ngIf="startDate">
+            <mat-icon>event</mat-icon>
+            <span><strong>Started:</strong> {{ formatDate(startDate) }}</span>
+          </div>
+          <div class="detail-row" *ngIf="endDate">
+            <mat-icon>event_busy</mat-icon>
+            <span><strong>Ended:</strong> {{ formatDate(endDate) }}</span>
+          </div>
+          <div class="detail-row" *ngIf="location">
+            <mat-icon>location_on</mat-icon>
+            <span><strong>Location:</strong> {{ location }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Warning Message -->
+      <mat-card class="warning-card" appearance="outlined">
+        <mat-card-content>
+          <div class="warning-header">
+            <mat-icon color="warn">error_outline</mat-icon>
+            <strong>Warning: This action will affect related data</strong>
+          </div>
+          <p class="warning-text">{{ getWarningMessage() }}</p>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Related Data Section -->
+      <section class="related-data" *ngIf="hasRelatedData()">
+        <h4 class="section-title">
+          <mat-icon>link</mat-icon>
+          Data That Will Be Affected ({{ getTotalRelatedItems() }} items)
+        </h4>
+        
+        <mat-list class="affected-items">
+          <!-- Children -->
+          <mat-list-item *ngIf="relatedData.children > 0">
+            <mat-icon matListItemIcon>child_care</mat-icon>
+            <div matListItemTitle>Children</div>
+            <div matListItemLine>{{ relatedData.children }} child(ren) will lose parent partnership reference</div>
+          </mat-list-item>
+
+          <!-- Shared Events -->
+          <mat-list-item *ngIf="relatedData.sharedEvents > 0">
+            <mat-icon matListItemIcon>event</mat-icon>
+            <div matListItemTitle>Shared Events</div>
+            <div matListItemLine>{{ relatedData.sharedEvents }} event(s) involving both partners</div>
+          </mat-list-item>
+
+          <!-- Photos -->
+          <mat-list-item *ngIf="relatedData.photos > 0">
+            <mat-icon matListItemIcon>photo_library</mat-icon>
+            <div matListItemTitle>Photos and Media</div>
+            <div matListItemLine>{{ relatedData.photos }} photo(s) tagged with both partners</div>
+          </mat-list-item>
+
+          <!-- Stories -->
+          <mat-list-item *ngIf="relatedData.stories > 0">
+            <mat-icon matListItemIcon>book</mat-icon>
+            <div matListItemTitle>Stories</div>
+            <div matListItemLine>{{ relatedData.stories }} story/stories about this partnership</div>
+          </mat-list-item>
+
+          <!-- Documents -->
+          <mat-list-item *ngIf="relatedData.documents > 0">
+            <mat-icon matListItemIcon>description</mat-icon>
+            <div matListItemTitle>Documents</div>
+            <div matListItemLine>{{ relatedData.documents }} document(s) (marriage certificates, etc.)</div>
+          </mat-list-item>
+        </mat-list>
+      </section>
+
+      <!-- Delete Type Selection -->
+      <section class="delete-options">
+        <h4 class="section-title">
+          <mat-icon>settings</mat-icon>
+          Action Options
+        </h4>
+
+        <mat-radio-group formControlName="deleteType" class="delete-type-group">
+          <mat-radio-button value="end" class="delete-option">
+            <div class="option-content">
+              <strong>End Partnership (Recommended)</strong>
+              <p>Mark partnership as ended with a date, preserve historical record</p>
+            </div>
+          </mat-radio-button>
+
+          <mat-radio-button value="soft" class="delete-option">
+            <div class="option-content">
+              <strong>Soft Delete</strong>
+              <p>Mark as deleted, can be restored by admin</p>
+            </div>
+          </mat-radio-button>
+
+          <mat-radio-button value="hard" class="delete-option" *ngIf="isAdmin">
+            <div class="option-content">
+              <strong class="danger-text">Hard Delete (Admin Only)</strong>
+              <p class="danger-text">Permanently delete all data - CANNOT BE UNDONE</p>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </section>
+
+      <!-- End Date Picker (only shown when "End Partnership" is selected) -->
+      <section class="end-date-section" *ngIf="selectedDeleteType === 'end'">
+        <h4 class="section-title">
+          <mat-icon>event</mat-icon>
+          End Date
+        </h4>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Partnership End Date</mat-label>
+          <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" required>
+          <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+          <mat-hint>When did this partnership end?</mat-hint>
+          <mat-error *ngIf="deleteForm.get('endDate')?.hasError('required')">
+            End date is required
+          </mat-error>
+        </mat-form-field>
+      </section>
+
+      <!-- Optional: Transfer Children -->
+      <section class="transfer-section" *ngIf="relatedData.children > 0">
+        <h4 class="section-title">
+          <mat-icon>swap_horiz</mat-icon>
+          Transfer Children (Optional)
+        </h4>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Transfer children to another partnership</mat-label>
+          <input matInput type="number" formControlName="transferChildrenTo" placeholder="Enter Partnership ID">
+          <mat-icon matSuffix>family_restroom</mat-icon>
+          <mat-hint>Leave blank to keep children's current partnership reference</mat-hint>
+        </mat-form-field>
+      </section>
+
+      <!-- Confirmation Checkbox -->
+      <section class="confirmation-section">
+        <mat-checkbox formControlName="confirmationCheckbox" color="warn" class="confirmation-checkbox">
+          <strong>I understand this action</strong>
+          <span *ngIf="selectedDeleteType === 'hard'"> and all data will be permanently lost</span>
+          <span *ngIf="selectedDeleteType === 'end'"> and the partnership will be marked as ended</span>
+        </mat-checkbox>
+      </section>
+    </form>
+  </div>
+
+  <!-- Dialog Actions -->
+  <div class="dialog-actions">
+    <button mat-button (click)="onCancel()" cdkFocusInitial>
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      [color]="getDeleteButtonColor()" 
+      (click)="onDelete()"
+      [disabled]="!deleteForm.valid"
+      class="delete-button">
+      <mat-icon>{{ selectedDeleteType === 'end' ? 'event_busy' : 'delete' }}</mat-icon>
+      {{ getDeleteButtonText() }}
+    </button>
+  </div>
+</div>
