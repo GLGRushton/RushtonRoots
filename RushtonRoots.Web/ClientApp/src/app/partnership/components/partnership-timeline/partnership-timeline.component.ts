@@ -231,7 +231,7 @@ export class PartnershipTimelineComponent implements OnInit {
     const start = new Date(this.partnership.startDate);
     const end = this.partnership.endDate ? new Date(this.partnership.endDate) : new Date();
 
-    // Calculate total months and convert to years (rounded)
+    // Calculate total months
     let years = end.getFullYear() - start.getFullYear();
     let months = end.getMonth() - start.getMonth();
     
@@ -241,6 +241,9 @@ export class PartnershipTimelineComponent implements OnInit {
     }
 
     const totalMonths = years * 12 + months;
+    
+    // Round to nearest year based on total months
+    // If more than 6 months into a year, round up
     return Math.max(0, Math.round(totalMonths / 12));
   }
 
