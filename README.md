@@ -52,18 +52,25 @@ The application will be available at `https://localhost:5001` (or the port speci
 ### Development Workflow
 
 #### Local Debug Builds (Windows)
-When building in Debug mode on Windows, the PowerShell script `Scripts/start-watch.ps1` will:
+When building in Debug mode on Windows, the PowerShell script `ClientApp/build-scripts/start-watch.ps1` will:
 1. Check if npm dependencies are installed (runs `npm install` if needed)
-2. Start `npm run watch` in a separate console window
-3. Track the process ID in `npm-watch.pid`
+2. Start `npm run watch` in a separate terminal window (Windows Terminal if available, otherwise PowerShell or cmd.exe)
+3. Track the terminal process ID in `.watch-pid`
 4. Prevent duplicate watch processes
 
 The watch process will automatically rebuild Angular assets when you make changes to TypeScript/HTML/CSS files.
 
-#### Stopping the Watch Process
+#### Managing the Watch Process
+To manually start the watch process:
+```powershell
+cd RushtonRoots.Web\ClientApp\build-scripts
+.\start-watch.ps1
+```
+
 To stop the npm watch process:
 ```powershell
-.\Scripts\stop-watch.ps1
+cd RushtonRoots.Web\ClientApp\build-scripts
+.\start-watch.ps1 -Stop
 ```
 
 #### CI/QA/Production Builds
@@ -109,11 +116,11 @@ RushtonRoots/
 │   │   │   │   └── welcome/     # Example Angular Element component
 │   │   │   ├── main.ts
 │   │   │   └── index.html
+│   │   ├── build-scripts/        # Build automation scripts
+│   │   │   └── start-watch.ps1   # Unified watch management script (start/stop)
 │   │   ├── angular.json
 │   │   └── package.json
-│   ├── Scripts/                  # Build automation scripts
-│   │   ├── start-watch.ps1
-│   │   └── stop-watch.ps1
+│   ├── Scripts/                  # Legacy scripts directory (deprecated)
 │   ├── AutofacModule.cs          # Dependency injection configuration
 │   ├── Program.cs                # Application entry point
 │   ├── appsettings.json          # Configuration (ConnectionStrings, Azure Blob Storage)

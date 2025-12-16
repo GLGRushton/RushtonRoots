@@ -39,7 +39,7 @@
   </Target>
 
   <Target Name="StartNpmWatch" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug' AND '$(IsCI)' != 'true'">
-    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ProjectDir)Scripts\start-watch.ps1&quot;" WorkingDirectory="$(ProjectDir)" IgnoreExitCode="true" />
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ProjectDir)ClientApp\build-scripts\start-watch.ps1&quot;" WorkingDirectory="$(ProjectDir)" IgnoreExitCode="true" />
   </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">

@@ -95,9 +95,9 @@ UnitTests (depends on all)
   - `angular.json` - Angular CLI configuration
   - `package.json` - npm dependencies (Angular 19, Angular Elements)
   - `/src/app/` - Angular components and modules
-- `/Scripts/` - PowerShell automation
-  - `start-watch.ps1` - Starts npm watch for development (Windows only)
-  - `stop-watch.ps1` - Stops npm watch process
+  - `/build-scripts/` - Build automation scripts
+    - `start-watch.ps1` - Unified script to start/stop npm watch for development (Windows only)
+- `/Scripts/` - Legacy scripts directory (deprecated)
 - `/wwwroot/` - Static files and Angular build output
 
 **NuGet Packages**:
