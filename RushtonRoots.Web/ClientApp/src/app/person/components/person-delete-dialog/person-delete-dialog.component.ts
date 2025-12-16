@@ -37,7 +37,7 @@ import { PersonDeleteDialogData, PersonDeleteOptions } from '../../models/person
 })
 export class PersonDeleteDialogComponent implements OnInit {
   deleteForm: FormGroup;
-  isAdmin = false; // TODO: Get from auth service
+  isAdmin = false; // TODO: Inject AuthService and get user role: constructor(private authService: AuthService) { this.isAdmin = this.authService.isAdmin(); }
   selectedDeleteType: 'soft' | 'archive' | 'hard' = 'soft';
 
   constructor(
@@ -151,9 +151,14 @@ export class PersonDeleteDialogComponent implements OnInit {
 
   /**
    * Get button color based on delete type
+   * Hard delete and archive use 'warn' to indicate destructive actions
+   * Soft delete uses 'accent' as it's less destructive
    */
   getDeleteButtonColor(): 'primary' | 'accent' | 'warn' {
-    return this.selectedDeleteType === 'hard' ? 'warn' : 'accent';
+    if (this.selectedDeleteType === 'hard' || this.selectedDeleteType === 'archive') {
+      return 'warn';
+    }
+    return 'accent';
   }
 
   /**

@@ -1128,7 +1128,7 @@ safeDefine('app-location-autocomplete', LocationAutocompleteComponent);
 8. **Accessible**: WCAG 2.1 AA compliant with keyboard navigation support
 
 **Next Steps for Complete Integration**:
-1. ⏳ Create EF Core migration for new Person entity fields (IsDeleted, DeletedDateTime, IsArchived, ArchivedDateTime)
+1. ✅ Create EF Core migration for new Person entity fields (IsDeleted, DeletedDateTime, IsArchived, ArchivedDateTime) - Migration created: 20251216204103_AddPersonSoftDeleteFields.cs
 2. ⏳ Implement backend service methods for soft delete, archive, and hard delete
 3. ⏳ Add cascade delete logic to handle related data removal
 4. ⏳ Implement relationship transfer functionality

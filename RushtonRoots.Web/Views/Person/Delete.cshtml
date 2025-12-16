@@ -100,8 +100,10 @@
                     }
                     
                     // Add anti-forgery token
-                    formData.append('__RequestVerificationToken', 
-                        document.querySelector('input[name="__RequestVerificationToken"]').value);
+                    const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+                    if (tokenElement && tokenElement.value) {
+                        formData.append('__RequestVerificationToken', tokenElement.value);
+                    }
                     
                     // Submit delete request
                     fetch('@Url.Action("Delete", "Person")', {
