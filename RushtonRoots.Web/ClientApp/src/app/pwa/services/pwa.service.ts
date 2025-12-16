@@ -1,4 +1,4 @@
-import { Injectable, ApplicationRef } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { BehaviorSubject, Observable, concat, interval } from 'rxjs';
 import { first, filter } from 'rxjs/operators';
@@ -161,7 +161,8 @@ export class PwaService {
    */
   async getRegistration(): Promise<ServiceWorkerRegistration | null> {
     if ('serviceWorker' in navigator) {
-      return await navigator.serviceWorker.getRegistration();
+      const registration = await navigator.serviceWorker.getRegistration();
+      return registration || null;
     }
     return null;
   }
