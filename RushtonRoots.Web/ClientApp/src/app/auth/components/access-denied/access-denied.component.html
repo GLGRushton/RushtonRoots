@@ -1,0 +1,105 @@
+<div class="access-denied-container">
+  <mat-card class="access-denied-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="warning-icon">block</mat-icon>
+        <h2>Access Denied</h2>
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Main access denied message -->
+      <div class="denied-message">
+        <mat-icon class="lock-icon">lock</mat-icon>
+        <h3>Permission Required</h3>
+        <p class="primary-message">
+          {{ displayReason }}
+        </p>
+        <p class="resource-info" *ngIf="resourceName">
+          <strong>Resource:</strong> {{ resourceName }}
+        </p>
+      </div>
+
+      <!-- What you can do section -->
+      <div class="actions-section">
+        <mat-icon>help_outline</mat-icon>
+        <div class="actions-content">
+          <h4>What can you do?</h4>
+          <ul>
+            <li>Return to the home page to access available features</li>
+            <li *ngIf="!requestSuccess">Request access from your administrator</li>
+            <li *ngIf="hasContactInfo">Contact your administrator directly for assistance</li>
+            <li>If you believe this is an error, please contact support</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Request access section -->
+      <div class="request-section" *ngIf="!requestSuccess">
+        <button 
+          mat-raised-button 
+          color="primary"
+          (click)="onRequestAccess()"
+          [disabled]="requestingAccess">
+          <mat-spinner 
+            *ngIf="requestingAccess" 
+            diameter="20" 
+            class="button-spinner">
+          </mat-spinner>
+          <mat-icon *ngIf="!requestingAccess">mail</mat-icon>
+          <span *ngIf="!requestingAccess">Request Access</span>
+          <span *ngIf="requestingAccess">Sending Request...</span>
+        </button>
+        
+        <!-- Contact administrator button -->
+        <a 
+          *ngIf="hasContactInfo"
+          [href]="mailtoLink" 
+          mat-stroked-button 
+          color="primary"
+          class="contact-button">
+          <mat-icon>contact_mail</mat-icon>
+          <span>Contact Administrator</span>
+        </a>
+      </div>
+
+      <!-- Request success message -->
+      <div class="request-success" *ngIf="requestSuccess">
+        <mat-icon>check_circle</mat-icon>
+        <div class="success-content">
+          <h4>Access Request Sent</h4>
+          <p>Your access request has been sent to the administrator. You will be notified when your request is reviewed.</p>
+        </div>
+      </div>
+
+      <!-- Navigation actions -->
+      <div class="navigation-actions">
+        <a routerLink="/" mat-raised-button color="accent" class="home-button">
+          <mat-icon>home</mat-icon>
+          <span>Return to Home</span>
+        </a>
+        
+        <button 
+          mat-button 
+          color="primary"
+          (click)="goBack()"
+          class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Go Back</span>
+        </button>
+      </div>
+
+      <!-- Help section -->
+      <div class="help-section">
+        <mat-icon>info</mat-icon>
+        <div class="help-content">
+          <h4>Need Help?</h4>
+          <p>
+            If you believe you should have access to this resource, please contact your household administrator 
+            or system administrator for assistance.
+          </p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,294 @@
+.access-denied-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #dc143c 0%, #8b0000 100%);
+}
+
+.access-denied-card {
+  width: 100%;
+  max-width: 700px;
+  margin-top: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+
+  mat-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem 0;
+
+    mat-card-title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+
+      .warning-icon {
+        font-size: 4rem;
+        width: 4rem;
+        height: 4rem;
+        color: #f44336;
+      }
+
+      h2 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 500;
+        color: #d32f2f;
+      }
+    }
+  }
+}
+
+.denied-message {
+  text-align: center;
+  padding: 1rem 0 2rem;
+
+  .lock-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    color: #f44336;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    margin: 0 0 1rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .primary-message {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  .resource-info {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 0.5rem;
+    
+    strong {
+      color: #555;
+    }
+  }
+}
+
+.actions-section {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border-left: 4px solid #2196f3;
+
+  mat-icon {
+    color: #2196f3;
+    flex-shrink: 0;
+  }
+
+  .actions-content {
+    flex: 1;
+
+    h4 {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #1976d2;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.25rem;
+      color: #555;
+
+      li {
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.request-section {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 0;
+  flex-wrap: wrap;
+
+  button,
+  a {
+    min-width: 180px;
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .button-spinner {
+    margin-right: 0.5rem;
+  }
+
+  .contact-button {
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.request-success {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #e8f5e9;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border-left: 4px solid #4caf50;
+
+  mat-icon {
+    color: #4caf50;
+    flex-shrink: 0;
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .success-content {
+    flex: 1;
+
+    h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #388e3c;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.5;
+    }
+  }
+}
+
+.navigation-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 0;
+  flex-wrap: wrap;
+
+  .home-button {
+    min-width: 180px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  .back-button {
+    min-width: 120px;
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.help-section {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #fff3e0;
+  border-radius: 8px;
+  margin-top: 2rem;
+  border-left: 4px solid #ff9800;
+
+  mat-icon {
+    color: #ff9800;
+    flex-shrink: 0;
+  }
+
+  .help-content {
+    flex: 1;
+
+    h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #f57c00;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .access-denied-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .access-denied-card {
+    margin-top: 1rem;
+
+    mat-card-header {
+      mat-card-title {
+        .warning-icon {
+          font-size: 3rem;
+          width: 3rem;
+          height: 3rem;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .denied-message {
+    h3 {
+      font-size: 1.25rem;
+    }
+  }
+
+  .actions-section,
+  .help-section {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .request-section,
+  .navigation-actions {
+    flex-direction: column;
+    
+    button,
+    a {
+      width: 100%;
+    }
+  }
+}

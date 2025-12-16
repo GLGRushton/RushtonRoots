@@ -92,6 +92,9 @@ import { ConfirmEmailComponent } from './auth/components/confirm-email/confirm-e
 // Import Phase 1.3 User Management components for Angular Elements registration
 import { CreateUserComponent } from './auth/components/create-user/create-user.component';
 
+// Import Phase 1.4 Access Control components for Angular Elements registration
+import { AccessDeniedComponent } from './auth/components/access-denied/access-denied.component';
+
 // Import Phase 6.2 User Profile & Settings components for Angular Elements registration
 import { UserProfileComponent } from './auth/components/user-profile/user-profile.component';
 import { NotificationPreferencesComponent } from './auth/components/notification-preferences/notification-preferences.component';
@@ -253,6 +256,9 @@ export class AppModule {
 
     // Register Phase 1.3 User Management components as Angular Elements
     safeDefine('app-create-user', CreateUserComponent);
+
+    // Register Phase 1.4 Access Control components as Angular Elements
+    safeDefine('app-access-denied', AccessDeniedComponent);
 
     // Register Phase 6.2 User Profile & Settings components as Angular Elements
     safeDefine('app-user-profile', UserProfileComponent);
