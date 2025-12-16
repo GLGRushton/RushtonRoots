@@ -1,58 +1,182 @@
 @model IEnumerable<RushtonRoots.Domain.UI.Models.PartnershipViewModel>
+@using System.Text.Json
 @{
     ViewData["Title"] = "Partnerships";
+    
+    // Helper function to calculate partnership status
+    string CalculateStatus(DateTime? startDate, DateTime? endDate)
+    {
+        if (endDate.HasValue)
+        {
+            return "ended";
+        }
+        return "current";
+    }
+    
+    // Helper function to get status display
+    string GetStatusDisplay(string status)
+    {
+        return status switch
+        {
+            "current" => "Current",
+            "ended" => "Ended",
+            _ => "Unknown"
+        };
+    }
+    
+    // Helper function to get status color
+    string GetStatusColor(string status)
+    {
+        return status switch
+        {
+            "current" => "primary",
+            "ended" => "accent",
+            _ => "accent"
+        };
+    }
+    
+    // Helper function to get partnership type display
+    string GetPartnershipTypeDisplay(string? type)
+    {
+        return type?.ToLower() switch
+        {
+            "married" => "Married",
+            "partnered" => "Partnered",
+            "engaged" => "Engaged",
+            "relationship" => "Relationship",
+            "commonlaw" => "Common Law",
+            _ => "Other"
+        };
+    }
+    
+    // Helper function to calculate duration
+    string CalculateDuration(DateTime? startDate, DateTime? endDate)
+    {
+        if (!startDate.HasValue) return "";
+        
+        var end = endDate ?? DateTime.Now;
+        var timeSpan = end - startDate.Value;
+        var years = timeSpan.Days / 365;
+        var months = (timeSpan.Days % 365) / 30;
+        
+        if (years > 0 && months > 0)
+        {
+            return $"{years} {(years == 1 ? "year" : "years")}, {months} {(months == 1 ? "month" : "months")}";
+        }
+        else if (years > 0)
+        {
+            return $"{years} {(years == 1 ? "year" : "years")}";
+        }
+        else if (months > 0)
+        {
+            return $"{months} {(months == 1 ? "month" : "months")}";
+        }
+        else
+        {
+            return "Less than a month";
+        }
+    }
+    
+    // Transform server-side data to match Angular component interface (PartnershipCard)
+    var partnerships = Model.Select(p => {
+        var status = CalculateStatus(p.StartDate, p.EndDate);
+        return new 
+        {
+            id = p.Id,
+            personAId = p.PersonAId,
+            personBId = p.PersonBId,
+            personAName = p.PersonAName,
+            personBName = p.PersonBName,
+            personAPhotoUrl = (string?)null, // TODO: Add photo URLs when available
+            personBPhotoUrl = (string?)null,
+            partnershipType = p.PartnershipType?.ToLower() ?? "other",
+            partnershipTypeDisplay = GetPartnershipTypeDisplay(p.PartnershipType),
+            startDate = p.StartDate?.ToString("o"), // ISO 8601 format
+            endDate = p.EndDate?.ToString("o"),
+            duration = CalculateDuration(p.StartDate, p.EndDate),
+            status = status,
+            statusDisplay = GetStatusDisplay(status),
+            statusColor = GetStatusColor(status),
+            location = (string?)null, // TODO: Add location when available in ViewModel
+            notes = (string?)null, // TODO: Add notes when available in ViewModel
+            createdDateTime = p.CreatedDateTime.ToString("o"),
+            updatedDateTime = p.UpdatedDateTime.ToString("o")
+        };
+    }).ToList();
+    
+    var partnershipsJson = JsonSerializer.Serialize(partnerships);
+    
+    // User permissions
+    var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    var canDelete = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    var canCreate = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Partnerships</h2>
-        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+<!-- Angular Partnership Index Component -->
+<app-partnership-index 
+    partnerships='@Html.Raw(partnershipsJson)'
+    can-create="@canCreate.ToString().ToLower()"
+    can-edit="@canEdit.ToString().ToLower()"
+    can-delete="@canDelete.ToString().ToLower()">
+</app-partnership-index>
+
+<!-- Fallback content for browsers without JavaScript -->
+<noscript>
+    <div class="container mt-4">
+        <div class="alert alert-warning">
+            <strong>JavaScript Required:</strong> This page requires JavaScript to display partnership information. Please enable JavaScript in your browser.
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Partnerships</h2>
+            @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+            {
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add New Partnership
+                </a>
+            }
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Person A</th>
+                        <th>Person B</th>
+                        <th>Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var partnership in Model)
+                    {
+                        <tr>
+                            <td>@partnership.PersonAName</td>
+                            <td>@partnership.PersonBName</td>
+                            <td>@partnership.PartnershipType</td>
+                            <td>@(partnership.StartDate?.ToString("MM/dd/yyyy") ?? "N/A")</td>
+                            <td>@(partnership.EndDate?.ToString("MM/dd/yyyy") ?? "N/A")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@partnership.Id" class="btn btn-sm btn-info">Details</a>
+                                @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@partnership.Id" class="btn btn-sm btn-warning">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@partnership.Id" class="btn btn-sm btn-danger">Delete</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @if (!Model.Any())
         {
-            <a asp-action="Create" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> Add New Partnership
-            </a>
+            <div class="alert alert-info">
+                No partnerships found.
+            </div>
         }
     </div>
-
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Person A</th>
-                    <th>Person B</th>
-                    <th>Type</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var partnership in Model)
-                {
-                    <tr>
-                        <td>@partnership.PersonAName</td>
-                        <td>@partnership.PersonBName</td>
-                        <td>@partnership.PartnershipType</td>
-                        <td>@(partnership.StartDate?.ToString("MM/dd/yyyy") ?? "N/A")</td>
-                        <td>@(partnership.EndDate?.ToString("MM/dd/yyyy") ?? "N/A")</td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@partnership.Id" class="btn btn-sm btn-info">Details</a>
-                            @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
-                            {
-                                <a asp-action="Edit" asp-route-id="@partnership.Id" class="btn btn-sm btn-warning">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@partnership.Id" class="btn btn-sm btn-danger">Delete</a>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info">
-            No partnerships found.
-        </div>
-    }
-</div>
+</noscript>
