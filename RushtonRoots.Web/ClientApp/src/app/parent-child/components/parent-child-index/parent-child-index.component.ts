@@ -141,12 +141,25 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
     // Use input data if available, otherwise use sample data
     if (this.relationships && this.relationships.length > 0) {
       // Transform input data to ensure dates are proper Date objects
-      this.allRelationships = this.relationships.map(r => ({
-        ...r,
-        childBirthDate: r.childBirthDate ? new Date(r.childBirthDate) : undefined,
-        createdDateTime: new Date(r.createdDateTime),
-        updatedDateTime: new Date(r.updatedDateTime)
-      }));
+      this.allRelationships = this.relationships.map(r => {
+        try {
+          return {
+            ...r,
+            childBirthDate: r.childBirthDate ? new Date(r.childBirthDate) : undefined,
+            createdDateTime: new Date(r.createdDateTime),
+            updatedDateTime: new Date(r.updatedDateTime)
+          };
+        } catch (error) {
+          console.error('Error parsing dates for relationship:', r.id, error);
+          // Return relationship with undefined dates if parsing fails
+          return {
+            ...r,
+            childBirthDate: undefined,
+            createdDateTime: new Date(), // Fallback to current date
+            updatedDateTime: new Date()
+          };
+        }
+      });
     } else {
       // Use sample data for demonstration/testing
       this.allRelationships = this.getSampleData();

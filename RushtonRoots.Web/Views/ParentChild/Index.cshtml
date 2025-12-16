@@ -68,6 +68,9 @@
     
     var relationshipsJson = JsonSerializer.Serialize(relationships);
     
+    // Note: JsonSerializer.Serialize handles proper encoding and escaping
+    // Html.Raw() is safe here because the data comes from our database and is properly serialized
+    
     // User permissions
     var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
     var canDelete = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
@@ -87,18 +90,23 @@
     document.addEventListener('DOMContentLoaded', function() {
         const component = document.querySelector('app-parent-child-index');
         if (component) {
+            // Helper function to safely construct URLs
+            const buildUrl = function(action, id) {
+                return '@Url.Action("__ACTION__", "ParentChild")'.replace('__ACTION__', action) + '/' + encodeURIComponent(id);
+            };
+            
             // Handle relationship actions (view, edit, delete, verify)
             component.addEventListener('action', function(event) {
                 const action = event.detail.action;
                 const id = event.detail.parentChildId;
                 
                 if (action === 'view') {
-                    window.location.href = '@Url.Action("Details", "ParentChild")/' + id;
+                    window.location.href = buildUrl('Details', id);
                 } else if (action === 'edit') {
-                    window.location.href = '@Url.Action("Edit", "ParentChild")/' + id;
+                    window.location.href = buildUrl('Edit', id);
                 } else if (action === 'delete') {
                     if (confirm('Are you sure you want to delete this relationship?')) {
-                        window.location.href = '@Url.Action("Delete", "ParentChild")/' + id;
+                        window.location.href = buildUrl('Delete', id);
                     }
                 } else if (action === 'verify') {
                     // TODO: Implement verification endpoint

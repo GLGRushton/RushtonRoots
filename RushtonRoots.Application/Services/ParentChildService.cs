@@ -173,7 +173,9 @@ public class ParentChildService : IParentChildService
             ChildBirthDate = parentChild.ChildPerson?.DateOfBirth,
             ChildAge = childAge,
             RelationshipType = parentChild.RelationshipType,
-            IsVerified = true, // Default to true for now; can be enhanced with verification logic later
+            // TODO: Implement verification logic when verification feature is added
+            // For now, all relationships are marked as verified by default
+            IsVerified = true,
             CreatedDateTime = parentChild.CreatedDateTime,
             UpdatedDateTime = parentChild.UpdatedDateTime
         };
