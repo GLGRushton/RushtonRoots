@@ -9,6 +9,7 @@ import { PushSubscriptionState } from '../../models/pwa.model';
  */
 @Component({
   selector: 'app-notification-prompt',
+  standalone: false,
   templateUrl: './notification-prompt.component.html',
   styleUrls: ['./notification-prompt.component.scss']
 })
