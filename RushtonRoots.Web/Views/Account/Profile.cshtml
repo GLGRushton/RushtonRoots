@@ -3,61 +3,121 @@
     ViewData["Title"] = "My Profile";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-8 col-lg-6">
-        <h2>@ViewData["Title"]</h2>
-        
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+@section Styles {
+    <style>
+        /* Ensure Angular Element displays properly */
+        app-user-profile {
+            display: block;
+            width: 100%;
         }
-        
-        <hr />
-        <form asp-action="Profile" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            <input asp-for="Id" type="hidden" />
+    </style>
+}
+
+<!-- Angular User Profile Component -->
+<app-user-profile
+    success-message="@TempData["SuccessMessage"]">
+</app-user-profile>
+
+<!-- Fallback content (shown if Angular component fails to load) -->
+<noscript>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-lg-6">
+            <h2>@ViewData["Title"]</h2>
             
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" readonly />
-                <small class="form-text text-muted">Email cannot be changed.</small>
-            </div>
-            
-            @if (Model.PersonName != null)
+            @if (TempData["SuccessMessage"] != null)
             {
-                <div class="mb-3">
-                    <label class="form-label">Linked Person</label>
-                    <input type="text" class="form-control" value="@Model.PersonName" readonly />
-                    <small class="form-text text-muted">Your account is linked to this family member.</small>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             }
             
-            <div class="mb-3">
-                <label asp-for="PhoneNumber" class="form-label"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Email Confirmed</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" checked="@Model.EmailConfirmed" disabled />
-                    <label class="form-check-label">
-                        @(Model.EmailConfirmed ? "Yes" : "No - Please check your email")
-                    </label>
+            <hr />
+            <form asp-action="Profile" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <input asp-for="Id" type="hidden" />
+                
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" readonly />
+                    <small class="form-text text-muted">Email cannot be changed.</small>
                 </div>
-            </div>
-            
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Update Profile</button>
-            </div>
-        </form>
+                
+                @if (Model.PersonName != null)
+                {
+                    <div class="mb-3">
+                        <label class="form-label">Linked Person</label>
+                        <input type="text" class="form-control" value="@Model.PersonName" readonly />
+                        <small class="form-text text-muted">Your account is linked to this family member.</small>
+                    </div>
+                }
+                
+                <div class="mb-3">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Email Confirmed</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" checked="@Model.EmailConfirmed" disabled />
+                        <label class="form-check-label">
+                            @(Model.EmailConfirmed ? "Yes" : "No - Please check your email")
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</noscript>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Handle form submission from Angular component
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileElement = document.querySelector('app-user-profile');
+            
+            if (profileElement) {
+                // Listen for the profileUpdate event from the Angular component
+                profileElement.addEventListener('profileUpdate', function(event) {
+                    const formData = event.detail;
+                    
+                    // Create a form and submit it to the server
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/Account/Profile';
+                    
+                    // Add anti-forgery token
+                    const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]');
+                    if (antiForgeryToken) {
+                        const tokenInput = document.createElement('input');
+                        tokenInput.type = 'hidden';
+                        tokenInput.name = '__RequestVerificationToken';
+                        tokenInput.value = antiForgeryToken.value;
+                        form.appendChild(tokenInput);
+                    }
+                    
+                    // Add form fields
+                    for (const [key, value] of Object.entries(formData)) {
+                        if (value !== null && value !== undefined) {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = key.charAt(0).toUpperCase() + key.slice(1); // Capitalize first letter for C# model binding
+                            input.value = value;
+                            form.appendChild(input);
+                        }
+                    }
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+        });
+    </script>
+    @Html.AntiForgeryToken()
 }
