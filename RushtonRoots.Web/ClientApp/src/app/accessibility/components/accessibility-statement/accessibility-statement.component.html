@@ -1,0 +1,206 @@
+<div class="accessibility-statement" role="main" aria-labelledby="page-title">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title id="page-title">
+        <mat-icon aria-hidden="true">accessibility_new</mat-icon>
+        Accessibility Statement
+      </mat-card-title>
+      <mat-card-subtitle>
+        RushtonRoots is committed to ensuring digital accessibility for people with disabilities
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="commitment-text">
+        We are continually improving the user experience for everyone, and applying the relevant accessibility standards to ensure we provide equal access to all of our users.
+      </p>
+      <p class="update-text">
+        <strong>Last Updated:</strong> {{ lastUpdated | date: 'long' }}
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Compliance Standards -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon aria-hidden="true">verified</mat-icon>
+        Compliance Standards
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="standards-grid">
+        <div class="standard-item" *ngFor="let standard of standards">
+          <mat-icon [class]="'status-icon ' + standard.status.toLowerCase()" 
+                    [attr.aria-label]="standard.status">
+            {{ standard.icon }}
+          </mat-icon>
+          <div class="standard-info">
+            <h3>{{ standard.name }}</h3>
+            <p>{{ standard.description }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Accessibility Features -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon aria-hidden="true">star</mat-icon>
+        Accessibility Features
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-accordion class="features-accordion">
+        <mat-expansion-panel *ngFor="let feature of features">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon aria-hidden="true">{{ feature.icon }}</mat-icon>
+              {{ feature.title }}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ feature.description }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <ul class="feature-details">
+            <li *ngFor="let detail of feature.details">{{ detail }}</li>
+          </ul>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Known Issues -->
+  <mat-card class="section-card" *ngIf="knownIssues.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon aria-hidden="true">warning</mat-icon>
+        Known Issues
+      </mat-card-title>
+      <mat-card-subtitle>
+        We are actively working to resolve the following accessibility issues
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="known-issues-list">
+        <div class="issue-item" *ngFor="let issue of knownIssues">
+          <div class="issue-header">
+            <h3>{{ issue.title }}</h3>
+            <span class="priority-badge" [class]="'priority-' + issue.priority.toLowerCase()">
+              {{ issue.priority }} Priority
+            </span>
+          </div>
+          <p class="issue-description">{{ issue.description }}</p>
+          <p class="issue-workaround">
+            <strong>Workaround:</strong> {{ issue.workaround }}
+          </p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Testing & Validation -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon aria-hidden="true">science</mat-icon>
+        Testing & Validation
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>We regularly test our website using:</p>
+      <ul class="testing-tools">
+        <li>
+          <mat-icon aria-hidden="true">check</mat-icon>
+          <strong>Automated Testing:</strong> Axe accessibility testing engine
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">check</mat-icon>
+          <strong>Manual Testing:</strong> Keyboard navigation and screen reader testing
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">check</mat-icon>
+          <strong>Screen Readers:</strong> NVDA, JAWS, VoiceOver
+        </li>
+        <li>
+          <mat-icon aria-hidden="true">check</mat-icon>
+          <strong>Browsers:</strong> Chrome, Firefox, Safari, Edge
+        </li>
+      </ul>
+      
+      <button mat-raised-button color="primary" (click)="viewTestResults()" class="test-button">
+        <mat-icon>analytics</mat-icon>
+        View Test Results (Dev Only)
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Contact & Feedback -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon aria-hidden="true">feedback</mat-icon>
+        Contact & Feedback
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        We welcome your feedback on the accessibility of RushtonRoots. Please let us know if you encounter 
+        accessibility barriers:
+      </p>
+      <ul class="contact-methods">
+        <li><strong>Email:</strong> accessibility&#64;rushtonroots.com</li>
+        <li><strong>Phone:</strong> +1 (555) 123-4567</li>
+        <li><strong>Response Time:</strong> Within 2 business days</li>
+      </ul>
+      
+      <button mat-raised-button color="accent" (click)="reportIssue()" class="report-button">
+        <mat-icon>bug_report</mat-icon>
+        Report Accessibility Issue
+      </button>
+      
+      <p class="feedback-note">
+        We will work with you to provide the information, item, or transaction in an accessible format.
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Additional Resources -->
+  <mat-card class="section-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon aria-hidden="true">library_books</mat-icon>
+        Additional Resources
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul class="resources-list">
+        <li>
+          <a href="https://www.w3.org/WAI/WCAG21/quickref/" target="_blank" rel="noopener noreferrer">
+            WCAG 2.1 Quick Reference
+            <mat-icon aria-hidden="true">open_in_new</mat-icon>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.ada.gov/" target="_blank" rel="noopener noreferrer">
+            Americans with Disabilities Act (ADA)
+            <mat-icon aria-hidden="true">open_in_new</mat-icon>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.section508.gov/" target="_blank" rel="noopener noreferrer">
+            Section 508 Information
+            <mat-icon aria-hidden="true">open_in_new</mat-icon>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.w3.org/WAI/people-use-web/" target="_blank" rel="noopener noreferrer">
+            How People with Disabilities Use the Web
+            <mat-icon aria-hidden="true">open_in_new</mat-icon>
+          </a>
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

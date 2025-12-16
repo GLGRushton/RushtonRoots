@@ -1,0 +1,23 @@
+<nav class="skip-navigation" aria-label="Skip navigation links">
+  <a 
+    class="skip-link" 
+    href="#main-content"
+    (click)="skipToMain(); $event.preventDefault()"
+    aria-label="Skip to main content">
+    Skip to main content
+  </a>
+  <a 
+    class="skip-link" 
+    href="#navigation"
+    (click)="skipToNavigation(); $event.preventDefault()"
+    aria-label="Skip to navigation">
+    Skip to navigation
+  </a>
+  <a 
+    class="skip-link" 
+    href="#footer"
+    (click)="skipToFooter(); $event.preventDefault()"
+    aria-label="Skip to footer">
+    Skip to footer
+  </a>
+</nav>

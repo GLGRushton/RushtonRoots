@@ -21,6 +21,7 @@ import { MediaGalleryModule } from './media-gallery/media-gallery.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { PwaModule } from './pwa/pwa.module';
+import { AccessibilityModule } from './accessibility/accessibility.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -124,6 +125,11 @@ import { ChatInterfaceComponent } from './messaging/components/chat-interface/ch
 import { NotificationPanelComponent } from './messaging/components/notification-panel/notification-panel.component';
 import { MessageCompositionDialogComponent } from './messaging/components/message-composition-dialog/message-composition-dialog.component';
 
+// Import Phase 10.1 Accessibility components for Angular Elements registration
+import { SkipNavigationComponent } from './accessibility/components/skip-navigation/skip-navigation.component';
+import { KeyboardShortcutsDialogComponent } from './accessibility/components/keyboard-shortcuts-dialog/keyboard-shortcuts-dialog.component';
+import { AccessibilityStatementComponent } from './accessibility/components/accessibility-statement/accessibility-statement.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -147,7 +153,8 @@ import { MessageCompositionDialogComponent } from './messaging/components/messag
     MediaGalleryModule,
     CalendarModule,
     MessagingModule,
-    PwaModule
+    PwaModule,
+    AccessibilityModule
   ],
   providers: []
 })
@@ -395,6 +402,16 @@ export class AppModule {
 
     const messageCompositionDialogElement = createCustomElement(MessageCompositionDialogComponent, { injector: this.injector });
     customElements.define('app-message-composition-dialog', messageCompositionDialogElement);
+
+    // Register Phase 10.1 Accessibility components as Angular Elements
+    const skipNavigationElement = createCustomElement(SkipNavigationComponent, { injector: this.injector });
+    customElements.define('app-skip-navigation', skipNavigationElement);
+
+    const keyboardShortcutsDialogElement = createCustomElement(KeyboardShortcutsDialogComponent, { injector: this.injector });
+    customElements.define('app-keyboard-shortcuts-dialog', keyboardShortcutsDialogElement);
+
+    const accessibilityStatementElement = createCustomElement(AccessibilityStatementComponent, { injector: this.injector });
+    customElements.define('app-accessibility-statement', accessibilityStatementElement);
   }
 
   ngDoBootstrap() {
