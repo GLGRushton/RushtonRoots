@@ -70,7 +70,7 @@ export class PartnershipTimelineComponent implements OnInit {
     const yearsActive = this.calculateYearsActive();
 
     this.timeline = {
-      partnership: this.partnership,
+      partnership: this.partnership as PartnershipCard, // Cast to PartnershipCard for timeline
       events,
       duration,
       yearsActive

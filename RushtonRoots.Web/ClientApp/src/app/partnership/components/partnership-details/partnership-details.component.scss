@@ -22,7 +22,7 @@
   gap: $spacing-xl;
   margin-bottom: $spacing-lg;
   padding-bottom: $spacing-lg;
-  border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 
   @media (max-width: $breakpoint-md) {
     flex-direction: column;

@@ -208,6 +208,7 @@ export interface PartnershipDetails {
   duration?: string;
   status: PartnershipStatus;
   statusDisplay: string;
+  statusColor: string; // Added to match PartnershipCard interface
   location?: string;
   notes?: string;
   description?: string;

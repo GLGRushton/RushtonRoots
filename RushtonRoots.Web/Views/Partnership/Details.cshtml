@@ -20,6 +20,7 @@
         duration = CalculateDuration(Model.StartDate, Model.EndDate),
         status = Model.EndDate.HasValue ? "ended" : "current",
         statusDisplay = Model.EndDate.HasValue ? "Ended" : "Current",
+        statusColor = Model.EndDate.HasValue ? "accent" : "primary", // Add statusColor
         location = (string?)null, // TODO: Add location when available
         notes = (string?)null, // TODO: Add notes when available
         description = (string?)null, // TODO: Add description when available
