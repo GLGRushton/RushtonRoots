@@ -1,0 +1,142 @@
+<div class="message-thread-container">
+  <!-- Header with search and new message button -->
+  <div class="thread-header">
+    <h2 class="thread-title">
+      <mat-icon>forum</mat-icon>
+      {{ showArchived ? 'Archived Messages' : 'Messages' }}
+    </h2>
+    <button mat-icon-button 
+            class="new-message-btn" 
+            (click)="startNewMessage()"
+            matTooltip="New Message"
+            aria-label="Start new message">
+      <mat-icon>add_comment</mat-icon>
+    </button>
+  </div>
+
+  <!-- Search bar -->
+  <div class="thread-search">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search messages</mat-label>
+      <input matInput 
+             [(ngModel)]="searchQuery"
+             (ngModelChange)="onSearchChange($event)"
+             placeholder="Search conversations..."
+             aria-label="Search messages">
+      <mat-icon matPrefix>search</mat-icon>
+      <button mat-icon-button 
+              matSuffix 
+              *ngIf="searchQuery"
+              (click)="searchQuery = ''; onSearchChange('')"
+              aria-label="Clear search">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <!-- Thread list -->
+  <div class="thread-list" *ngIf="!isLoading">
+    <!-- Empty state -->
+    <div class="empty-state" *ngIf="filteredThreads.length === 0">
+      <mat-icon>forum</mat-icon>
+      <p *ngIf="!searchQuery">{{ showArchived ? 'No archived messages' : 'No messages yet' }}</p>
+      <p *ngIf="searchQuery">No messages found matching "{{ searchQuery }}"</p>
+      <button mat-raised-button 
+              color="primary" 
+              (click)="startNewMessage()"
+              *ngIf="!searchQuery && !showArchived">
+        <mat-icon>add</mat-icon>
+        Start a Conversation
+      </button>
+    </div>
+
+    <!-- Thread items -->
+    <div class="thread-items" *ngIf="filteredThreads.length > 0">
+      <div *ngFor="let thread of filteredThreads; trackBy: trackByThreadId"
+           class="thread-item"
+           [class.selected]="thread.id === selectedThreadId"
+           [class.unread]="thread.unreadCount > 0"
+           [class.muted]="thread.isMuted"
+           (click)="selectThread(thread)">
+        
+        <!-- Avatar -->
+        <div class="thread-avatar">
+          <img *ngIf="getParticipantAvatar(thread)" 
+               [src]="getParticipantAvatar(thread)" 
+               [alt]="getParticipantNames(thread)"
+               class="avatar-image">
+          <div *ngIf="!getParticipantAvatar(thread)" 
+               class="avatar-placeholder">
+            {{ getParticipantInitials(thread) }}
+          </div>
+          <span class="online-indicator" 
+                *ngIf="isParticipantOnline(thread)"
+                matTooltip="Online"></span>
+        </div>
+
+        <!-- Thread info -->
+        <div class="thread-info">
+          <div class="thread-header-row">
+            <span class="participant-names">{{ getParticipantNames(thread) }}</span>
+            <span class="timestamp">{{ formatTimestamp(thread.updatedAt) }}</span>
+          </div>
+          
+          <div class="thread-preview">
+            <span class="typing-indicator" *ngIf="thread.isTyping">
+              <mat-icon>more_horiz</mat-icon>
+              Typing...
+            </span>
+            <span *ngIf="!thread.isTyping" class="last-message">
+              {{ getLastMessagePreview(thread) }}
+            </span>
+          </div>
+
+          <!-- Thread badges -->
+          <div class="thread-badges">
+            <mat-chip-set aria-label="Thread status">
+              <mat-chip *ngIf="thread.unreadCount > 0" 
+                        class="unread-badge"
+                        [highlighted]="true">
+                {{ thread.unreadCount }}
+              </mat-chip>
+              <mat-chip *ngIf="thread.isMuted">
+                <mat-icon>notifications_off</mat-icon>
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="thread-actions" (click)="$event.stopPropagation()">
+          <button mat-icon-button 
+                  [matMenuTriggerFor]="threadMenu"
+                  aria-label="Thread options">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          
+          <mat-menu #threadMenu="matMenu">
+            <button mat-menu-item (click)="toggleMuteThread(thread.id, $event)">
+              <mat-icon>{{ thread.isMuted ? 'notifications_active' : 'notifications_off' }}</mat-icon>
+              <span>{{ thread.isMuted ? 'Unmute' : 'Mute' }}</span>
+            </button>
+            <button mat-menu-item (click)="archiveThread(thread.id, $event)">
+              <mat-icon>{{ showArchived ? 'unarchive' : 'archive' }}</mat-icon>
+              <span>{{ showArchived ? 'Unarchive' : 'Archive' }}</span>
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item (click)="deleteThread(thread.id, $event)" class="delete-action">
+              <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" *ngIf="isLoading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading messages...</p>
+  </div>
+</div>

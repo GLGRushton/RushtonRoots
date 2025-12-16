@@ -1,0 +1,204 @@
+<div class="chat-interface-container">
+  <!-- Empty state when no thread selected -->
+  <div class="empty-state" *ngIf="!thread">
+    <mat-icon>chat_bubble_outline</mat-icon>
+    <h3>Select a conversation</h3>
+    <p>Choose a conversation from the list to start messaging</p>
+  </div>
+
+  <!-- Chat interface when thread is selected -->
+  <div class="chat-interface" *ngIf="thread">
+    <!-- Chat header -->
+    <div class="chat-header">
+      <div class="header-info">
+        <h3 class="participant-name">{{ getParticipantName(thread.participants[0].id) }}</h3>
+        <span class="participant-status" *ngIf="thread.participants.length === 2">
+          {{ getOnlineStatus() }}
+        </span>
+        <span class="participant-count" *ngIf="thread.participants.length > 2">
+          {{ thread.participants.length }} participants
+        </span>
+      </div>
+    </div>
+
+    <!-- Messages list -->
+    <div class="messages-container" #messageList>
+      <div class="message-groups">
+        <!-- Date groups -->
+        <div *ngFor="let group of getMessagesGroupedByDate()" class="date-group">
+          <!-- Date divider -->
+          <div class="date-divider">
+            <span>{{ formatDate(group.date) }}</span>
+          </div>
+
+          <!-- Messages -->
+          <div *ngFor="let message of group.messages; trackBy: trackByMessageId" 
+               class="message-wrapper"
+               [class.own-message]="isOwnMessage(message)">
+            
+            <!-- Sender avatar (for received messages) -->
+            <div class="message-avatar" *ngIf="!isOwnMessage(message)">
+              <img *ngIf="getParticipantAvatar(message.senderId)" 
+                   [src]="getParticipantAvatar(message.senderId)" 
+                   [alt]="getParticipantName(message.senderId)"
+                   class="avatar-image">
+              <div *ngIf="!getParticipantAvatar(message.senderId)" 
+                   class="avatar-placeholder">
+                {{ getParticipantInitials(message.senderId) }}
+              </div>
+            </div>
+
+            <!-- Message bubble -->
+            <div class="message-bubble">
+              <!-- Sender name (for received messages) -->
+              <div class="message-sender" *ngIf="!isOwnMessage(message) && thread.participants.length > 2">
+                {{ getParticipantName(message.senderId) }}
+              </div>
+
+              <!-- Message content -->
+              <div class="message-content" *ngIf="editingMessageId !== message.id">
+                {{ message.content }}
+              </div>
+
+              <div class="message-edit" *ngIf="editingMessageId === message.id">
+                <mat-form-field appearance="outline" class="edit-field">
+                  <textarea matInput 
+                            [(ngModel)]="editingContent"
+                            rows="2"
+                            (keydown.enter)="onEditEnter($event)"
+                            (keydown.escape)="cancelEdit()"></textarea>
+                </mat-form-field>
+                <div class="edit-actions">
+                  <button mat-button (click)="cancelEdit()">Cancel</button>
+                  <button mat-raised-button color="primary" (click)="saveEditedMessage()">Save</button>
+                </div>
+              </div>
+
+              <!-- Attachments -->
+              <div class="message-attachments" *ngIf="message.attachments && message.attachments.length > 0">
+                <div *ngFor="let attachment of message.attachments" class="attachment-item">
+                  <mat-icon>attach_file</mat-icon>
+                  <span class="attachment-name">{{ attachment.fileName }}</span>
+                  <span class="attachment-size">({{ formatFileSize(attachment.fileSize) }})</span>
+                </div>
+              </div>
+
+              <!-- Message footer -->
+              <div class="message-footer">
+                <span class="message-time">{{ formatMessageTime(message.timestamp) }}</span>
+                <span class="message-edited" *ngIf="message.isEdited">(edited)</span>
+                
+                <!-- Message status (for sent messages) -->
+                <span class="message-status" *ngIf="isOwnMessage(message)">
+                  <mat-icon *ngIf="getMessageStatus(message) === MessageStatus.SENDING">schedule</mat-icon>
+                  <mat-icon *ngIf="getMessageStatus(message) === MessageStatus.SENT">done</mat-icon>
+                  <mat-icon *ngIf="getMessageStatus(message) === MessageStatus.DELIVERED">done_all</mat-icon>
+                  <mat-icon *ngIf="getMessageStatus(message) === MessageStatus.READ" class="read">done_all</mat-icon>
+                  <mat-icon *ngIf="getMessageStatus(message) === MessageStatus.FAILED" class="failed">error</mat-icon>
+                </span>
+              </div>
+
+              <!-- Message actions -->
+              <div class="message-actions" *ngIf="isOwnMessage(message) && !editingMessageId">
+                <button mat-icon-button 
+                        [matMenuTriggerFor]="messageMenu"
+                        class="message-menu-btn"
+                        aria-label="Message options">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                
+                <mat-menu #messageMenu="matMenu">
+                  <button mat-menu-item (click)="startEditMessage(message)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                  </button>
+                  <button mat-menu-item (click)="deleteMessage(message.id)" class="delete-action">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                </mat-menu>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Typing indicator -->
+      <div class="typing-indicator" *ngIf="thread.isTyping && getTypingUsersDisplay()">
+        <div class="typing-avatar">
+          <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+        <span class="typing-text">{{ getTypingUsersDisplay() }}</span>
+      </div>
+    </div>
+
+    <!-- Message composition -->
+    <div class="message-composer" *ngIf="canSendMessages">
+      <!-- Attached files preview -->
+      <div class="attached-files" *ngIf="attachedFiles.length > 0">
+        <div *ngFor="let file of attachedFiles; let i = index" class="attached-file">
+          <mat-icon>attach_file</mat-icon>
+          <span class="file-name">{{ file.name }}</span>
+          <span class="file-size">({{ formatFileSize(file.size) }})</span>
+          <button mat-icon-button (click)="removeFile(i)" class="remove-file-btn">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Composition form -->
+      <div class="composer-form">
+        <!-- Attachment button -->
+        <button mat-icon-button 
+                (click)="selectFiles()"
+                matTooltip="Attach files"
+                class="attach-btn"
+                aria-label="Attach files">
+          <mat-icon>attach_file</mat-icon>
+        </button>
+
+        <!-- Hidden file input -->
+        <input type="file" 
+               #fileInput 
+               (change)="onFileSelected($event)"
+               multiple
+               style="display: none">
+
+        <!-- Message input -->
+        <mat-form-field appearance="outline" class="message-input">
+          <textarea matInput 
+                    [formControl]="messageControl"
+                    placeholder="Type a message..."
+                    rows="1"
+                    (keypress)="onKeyPress($event)"
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="1"
+                    cdkAutosizeMaxRows="5"
+                    aria-label="Message input"></textarea>
+          <mat-hint align="end">{{ getMessageCharacterCount() }}/2000</mat-hint>
+        </mat-form-field>
+
+        <!-- Send button -->
+        <button mat-fab 
+                color="primary"
+                (click)="sendMessage()"
+                [disabled]="!canSend()"
+                matTooltip="Send message (Enter)"
+                class="send-btn"
+                aria-label="Send message">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Cannot send message state -->
+    <div class="composer-disabled" *ngIf="!canSendMessages">
+      <mat-icon>block</mat-icon>
+      <p>You cannot send messages in this conversation</p>
+    </div>
+  </div>
+</div>

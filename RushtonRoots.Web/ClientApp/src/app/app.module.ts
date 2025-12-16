@@ -19,6 +19,7 @@ import { WikiModule } from './wiki/wiki.module';
 import { ContentModule } from './content/content.module';
 import { MediaGalleryModule } from './media-gallery/media-gallery.module';
 import { CalendarModule } from './calendar/calendar.module';
+import { MessagingModule } from './messaging/messaging.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -116,6 +117,12 @@ import { EventFormDialogComponent } from './calendar/components/event-form-dialo
 import { EventRsvpDialogComponent } from './calendar/components/event-rsvp-dialog/event-rsvp-dialog.component';
 import { EventDetailsDialogComponent } from './calendar/components/event-details-dialog/event-details-dialog.component';
 
+// Import Phase 8.3 Messaging & Notifications components for Angular Elements registration
+import { MessageThreadComponent } from './messaging/components/message-thread/message-thread.component';
+import { ChatInterfaceComponent } from './messaging/components/chat-interface/chat-interface.component';
+import { NotificationPanelComponent } from './messaging/components/notification-panel/notification-panel.component';
+import { MessageCompositionDialogComponent } from './messaging/components/message-composition-dialog/message-composition-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -137,7 +144,8 @@ import { EventDetailsDialogComponent } from './calendar/components/event-details
     WikiModule,
     ContentModule,
     MediaGalleryModule,
-    CalendarModule
+    CalendarModule,
+    MessagingModule
   ],
   providers: []
 })
@@ -372,6 +380,19 @@ export class AppModule {
 
     const eventDetailsDialogElement = createCustomElement(EventDetailsDialogComponent, { injector: this.injector });
     customElements.define('app-event-details-dialog', eventDetailsDialogElement);
+
+    // Register Phase 8.3 Messaging & Notifications components as Angular Elements
+    const messageThreadElement = createCustomElement(MessageThreadComponent, { injector: this.injector });
+    customElements.define('app-message-thread', messageThreadElement);
+
+    const chatInterfaceElement = createCustomElement(ChatInterfaceComponent, { injector: this.injector });
+    customElements.define('app-chat-interface', chatInterfaceElement);
+
+    const notificationPanelElement = createCustomElement(NotificationPanelComponent, { injector: this.injector });
+    customElements.define('app-notification-panel', notificationPanelElement);
+
+    const messageCompositionDialogElement = createCustomElement(MessageCompositionDialogComponent, { injector: this.injector });
+    customElements.define('app-message-composition-dialog', messageCompositionDialogElement);
   }
 
   ngDoBootstrap() {
