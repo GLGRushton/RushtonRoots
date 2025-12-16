@@ -1,0 +1,145 @@
+<div class="relationship-suggestions">
+  <div class="suggestions-header">
+    <div class="header-content">
+      <h2>
+        <mat-icon>lightbulb</mat-icon>
+        AI-Powered Relationship Suggestions
+      </h2>
+      <button mat-icon-button (click)="showHelp = !showHelp" matTooltip="How this works">
+        <mat-icon>help_outline</mat-icon>
+      </button>
+    </div>
+    <button mat-raised-button color="primary" (click)="onRefresh()" [disabled]="isLoading">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Help Text -->
+  <mat-card *ngIf="showHelp" class="help-card">
+    <mat-card-content>
+      <h3>
+        <mat-icon>info</mat-icon>
+        How AI Suggestions Work
+      </h3>
+      <p>
+        Our AI analyzes your family tree data, including names, dates, locations, and existing 
+        relationships to suggest potential parent-child connections. The confidence score 
+        indicates how certain the AI is about each suggestion.
+      </p>
+      <ul>
+        <li><strong>Very High (90%+):</strong> Strong evidence from multiple sources</li>
+        <li><strong>High (80-89%):</strong> Solid evidence with good matches</li>
+        <li><strong>Medium (70-79%):</strong> Reasonable evidence, worth reviewing</li>
+        <li><strong>Moderate (60-69%):</strong> Some evidence, may need verification</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Analyzing your family tree...</p>
+  </div>
+
+  <!-- Suggestions List -->
+  <div class="suggestions-list" *ngIf="!isLoading && suggestions.length > 0">
+    <mat-card *ngFor="let suggestion of suggestions" class="suggestion-card">
+      <!-- Confidence Badge -->
+      <div class="confidence-badge">
+        <mat-chip [color]="getConfidenceBadgeColor(suggestion.confidence)">
+          {{ suggestion.confidence }}%
+        </mat-chip>
+        <span class="confidence-level">{{ getConfidenceLevel(suggestion.confidence) }} Confidence</span>
+      </div>
+
+      <mat-card-content>
+        <!-- Relationship Display -->
+        <div class="relationship-display">
+          <!-- Parent -->
+          <div class="person-section">
+            <div class="avatar">
+              <img *ngIf="suggestion.parentPhotoUrl" 
+                   [src]="suggestion.parentPhotoUrl" 
+                   [alt]="suggestion.parentName">
+              <span *ngIf="!suggestion.parentPhotoUrl">{{ getInitials(suggestion.parentName) }}</span>
+            </div>
+            <div class="person-info">
+              <div class="person-name">{{ suggestion.parentName }}</div>
+              <div class="person-role">Parent</div>
+            </div>
+          </div>
+
+          <!-- Arrow -->
+          <div class="arrow-section">
+            <mat-icon>arrow_forward</mat-icon>
+            <mat-chip class="type-chip">{{ suggestion.suggestedType }}</mat-chip>
+          </div>
+
+          <!-- Child -->
+          <div class="person-section">
+            <div class="avatar">
+              <img *ngIf="suggestion.childPhotoUrl" 
+                   [src]="suggestion.childPhotoUrl" 
+                   [alt]="suggestion.childName">
+              <span *ngIf="!suggestion.childPhotoUrl">{{ getInitials(suggestion.childName) }}</span>
+            </div>
+            <div class="person-info">
+              <div class="person-name">{{ suggestion.childName }}</div>
+              <div class="person-role">Child</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reasoning -->
+        <div class="reasoning-section">
+          <div class="reasoning-header">
+            <mat-icon>psychology</mat-icon>
+            <strong>AI Reasoning:</strong>
+          </div>
+          <p>{{ suggestion.reasoning }}</p>
+        </div>
+
+        <!-- Sources -->
+        <div class="sources-section" *ngIf="suggestion.sources && suggestion.sources.length > 0">
+          <div class="sources-header">
+            <mat-icon>source</mat-icon>
+            <strong>Evidence Sources:</strong>
+          </div>
+          <div class="sources-list">
+            <mat-chip *ngFor="let source of suggestion.sources">
+              {{ source }}
+            </mat-chip>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <!-- Actions -->
+      <mat-card-actions>
+        <button mat-button (click)="onReject(suggestion)">
+          <mat-icon>close</mat-icon>
+          Reject
+        </button>
+        <div class="spacer"></div>
+        <button mat-raised-button color="primary" (click)="onAccept(suggestion)">
+          <mat-icon>check</mat-icon>
+          Accept & Create
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && suggestions.length === 0">
+    <mat-icon>search_off</mat-icon>
+    <h3>No Suggestions Available</h3>
+    <p>
+      The AI couldn't find any new relationship suggestions at this time. 
+      Try adding more people or details to your family tree.
+    </p>
+    <button mat-raised-button color="primary" (click)="onRefresh()">
+      <mat-icon>refresh</mat-icon>
+      Check Again
+    </button>
+  </div>
+</div>

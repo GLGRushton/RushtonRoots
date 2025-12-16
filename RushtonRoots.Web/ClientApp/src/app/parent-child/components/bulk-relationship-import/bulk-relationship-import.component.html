@@ -1,0 +1,191 @@
+<div class="bulk-relationship-import">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>upload_file</mat-icon>
+        Bulk Relationship Import
+      </mat-card-title>
+      <button mat-icon-button (click)="showHelp = !showHelp" matTooltip="Help">
+        <mat-icon>help_outline</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Help Section -->
+      <div class="help-section" *ngIf="showHelp">
+        <mat-icon>info</mat-icon>
+        <div>
+          <h4>How to Import Relationships</h4>
+          <p><strong>CSV Import:</strong> Upload a CSV file with columns: Parent Name, Child Name, Relationship Type, Notes</p>
+          <p><strong>Manual Entry:</strong> Add relationships one by one using the form below</p>
+          <p><strong>Relationship Types:</strong> biological, adopted, step, guardian, foster, unknown</p>
+          <button mat-button color="primary" (click)="downloadTemplate()">
+            <mat-icon>download</mat-icon>
+            Download CSV Template
+          </button>
+        </div>
+      </div>
+
+      <!-- Import Method Selection -->
+      <div class="method-selection">
+        <mat-button-toggle-group [(value)]="importMethod">
+          <mat-button-toggle value="manual" (click)="onMethodChange('manual')">
+            <mat-icon>edit</mat-icon>
+            Manual Entry
+          </mat-button-toggle>
+          <mat-button-toggle value="csv" (click)="onMethodChange('csv')">
+            <mat-icon>upload_file</mat-icon>
+            CSV Upload
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- CSV Upload -->
+      <div class="csv-upload-section" *ngIf="importMethod === 'csv'">
+        <div class="upload-area">
+          <input type="file"
+                 #fileInput
+                 accept=".csv"
+                 (change)="onFileSelected($event)"
+                 style="display: none;">
+          
+          <button mat-raised-button color="primary" (click)="fileInput.click()">
+            <mat-icon>cloud_upload</mat-icon>
+            Select CSV File
+          </button>
+          
+          <div class="file-info" *ngIf="csvFile">
+            <mat-icon>description</mat-icon>
+            <span>{{ csvFile.name }}</span>
+            <span class="file-size">({{ (csvFile.size / 1024).toFixed(2) }} KB)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual Entry Form -->
+      <form [formGroup]="importForm" *ngIf="importMethod === 'manual' && !importResult">
+        <div class="relationships-table">
+          <table mat-table [dataSource]="relationships.controls">
+            <!-- Parent Name Column -->
+            <ng-container matColumnDef="parentName">
+              <th mat-header-cell *matHeaderCellDef>Parent Name *</th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field appearance="outline" class="table-field">
+                  <input matInput [formControl]="$any(relationships.at(i).get('parentName'))" 
+                         placeholder="Enter parent name">
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Child Name Column -->
+            <ng-container matColumnDef="childName">
+              <th mat-header-cell *matHeaderCellDef>Child Name *</th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field appearance="outline" class="table-field">
+                  <input matInput [formControl]="$any(relationships.at(i).get('childName'))" 
+                         placeholder="Enter child name">
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Relationship Type Column -->
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>Type *</th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field appearance="outline" class="table-field">
+                  <mat-select [formControl]="$any(relationships.at(i).get('relationshipType'))">
+                    <mat-option value="biological">Biological</mat-option>
+                    <mat-option value="adopted">Adopted</mat-option>
+                    <mat-option value="step">Step</mat-option>
+                    <mat-option value="guardian">Guardian</mat-option>
+                    <mat-option value="foster">Foster</mat-option>
+                    <mat-option value="unknown">Unknown</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Notes Column -->
+            <ng-container matColumnDef="notes">
+              <th mat-header-cell *matHeaderCellDef>Notes</th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <mat-form-field appearance="outline" class="table-field">
+                  <input matInput [formControl]="$any(relationships.at(i).get('notes'))" 
+                         placeholder="Optional notes">
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <button mat-icon-button 
+                        color="warn"
+                        (click)="removeRelationship(i)"
+                        [disabled]="relationships.length === 1"
+                        matTooltip="Remove">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="['parentName', 'childName', 'type', 'notes', 'actions']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['parentName', 'childName', 'type', 'notes', 'actions']"></tr>
+          </table>
+        </div>
+
+        <button mat-button (click)="addRelationship()" class="add-row-button">
+          <mat-icon>add</mat-icon>
+          Add Another Relationship
+        </button>
+      </form>
+
+      <!-- Import Result -->
+      <div class="import-result" *ngIf="importResult">
+        <div class="result-summary" 
+             [class.success]="importResult.failed === 0"
+             [class.partial]="importResult.failed > 0">
+          <mat-icon>{{ importResult.failed === 0 ? 'check_circle' : 'warning' }}</mat-icon>
+          <div class="summary-content">
+            <h3>Import Complete</h3>
+            <p>
+              <strong>{{ importResult.successful }}</strong> of <strong>{{ importResult.total }}</strong> relationships imported successfully
+            </p>
+          </div>
+        </div>
+
+        <!-- Errors -->
+        <div class="import-errors" *ngIf="importResult.errors.length > 0">
+          <h4>Errors ({{ importResult.errors.length }})</h4>
+          <div class="error-item" *ngFor="let error of importResult.errors">
+            <mat-icon>error</mat-icon>
+            <div>
+              <strong>Row {{ error.row }}:</strong>
+              {{ error.parentName }} → {{ error.childName }}
+              <p>{{ error.error }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <!-- Actions -->
+    <mat-card-actions>
+      <button mat-button (click)="onReset()" *ngIf="importResult">
+        <mat-icon>refresh</mat-icon>
+        Import More
+      </button>
+      <div class="spacer"></div>
+      <button mat-raised-button 
+              color="primary"
+              (click)="onImport()"
+              [disabled]="!importForm.valid || isImporting || !!importResult"
+              *ngIf="!importResult">
+        <mat-icon *ngIf="!isImporting">upload</mat-icon>
+        <mat-spinner *ngIf="isImporting" diameter="20"></mat-spinner>
+        {{ isImporting ? 'Importing...' : 'Import Relationships' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

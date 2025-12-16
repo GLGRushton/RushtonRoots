@@ -1,0 +1,53 @@
+<div class="relationship-validation">
+  <mat-expansion-panel [expanded]="expanded">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon [color]="statusColor">{{ statusIcon }}</mat-icon>
+        <span>{{ statusMessage }}</span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="validation-content">
+      <!-- Errors -->
+      <div class="errors-section" *ngIf="validationResult.errors.length > 0">
+        <h4>
+          <mat-icon>error</mat-icon>
+          Errors
+        </h4>
+        <div class="validation-item error" *ngFor="let error of validationResult.errors">
+          <div class="item-header">
+            <mat-icon>error</mat-icon>
+            <strong>{{ error.message }}</strong>
+          </div>
+          <p *ngIf="error.details">{{ error.details }}</p>
+          <mat-chip class="error-type-chip">{{ error.type }}</mat-chip>
+        </div>
+      </div>
+
+      <!-- Warnings -->
+      <div class="warnings-section" *ngIf="validationResult.warnings.length > 0">
+        <h4>
+          <mat-icon>warning</mat-icon>
+          Warnings
+        </h4>
+        <div class="validation-item warning" *ngFor="let warning of validationResult.warnings">
+          <div class="item-header">
+            <mat-icon>warning</mat-icon>
+            <strong>{{ warning.message }}</strong>
+          </div>
+          <p *ngIf="warning.details">{{ warning.details }}</p>
+          <mat-chip class="warning-type-chip">{{ warning.type }}</mat-chip>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div class="success-section" *ngIf="validationStatus === 'success'">
+        <mat-icon>check_circle</mat-icon>
+        <div>
+          <h4>Validation Successful</h4>
+          <p>This relationship has passed all validation checks.</p>
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</div>
