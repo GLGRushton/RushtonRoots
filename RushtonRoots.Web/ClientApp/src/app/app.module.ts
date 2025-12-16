@@ -13,6 +13,7 @@ import { SharedModule } from './shared/shared.module';
 import { PersonModule } from './person/person.module';
 import { HouseholdModule } from './household/household.module';
 import { PartnershipModule } from './partnership/partnership.module';
+import { ParentChildModule } from './parent-child/parent-child.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -61,6 +62,15 @@ import { PartnershipCardComponent } from './partnership/components/partnership-c
 import { PartnershipFormComponent } from './partnership/components/partnership-form/partnership-form.component';
 import { PartnershipTimelineComponent } from './partnership/components/partnership-timeline/partnership-timeline.component';
 
+// Import Phase 5.2 Parent-Child Relationships components for Angular Elements registration
+import { ParentChildIndexComponent } from './parent-child/components/parent-child-index/parent-child-index.component';
+import { ParentChildCardComponent } from './parent-child/components/parent-child-card/parent-child-card.component';
+import { ParentChildFormComponent } from './parent-child/components/parent-child-form/parent-child-form.component';
+import { FamilyTreeMiniComponent } from './parent-child/components/family-tree-mini/family-tree-mini.component';
+import { RelationshipValidationComponent } from './parent-child/components/relationship-validation/relationship-validation.component';
+import { RelationshipSuggestionsComponent } from './parent-child/components/relationship-suggestions/relationship-suggestions.component';
+import { BulkRelationshipImportComponent } from './parent-child/components/bulk-relationship-import/bulk-relationship-import.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,7 +86,8 @@ import { PartnershipTimelineComponent } from './partnership/components/partnersh
     SharedModule,
     PersonModule,
     HouseholdModule,
-    PartnershipModule
+    PartnershipModule,
+    ParentChildModule
   ],
   providers: []
 })
@@ -199,6 +210,28 @@ export class AppModule {
 
     const partnershipTimelineElement = createCustomElement(PartnershipTimelineComponent, { injector: this.injector });
     customElements.define('app-partnership-timeline', partnershipTimelineElement);
+
+    // Register Phase 5.2 Parent-Child Relationships components as Angular Elements
+    const parentChildIndexElement = createCustomElement(ParentChildIndexComponent, { injector: this.injector });
+    customElements.define('app-parent-child-index', parentChildIndexElement);
+
+    const parentChildCardElement = createCustomElement(ParentChildCardComponent, { injector: this.injector });
+    customElements.define('app-parent-child-card', parentChildCardElement);
+
+    const parentChildFormElement = createCustomElement(ParentChildFormComponent, { injector: this.injector });
+    customElements.define('app-parent-child-form', parentChildFormElement);
+
+    const familyTreeMiniElement = createCustomElement(FamilyTreeMiniComponent, { injector: this.injector });
+    customElements.define('app-family-tree-mini', familyTreeMiniElement);
+
+    const relationshipValidationElement = createCustomElement(RelationshipValidationComponent, { injector: this.injector });
+    customElements.define('app-relationship-validation', relationshipValidationElement);
+
+    const relationshipSuggestionsElement = createCustomElement(RelationshipSuggestionsComponent, { injector: this.injector });
+    customElements.define('app-relationship-suggestions', relationshipSuggestionsElement);
+
+    const bulkRelationshipImportElement = createCustomElement(BulkRelationshipImportComponent, { injector: this.injector });
+    customElements.define('app-bulk-relationship-import', bulkRelationshipImportElement);
   }
 
   ngDoBootstrap() {

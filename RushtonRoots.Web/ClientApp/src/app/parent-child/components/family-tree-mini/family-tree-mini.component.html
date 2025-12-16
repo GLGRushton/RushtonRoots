@@ -1,0 +1,144 @@
+<div class="family-tree-mini" [class.compact]="compact">
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading family tree...</p>
+  </div>
+
+  <!-- Tree Display -->
+  <div class="tree-container" *ngIf="!isLoading && rootNode">
+    <!-- Grandparents (Generation -2) -->
+    <div class="generation-row grandparents-row" *ngIf="rootNode.parents && rootNode.parents.length > 0">
+      <div class="generation-label">Grandparents</div>
+      <div class="persons-row">
+        <ng-container *ngFor="let parent of rootNode.parents">
+          <ng-container *ngFor="let grandparent of parent.parents || []">
+            <div class="person-card" (click)="onPersonClick(grandparent.id)">
+              <div class="avatar-container">
+                <img *ngIf="grandparent.photoUrl" 
+                     [src]="grandparent.photoUrl" 
+                     [alt]="grandparent.name"
+                     class="avatar">
+                <div *ngIf="!grandparent.photoUrl" class="avatar avatar-placeholder">
+                  {{ getInitials(grandparent.name) }}
+                </div>
+              </div>
+              <div class="person-info">
+                <div class="person-name">{{ grandparent.name }}</div>
+                <div class="person-years">{{ getLifeSpan(grandparent) }}</div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Parents (Generation -1) -->
+    <div class="generation-row parents-row" *ngIf="rootNode.parents && rootNode.parents.length > 0">
+      <div class="generation-label">Parents</div>
+      <div class="persons-row">
+        <div class="person-card" 
+             *ngFor="let parent of rootNode.parents"
+             (click)="onPersonClick(parent.id)">
+          <div class="avatar-container">
+            <img *ngIf="parent.photoUrl" 
+                 [src]="parent.photoUrl" 
+                 [alt]="parent.name"
+                 class="avatar">
+            <div *ngIf="!parent.photoUrl" class="avatar avatar-placeholder">
+              {{ getInitials(parent.name) }}
+            </div>
+          </div>
+          <div class="person-info">
+            <div class="person-name">{{ parent.name }}</div>
+            <div class="person-years">{{ getLifeSpan(parent) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spouses (Same Generation) -->
+    <div class="generation-row spouses-row" 
+         *ngIf="showSpouses && rootNode.spouses && rootNode.spouses.length > 0">
+      <div class="generation-label">Spouse(s)</div>
+      <div class="persons-row">
+        <div class="person-card" 
+             *ngFor="let spouse of rootNode.spouses"
+             (click)="onPersonClick(spouse.id)">
+          <div class="avatar-container">
+            <img *ngIf="spouse.photoUrl" 
+                 [src]="spouse.photoUrl" 
+                 [alt]="spouse.name"
+                 class="avatar">
+            <div *ngIf="!spouse.photoUrl" class="avatar avatar-placeholder">
+              {{ getInitials(spouse.name) }}
+            </div>
+          </div>
+          <div class="person-info">
+            <div class="person-name">{{ spouse.name }}</div>
+            <div class="person-years">{{ getLifeSpan(spouse) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Focus Person (Generation 0) -->
+    <div class="generation-row focus-row">
+      <div class="generation-label">Focus</div>
+      <div class="persons-row">
+        <div class="person-card focus-person" (click)="onPersonClick(rootNode.id)">
+          <div class="avatar-container">
+            <img *ngIf="rootNode.photoUrl" 
+                 [src]="rootNode.photoUrl" 
+                 [alt]="rootNode.name"
+                 class="avatar">
+            <div *ngIf="!rootNode.photoUrl" class="avatar avatar-placeholder">
+              {{ getInitials(rootNode.name) }}
+            </div>
+            <mat-icon class="focus-icon">star</mat-icon>
+          </div>
+          <div class="person-info">
+            <div class="person-name">{{ rootNode.name }}</div>
+            <div class="person-years">{{ getLifeSpan(rootNode) }}</div>
+            <div class="person-age" *ngIf="getAge(rootNode)">
+              Age {{ getAge(rootNode) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Children (Generation 1) -->
+    <div class="generation-row children-row" *ngIf="rootNode.children && rootNode.children.length > 0">
+      <div class="generation-label">Children</div>
+      <div class="persons-row">
+        <div class="person-card" 
+             *ngFor="let child of rootNode.children"
+             (click)="onPersonClick(child.id)">
+          <div class="avatar-container">
+            <img *ngIf="child.photoUrl" 
+                 [src]="child.photoUrl" 
+                 [alt]="child.name"
+                 class="avatar">
+            <div *ngIf="!child.photoUrl" class="avatar avatar-placeholder">
+              {{ getInitials(child.name) }}
+            </div>
+          </div>
+          <div class="person-info">
+            <div class="person-name">{{ child.name }}</div>
+            <div class="person-years">{{ getLifeSpan(child) }}</div>
+            <div class="person-age" *ngIf="getAge(child)">
+              Age {{ getAge(child) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && !rootNode">
+    <mat-icon>account_tree</mat-icon>
+    <p>No family tree data available</p>
+  </div>
+</div>

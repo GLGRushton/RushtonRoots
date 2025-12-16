@@ -1,0 +1,100 @@
+<mat-card [class]="'parent-child-card elevation-' + elevation" [class.verified]="relationship.isVerified">
+  <!-- Verification Badge -->
+  <div class="verification-badge" *ngIf="relationship.isVerified">
+    <mat-icon class="verified-icon">verified</mat-icon>
+  </div>
+
+  <!-- Confidence Badge for AI Suggestions -->
+  <div class="confidence-badge" *ngIf="relationship.confidence !== undefined">
+    <mat-chip [color]="getConfidenceBadgeColor()">
+      {{ relationship.confidence }}% confident
+    </mat-chip>
+  </div>
+
+  <mat-card-content>
+    <!-- Relationship Display -->
+    <div class="relationship-container">
+      <!-- Parent Section -->
+      <div class="person-section parent-section">
+        <div class="avatar-container">
+          <img *ngIf="relationship.parentPhotoUrl" 
+               [src]="relationship.parentPhotoUrl" 
+               [alt]="relationship.parentName"
+               class="avatar">
+          <div *ngIf="!relationship.parentPhotoUrl" class="avatar avatar-placeholder">
+            {{ parentInitials }}
+          </div>
+        </div>
+        <div class="person-info">
+          <h3 class="person-name">{{ relationship.parentName }}</h3>
+          <p class="person-role">Parent</p>
+        </div>
+      </div>
+
+      <!-- Relationship Indicator -->
+      <div class="relationship-indicator">
+        <mat-icon 
+          [matTooltip]="relationshipTypeConfig.description"
+          [style.color]="relationshipTypeConfig.color === 'primary' ? '#2e7d32' : 
+                         relationshipTypeConfig.color === 'accent' ? '#66bb6a' : '#d32f2f'">
+          {{ relationshipTypeConfig.icon }}
+        </mat-icon>
+        <mat-chip 
+          [color]="relationshipTypeConfig.color"
+          class="relationship-type-chip">
+          {{ relationship.relationshipTypeDisplay }}
+        </mat-chip>
+      </div>
+
+      <!-- Child Section -->
+      <div class="person-section child-section">
+        <div class="avatar-container">
+          <img *ngIf="relationship.childPhotoUrl" 
+               [src]="relationship.childPhotoUrl" 
+               [alt]="relationship.childName"
+               class="avatar">
+          <div *ngIf="!relationship.childPhotoUrl" class="avatar avatar-placeholder">
+            {{ childInitials }}
+          </div>
+        </div>
+        <div class="person-info">
+          <h3 class="person-name">{{ relationship.childName }}</h3>
+          <p class="person-role">Child</p>
+          <p class="person-age" *ngIf="ageDisplay">{{ ageDisplay }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Birth Date Display -->
+    <div class="metadata" *ngIf="relationship.childBirthDate">
+      <mat-icon class="metadata-icon">cake</mat-icon>
+      <span>Born: {{ relationship.childBirthDate | date:'mediumDate' }}</span>
+    </div>
+  </mat-card-content>
+
+  <!-- Actions -->
+  <mat-card-actions *ngIf="showActions">
+    <button mat-button color="primary" (click)="onView()" matTooltip="View Details">
+      <mat-icon>visibility</mat-icon>
+      View
+    </button>
+    <button mat-button color="accent" (click)="onEdit()" matTooltip="Edit Relationship">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="moreMenu" matTooltip="More Actions">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #moreMenu="matMenu">
+      <button mat-menu-item (click)="onVerify()" *ngIf="!relationship.isVerified">
+        <mat-icon>verified</mat-icon>
+        <span>Mark as Verified</span>
+      </button>
+      <button mat-menu-item (click)="onDelete()">
+        <mat-icon color="warn">delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>

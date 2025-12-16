@@ -1,0 +1,105 @@
+<div class="parent-child-index">
+  <!-- Header -->
+  <div class="index-header">
+    <h1>Parent-Child Relationships</h1>
+    <button mat-raised-button color="primary" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+      Add Relationship
+    </button>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="search-filter-section">
+    <mat-card>
+      <mat-card-content>
+        <div class="filter-row">
+          <!-- Search -->
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search</mat-label>
+            <input matInput 
+                   [formControl]="searchControl" 
+                   placeholder="Search by parent or child name...">
+            <mat-icon matPrefix>search</mat-icon>
+            <button *ngIf="searchControl.value" 
+                    matSuffix 
+                    mat-icon-button 
+                    (click)="searchControl.setValue('')">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <!-- Relationship Type Filter -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Relationship Type</mat-label>
+            <mat-select [(ngModel)]="selectedType" (selectionChange)="onTypeFilterChange()">
+              <mat-option value="">All Types</mat-option>
+              <mat-option *ngFor="let type of relationshipTypes" [value]="type.value">
+                <mat-icon [style.color]="type.color === 'primary' ? '#2e7d32' : '#66bb6a'">
+                  {{ type.icon }}
+                </mat-icon>
+                {{ type.display }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Sort -->
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Sort By</mat-label>
+            <mat-select [(ngModel)]="sortOption" (selectionChange)="onSortChange()">
+              <mat-option *ngFor="let option of sortOptions" [value]="option.value">
+                {{ option.display }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Verified Filter -->
+          <div class="verified-filter">
+            <mat-checkbox [(ngModel)]="verifiedOnly" (change)="onVerifiedFilterChange()">
+              Verified Only
+            </mat-checkbox>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Results Summary -->
+  <div class="results-summary" *ngIf="!isLoading">
+    <span>Showing {{ filteredRelationships.length }} of {{ allRelationships.length }} relationships</span>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Loading relationships...</p>
+  </div>
+
+  <!-- Relationship Cards Grid -->
+  <div class="relationships-grid" 
+       *ngIf="!isLoading && filteredRelationships.length > 0"
+       [style.grid-template-columns]="getGridColumns()">
+    <app-parent-child-card
+      *ngFor="let relationship of filteredRelationships"
+      [relationship]="relationship"
+      [elevation]="2"
+      [showActions]="true"
+      (action)="onRelationshipAction($event)">
+    </app-parent-child-card>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && filteredRelationships.length === 0">
+    <mat-icon>family_restroom</mat-icon>
+    <h2>No Relationships Found</h2>
+    <p *ngIf="searchControl.value || selectedType || verifiedOnly">
+      Try adjusting your filters to see more results.
+    </p>
+    <p *ngIf="!searchControl.value && !selectedType && !verifiedOnly">
+      Start by adding your first parent-child relationship.
+    </p>
+    <button mat-raised-button color="primary" (click)="onCreate()">
+      <mat-icon>add</mat-icon>
+      Add Relationship
+    </button>
+  </div>
+</div>

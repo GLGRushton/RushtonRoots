@@ -1,0 +1,146 @@
+.parent-child-index {
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+.index-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 500;
+    color: #212121;
+  }
+
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+}
+
+.search-filter-section {
+  margin-bottom: 24px;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 16px;
+  align-items: center;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.search-field {
+  width: 100%;
+}
+
+.filter-field {
+  width: 100%;
+}
+
+.verified-filter {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+
+  @media (max-width: 1200px) {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 768px) {
+    grid-column: span 1;
+  }
+}
+
+.results-summary {
+  margin-bottom: 16px;
+  color: #616161;
+  font-size: 14px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  gap: 16px;
+
+  p {
+    color: #757575;
+    margin: 0;
+  }
+}
+
+.relationships-grid {
+  display: grid;
+  gap: 24px;
+  margin-bottom: 24px;
+
+  @media (max-width: 768px) {
+    gap: 16px;
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+
+  mat-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    color: #e0e0e0;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 400;
+    color: #616161;
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    color: #757575;
+    max-width: 400px;
+  }
+
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
