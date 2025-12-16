@@ -1,0 +1,136 @@
+<div class="content-grid">
+  <!-- Header -->
+  <div class="content-grid__header">
+    <h2 class="content-grid__title">{{ getContentTypeLabel() }}</h2>
+    <span class="content-grid__count">{{ filteredItems.length }} {{ filteredItems.length === 1 ? 'item' : 'items' }}</span>
+  </div>
+
+  <!-- Filters and Sort -->
+  <div class="content-grid__controls" *ngIf="showFilters || showSort">
+    <mat-card class="content-grid__filter-card">
+      <!-- Search and Sort Bar -->
+      <div class="content-grid__filter-bar">
+        <!-- Search Input -->
+        <mat-form-field appearance="outline" class="content-grid__search">
+          <mat-label>Search {{ getContentTypeLabel() }}</mat-label>
+          <input matInput
+                 [value]="filters.searchText"
+                 (input)="onSearchChange($any($event.target).value)"
+                 placeholder="Search by title, description, or tags...">
+          <mat-icon matPrefix>search</mat-icon>
+          <button mat-icon-button matSuffix *ngIf="filters.searchText" (click)="onSearchChange('')">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Sort Dropdown -->
+        <mat-form-field appearance="outline" class="content-grid__sort" *ngIf="showSort">
+          <mat-label>Sort by</mat-label>
+          <mat-select [(value)]="currentSort" (selectionChange)="onSortChange(currentSort)">
+            <mat-option *ngFor="let option of sortOptions" [value]="option.value">
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>sort</mat-icon>
+        </mat-form-field>
+
+        <!-- Advanced Filters Toggle -->
+        <button mat-stroked-button (click)="toggleAdvancedFilters()" class="content-grid__filter-toggle">
+          <mat-icon>{{ showAdvancedFilters ? 'expand_less' : 'tune' }}</mat-icon>
+          {{ showAdvancedFilters ? 'Hide' : 'Advanced' }} Filters
+        </button>
+
+        <!-- Clear Filters -->
+        <button mat-stroked-button (click)="clearFilters()" *ngIf="filters.searchText || filters.categoryId || filters.featured !== undefined">
+          <mat-icon>clear_all</mat-icon>
+          Clear
+        </button>
+      </div>
+
+      <!-- Advanced Filters -->
+      <div class="content-grid__advanced-filters" *ngIf="showAdvancedFilters">
+        <mat-divider></mat-divider>
+        <div class="advanced-filters-content">
+          <!-- Featured Only -->
+          <mat-checkbox [(ngModel)]="filters.featured" (change)="applyFiltersAndSort()">
+            Featured Only
+          </mat-checkbox>
+
+          <!-- Category Filter (placeholder - would be populated with actual categories) -->
+          <mat-form-field appearance="outline">
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="filters.categoryId" (selectionChange)="applyFiltersAndSort()">
+              <mat-option [value]="undefined">All Categories</mat-option>
+              <!-- Categories would be dynamically loaded -->
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Results Summary -->
+  <div class="content-grid__summary" *ngIf="filters.searchText || filters.categoryId || filters.featured !== undefined">
+    <p>Showing {{ filteredItems.length }} of {{ items.length }} {{ getContentTypeLabel().toLowerCase() }}</p>
+  </div>
+
+  <!-- Grid -->
+  <div class="content-grid__grid" [style.grid-template-columns]="'repeat(' + columns + ', 1fr)'">
+    <!-- Recipe Cards -->
+    <ng-container *ngIf="isRecipe(filteredItems[0])">
+      <div *ngFor="let item of filteredItems" class="content-grid__item">
+        <app-recipe-card
+          [recipe]="$any(item)"
+          [canEdit]="canEdit"
+          (viewRecipe)="onViewItem($event)"
+          (editRecipe)="onEditItem($event)"
+          (deleteRecipe)="onDeleteItem($event)">
+        </app-recipe-card>
+      </div>
+    </ng-container>
+
+    <!-- Story Cards -->
+    <ng-container *ngIf="isStory(filteredItems[0])">
+      <div *ngFor="let item of filteredItems" class="content-grid__item">
+        <app-story-card
+          [story]="$any(item)"
+          [canEdit]="canEdit"
+          (viewStory)="onViewItem($event)"
+          (editStory)="onEditItem($event)"
+          (deleteStory)="onDeleteItem($event)">
+        </app-story-card>
+      </div>
+    </ng-container>
+
+    <!-- Tradition Cards -->
+    <ng-container *ngIf="isTradition(filteredItems[0])">
+      <div *ngFor="let item of filteredItems" class="content-grid__item">
+        <app-tradition-card
+          [tradition]="$any(item)"
+          [canEdit]="canEdit"
+          (viewTradition)="onViewItem($event)"
+          (editTradition)="onEditItem($event)"
+          (deleteTradition)="onDeleteItem($event)">
+        </app-tradition-card>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Empty State -->
+  <div class="content-grid__empty" *ngIf="filteredItems.length === 0">
+    <mat-icon>{{ contentType === ContentType.Recipe ? 'restaurant_menu' : contentType === ContentType.Story ? 'auto_stories' : 'celebration' }}</mat-icon>
+    <h3>No {{ getContentTypeLabel() }} Found</h3>
+    <p *ngIf="filters.searchText || filters.categoryId">Try adjusting your filters to see more results.</p>
+    <p *ngIf="!filters.searchText && !filters.categoryId">No {{ getContentTypeLabel().toLowerCase() }} have been added yet.</p>
+    <button mat-raised-button color="primary" *ngIf="canEdit && !filters.searchText && !filters.categoryId">
+      <mat-icon>add</mat-icon>
+      Add {{ contentType === ContentType.Recipe ? 'Recipe' : contentType === ContentType.Story ? 'Story' : 'Tradition' }}
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="content-grid__loading" *ngIf="items.length === 0 && filteredItems.length === 0">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading {{ getContentTypeLabel().toLowerCase() }}...</p>
+  </div>
+</div>

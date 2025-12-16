@@ -1,0 +1,330 @@
+<div class="recipe-details" [class.print-view]="isPrintView">
+  <!-- Header -->
+  <div class="recipe-details__header">
+    <div class="recipe-details__title-section">
+      <h1 class="recipe-details__title">{{ recipe.title }}</h1>
+      <div class="recipe-details__rating">
+        <mat-icon *ngFor="let star of getStars()"
+                  [class.filled]="isStarFilled(star)"
+                  class="recipe-details__star">
+          {{ isStarFilled(star) ? 'star' : 'star_border' }}
+        </mat-icon>
+        <span class="recipe-details__rating-text">{{ recipe.averageRating.toFixed(1) }}</span>
+        <span class="recipe-details__rating-count">({{ recipe.ratings.length }} ratings)</span>
+      </div>
+      <p class="recipe-details__description">{{ recipe.description }}</p>
+    </div>
+
+    <div class="recipe-details__actions" *ngIf="!isPrintView">
+      <button mat-raised-button color="primary" (click)="onPrint()">
+        <mat-icon>print</mat-icon>
+        Print
+      </button>
+      <button mat-raised-button *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item *ngIf="canEdit" (click)="onDelete()">
+          <mat-icon color="warn">delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Image -->
+  <div class="recipe-details__image-container">
+    <img [src]="recipe.imageUrl || 'assets/images/recipe-placeholder.jpg'"
+         [alt]="recipe.title"
+         class="recipe-details__image">
+  </div>
+
+  <!-- Meta Information -->
+  <mat-card class="recipe-details__meta">
+    <div class="recipe-details__meta-grid">
+      <div class="recipe-details__meta-item">
+        <mat-icon>schedule</mat-icon>
+        <div>
+          <div class="label">Prep Time</div>
+          <div class="value">{{ formatTime(recipe.prepTime) }}</div>
+        </div>
+      </div>
+      <div class="recipe-details__meta-item">
+        <mat-icon>local_fire_department</mat-icon>
+        <div>
+          <div class="label">Cook Time</div>
+          <div class="value">{{ formatTime(recipe.cookTime) }}</div>
+        </div>
+      </div>
+      <div class="recipe-details__meta-item">
+        <mat-icon>timer</mat-icon>
+        <div>
+          <div class="label">Total Time</div>
+          <div class="value">{{ formatTime(recipe.totalTime) }}</div>
+        </div>
+      </div>
+      <div class="recipe-details__meta-item">
+        <mat-icon>restaurant</mat-icon>
+        <div>
+          <div class="label">Servings</div>
+          <div class="value">{{ recipe.servings }}</div>
+        </div>
+      </div>
+      <div class="recipe-details__meta-item">
+        <mat-icon>signal_cellular_alt</mat-icon>
+        <div>
+          <div class="label">Difficulty</div>
+          <div class="value">
+            <mat-chip [style.background-color]="getDifficultyColor()">
+              {{ recipe.difficulty }}
+            </mat-chip>
+          </div>
+        </div>
+      </div>
+      <div class="recipe-details__meta-item" *ngIf="recipe.cuisine">
+        <mat-icon>public</mat-icon>
+        <div>
+          <div class="label">Cuisine</div>
+          <div class="value">{{ recipe.cuisine }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Origin and Tags -->
+    <div class="recipe-details__meta-footer">
+      <div *ngIf="recipe.origin">
+        <mat-icon>favorite</mat-icon>
+        <strong>Origin:</strong> {{ recipe.origin }}
+        <span *ngIf="recipe.yearOrigin">({{ recipe.yearOrigin }})</span>
+      </div>
+      <div *ngIf="recipe.tags.length > 0" class="recipe-details__tags">
+        <mat-chip-set>
+          <mat-chip *ngFor="let tag of recipe.tags">{{ tag }}</mat-chip>
+        </mat-chip-set>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Tabs (hide in print view) -->
+  <mat-tab-group *ngIf="!isPrintView" [(selectedIndex)]="selectedTab" class="recipe-details__tabs">
+    <!-- Recipe Tab -->
+    <mat-tab label="Recipe">
+      <div class="recipe-details__content">
+        <!-- Serving Size Adjuster -->
+        <div class="recipe-details__serving-adjuster">
+          <span>Adjust servings:</span>
+          <button mat-icon-button (click)="decreaseServings()">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span class="serving-count">{{ getScaledServings() }}</span>
+          <button mat-icon-button (click)="increaseServings()">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-button (click)="resetServings()" *ngIf="servingMultiplier !== 1">
+            Reset
+          </button>
+        </div>
+
+        <!-- Ingredients -->
+        <mat-card class="recipe-details__section">
+          <h2>Ingredients</h2>
+          <ul class="recipe-details__ingredients">
+            <li *ngFor="let ingredient of recipe.ingredients">
+              <mat-checkbox></mat-checkbox>
+              <span>
+                {{ scaleQuantity(ingredient.quantity) }} {{ ingredient.unit }} {{ ingredient.ingredient }}
+                <span *ngIf="ingredient.notes" class="notes">({{ ingredient.notes }})</span>
+              </span>
+            </li>
+          </ul>
+        </mat-card>
+
+        <!-- Instructions -->
+        <mat-card class="recipe-details__section">
+          <h2>Instructions</h2>
+          <ol class="recipe-details__instructions">
+            <li *ngFor="let instruction of recipe.instructions">
+              <div class="step-number">Step {{ instruction.stepNumber }}</div>
+              <div class="step-content">
+                <p>{{ instruction.instruction }}</p>
+                <img *ngIf="instruction.imageUrl" [src]="instruction.imageUrl" [alt]="'Step ' + instruction.stepNumber">
+                <span *ngIf="instruction.duration" class="step-duration">
+                  <mat-icon>schedule</mat-icon>
+                  {{ formatTime(instruction.duration) }}
+                </span>
+              </div>
+            </li>
+          </ol>
+        </mat-card>
+
+        <!-- Nutrition Info -->
+        <mat-card *ngIf="recipe.nutritionInfo" class="recipe-details__section">
+          <h2>Nutrition Information</h2>
+          <div class="recipe-details__nutrition">
+            <div *ngIf="recipe.nutritionInfo.calories">
+              <strong>Calories:</strong> {{ recipe.nutritionInfo.calories }}
+            </div>
+            <div *ngIf="recipe.nutritionInfo.protein">
+              <strong>Protein:</strong> {{ recipe.nutritionInfo.protein }}g
+            </div>
+            <div *ngIf="recipe.nutritionInfo.carbohydrates">
+              <strong>Carbs:</strong> {{ recipe.nutritionInfo.carbohydrates }}g
+            </div>
+            <div *ngIf="recipe.nutritionInfo.fat">
+              <strong>Fat:</strong> {{ recipe.nutritionInfo.fat }}g
+            </div>
+            <div *ngIf="recipe.nutritionInfo.fiber">
+              <strong>Fiber:</strong> {{ recipe.nutritionInfo.fiber }}g
+            </div>
+            <div *ngIf="recipe.nutritionInfo.sodium">
+              <strong>Sodium:</strong> {{ recipe.nutritionInfo.sodium }}mg
+            </div>
+          </div>
+          <p *ngIf="recipe.nutritionInfo.servingSize" class="serving-size">
+            Per serving: {{ recipe.nutritionInfo.servingSize }}
+          </p>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Ratings Tab -->
+    <mat-tab label="Ratings & Reviews">
+      <div class="recipe-details__content">
+        <!-- Add Rating -->
+        <mat-card class="recipe-details__add-rating" *ngIf="!userHasRated">
+          <h3>Rate this recipe</h3>
+          <div class="rating-input">
+            <mat-icon *ngFor="let star of getStars()"
+                      (click)="newRating = star"
+                      [class.filled]="star <= newRating"
+                      class="rating-star">
+              {{ star <= newRating ? 'star' : 'star_border' }}
+            </mat-icon>
+          </div>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Write a review (optional)</mat-label>
+            <textarea matInput rows="3" [(ngModel)]="newReview"></textarea>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="onSubmitRating()" [disabled]="newRating === 0">
+            Submit Rating
+          </button>
+        </mat-card>
+
+        <!-- Ratings List -->
+        <div class="recipe-details__ratings-list">
+          <div *ngFor="let rating of recipe.ratings" class="rating-item">
+            <div class="rating-header">
+              <strong>{{ rating.userName }}</strong>
+              <div class="rating-stars">
+                <mat-icon *ngFor="let star of getStars()"
+                          [class.filled]="star <= rating.rating"
+                          class="rating-star-small">
+                  {{ star <= rating.rating ? 'star' : 'star_border' }}
+                </mat-icon>
+              </div>
+              <span class="rating-date">{{ rating.createdDate | date:'mediumDate' }}</span>
+            </div>
+            <p *ngIf="rating.review">{{ rating.review }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Comments Tab -->
+    <mat-tab label="Comments">
+      <div class="recipe-details__content">
+        <!-- Add Comment -->
+        <mat-card class="recipe-details__add-comment">
+          <h3>Add a comment</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Your comment</mat-label>
+            <textarea matInput rows="3" [(ngModel)]="newComment"></textarea>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="onSubmitComment()" [disabled]="!newComment.trim()">
+            Post Comment
+          </button>
+        </mat-card>
+
+        <!-- Comments List -->
+        <div class="recipe-details__comments-list">
+          <div *ngFor="let comment of recipe.comments" class="comment-item">
+            <div class="comment-header">
+              <img [src]="comment.userAvatar || 'assets/images/default-avatar.png'"
+                   [alt]="comment.userName"
+                   class="comment-avatar">
+              <div>
+                <strong>{{ comment.userName }}</strong>
+                <span class="comment-date">{{ comment.createdDate | date:'medium' }}</span>
+              </div>
+            </div>
+            <p>{{ comment.comment }}</p>
+            <button mat-button (click)="startReply(comment.id)">
+              <mat-icon>reply</mat-icon>
+              Reply
+            </button>
+
+            <!-- Reply Form -->
+            <div *ngIf="replyToCommentId === comment.id" class="reply-form">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Your reply</mat-label>
+                <textarea matInput rows="2" [(ngModel)]="replyText"></textarea>
+              </mat-form-field>
+              <div class="reply-actions">
+                <button mat-raised-button color="primary" (click)="onSubmitReply(comment.id)" [disabled]="!replyText.trim()">
+                  Post Reply
+                </button>
+                <button mat-button (click)="cancelReply()">Cancel</button>
+              </div>
+            </div>
+
+            <!-- Replies -->
+            <div *ngIf="comment.replies && comment.replies.length > 0" class="comment-replies">
+              <div *ngFor="let reply of comment.replies" class="comment-item reply">
+                <div class="comment-header">
+                  <img [src]="reply.userAvatar || 'assets/images/default-avatar.png'"
+                       [alt]="reply.userName"
+                       class="comment-avatar">
+                  <div>
+                    <strong>{{ reply.userName }}</strong>
+                    <span class="comment-date">{{ reply.createdDate | date:'medium' }}</span>
+                  </div>
+                </div>
+                <p>{{ reply.comment }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Print View Content -->
+  <div *ngIf="isPrintView" class="print-content">
+    <h2>Ingredients</h2>
+    <ul>
+      <li *ngFor="let ingredient of recipe.ingredients">
+        {{ ingredient.quantity }} {{ ingredient.unit }} {{ ingredient.ingredient }}
+        <span *ngIf="ingredient.notes">({{ ingredient.notes }})</span>
+      </li>
+    </ul>
+
+    <h2>Instructions</h2>
+    <ol>
+      <li *ngFor="let instruction of recipe.instructions">
+        {{ instruction.instruction }}
+      </li>
+    </ol>
+
+    <div *ngIf="recipe.nutritionInfo">
+      <h2>Nutrition Information</h2>
+      <p *ngIf="recipe.nutritionInfo.calories">Calories: {{ recipe.nutritionInfo.calories }}</p>
+      <p *ngIf="recipe.nutritionInfo.protein">Protein: {{ recipe.nutritionInfo.protein }}g</p>
+      <p *ngIf="recipe.nutritionInfo.carbohydrates">Carbs: {{ recipe.nutritionInfo.carbohydrates }}g</p>
+      <p *ngIf="recipe.nutritionInfo.fat">Fat: {{ recipe.nutritionInfo.fat }}g</p>
+    </div>
+  </div>
+</div>

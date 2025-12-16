@@ -1,0 +1,127 @@
+<mat-card [class.mat-elevation-z0]="elevation === 0"
+          [class.mat-elevation-z2]="elevation === 2"
+          [class.mat-elevation-z4]="elevation === 4"
+          [class.mat-elevation-z8]="elevation === 8"
+          class="story-card">
+  <!-- Featured Badge -->
+  <div *ngIf="story.featured" class="story-card__featured-badge">
+    <mat-icon>stars</mat-icon>
+    <span>Featured</span>
+  </div>
+
+  <!-- Story Image -->
+  <div class="story-card__image-container">
+    <img [src]="story.imageUrl || 'assets/images/story-placeholder.jpg'"
+         [alt]="story.title"
+         class="story-card__image"
+         loading="lazy">
+    <div class="story-card__media-badge" *ngIf="getMediaCount() > 0">
+      <mat-icon>collections</mat-icon>
+      <span>{{ getMediaCount() }}</span>
+    </div>
+  </div>
+
+  <mat-card-content class="story-card__content">
+    <!-- Title -->
+    <h3 class="story-card__title">{{ story.title }}</h3>
+
+    <!-- Event Date and Location -->
+    <div class="story-card__event-info" *ngIf="story.dateOfEvent || story.location">
+      <div *ngIf="story.dateOfEvent" class="story-card__event-date">
+        <mat-icon>event</mat-icon>
+        <span>{{ getEventDate() }}</span>
+      </div>
+      <div *ngIf="story.location" class="story-card__location">
+        <mat-icon>place</mat-icon>
+        <span>{{ story.location }}</span>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <p class="story-card__summary">{{ getSummary() }}</p>
+
+    <!-- Related People -->
+    <div class="story-card__people" *ngIf="story.relatedPeople.length > 0">
+      <div class="story-card__people-label">
+        <mat-icon>people</mat-icon>
+        <span>People in this story:</span>
+      </div>
+      <div class="story-card__people-list">
+        <button mat-chip-button
+                *ngFor="let person of story.relatedPeople.slice(0, 3)"
+                (click)="onPersonClick(person.personId)"
+                class="person-chip">
+          <img [src]="person.personAvatar || 'assets/images/default-avatar.png'"
+               [alt]="person.personName"
+               class="person-avatar">
+          <span>{{ person.personName }}</span>
+        </button>
+        <mat-chip *ngIf="story.relatedPeople.length > 3">
+          +{{ story.relatedPeople.length - 3 }} more
+        </mat-chip>
+      </div>
+    </div>
+
+    <!-- Category and Tags -->
+    <div class="story-card__meta">
+      <mat-chip-set>
+        <mat-chip *ngIf="story.categoryName">
+          <mat-icon>category</mat-icon>
+          {{ story.categoryName }}
+        </mat-chip>
+        <mat-chip *ngFor="let tag of story.tags.slice(0, 2)">{{ tag }}</mat-chip>
+        <mat-chip *ngIf="story.tags.length > 2">+{{ story.tags.length - 2 }} more</mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Media Info -->
+    <div class="story-card__media-info" *ngIf="getMediaCount() > 0">
+      <div *ngIf="getPhotoCount() > 0">
+        <mat-icon>photo</mat-icon>
+        <span>{{ getPhotoCount() }} {{ getPhotoCount() === 1 ? 'photo' : 'photos' }}</span>
+      </div>
+      <div *ngIf="getVideoCount() > 0">
+        <mat-icon>videocam</mat-icon>
+        <span>{{ getVideoCount() }} {{ getVideoCount() === 1 ? 'video' : 'videos' }}</span>
+      </div>
+    </div>
+
+    <!-- Author and Date -->
+    <div class="story-card__footer">
+      <div class="story-card__author">
+        <img [src]="story.authorAvatar || 'assets/images/default-avatar.png'"
+             [alt]="story.authorName"
+             class="story-card__author-avatar">
+        <div class="story-card__author-info">
+          <span class="story-card__author-name">{{ story.authorName }}</span>
+          <span class="story-card__date">{{ story.publishedDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
+      <div class="story-card__views">
+        <mat-icon>visibility</mat-icon>
+        <span>{{ story.viewCount }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <!-- Actions -->
+  <mat-card-actions *ngIf="showActions" class="story-card__actions">
+    <button mat-raised-button color="primary" (click)="onView()">
+      <mat-icon>auto_stories</mat-icon>
+      Read Story
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button mat-menu-item *ngIf="canEdit" (click)="onDelete()" class="danger-action">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>

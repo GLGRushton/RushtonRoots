@@ -1,0 +1,124 @@
+<mat-card [class.mat-elevation-z0]="elevation === 0"
+          [class.mat-elevation-z2]="elevation === 2"
+          [class.mat-elevation-z4]="elevation === 4"
+          [class.mat-elevation-z8]="elevation === 8"
+          class="recipe-card">
+  <!-- Featured Badge -->
+  <div *ngIf="recipe.featured" class="recipe-card__featured-badge">
+    <mat-icon>stars</mat-icon>
+    <span>Featured</span>
+  </div>
+
+  <!-- Recipe Image -->
+  <div class="recipe-card__image-container">
+    <img [src]="recipe.imageUrl || 'assets/images/recipe-placeholder.jpg'"
+         [alt]="recipe.title"
+         class="recipe-card__image"
+         loading="lazy">
+    <div class="recipe-card__difficulty-badge" [style.background-color]="getDifficultyColor()">
+      {{ getDifficultyLabel() }}
+    </div>
+  </div>
+
+  <mat-card-content class="recipe-card__content">
+    <!-- Title and Rating -->
+    <div class="recipe-card__header">
+      <h3 class="recipe-card__title">{{ recipe.title }}</h3>
+      <div class="recipe-card__rating">
+        <mat-icon *ngFor="let star of getStars()"
+                  [class.filled]="isStarFilled(star)"
+                  class="recipe-card__star">
+          {{ isStarFilled(star) ? 'star' : 'star_border' }}
+        </mat-icon>
+        <span class="recipe-card__rating-text">{{ recipe.averageRating.toFixed(1) }}</span>
+        <span class="recipe-card__rating-count">({{ recipe.ratings.length }})</span>
+      </div>
+    </div>
+
+    <!-- Category and Origin -->
+    <div class="recipe-card__meta">
+      <mat-chip-set>
+        <mat-chip *ngIf="recipe.categoryName">
+          <mat-icon>local_dining</mat-icon>
+          {{ recipe.categoryName }}
+        </mat-chip>
+        <mat-chip *ngIf="recipe.origin">
+          <mat-icon>favorite</mat-icon>
+          {{ recipe.origin }}
+        </mat-chip>
+        <mat-chip *ngIf="recipe.cuisine">
+          <mat-icon>public</mat-icon>
+          {{ recipe.cuisine }}
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Description -->
+    <p class="recipe-card__description">{{ getDescription() }}</p>
+
+    <!-- Recipe Info -->
+    <div class="recipe-card__info">
+      <div class="recipe-card__info-item">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ formatTime(recipe.totalTime) }}</span>
+      </div>
+      <div class="recipe-card__info-item">
+        <mat-icon>restaurant</mat-icon>
+        <span>{{ recipe.servings }} servings</span>
+      </div>
+      <div class="recipe-card__info-item">
+        <mat-icon>receipt</mat-icon>
+        <span>{{ recipe.ingredients.length }} ingredients</span>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div class="recipe-card__tags" *ngIf="recipe.tags.length > 0">
+      <mat-chip-set>
+        <mat-chip *ngFor="let tag of recipe.tags">{{ tag }}</mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Author and Date -->
+    <div class="recipe-card__footer">
+      <div class="recipe-card__author">
+        <img [src]="recipe.authorAvatar || 'assets/images/default-avatar.png'"
+             [alt]="recipe.authorName"
+             class="recipe-card__author-avatar">
+        <div class="recipe-card__author-info">
+          <span class="recipe-card__author-name">{{ recipe.authorName }}</span>
+          <span class="recipe-card__date">{{ recipe.publishedDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
+      <div class="recipe-card__views">
+        <mat-icon>visibility</mat-icon>
+        <span>{{ recipe.viewCount }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <!-- Actions -->
+  <mat-card-actions *ngIf="showActions" class="recipe-card__actions">
+    <button mat-raised-button color="primary" (click)="onView()">
+      <mat-icon>visibility</mat-icon>
+      View Recipe
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onPrint()">
+        <mat-icon>print</mat-icon>
+        <span>Print</span>
+      </button>
+      <button mat-menu-item *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button mat-menu-item *ngIf="canEdit" (click)="onDelete()" class="danger-action">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>
