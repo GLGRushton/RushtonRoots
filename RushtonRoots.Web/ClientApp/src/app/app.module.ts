@@ -16,6 +16,7 @@ import { PartnershipModule } from './partnership/partnership.module';
 import { ParentChildModule } from './parent-child/parent-child.module';
 import { AuthModule } from './auth/auth.module';
 import { WikiModule } from './wiki/wiki.module';
+import { ContentModule } from './content/content.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -90,6 +91,13 @@ import { WikiIndexComponent } from './wiki/components/wiki-index/wiki-index.comp
 import { WikiArticleComponent } from './wiki/components/wiki-article/wiki-article.component';
 import { MarkdownEditorComponent } from './wiki/components/markdown-editor/markdown-editor.component';
 
+// Import Phase 7.2 Recipes, Stories, & Traditions components for Angular Elements registration
+import { RecipeCardComponent } from './content/components/recipe-card/recipe-card.component';
+import { RecipeDetailsComponent } from './content/components/recipe-details/recipe-details.component';
+import { StoryCardComponent } from './content/components/story-card/story-card.component';
+import { TraditionCardComponent } from './content/components/tradition-card/tradition-card.component';
+import { ContentGridComponent } from './content/components/content-grid/content-grid.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -108,7 +116,8 @@ import { MarkdownEditorComponent } from './wiki/components/markdown-editor/markd
     PartnershipModule,
     ParentChildModule,
     AuthModule,
-    WikiModule
+    WikiModule,
+    ContentModule
   ],
   providers: []
 })
@@ -289,6 +298,22 @@ export class AppModule {
 
     const markdownEditorElement = createCustomElement(MarkdownEditorComponent, { injector: this.injector });
     customElements.define('app-markdown-editor', markdownEditorElement);
+
+    // Register Phase 7.2 Recipes, Stories, & Traditions components as Angular Elements
+    const recipeCardElement = createCustomElement(RecipeCardComponent, { injector: this.injector });
+    customElements.define('app-recipe-card', recipeCardElement);
+
+    const recipeDetailsElement = createCustomElement(RecipeDetailsComponent, { injector: this.injector });
+    customElements.define('app-recipe-details', recipeDetailsElement);
+
+    const storyCardElement = createCustomElement(StoryCardComponent, { injector: this.injector });
+    customElements.define('app-story-card', storyCardElement);
+
+    const traditionCardElement = createCustomElement(TraditionCardComponent, { injector: this.injector });
+    customElements.define('app-tradition-card', traditionCardElement);
+
+    const contentGridElement = createCustomElement(ContentGridComponent, { injector: this.injector });
+    customElements.define('app-content-grid', contentGridElement);
   }
 
   ngDoBootstrap() {

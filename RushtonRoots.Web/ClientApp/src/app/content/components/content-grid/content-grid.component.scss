@@ -1,0 +1,294 @@
+.content-grid {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 24px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    color: #212121;
+  }
+
+  &__count {
+    font-size: 16px;
+    color: #757575;
+    padding: 4px 12px;
+    background-color: #f5f5f5;
+    border-radius: 16px;
+  }
+
+  &__controls {
+    margin-bottom: 24px;
+  }
+
+  &__filter-card {
+    padding: 16px;
+  }
+
+  &__filter-bar {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  &__search {
+    flex: 1;
+    min-width: 250px;
+  }
+
+  &__sort {
+    min-width: 200px;
+  }
+
+  &__filter-toggle {
+    white-space: nowrap;
+  }
+
+  &__advanced-filters {
+    margin-top: 16px;
+
+    mat-divider {
+      margin-bottom: 16px;
+    }
+
+    .advanced-filters-content {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+
+      mat-checkbox {
+        margin-right: 16px;
+      }
+
+      mat-form-field {
+        min-width: 200px;
+      }
+    }
+  }
+
+  &__summary {
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    border-radius: 4px;
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #1976d2;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    gap: 24px;
+    margin-bottom: 24px;
+
+    // Masonry grid effect with CSS Grid
+    grid-auto-rows: 10px;
+  }
+
+  &__item {
+    // Auto-fit to content height for masonry effect
+    grid-row-end: span var(--row-span, 50);
+    
+    // Adjust row span based on card content
+    &:nth-child(3n+1) {
+      --row-span: 55;
+    }
+    
+    &:nth-child(3n+2) {
+      --row-span: 50;
+    }
+    
+    &:nth-child(3n+3) {
+      --row-span: 52;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 64px 24px;
+    
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: #bdbdbd;
+      margin-bottom: 16px;
+    }
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: #424242;
+    }
+
+    p {
+      margin: 0 0 24px 0;
+      font-size: 16px;
+      color: #757575;
+    }
+
+    button {
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+      }
+    }
+  }
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 24px;
+
+    mat-spinner {
+      margin-bottom: 16px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+      color: #757575;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1280px) {
+  .content-grid {
+    &__grid {
+      gap: 20px;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .content-grid {
+    padding: 16px;
+
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+
+    &__filter-bar {
+      flex-direction: column;
+
+      mat-form-field {
+        width: 100%;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+    &__grid {
+      gap: 16px;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .content-grid {
+    padding: 12px;
+
+    &__header {
+      margin-bottom: 16px;
+    }
+
+    &__title {
+      font-size: 20px;
+    }
+
+    &__count {
+      font-size: 14px;
+    }
+
+    &__controls {
+      margin-bottom: 16px;
+    }
+
+    &__filter-card {
+      padding: 12px;
+    }
+
+    &__advanced-filters {
+      .advanced-filters-content {
+        flex-direction: column;
+        align-items: stretch;
+
+        mat-form-field {
+          width: 100%;
+        }
+      }
+    }
+
+    &__grid {
+      gap: 12px;
+      // Single column on mobile
+      grid-template-columns: 1fr !important;
+    }
+
+    &__item {
+      --row-span: auto !important;
+    }
+
+    &__empty {
+      padding: 48px 16px;
+
+      mat-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+      }
+
+      h3 {
+        font-size: 20px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Print Styles
+@media print {
+  .content-grid {
+    &__controls,
+    &__summary,
+    &__empty mat-icon,
+    &__empty button {
+      display: none;
+    }
+
+    &__grid {
+      gap: 16px;
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+}

@@ -1,0 +1,145 @@
+<mat-card [class.mat-elevation-z0]="elevation === 0"
+          [class.mat-elevation-z2]="elevation === 2"
+          [class.mat-elevation-z4]="elevation === 4"
+          [class.mat-elevation-z8]="elevation === 8"
+          class="tradition-card">
+  <!-- Featured Badge -->
+  <div *ngIf="tradition.featured" class="tradition-card__featured-badge">
+    <mat-icon>stars</mat-icon>
+    <span>Featured</span>
+  </div>
+
+  <!-- Tradition Image -->
+  <div class="tradition-card__image-container">
+    <img [src]="tradition.imageUrl || 'assets/images/tradition-placeholder.jpg'"
+         [alt]="tradition.title"
+         class="tradition-card__image"
+         loading="lazy">
+    <div class="tradition-card__frequency-badge">
+      <mat-icon>{{ getFrequencyIcon() }}</mat-icon>
+      <span>{{ getFrequencyLabel() }}</span>
+    </div>
+  </div>
+
+  <mat-card-content class="tradition-card__content">
+    <!-- Title -->
+    <h3 class="tradition-card__title">{{ tradition.title }}</h3>
+
+    <!-- Tradition Info -->
+    <div class="tradition-card__info">
+      <div *ngIf="tradition.season" class="tradition-card__info-item">
+        <mat-icon>wb_sunny</mat-icon>
+        <span>{{ tradition.season }}</span>
+      </div>
+      <div *ngIf="getMonthsDisplay()" class="tradition-card__info-item">
+        <mat-icon>calendar_today</mat-icon>
+        <span>{{ getMonthsDisplay() }}</span>
+      </div>
+      <div *ngIf="tradition.location" class="tradition-card__info-item">
+        <mat-icon>place</mat-icon>
+        <span>{{ tradition.location }}</span>
+      </div>
+      <div *ngIf="tradition.startedYear" class="tradition-card__info-item">
+        <mat-icon>history</mat-icon>
+        <span>Since {{ tradition.startedYear }}</span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <p class="tradition-card__description">{{ getDescription() }}</p>
+
+    <!-- Related People -->
+    <div class="tradition-card__people" *ngIf="tradition.relatedPeople.length > 0">
+      <div class="tradition-card__people-label">
+        <mat-icon>people</mat-icon>
+        <span>Participants:</span>
+      </div>
+      <div class="tradition-card__people-list">
+        <button mat-chip-button
+                *ngFor="let person of tradition.relatedPeople.slice(0, 3)"
+                (click)="onPersonClick(person.personId)"
+                class="person-chip">
+          <img [src]="person.personAvatar || 'assets/images/default-avatar.png'"
+               [alt]="person.personName"
+               class="person-avatar">
+          <span>{{ person.personName }}</span>
+        </button>
+        <mat-chip *ngIf="tradition.relatedPeople.length > 3">
+          +{{ tradition.relatedPeople.length - 3 }} more
+        </mat-chip>
+      </div>
+    </div>
+
+    <!-- Related Recipes -->
+    <div class="tradition-card__recipes" *ngIf="tradition.relatedRecipes && tradition.relatedRecipes.length > 0">
+      <mat-chip-set>
+        <mat-chip>
+          <mat-icon>restaurant_menu</mat-icon>
+          {{ tradition.relatedRecipes.length }} {{ tradition.relatedRecipes.length === 1 ? 'recipe' : 'recipes' }}
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Category and Tags -->
+    <div class="tradition-card__meta">
+      <mat-chip-set>
+        <mat-chip *ngIf="tradition.categoryName">
+          <mat-icon>category</mat-icon>
+          {{ tradition.categoryName }}
+        </mat-chip>
+        <mat-chip *ngFor="let tag of tradition.tags.slice(0, 2)">{{ tag }}</mat-chip>
+        <mat-chip *ngIf="tradition.tags.length > 2">+{{ tradition.tags.length - 2 }} more</mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Media Info -->
+    <div class="tradition-card__media-info" *ngIf="getMediaCount() > 0">
+      <div *ngIf="getPhotoCount() > 0">
+        <mat-icon>photo</mat-icon>
+        <span>{{ getPhotoCount() }} {{ getPhotoCount() === 1 ? 'photo' : 'photos' }}</span>
+      </div>
+      <div *ngIf="getMediaCount() > getPhotoCount()">
+        <mat-icon>collections</mat-icon>
+        <span>{{ getMediaCount() - getPhotoCount() }} other media</span>
+      </div>
+    </div>
+
+    <!-- Author and Date -->
+    <div class="tradition-card__footer">
+      <div class="tradition-card__author">
+        <img [src]="tradition.authorAvatar || 'assets/images/default-avatar.png'"
+             [alt]="tradition.authorName"
+             class="tradition-card__author-avatar">
+        <div class="tradition-card__author-info">
+          <span class="tradition-card__author-name">{{ tradition.authorName }}</span>
+          <span class="tradition-card__date">{{ tradition.publishedDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
+      <div class="tradition-card__views">
+        <mat-icon>visibility</mat-icon>
+        <span>{{ tradition.viewCount }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <!-- Actions -->
+  <mat-card-actions *ngIf="showActions" class="tradition-card__actions">
+    <button mat-raised-button color="primary" (click)="onView()">
+      <mat-icon>celebration</mat-icon>
+      View Tradition
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button mat-menu-item *ngIf="canEdit" (click)="onDelete()" class="danger-action">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>
