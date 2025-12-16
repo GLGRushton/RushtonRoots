@@ -10,6 +10,11 @@ import { SharedModule } from '../shared/shared.module';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { NotificationPreferencesComponent } from './components/notification-preferences/notification-preferences.component';
+import { PrivacySettingsComponent } from './components/privacy-settings/privacy-settings.component';
+import { ConnectedAccountsComponent } from './components/connected-accounts/connected-accounts.component';
+import { AccountDeletionComponent } from './components/account-deletion/account-deletion.component';
 
 /**
  * AuthModule - Authentication and account management components
@@ -18,6 +23,11 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
  * - LoginComponent: Modern login form with social login buttons
  * - ForgotPasswordComponent: Password reset request form
  * - ResetPasswordComponent: Password reset form with strength indicator
+ * - UserProfileComponent: Comprehensive user profile and settings management
+ * - NotificationPreferencesComponent: Notification settings
+ * - PrivacySettingsComponent: Privacy settings
+ * - ConnectedAccountsComponent: Connected social accounts management
+ * - AccountDeletionComponent: Account deletion flow
  * 
  * All components are built with Angular Material and follow the design system.
  */
@@ -25,7 +35,12 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
   declarations: [
     LoginComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UserProfileComponent,
+    NotificationPreferencesComponent,
+    PrivacySettingsComponent,
+    ConnectedAccountsComponent,
+    AccountDeletionComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +51,12 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
   exports: [
     LoginComponent,
     ForgotPasswordComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UserProfileComponent,
+    NotificationPreferencesComponent,
+    PrivacySettingsComponent,
+    ConnectedAccountsComponent,
+    AccountDeletionComponent
   ]
 })
 export class AuthModule { }

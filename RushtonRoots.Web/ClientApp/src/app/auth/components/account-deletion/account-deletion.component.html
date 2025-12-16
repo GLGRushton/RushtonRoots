@@ -1,0 +1,112 @@
+<div class="account-deletion">
+  <div class="security-section">
+    <h3>
+      <mat-icon class="section-icon">vpn_key</mat-icon>
+      Password & Security
+    </h3>
+    <p class="section-description">Manage your password and account security settings</p>
+    
+    <div class="security-actions">
+      <button mat-raised-button color="primary">
+        <mat-icon>lock_reset</mat-icon>
+        Change Password
+      </button>
+      <button mat-button>
+        <mat-icon>security</mat-icon>
+        Two-Factor Authentication
+      </button>
+      <button mat-button>
+        <mat-icon>devices</mat-icon>
+        Active Sessions
+      </button>
+    </div>
+  </div>
+  
+  <mat-divider class="section-divider"></mat-divider>
+  
+  <div class="danger-zone">
+    <h3>
+      <mat-icon class="section-icon danger">warning</mat-icon>
+      Danger Zone
+    </h3>
+    
+    <mat-card class="danger-card">
+      <div class="danger-content">
+        <div class="danger-info">
+          <h4>Delete Your Account</h4>
+          <p>Once you delete your account, there is no going back. Please be certain.</p>
+        </div>
+        <button mat-raised-button color="warn" 
+                [disabled]="!canDelete"
+                (click)="toggleDeletionForm()">
+          <mat-icon>delete_forever</mat-icon>
+          {{ showDeletionForm ? 'Cancel' : 'Delete Account' }}
+        </button>
+      </div>
+      
+      <div class="deletion-form" *ngIf="showDeletionForm">
+        <mat-divider class="form-divider"></mat-divider>
+        
+        <form [formGroup]="deletionForm" (ngSubmit)="submitDeletion()">
+          <h4>Account Deletion</h4>
+          <p class="warning-text">
+            <mat-icon>warning</mat-icon>
+            This action cannot be undone. All your data will be permanently deleted.
+          </p>
+          
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Reason for Deletion</mat-label>
+            <mat-select formControlName="reason" required>
+              <mat-option *ngFor="let reason of deletionReasons" [value]="reason.value">
+                {{ reason.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error>{{ getFieldError('reason') }}</mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="form-field-full">
+            <mat-label>Additional Feedback (Optional)</mat-label>
+            <textarea matInput formControlName="feedback" rows="3" 
+                     placeholder="Help us improve by sharing your feedback..."></textarea>
+          </mat-form-field>
+          
+          <div class="confirmation-section">
+            <h5>Confirmation Required</h5>
+            <p>Please confirm your email and password to proceed with account deletion.</p>
+            
+            <mat-form-field appearance="outline" class="form-field-full">
+              <mat-label>Confirm Email</mat-label>
+              <input matInput formControlName="confirmEmail" type="email" required>
+              <mat-icon matPrefix>email</mat-icon>
+              <mat-error>{{ getFieldError('confirmEmail') }}</mat-error>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="form-field-full">
+              <mat-label>Confirm Password</mat-label>
+              <input matInput formControlName="confirmPassword" type="password" required>
+              <mat-icon matPrefix>lock</mat-icon>
+              <mat-error>{{ getFieldError('confirmPassword') }}</mat-error>
+            </mat-form-field>
+          </div>
+          
+          <div class="deletion-options">
+            <mat-checkbox formControlName="deleteImmediately" color="warn">
+              Delete my account immediately (default is 30-day grace period)
+            </mat-checkbox>
+          </div>
+          
+          <div class="form-actions">
+            <button mat-raised-button color="warn" type="submit" 
+                    [disabled]="deletionForm.invalid">
+              <mat-icon>delete_forever</mat-icon>
+              Permanently Delete Account
+            </button>
+            <button mat-button type="button" (click)="toggleDeletionForm()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+</div>

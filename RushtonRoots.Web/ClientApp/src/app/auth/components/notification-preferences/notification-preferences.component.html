@@ -1,0 +1,179 @@
+<div class="notification-preferences">
+  <form [formGroup]="notificationForm">
+    <div class="preferences-section">
+      <h3>
+        <mat-icon class="section-icon">email</mat-icon>
+        Email Notifications
+      </h3>
+      <p class="section-description">Receive updates and notifications via email</p>
+      
+      <div formGroupName="emailNotifications" class="options-list">
+        <div class="option-item">
+          <mat-slide-toggle formControlName="familyUpdates">
+            <div class="option-content">
+              <span class="option-label">Family Updates</span>
+              <span class="option-description">Get notified when family members make updates</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="newMembers">
+            <div class="option-content">
+              <span class="option-label">New Members</span>
+              <span class="option-description">Get notified when new members join your family</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="comments">
+            <div class="option-content">
+              <span class="option-label">Comments</span>
+              <span class="option-description">Get notified when someone comments on your posts</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="mentions">
+            <div class="option-content">
+              <span class="option-label">Mentions</span>
+              <span class="option-description">Get notified when someone mentions you</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <mat-divider></mat-divider>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="weeklyDigest">
+            <div class="option-content">
+              <span class="option-label">Weekly Digest</span>
+              <span class="option-description">Receive a weekly summary of family activity</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="monthlyNewsletter">
+            <div class="option-content">
+              <span class="option-label">Monthly Newsletter</span>
+              <span class="option-description">Receive monthly news and tips</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+    
+    <mat-divider class="section-divider"></mat-divider>
+    
+    <div class="preferences-section">
+      <h3>
+        <mat-icon class="section-icon">notifications_active</mat-icon>
+        Push Notifications
+      </h3>
+      <p class="section-description">Receive real-time notifications on your device</p>
+      
+      <div formGroupName="pushNotifications" class="options-list">
+        <div class="option-item primary">
+          <mat-slide-toggle formControlName="enabled">
+            <div class="option-content">
+              <span class="option-label">Enable Push Notifications</span>
+              <span class="option-description">Allow push notifications from RushtonRoots</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="nested-options" *ngIf="pushNotificationsEnabled">
+          <div class="option-item">
+            <mat-slide-toggle formControlName="familyUpdates">
+              <div class="option-content">
+                <span class="option-label">Family Updates</span>
+              </div>
+            </mat-slide-toggle>
+          </div>
+          
+          <div class="option-item">
+            <mat-slide-toggle formControlName="newMembers">
+              <div class="option-content">
+                <span class="option-label">New Members</span>
+              </div>
+            </mat-slide-toggle>
+          </div>
+          
+          <div class="option-item">
+            <mat-slide-toggle formControlName="comments">
+              <div class="option-content">
+                <span class="option-label">Comments</span>
+              </div>
+            </mat-slide-toggle>
+          </div>
+          
+          <div class="option-item">
+            <mat-slide-toggle formControlName="mentions">
+              <div class="option-content">
+                <span class="option-label">Mentions</span>
+              </div>
+            </mat-slide-toggle>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <mat-divider class="section-divider"></mat-divider>
+    
+    <div class="preferences-section">
+      <h3>
+        <mat-icon class="section-icon">notifications</mat-icon>
+        In-App Notifications
+      </h3>
+      <p class="section-description">Receive notifications while using RushtonRoots</p>
+      
+      <div formGroupName="inAppNotifications" class="options-list">
+        <div class="option-item">
+          <mat-slide-toggle formControlName="familyUpdates">
+            <div class="option-content">
+              <span class="option-label">Family Updates</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="newMembers">
+            <div class="option-content">
+              <span class="option-label">New Members</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="comments">
+            <div class="option-content">
+              <span class="option-label">Comments</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+        
+        <div class="option-item">
+          <mat-slide-toggle formControlName="mentions">
+            <div class="option-content">
+              <span class="option-label">Mentions</span>
+            </div>
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+  </form>
+  
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="savePreferences()" [disabled]="!hasChanges">
+      <mat-icon>save</mat-icon>
+      Save Preferences
+    </button>
+    <button mat-button (click)="resetToDefaults()">
+      <mat-icon>restore</mat-icon>
+      Reset to Defaults
+    </button>
+  </div>
+</div>
