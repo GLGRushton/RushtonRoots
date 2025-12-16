@@ -1,41 +1,192 @@
 @model RushtonRoots.Domain.UI.Models.PartnershipViewModel
+@using System.Text.Json
 @{
     ViewData["Title"] = "Partnership Details";
+
+    // Transform server data to Angular component format
+    var partnershipDetails = new
+    {
+        id = Model.Id,
+        personAId = Model.PersonAId,
+        personBId = Model.PersonBId,
+        personAName = Model.PersonAName,
+        personBName = Model.PersonBName,
+        personAPhotoUrl = (string?)null, // TODO: Add photo URLs when available
+        personBPhotoUrl = (string?)null,
+        partnershipType = Model.PartnershipType.ToLower(),
+        partnershipTypeDisplay = GetPartnershipTypeDisplay(Model.PartnershipType),
+        startDate = Model.StartDate?.ToString("yyyy-MM-dd"),
+        endDate = Model.EndDate?.ToString("yyyy-MM-dd"),
+        duration = CalculateDuration(Model.StartDate, Model.EndDate),
+        status = Model.EndDate.HasValue ? "ended" : "current",
+        statusDisplay = Model.EndDate.HasValue ? "Ended" : "Current",
+        statusColor = Model.EndDate.HasValue ? "accent" : "primary", // Add statusColor
+        location = (string?)null, // TODO: Add location when available
+        notes = (string?)null, // TODO: Add notes when available
+        description = (string?)null, // TODO: Add description when available
+        createdDateTime = Model.CreatedDateTime.ToString("yyyy-MM-dd'T'HH:mm:ss"),
+        updatedDateTime = Model.UpdatedDateTime.ToString("yyyy-MM-dd'T'HH:mm:ss")
+    };
+
+    // TODO: Fetch children from database
+    var children = new object[] { };
+
+    // TODO: Fetch photos from database
+    var photos = new object[] { };
+
+    // TODO: Fetch events from database
+    var events = new object[] { };
+
+    var jsonOptions = new JsonSerializerOptions
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = false
+    };
+
+    var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    var canDelete = User.IsInRole("Admin");
+}
+
+@functions {
+    string GetPartnershipTypeDisplay(string type)
+    {
+        return type?.ToLower() switch
+        {
+            "married" => "Married",
+            "partnered" => "Partnered",
+            "engaged" => "Engaged",
+            "relationship" => "Relationship",
+            "commonlaw" => "Common Law",
+            _ => "Other"
+        };
+    }
+
+    string CalculateDuration(DateTime? start, DateTime? end)
+    {
+        if (!start.HasValue) return "Unknown duration";
+
+        var endDate = end ?? DateTime.Now;
+        var years = endDate.Year - start.Value.Year;
+        var months = endDate.Month - start.Value.Month;
+
+        if (months < 0)
+        {
+            years--;
+            months += 12;
+        }
+
+        if (years == 0 && months == 0) return "Less than a month";
+        if (years == 0) return $"{months} {(months == 1 ? "month" : "months")}";
+        if (months == 0) return $"{years} {(years == 1 ? "year" : "years")}";
+        return $"{years} {(years == 1 ? "year" : "years")}, {months} {(months == 1 ? "month" : "months")}";
+    }
 }
 
 <div class="container mt-4">
-    <h2>Partnership Details</h2>
-    <hr />
+    <app-partnership-details
+        partnership='@JsonSerializer.Serialize(partnershipDetails, jsonOptions)'
+        children='@JsonSerializer.Serialize(children, jsonOptions)'
+        photos='@JsonSerializer.Serialize(photos, jsonOptions)'
+        events='@JsonSerializer.Serialize(events, jsonOptions)'
+        can-edit="@canEdit.ToString().ToLower()"
+        can-delete="@canDelete.ToString().ToLower()"
+        initial-tab="0">
+    </app-partnership-details>
 
-    <dl class="row">
-        <dt class="col-sm-3">Person A</dt>
-        <dd class="col-sm-9">@Model.PersonAName</dd>
+    <!-- Fallback content if Angular fails to load -->
+    <noscript>
+        <div class="alert alert-warning">
+            <strong>JavaScript Required:</strong> This page requires JavaScript to display the partnership details.
+        </div>
+        <h2>Partnership Details</h2>
+        <hr />
 
-        <dt class="col-sm-3">Person B</dt>
-        <dd class="col-sm-9">@Model.PersonBName</dd>
+        <dl class="row">
+            <dt class="col-sm-3">Person A</dt>
+            <dd class="col-sm-9">@Model.PersonAName</dd>
 
-        <dt class="col-sm-3">Partnership Type</dt>
-        <dd class="col-sm-9">@Model.PartnershipType</dd>
+            <dt class="col-sm-3">Person B</dt>
+            <dd class="col-sm-9">@Model.PersonBName</dd>
 
-        <dt class="col-sm-3">Start Date</dt>
-        <dd class="col-sm-9">@(Model.StartDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+            <dt class="col-sm-3">Partnership Type</dt>
+            <dd class="col-sm-9">@Model.PartnershipType</dd>
 
-        <dt class="col-sm-3">End Date</dt>
-        <dd class="col-sm-9">@(Model.EndDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
+            <dt class="col-sm-3">Start Date</dt>
+            <dd class="col-sm-9">@(Model.StartDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
 
-        <dt class="col-sm-3">Created</dt>
-        <dd class="col-sm-9">@Model.CreatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
+            <dt class="col-sm-3">End Date</dt>
+            <dd class="col-sm-9">@(Model.EndDate?.ToString("MM/dd/yyyy") ?? "N/A")</dd>
 
-        <dt class="col-sm-3">Last Updated</dt>
-        <dd class="col-sm-9">@Model.UpdatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
-    </dl>
+            <dt class="col-sm-3">Created</dt>
+            <dd class="col-sm-9">@Model.CreatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
 
-    <div>
-        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
-        {
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
-            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
-        }
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
+            <dt class="col-sm-3">Last Updated</dt>
+            <dd class="col-sm-9">@Model.UpdatedDateTime.ToString("MM/dd/yyyy hh:mm tt")</dd>
+        </dl>
+
+        <div>
+            @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+            {
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            }
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </noscript>
 </div>
+
+@section Scripts {
+    <script>
+        // Event handlers for Angular component outputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const partnershipDetails = document.querySelector('app-partnership-details');
+            
+            if (partnershipDetails) {
+                // Handle edit clicked
+                partnershipDetails.addEventListener('editClicked', function(event) {
+                    window.location.href = '/Partnership/Edit/' + event.detail;
+                });
+
+                // Handle delete clicked
+                partnershipDetails.addEventListener('deleteClicked', function(event) {
+                    window.location.href = '/Partnership/Delete/' + event.detail;
+                });
+
+                // Handle person clicked (navigate to person details)
+                partnershipDetails.addEventListener('personClicked', function(event) {
+                    window.location.href = '/Person/Details/' + event.detail;
+                });
+
+                // Handle child clicked (navigate to child/person details)
+                partnershipDetails.addEventListener('childClicked', function(event) {
+                    window.location.href = '/Person/Details/' + event.detail;
+                });
+
+                // Handle photo upload
+                partnershipDetails.addEventListener('photoUploaded', function(event) {
+                    console.log('Photo uploaded:', event.detail);
+                    // TODO: Implement photo upload to backend
+                });
+
+                // Handle photo delete
+                partnershipDetails.addEventListener('photoDeleted', function(event) {
+                    console.log('Photo deleted:', event.detail);
+                    // TODO: Implement photo deletion
+                });
+
+                // Handle photo primary change
+                partnershipDetails.addEventListener('photoPrimaryChanged', function(event) {
+                    console.log('Photo set as primary:', event.detail);
+                    // TODO: Implement primary photo change
+                });
+
+                // Handle event added
+                partnershipDetails.addEventListener('eventAdded', function(event) {
+                    console.log('Event added:', event.detail);
+                    // TODO: Implement event creation
+                });
+            }
+        });
+    </script>
+}
+

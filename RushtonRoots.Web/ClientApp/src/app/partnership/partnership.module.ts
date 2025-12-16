@@ -17,6 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTabsModule } from '@angular/material/tabs';
 
 // Components - Phase 5.1
 import { PartnershipIndexComponent } from './components/partnership-index/partnership-index.component';
@@ -24,13 +25,18 @@ import { PartnershipCardComponent } from './components/partnership-card/partners
 import { PartnershipFormComponent } from './components/partnership-form/partnership-form.component';
 import { PartnershipTimelineComponent } from './components/partnership-timeline/partnership-timeline.component';
 
+// Components - Phase 4.2
+import { PartnershipDetailsComponent } from './components/partnership-details/partnership-details.component';
+
 @NgModule({
   declarations: [
     // Phase 5.1
     PartnershipIndexComponent,
     PartnershipCardComponent,
     PartnershipFormComponent,
-    PartnershipTimelineComponent
+    PartnershipTimelineComponent,
+    // Phase 4.2
+    PartnershipDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -49,14 +55,17 @@ import { PartnershipTimelineComponent } from './components/partnership-timeline/
     MatProgressSpinnerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatTabsModule
   ],
   exports: [
     // Phase 5.1
     PartnershipIndexComponent,
     PartnershipCardComponent,
     PartnershipFormComponent,
-    PartnershipTimelineComponent
+    PartnershipTimelineComponent,
+    // Phase 4.2
+    PartnershipDetailsComponent
   ]
 })
 export class PartnershipModule { }

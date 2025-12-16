@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PartnershipCard, PartnershipTimeline, PartnershipTimelineEvent } from '../../models/partnership.model';
+import { PartnershipCard, PartnershipDetails, PartnershipTimeline, PartnershipTimelineEvent } from '../../models/partnership.model';
 
 /**
  * PartnershipTimelineComponent - Displays partnership relationship timeline
@@ -13,9 +13,9 @@ import { PartnershipCard, PartnershipTimeline, PartnershipTimelineEvent } from '
 })
 export class PartnershipTimelineComponent implements OnInit {
   /**
-   * Partnership data
+   * Partnership data (can be either Card or Details)
    */
-  @Input() partnership!: PartnershipCard;
+  @Input() partnership!: PartnershipCard | PartnershipDetails;
 
   /**
    * Timeline data with events
@@ -70,7 +70,7 @@ export class PartnershipTimelineComponent implements OnInit {
     const yearsActive = this.calculateYearsActive();
 
     this.timeline = {
-      partnership: this.partnership,
+      partnership: this.partnership as PartnershipCard, // Cast to PartnershipCard for timeline
       events,
       duration,
       yearsActive

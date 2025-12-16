@@ -79,6 +79,9 @@ import { PartnershipCardComponent } from './partnership/components/partnership-c
 import { PartnershipFormComponent } from './partnership/components/partnership-form/partnership-form.component';
 import { PartnershipTimelineComponent } from './partnership/components/partnership-timeline/partnership-timeline.component';
 
+// Import Phase 4.2 Partnership Details component for Angular Elements registration
+import { PartnershipDetailsComponent } from './partnership/components/partnership-details/partnership-details.component';
+
 // Import Phase 5.2 Parent-Child Relationships components for Angular Elements registration
 import { ParentChildIndexComponent } from './parent-child/components/parent-child-index/parent-child-index.component';
 import { ParentChildCardComponent } from './parent-child/components/parent-child-card/parent-child-card.component';
@@ -252,6 +255,9 @@ export class AppModule {
     safeDefine('app-partnership-card', PartnershipCardComponent);
     safeDefine('app-partnership-form', PartnershipFormComponent);
     safeDefine('app-partnership-timeline', PartnershipTimelineComponent);
+
+    // Register Phase 4.2 Partnership Details component as Angular Element
+    safeDefine('app-partnership-details', PartnershipDetailsComponent);
 
     // Register Phase 5.2 Parent-Child Relationships components as Angular Elements
     safeDefine('app-parent-child-index', ParentChildIndexComponent);

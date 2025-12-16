@@ -189,3 +189,82 @@ export interface PartnershipTimeline {
   duration?: string;
   yearsActive?: number;
 }
+
+/**
+ * Partnership details for detailed view
+ */
+export interface PartnershipDetails {
+  id: number;
+  personAId: number;
+  personBId: number;
+  personAName: string;
+  personBName: string;
+  personAPhotoUrl?: string;
+  personBPhotoUrl?: string;
+  partnershipType: string;
+  partnershipTypeDisplay: string;
+  startDate?: Date | string;
+  endDate?: Date | string;
+  duration?: string;
+  status: PartnershipStatus;
+  statusDisplay: string;
+  statusColor: string; // Added to match PartnershipCard interface
+  location?: string;
+  notes?: string;
+  description?: string;
+  createdDateTime: Date | string;
+  updatedDateTime: Date | string;
+}
+
+/**
+ * Child from partnership
+ */
+export interface PartnershipChild {
+  id: number;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  dateOfBirth?: Date | string;
+  age?: number;
+  isDeceased: boolean;
+  photoUrl?: string;
+}
+
+/**
+ * Partnership photo/media
+ */
+export interface PartnershipPhoto {
+  id: number;
+  partnershipId: number;
+  photoUrl: string;
+  thumbnailUrl?: string;
+  title?: string;
+  description?: string;
+  uploadDate: Date | string;
+  isPrimary: boolean;
+  tags?: string[];
+}
+
+/**
+ * Partnership event
+ */
+export interface PartnershipEvent {
+  id: number;
+  partnershipId: number;
+  title: string;
+  date: Date | string;
+  description?: string;
+  eventType: 'ceremony' | 'anniversary' | 'celebration' | 'milestone' | 'other';
+  icon?: string;
+  location?: string;
+}
+
+/**
+ * Partnership details tab configuration
+ */
+export interface PartnershipDetailsTab {
+  label: string;
+  icon?: string;
+  content: 'overview' | 'timeline' | 'children' | 'media' | 'events';
+  badge?: number;
+}
