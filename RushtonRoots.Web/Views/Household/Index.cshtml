@@ -25,23 +25,11 @@
 
 <!-- Angular Household Index Component -->
 <app-household-index 
-    id="household-index-component"
+    initial-households='@Html.Raw(householdsJson)'
     can-edit="@canEdit.ToString().ToLower()"
     can-delete="@canDelete.ToString().ToLower()"
     can-create="@canCreate.ToString().ToLower()">
 </app-household-index>
-
-<script>
-    // Pass data to Angular component via JavaScript (safer than inline HTML attributes)
-    document.addEventListener('DOMContentLoaded', function() {
-        const component = document.getElementById('household-index-component');
-        if (component) {
-            // Pass JSON string directly to avoid double-serialization
-            const householdsJsonString = '@Html.Raw(householdsJson)';
-            component.setAttribute('initial-households', householdsJsonString);
-        }
-    });
-</script>
 
 <!-- Fallback content for browsers without JavaScript -->
 <noscript>
