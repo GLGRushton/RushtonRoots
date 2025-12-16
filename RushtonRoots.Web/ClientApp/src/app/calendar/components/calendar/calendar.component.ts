@@ -31,6 +31,7 @@ import {
  */
 @Component({
   selector: 'app-calendar',
+  standalone: false,
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })

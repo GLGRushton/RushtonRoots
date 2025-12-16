@@ -16,6 +16,7 @@ import { CalendarEvent, RsvpStatus, RsvpFormData, RSVP_STATUSES } from '../../mo
  */
 @Component({
   selector: 'app-event-rsvp-dialog',
+  standalone: false,
   templateUrl: './event-rsvp-dialog.component.html',
   styleUrls: ['./event-rsvp-dialog.component.scss']
 })

@@ -18,6 +18,7 @@ import { EventRsvpDialogComponent } from '../event-rsvp-dialog/event-rsvp-dialog
  */
 @Component({
   selector: 'app-event-details-dialog',
+  standalone: false,
   templateUrl: './event-details-dialog.component.html',
   styleUrls: ['./event-details-dialog.component.scss']
 })

@@ -17,6 +17,7 @@ import { CalendarEvent, RsvpStatus, EVENT_CATEGORIES, RSVP_STATUSES } from '../.
  */
 @Component({
   selector: 'app-event-card',
+  standalone: false,
   templateUrl: './event-card.component.html',
   styleUrls: ['./event-card.component.scss']
 })

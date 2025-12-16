@@ -29,6 +29,7 @@ import {
  */
 @Component({
   selector: 'app-event-form-dialog',
+  standalone: false,
   templateUrl: './event-form-dialog.component.html',
   styleUrls: ['./event-form-dialog.component.scss']
 })
