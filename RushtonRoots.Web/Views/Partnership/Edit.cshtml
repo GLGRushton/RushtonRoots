@@ -7,6 +7,9 @@
 <div class="container mt-4">
     <h2>Edit Partnership</h2>
 
+    <!-- Anti-forgery token for secure form submission -->
+    @Html.AntiForgeryToken()
+
     <!-- Angular Component -->
     <app-partnership-form
         id="partnershipForm"
