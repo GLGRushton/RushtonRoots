@@ -126,7 +126,7 @@ export class MediaGalleryComponent implements OnInit, OnDestroy {
     this.applyFiltersAndSort();
   }
 
-  private applyFiltersAndSort(): void {
+  applyFiltersAndSort(): void {
     let items = [...this.mediaItems];
 
     // Apply filters
@@ -206,7 +206,7 @@ export class MediaGalleryComponent implements OnInit, OnDestroy {
     }
   }
 
-  onMediaAction(action: 'edit' | 'delete' | 'download' | 'share' | 'favorite', item: MediaItem): void {
+  onMediaAction(action: 'view' | 'edit' | 'delete' | 'download' | 'share' | 'favorite', item: MediaItem): void {
     this.mediaAction.emit({ action, mediaItem: item });
   }
 
