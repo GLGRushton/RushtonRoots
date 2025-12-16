@@ -3,66 +3,65 @@
     ViewData["Title"] = "Create New User";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-8 col-lg-6">
-        <h2>@ViewData["Title"]</h2>
-        <p>Create a new user account for a family member.</p>
-        
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+@section Styles {
+    <style>
+        /* Ensure Angular Element displays properly */
+        app-create-user {
+            display: block;
+            width: 100%;
         }
-        
-        <hr />
-        <form asp-action="CreateUser" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            
-            <div class="mb-3">
-                <label asp-for="PersonId" class="form-label"></label>
-                <input asp-for="PersonId" class="form-control" type="number" />
-                <span asp-validation-for="PersonId" class="text-danger"></span>
-                <small class="form-text text-muted">Enter the Person ID from the family tree.</small>
-            </div>
-            
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            
-            <div class="mb-3">
-                <label asp-for="ConfirmPassword" class="form-label"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
-            
-            <div class="mb-3">
-                <label asp-for="Role" class="form-label"></label>
-                <select asp-for="Role" class="form-select">
-                    <option value="">Select Role (Optional)</option>
-                    <option value="FamilyMember">Family Member</option>
-                    <option value="HouseholdAdmin">Household Admin</option>
-                </select>
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Create User</button>
-                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Cancel</a>
-            </div>
-        </form>
-    </div>
-</div>
+    </style>
+}
+
+<!-- Angular Element for Create User Component -->
+<app-create-user
+    success-message="@TempData["SuccessMessage"]"
+    error-message="@ViewData["ErrorMessage"]">
+</app-create-user>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Handle form submission from Angular component
+        document.addEventListener('DOMContentLoaded', function() {
+            const createUserElement = document.querySelector('app-create-user');
+            
+            if (createUserElement) {
+                // Listen for the userCreateSubmit event from the Angular component
+                createUserElement.addEventListener('userCreateSubmit', function(event) {
+                    const formData = event.detail;
+                    
+                    // Create a form and submit it to the server
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/Account/CreateUser';
+                    
+                    // Add anti-forgery token
+                    const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]');
+                    if (antiForgeryToken) {
+                        const tokenInput = document.createElement('input');
+                        tokenInput.type = 'hidden';
+                        tokenInput.name = '__RequestVerificationToken';
+                        tokenInput.value = antiForgeryToken.value;
+                        form.appendChild(tokenInput);
+                    }
+                    
+                    // Add form fields
+                    for (const [key, value] of Object.entries(formData)) {
+                        if (value !== null && value !== undefined && key !== 'confirmPassword' && key !== 'sendInvitationEmail') {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = key.charAt(0).toUpperCase() + key.slice(1); // Capitalize first letter for C# model binding
+                            input.value = value;
+                            form.appendChild(input);
+                        }
+                    }
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            }
+        });
+    </script>
+    @Html.AntiForgeryToken()
 }
+

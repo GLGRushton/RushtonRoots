@@ -89,6 +89,9 @@ import { ForgotPasswordConfirmationComponent } from './auth/components/forgot-pa
 import { ResetPasswordConfirmationComponent } from './auth/components/reset-password-confirmation/reset-password-confirmation.component';
 import { ConfirmEmailComponent } from './auth/components/confirm-email/confirm-email.component';
 
+// Import Phase 1.3 User Management components for Angular Elements registration
+import { CreateUserComponent } from './auth/components/create-user/create-user.component';
+
 // Import Phase 6.2 User Profile & Settings components for Angular Elements registration
 import { UserProfileComponent } from './auth/components/user-profile/user-profile.component';
 import { NotificationPreferencesComponent } from './auth/components/notification-preferences/notification-preferences.component';
@@ -247,6 +250,9 @@ export class AppModule {
     safeDefine('app-forgot-password-confirmation', ForgotPasswordConfirmationComponent);
     safeDefine('app-reset-password-confirmation', ResetPasswordConfirmationComponent);
     safeDefine('app-confirm-email', ConfirmEmailComponent);
+
+    // Register Phase 1.3 User Management components as Angular Elements
+    safeDefine('app-create-user', CreateUserComponent);
 
     // Register Phase 6.2 User Profile & Settings components as Angular Elements
     safeDefine('app-user-profile', UserProfileComponent);

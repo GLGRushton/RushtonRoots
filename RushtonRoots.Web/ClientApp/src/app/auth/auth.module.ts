@@ -18,6 +18,10 @@ import { NotificationPreferencesComponent } from './components/notification-pref
 import { PrivacySettingsComponent } from './components/privacy-settings/privacy-settings.component';
 import { ConnectedAccountsComponent } from './components/connected-accounts/connected-accounts.component';
 import { AccountDeletionComponent } from './components/account-deletion/account-deletion.component';
+import { CreateUserComponent } from './components/create-user/create-user.component';
+
+// Import auth directives
+import { AdminOnlyDirective, RoleGuardDirective } from './directives/admin-only.directive';
 
 /**
  * AuthModule - Authentication and account management components
@@ -34,6 +38,11 @@ import { AccountDeletionComponent } from './components/account-deletion/account-
  * - PrivacySettingsComponent: Privacy settings
  * - ConnectedAccountsComponent: Connected social accounts management
  * - AccountDeletionComponent: Account deletion flow
+ * - CreateUserComponent: Admin-only user creation form
+ * 
+ * Directives:
+ * - AdminOnlyDirective: Show/hide content for admin users
+ * - RoleGuardDirective: Flexible role-based content visibility
  * 
  * All components are built with Angular Material and follow the design system.
  */
@@ -49,7 +58,10 @@ import { AccountDeletionComponent } from './components/account-deletion/account-
     NotificationPreferencesComponent,
     PrivacySettingsComponent,
     ConnectedAccountsComponent,
-    AccountDeletionComponent
+    AccountDeletionComponent,
+    CreateUserComponent,
+    AdminOnlyDirective,
+    RoleGuardDirective
   ],
   imports: [
     CommonModule,
@@ -68,7 +80,10 @@ import { AccountDeletionComponent } from './components/account-deletion/account-
     NotificationPreferencesComponent,
     PrivacySettingsComponent,
     ConnectedAccountsComponent,
-    AccountDeletionComponent
+    AccountDeletionComponent,
+    CreateUserComponent,
+    AdminOnlyDirective,
+    RoleGuardDirective
   ]
 })
 export class AuthModule { }
