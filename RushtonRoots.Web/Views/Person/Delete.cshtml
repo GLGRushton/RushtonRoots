@@ -6,45 +6,132 @@
 <div class="container mt-4">
     <h2>Delete Person</h2>
 
-    <div class="alert alert-danger">
-        <h4>Are you sure you want to delete this person?</h4>
-        <p>This action cannot be undone.</p>
-    </div>
+    <!-- Angular Person Delete Dialog Component -->
+    <app-person-delete-dialog 
+        id="personDeleteDialog"
+        person-id="@Model.Id"
+        full-name="@Model.FullName"
+        photo-url="@(Model.PhotoUrl ?? "")"
+        date-of-birth="@(Model.DateOfBirth?.ToString("o") ?? "")"
+        date-of-death="@(Model.DateOfDeath?.ToString("o") ?? "")"
+        is-deceased="@Model.IsDeceased.ToString().ToLower()"
+        household-name="@(Model.HouseholdName ?? "")"
+        related-data='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(new {
+            relationships = new {
+                parents = 0,
+                children = 0,
+                spouses = 0,
+                siblings = 0,
+                total = 0
+            },
+            householdMemberships = 1,
+            photos = 0,
+            stories = 0,
+            documents = 0,
+            lifeEvents = 0
+        }))'>
+    </app-person-delete-dialog>
 
-    <div class="card">
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Full Name</dt>
-                <dd class="col-sm-9">@Model.FullName</dd>
-
-                <dt class="col-sm-3">Household</dt>
-                <dd class="col-sm-9">@Model.HouseholdName</dd>
-
-                <dt class="col-sm-3">Date of Birth</dt>
-                <dd class="col-sm-9">@(Model.DateOfBirth?.ToString("MMMM dd, yyyy") ?? "N/A")</dd>
-
-                <dt class="col-sm-3">Status</dt>
-                <dd class="col-sm-9">
-                    @if (Model.IsDeceased)
-                    {
-                        <span class="badge bg-secondary">Deceased</span>
-                        @if (Model.DateOfDeath.HasValue)
-                        {
-                            <span>(@Model.DateOfDeath.Value.ToString("MMMM dd, yyyy"))</span>
-                        }
-                    }
-                    else
-                    {
-                        <span class="badge bg-success">Living</span>
-                    }
-                </dd>
-            </dl>
+    <!-- Fallback content for browsers without JavaScript -->
+    <noscript>
+        <div class="alert alert-danger">
+            <h4>Are you sure you want to delete this person?</h4>
+            <p>This action cannot be undone.</p>
         </div>
-    </div>
 
-    <form asp-action="Delete" method="post" class="mt-3">
-        <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </form>
+        <div class="card">
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Full Name</dt>
+                    <dd class="col-sm-9">@Model.FullName</dd>
+
+                    <dt class="col-sm-3">Household</dt>
+                    <dd class="col-sm-9">@Model.HouseholdName</dd>
+
+                    <dt class="col-sm-3">Date of Birth</dt>
+                    <dd class="col-sm-9">@(Model.DateOfBirth?.ToString("MMMM dd, yyyy") ?? "N/A")</dd>
+
+                    <dt class="col-sm-3">Status</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.IsDeceased)
+                        {
+                            <span class="badge bg-secondary">Deceased</span>
+                            @if (Model.DateOfDeath.HasValue)
+                            {
+                                <span>(@Model.DateOfDeath.Value.ToString("MMMM dd, yyyy"))</span>
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Living</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <form asp-action="Delete" method="post" class="mt-3">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </noscript>
 </div>
+
+@section Scripts {
+    <script>
+        // Handle person delete dialog events
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteDialog = document.getElementById('personDeleteDialog');
+            
+            if (deleteDialog) {
+                // Listen for delete confirmation event
+                deleteDialog.addEventListener('deleteConfirmed', function(event) {
+                    const deleteOptions = event.detail;
+                    
+                    // Prepare form data
+                    const formData = new FormData();
+                    formData.append('Id', @Model.Id);
+                    formData.append('DeleteType', deleteOptions.deleteType);
+                    formData.append('Confirmed', deleteOptions.confirmed);
+                    
+                    if (deleteOptions.transferRelationshipsTo) {
+                        formData.append('TransferRelationshipsTo', deleteOptions.transferRelationshipsTo);
+                    }
+                    
+                    // Add anti-forgery token
+                    const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+                    if (tokenElement && tokenElement.value) {
+                        formData.append('__RequestVerificationToken', tokenElement.value);
+                    }
+                    
+                    // Submit delete request
+                    fetch('@Url.Action("Delete", "Person")', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Redirect to index on success
+                            window.location.href = '@Url.Action("Index", "Person")';
+                        } else {
+                            alert('Error deleting person. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error deleting person. Please try again.');
+                    });
+                });
+                
+                // Listen for cancel event
+                deleteDialog.addEventListener('deleteCancelled', function() {
+                    // Redirect back to index
+                    window.location.href = '@Url.Action("Index", "Person")';
+                });
+            }
+        });
+    </script>
+    
+    @Html.AntiForgeryToken()
+}

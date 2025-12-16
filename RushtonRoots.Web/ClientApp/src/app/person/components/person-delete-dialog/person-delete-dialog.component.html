@@ -1,0 +1,166 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="warning-icon">warning</mat-icon>
+  Delete Person
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="deleteForm">
+    <!-- Person Summary Section -->
+    <section class="person-summary">
+      <div class="person-header">
+        <div class="person-photo">
+          <img *ngIf="data.photoUrl" [src]="data.photoUrl" [alt]="data.fullName" class="avatar">
+          <div *ngIf="!data.photoUrl" class="avatar-placeholder">
+            <mat-icon>person</mat-icon>
+          </div>
+        </div>
+        <div class="person-info">
+          <h3 class="person-name">{{ data.fullName }}</h3>
+          <div class="person-dates" *ngIf="data.dateOfBirth">
+            <mat-icon class="date-icon">cake</mat-icon>
+            <span>{{ formatDate(data.dateOfBirth) }}</span>
+            <span *ngIf="data.isDeceased && data.dateOfDeath" class="death-date">
+              - {{ formatDate(data.dateOfDeath) }}
+            </span>
+            <span class="lifespan">{{ getLifespan() }}</span>
+          </div>
+          <div class="person-household" *ngIf="data.householdName">
+            <mat-icon class="household-icon">home</mat-icon>
+            <span>{{ data.householdName }}</span>
+          </div>
+          <mat-chip *ngIf="data.isDeceased" class="status-chip deceased">Deceased</mat-chip>
+          <mat-chip *ngIf="!data.isDeceased" class="status-chip living">Living</mat-chip>
+        </div>
+      </div>
+    </section>
+
+    <!-- Warning Message -->
+    <mat-card class="warning-card" appearance="outlined">
+      <mat-card-content>
+        <div class="warning-header">
+          <mat-icon color="warn">error_outline</mat-icon>
+          <strong>Warning: This action will affect related data</strong>
+        </div>
+        <p class="warning-text">{{ getWarningMessage() }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Related Data Section -->
+    <section class="related-data" *ngIf="hasRelatedData()">
+      <h4 class="section-title">
+        <mat-icon>link</mat-icon>
+        Data That Will Be Affected ({{ getTotalRelatedItems() }} items)
+      </h4>
+      
+      <mat-list class="affected-items">
+        <!-- Relationships -->
+        <mat-list-item *ngIf="data.relatedData.relationships.total > 0">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <div matListItemTitle>Relationships</div>
+          <div matListItemLine>
+            <span *ngIf="data.relatedData.relationships.parents > 0">{{ data.relatedData.relationships.parents }} parent(s), </span>
+            <span *ngIf="data.relatedData.relationships.children > 0">{{ data.relatedData.relationships.children }} child(ren), </span>
+            <span *ngIf="data.relatedData.relationships.spouses > 0">{{ data.relatedData.relationships.spouses }} spouse(s), </span>
+            <span *ngIf="data.relatedData.relationships.siblings > 0">{{ data.relatedData.relationships.siblings }} sibling(s)</span>
+          </div>
+        </mat-list-item>
+
+        <!-- Household Memberships -->
+        <mat-list-item *ngIf="data.relatedData.householdMemberships > 0">
+          <mat-icon matListItemIcon>home</mat-icon>
+          <div matListItemTitle>Household Memberships</div>
+          <div matListItemLine>{{ data.relatedData.householdMemberships }} household(s)</div>
+        </mat-list-item>
+
+        <!-- Photos -->
+        <mat-list-item *ngIf="data.relatedData.photos > 0">
+          <mat-icon matListItemIcon>photo_library</mat-icon>
+          <div matListItemTitle>Photos and Media</div>
+          <div matListItemLine>{{ data.relatedData.photos }} photo(s)</div>
+        </mat-list-item>
+
+        <!-- Stories -->
+        <mat-list-item *ngIf="data.relatedData.stories > 0">
+          <mat-icon matListItemIcon>book</mat-icon>
+          <div matListItemTitle>Stories and Documents</div>
+          <div matListItemLine>{{ data.relatedData.stories }} story/stories, {{ data.relatedData.documents }} document(s)</div>
+        </mat-list-item>
+
+        <!-- Life Events -->
+        <mat-list-item *ngIf="data.relatedData.lifeEvents > 0">
+          <mat-icon matListItemIcon>event</mat-icon>
+          <div matListItemTitle>Life Events</div>
+          <div matListItemLine>{{ data.relatedData.lifeEvents }} event(s)</div>
+        </mat-list-item>
+      </mat-list>
+    </section>
+
+    <!-- Delete Type Selection -->
+    <section class="delete-options">
+      <h4 class="section-title">
+        <mat-icon>settings</mat-icon>
+        Deletion Options
+      </h4>
+
+      <mat-radio-group formControlName="deleteType" class="delete-type-group">
+        <mat-radio-button value="soft" class="delete-option">
+          <div class="option-content">
+            <strong>Soft Delete (Recommended)</strong>
+            <p>Mark as deleted, can be restored by admin</p>
+          </div>
+        </mat-radio-button>
+
+        <mat-radio-button value="archive" class="delete-option">
+          <div class="option-content">
+            <strong>Archive</strong>
+            <p>Move to archive, preserve for history</p>
+          </div>
+        </mat-radio-button>
+
+        <mat-radio-button value="hard" class="delete-option" *ngIf="isAdmin">
+          <div class="option-content">
+            <strong class="danger-text">Hard Delete (Admin Only)</strong>
+            <p class="danger-text">Permanently delete all data - CANNOT BE UNDONE</p>
+          </div>
+        </mat-radio-button>
+      </mat-radio-group>
+    </section>
+
+    <!-- Optional: Transfer Relationships -->
+    <section class="transfer-section" *ngIf="data.relatedData.relationships.total > 0">
+      <h4 class="section-title">
+        <mat-icon>swap_horiz</mat-icon>
+        Transfer Relationships (Optional)
+      </h4>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Transfer relationships to another person</mat-label>
+        <input matInput type="number" formControlName="transferPersonId" placeholder="Enter Person ID">
+        <mat-icon matSuffix>person_search</mat-icon>
+        <mat-hint>Leave blank to remove relationships</mat-hint>
+      </mat-form-field>
+    </section>
+
+    <!-- Confirmation Checkbox -->
+    <section class="confirmation-section">
+      <mat-checkbox formControlName="confirmationCheckbox" color="warn" class="confirmation-checkbox">
+        <strong>I understand this action cannot be undone</strong>
+        <span *ngIf="selectedDeleteType === 'hard'"> and all data will be permanently lost</span>
+      </mat-checkbox>
+    </section>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button (click)="onCancel()" cdkFocusInitial>
+    Cancel
+  </button>
+  <button 
+    mat-raised-button 
+    [color]="getDeleteButtonColor()" 
+    (click)="onDelete()"
+    [disabled]="!deleteForm.valid"
+    class="delete-button">
+    <mat-icon>delete</mat-icon>
+    {{ getDeleteButtonText() }}
+  </button>
+</mat-dialog-actions>

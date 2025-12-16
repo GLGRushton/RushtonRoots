@@ -24,6 +24,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
+import { MatRadioModule } from '@angular/material/radio';
 
 // Components
 import { PersonIndexComponent } from './components/person-index/person-index.component';
@@ -36,6 +39,7 @@ import { PhotoGalleryComponent } from './components/photo-gallery/photo-gallery.
 import { PersonFormComponent } from './components/person-form/person-form.component';
 import { DatePickerComponent } from './components/date-picker/date-picker.component';
 import { LocationAutocompleteComponent } from './components/location-autocomplete/location-autocomplete.component';
+import { PersonDeleteDialogComponent } from './components/person-delete-dialog/person-delete-dialog.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +52,8 @@ import { LocationAutocompleteComponent } from './components/location-autocomplet
     PhotoGalleryComponent,
     PersonFormComponent,
     DatePickerComponent,
-    LocationAutocompleteComponent
+    LocationAutocompleteComponent,
+    PersonDeleteDialogComponent
   ],
   imports: [
     CommonModule,
@@ -74,7 +79,10 @@ import { LocationAutocompleteComponent } from './components/location-autocomplet
     MatMenuModule,
     MatStepperModule,
     MatSnackBarModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDialogModule,
+    MatListModule,
+    MatRadioModule
   ],
   exports: [
     PersonIndexComponent,
@@ -86,7 +94,8 @@ import { LocationAutocompleteComponent } from './components/location-autocomplet
     PhotoGalleryComponent,
     PersonFormComponent,
     DatePickerComponent,
-    LocationAutocompleteComponent
+    LocationAutocompleteComponent,
+    PersonDeleteDialogComponent
   ]
 })
 export class PersonModule { }

@@ -53,6 +53,9 @@ import { PersonFormComponent } from './person/components/person-form/person-form
 import { DatePickerComponent } from './person/components/date-picker/date-picker.component';
 import { LocationAutocompleteComponent } from './person/components/location-autocomplete/location-autocomplete.component';
 
+// Import Phase 2.4 Person Delete Dialog component for Angular Elements registration
+import { PersonDeleteDialogComponent } from './person/components/person-delete-dialog/person-delete-dialog.component';
+
 // Import Phase 4.1 Household Index & Cards components for Angular Elements registration
 import { HouseholdIndexComponent } from './household/components/household-index/household-index.component';
 import { HouseholdCardComponent } from './household/components/household-card/household-card.component';
@@ -217,6 +220,9 @@ export class AppModule {
     safeDefine('app-person-form', PersonFormComponent);
     safeDefine('app-date-picker', DatePickerComponent);
     safeDefine('app-location-autocomplete', LocationAutocompleteComponent);
+
+    // Register Phase 2.4 Person Delete Dialog component as Angular Element
+    safeDefine('app-person-delete-dialog', PersonDeleteDialogComponent);
 
     // Register Phase 4.1 Household Index & Cards components as Angular Elements
     safeDefine('app-household-index', HouseholdIndexComponent);
