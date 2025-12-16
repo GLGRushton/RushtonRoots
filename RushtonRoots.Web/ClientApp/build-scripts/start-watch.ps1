@@ -51,6 +51,15 @@ $clientAppPath = Split-Path -Parent $scriptDir
 # Project root (parent of ClientApp) – here if you ever need it
 $projectRoot = Split-Path -Parent $clientAppPath
 
+# Validate paths don't contain dangerous characters (defense in depth)
+# Since these paths are derived from the script location, this is primarily
+# a defense against unusual installation paths or filesystem issues
+$dangerousChars = '[;&|<>`$()]'
+if ($clientAppPath -match $dangerousChars) {
+    Write-Error "ClientApp path contains potentially dangerous characters: $clientAppPath"
+    exit 1
+}
+
 # PID file (tracks the terminal process)
 $pidFile = Join-Path $scriptDir ".watch-pid"
 
@@ -229,6 +238,8 @@ if (Test-Path $windowsTerminal) {
         exit 1
     }
     
+    # Note: ArgumentList array elements are automatically escaped by Start-Process
+    # The -d parameter takes the path as a separate argument, preventing injection
     $wtArgs = @(
         '-d', $clientAppPath,
         '--', $shell,
