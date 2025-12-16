@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Household Components - Usage Examples</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+        }
+        h1, h2 {
+            color: #2e7d32;
+        }
+        .example-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 12px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Household Components - Usage Examples</h1>
+    
+    <div class="example-section">
+        <h2>1. Basic HouseholdIndexComponent Usage</h2>
+        <p>Display a list of households with search, filter, and sort capabilities.</p>
+        
+        <h3>TypeScript (Component)</h3>
+        <pre><code>import { Component } from '@angular/core';
+import { HouseholdCard } from './household/models/household.model';
+
+@Component({
+  selector: 'app-households-page',
+  template: `
+    &lt;app-household-index
+      [initialHouseholds]="households"
+      [canEdit]="true"
+      [canDelete]="true"
+      [canCreate]="true"&gt;
+    &lt;/app-household-index&gt;
+  `
+})
+export class HouseholdsPageComponent {
+  households: HouseholdCard[] = [
+    {
+      id: 1,
+      householdName: 'The Smith Family',
+      anchorPersonId: 10,
+      anchorPersonName: 'John Smith',
+      memberCount: 5,
+      createdDateTime: new Date('2023-01-15'),
+      updatedDateTime: new Date('2024-11-20'),
+      members: [
+        {
+          personId: 10,
+          firstName: 'John',
+          lastName: 'Smith',
+          fullName: 'John Smith',
+          isAnchor: true
+        },
+        {
+          personId: 11,
+          firstName: 'Jane',
+          lastName: 'Smith',
+          fullName: 'Jane Smith',
+          isAnchor: false
+        }
+      ]
+    },
+    {
+      id: 2,
+      householdName: 'The Johnson Family',
+      anchorPersonId: 20,
+      anchorPersonName: 'Sarah Johnson',
+      memberCount: 3,
+      createdDateTime: new Date('2023-06-10'),
+      updatedDateTime: new Date('2024-12-01'),
+      members: []
+    }
+  ];
+}</code></pre>
+
+        <h3>Razor View (.cshtml)</h3>
+        <pre><code>@model HouseholdIndexViewModel
+
+&lt;div class="container"&gt;
+    &lt;app-household-index
+        initial-households='@Json.Serialize(Model.Households)'
+        can-edit="@(User.IsInRole("Admin") ? "true" : "false")"
+        can-delete="@(User.IsInRole("Admin") ? "true" : "false")"
+        can-create="true"&gt;
+    &lt;/app-household-index&gt;
+&lt;/div&gt;</code></pre>
+
+        <div class="note">
+            <strong>Note:</strong> The component automatically handles responsive grid layout based on screen size.
+        </div>
+    </div>
+
+    <div class="example-section">
+        <h2>2. HouseholdCardComponent as Standalone</h2>
+        <p>Use individual household cards in custom layouts.</p>
+        
+        <h3>TypeScript</h3>
+        <pre><code>import { Component } from '@angular/core';
+import { HouseholdCard, HouseholdAction } from './household/models/household.model';
+
+@Component({
+  selector: 'app-featured-households',
+  template: `
+    &lt;div class="featured-grid"&gt;
+      &lt;app-household-card
+        *ngFor="let household of featuredHouseholds"
+        [household]="household"
+        [canEdit]="true"
+        [canDelete]="false"
+        [elevation]="4"
+        (action)="handleAction($event)"&gt;
+      &lt;/app-household-card&gt;
+    &lt;/div&gt;
+  `
+})
+export class FeaturedHouseholdsComponent {
+  featuredHouseholds: HouseholdCard[] = [];
+
+  handleAction(action: HouseholdAction): void {
+    console.log('Action:', action);
+    
+    switch (action.type) {
+      case 'view':
+        this.viewHousehold(action.householdId);
+        break;
+      case 'edit':
+        this.editHousehold(action.householdId);
+        break;
+      // ... handle other actions
+    }
+  }
+
+  private viewHousehold(id: number): void {
+    // Navigate to household details
+  }
+
+  private editHousehold(id: number): void {
+    // Navigate to edit page
+  }
+}</code></pre>
+    </div>
+
+    <div class="example-section">
+        <h2>3. Server-Side Data Integration</h2>
+        <p>Example C# controller and view model for server-side rendering.</p>
+        
+        <h3>C# Controller</h3>
+        <pre><code>public class HouseholdController : Controller
+{
+    private readonly IHouseholdService _householdService;
+
+    public HouseholdController(IHouseholdService householdService)
+    {
+        _householdService = householdService;
+    }
+
+    public async Task&lt;IActionResult&gt; Index()
+    {
+        var households = await _householdService.GetAllHouseholdsAsync();
+        var viewModel = new HouseholdIndexViewModel
+        {
+            Households = households.Select(h => new HouseholdCardDto
+            {
+                Id = h.Id,
+                HouseholdName = h.HouseholdName,
+                AnchorPersonId = h.AnchorPersonId,
+                AnchorPersonName = h.AnchorPerson?.FullName,
+                MemberCount = h.Members.Count,
+                CreatedDateTime = h.CreatedDateTime,
+                UpdatedDateTime = h.UpdatedDateTime,
+                Members = h.Members.Select(m => new HouseholdMemberDto
+                {
+                    PersonId = m.Id,
+                    FirstName = m.FirstName,
+                    LastName = m.LastName,
+                    FullName = m.FullName,
+                    PhotoUrl = m.PhotoUrl,
+                    IsAnchor = m.Id == h.AnchorPersonId
+                }).ToList()
+            }).ToList(),
+            CanEdit = User.IsInRole("Admin") || User.IsInRole("Editor"),
+            CanDelete = User.IsInRole("Admin"),
+            CanCreate = User.Identity.IsAuthenticated
+        };
+
+        return View(viewModel);
+    }
+}</code></pre>
+
+        <h3>View Model</h3>
+        <pre><code>public class HouseholdIndexViewModel
+{
+    public List&lt;HouseholdCardDto&gt; Households { get; set; }
+    public bool CanEdit { get; set; }
+    public bool CanDelete { get; set; }
+    public bool CanCreate { get; set; }
+}
+
+public class HouseholdCardDto
+{
+    public int Id { get; set; }
+    public string HouseholdName { get; set; }
+    public int? AnchorPersonId { get; set; }
+    public string AnchorPersonName { get; set; }
+    public int MemberCount { get; set; }
+    public DateTime CreatedDateTime { get; set; }
+    public DateTime UpdatedDateTime { get; set; }
+    public List&lt;HouseholdMemberDto&gt; Members { get; set; }
+}
+
+public class HouseholdMemberDto
+{
+    public int PersonId { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string FullName { get; set; }
+    public string PhotoUrl { get; set; }
+    public bool IsAnchor { get; set; }
+}</code></pre>
+    </div>
+
+    <div class="example-section">
+        <h2>4. Customizing Card Elevation</h2>
+        <p>Control the visual elevation of household cards.</p>
+        
+        <pre><code>&lt;!-- Standard elevation (default: 2) --&gt;
+&lt;app-household-card [household]="household"&gt;&lt;/app-household-card&gt;
+
+&lt;!-- Flat card (no shadow) --&gt;
+&lt;app-household-card [household]="household" [elevation]="0"&gt;&lt;/app-household-card&gt;
+
+&lt;!-- Raised card --&gt;
+&lt;app-household-card [household]="household" [elevation]="4"&gt;&lt;/app-household-card&gt;
+
+&lt;!-- Highly elevated card --&gt;
+&lt;app-household-card [household]="household" [elevation]="8"&gt;&lt;/app-household-card&gt;</code></pre>
+    </div>
+
+    <div class="example-section">
+        <h2>5. Permission-Based Display</h2>
+        <p>Show or hide features based on user permissions.</p>
+        
+        <pre><code>&lt;!-- Admin can edit and delete --&gt;
+&lt;app-household-index
+    [initialHouseholds]="households"
+    [canEdit]="isAdmin"
+    [canDelete]="isAdmin"
+    [canCreate]="isAuthenticated"&gt;
+&lt;/app-household-index&gt;
+
+&lt;!-- Read-only view for guests --&gt;
+&lt;app-household-index
+    [initialHouseholds]="households"
+    [canEdit]="false"
+    [canDelete]="false"
+    [canCreate]="false"&gt;
+&lt;/app-household-index&gt;</code></pre>
+    </div>
+
+    <div class="example-section">
+        <h2>6. Empty State Example</h2>
+        <p>The component automatically shows an empty state when no households are found.</p>
+        
+        <pre><code>&lt;!-- With no households --&gt;
+&lt;app-household-index
+    [initialHouseholds]="[]"
+    [canCreate]="true"&gt;
+&lt;/app-household-index&gt;
+
+&lt;!-- Shows: "No Households Found" with "Create Your First Household" button --&gt;</code></pre>
+    </div>
+
+    <div class="example-section">
+        <h2>7. Loading State</h2>
+        <p>Show loading indicator while data is being fetched.</p>
+        
+        <pre><code>// In your component
+isLoading = true;
+households: HouseholdCard[] = [];
+
+ngOnInit() {
+  this.loadHouseholds();
+}
+
+async loadHouseholds() {
+  this.isLoading = true;
+  try {
+    this.households = await this.householdService.getHouseholds();
+  } finally {
+    this.isLoading = false;
+  }
+}
+
+// In template
+&lt;app-household-index
+    *ngIf="!isLoading"
+    [initialHouseholds]="households"&gt;
+&lt;/app-household-index&gt;
+
+&lt;mat-spinner *ngIf="isLoading"&gt;&lt;/mat-spinner&gt;</code></pre>
+    </div>
+
+    <div class="warning">
+        <strong>Important:</strong> Make sure to include the HouseholdModule in your app.module.ts imports and register components as Angular Elements if using in Razor views.
+    </div>
+
+    <div class="example-section">
+        <h2>8. Responsive Grid Behavior</h2>
+        <p>The grid automatically adjusts based on screen size:</p>
+        <ul>
+            <li><strong>Mobile (&lt; 600px):</strong> 1 column</li>
+            <li><strong>Tablet (600px - 960px):</strong> 2 columns</li>
+            <li><strong>Small Desktop (960px - 1280px):</strong> 3 columns</li>
+            <li><strong>Large Desktop (≥ 1280px):</strong> 4 columns</li>
+        </ul>
+        
+        <div class="note">
+            The component listens to window resize events and updates the grid layout automatically.
+        </div>
+    </div>
+
+    <div class="example-section">
+        <h2>Additional Resources</h2>
+        <ul>
+            <li><a href="README.md">Module README</a></li>
+            <li><a href="models/household.model.ts">TypeScript Models</a></li>
+            <li><a href="https://material.angular.io">Angular Material Documentation</a></li>
+        </ul>
+    </div>
+</body>
+</html>

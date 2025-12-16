@@ -11,6 +11,7 @@ import { FamilyTreeComponent } from './family-tree/family-tree.component';
 import { StyleGuideComponent } from './style-guide/style-guide.component';
 import { SharedModule } from './shared/shared.module';
 import { PersonModule } from './person/person.module';
+import { HouseholdModule } from './household/household.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -42,6 +43,10 @@ import { PersonFormComponent } from './person/components/person-form/person-form
 import { DatePickerComponent } from './person/components/date-picker/date-picker.component';
 import { LocationAutocompleteComponent } from './person/components/location-autocomplete/location-autocomplete.component';
 
+// Import Phase 4.1 Household Index & Cards components for Angular Elements registration
+import { HouseholdIndexComponent } from './household/components/household-index/household-index.component';
+import { HouseholdCardComponent } from './household/components/household-card/household-card.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +60,8 @@ import { LocationAutocompleteComponent } from './person/components/location-auto
     HttpClientModule,
     FormsModule,
     SharedModule,
-    PersonModule
+    PersonModule,
+    HouseholdModule
   ],
   providers: []
 })
@@ -142,6 +148,13 @@ export class AppModule {
 
     const locationAutocompleteElement = createCustomElement(LocationAutocompleteComponent, { injector: this.injector });
     customElements.define('app-location-autocomplete', locationAutocompleteElement);
+
+    // Register Phase 4.1 Household Index & Cards components as Angular Elements
+    const householdIndexElement = createCustomElement(HouseholdIndexComponent, { injector: this.injector });
+    customElements.define('app-household-index', householdIndexElement);
+
+    const householdCardElement = createCustomElement(HouseholdCardComponent, { injector: this.injector });
+    customElements.define('app-household-card', householdCardElement);
   }
 
   ngDoBootstrap() {

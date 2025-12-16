@@ -1,0 +1,87 @@
+<mat-card [class.mat-elevation-z2]="elevation === 2" 
+          [class.mat-elevation-z4]="elevation === 4"
+          [class.mat-elevation-z8]="elevation === 8"
+          class="household-card">
+  <mat-card-header>
+    <div mat-card-avatar class="household-avatar">
+      <img [src]="getAnchorAvatar()" 
+           [alt]="household.householdName"
+           class="avatar-image">
+    </div>
+    <mat-card-title>
+      {{ household.householdName }}
+      <mat-icon class="badge-icon" 
+                [matBadge]="household.memberCount" 
+                matBadgeColor="primary"
+                matBadgeSize="small"
+                matTooltip="Member count">
+        people
+      </mat-icon>
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="household.anchorPersonName">
+      Anchor: {{ household.anchorPersonName }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="household-details">
+      <div class="detail-row" *ngIf="showMembers">
+        <mat-icon class="detail-icon">group</mat-icon>
+        <span class="detail-text">{{ getMemberPreview() }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <mat-icon class="detail-icon">event</mat-icon>
+        <span class="detail-text">Created {{ formatDate(household.createdDateTime) }}</span>
+      </div>
+      
+      <div class="detail-row" *ngIf="household.updatedDateTime !== household.createdDateTime">
+        <mat-icon class="detail-icon">update</mat-icon>
+        <span class="detail-text">Updated {{ formatDate(household.updatedDateTime) }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="card-actions">
+    <button mat-button 
+            color="primary" 
+            (click)="onView()"
+            matTooltip="View household details">
+      <mat-icon>visibility</mat-icon>
+      View
+    </button>
+    
+    <button mat-button 
+            *ngIf="canEdit"
+            (click)="onEdit()"
+            matTooltip="Edit household">
+      <mat-icon>edit</mat-icon>
+      Edit
+    </button>
+    
+    <button mat-icon-button 
+            [matMenuTriggerFor]="actionMenu"
+            matTooltip="More actions">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    
+    <mat-menu #actionMenu="matMenu">
+      <button mat-menu-item (click)="onManageMembers()">
+        <mat-icon>people_outline</mat-icon>
+        <span>Manage Members</span>
+      </button>
+      <button mat-menu-item (click)="onSettings()">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </button>
+      <mat-divider *ngIf="canDelete"></mat-divider>
+      <button mat-menu-item 
+              *ngIf="canDelete"
+              (click)="onDelete()"
+              class="delete-action">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,96 @@
+.household-card {
+  max-width: 400px;
+  margin: 16px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.household-avatar {
+  .avatar-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  .badge-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.household-details {
+  margin-top: 16px;
+  
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: rgba(0, 0, 0, 0.6);
+    
+    .detail-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: rgba(0, 0, 0, 0.54);
+    }
+    
+    .detail-text {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  }
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  
+  button {
+    margin-right: 4px;
+    
+    mat-icon {
+      margin-right: 4px;
+    }
+  }
+}
+
+.delete-action {
+  color: #d32f2f;
+  
+  mat-icon {
+    color: #d32f2f;
+  }
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .household-card {
+    margin: 8px;
+    max-width: 100%;
+  }
+  
+  .card-actions {
+    flex-direction: column;
+    align-items: stretch;
+    
+    button {
+      margin-right: 0;
+      margin-bottom: 4px;
+    }
+  }
+}
