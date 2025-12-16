@@ -22,6 +22,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
 
 // Components - Phase 4.1
 import { HouseholdCardComponent } from './components/household-card/household-card.component';
@@ -37,6 +38,9 @@ import { HouseholdActivityTimelineComponent } from './components/household-activ
 // Components - Phase 3.3 (UpdateDesigns.md)
 import { HouseholdFormComponent } from './components/household-form/household-form.component';
 
+// Components - Phase 3.4 (UpdateDesigns.md)
+import { HouseholdDeleteDialogComponent } from './components/household-delete-dialog/household-delete-dialog.component';
+
 @NgModule({
   declarations: [
     // Phase 4.1
@@ -49,7 +53,9 @@ import { HouseholdFormComponent } from './components/household-form/household-fo
     HouseholdSettingsComponent,
     HouseholdActivityTimelineComponent,
     // Phase 3.3 (UpdateDesigns.md)
-    HouseholdFormComponent
+    HouseholdFormComponent,
+    // Phase 3.4 (UpdateDesigns.md)
+    HouseholdDeleteDialogComponent
   ],
   imports: [
     CommonModule,
@@ -73,7 +79,8 @@ import { HouseholdFormComponent } from './components/household-form/household-fo
     MatRadioModule,
     MatAutocompleteModule,
     MatCheckboxModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatListModule
   ],
   exports: [
     // Phase 4.1
@@ -86,7 +93,9 @@ import { HouseholdFormComponent } from './components/household-form/household-fo
     HouseholdSettingsComponent,
     HouseholdActivityTimelineComponent,
     // Phase 3.3 (UpdateDesigns.md)
-    HouseholdFormComponent
+    HouseholdFormComponent,
+    // Phase 3.4 (UpdateDesigns.md)
+    HouseholdDeleteDialogComponent
   ]
 })
 export class HouseholdModule { }

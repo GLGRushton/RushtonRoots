@@ -1,0 +1,366 @@
+/* Household Delete Dialog Component Styles */
+
+/* Dialog Title */
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #d32f2f; /* Material red */
+  margin: 0;
+  padding: 20px 24px 0;
+  
+  .warning-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Dialog Content */
+.dialog-content {
+  padding: 20px 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* Household Summary Section */
+.household-summary {
+  margin-bottom: 24px;
+  
+  .household-header {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .household-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    
+    .large-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: white;
+    }
+  }
+  
+  .household-info {
+    flex: 1;
+  }
+  
+  .household-name {
+    margin: 0 0 12px 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: #212121;
+  }
+  
+  .household-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #616161;
+    font-size: 14px;
+    
+    .detail-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #757575;
+    }
+  }
+}
+
+/* Warning Card */
+.warning-card {
+  margin-bottom: 24px;
+  border: 2px solid #ff9800;
+  background-color: #fff3e0;
+  
+  .warning-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    color: #e65100;
+    
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+  
+  .warning-text {
+    margin: 0;
+    color: #424242;
+    line-height: 1.6;
+  }
+}
+
+/* Related Data Section */
+.related-data {
+  margin-bottom: 24px;
+  
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #424242;
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .affected-items {
+    padding: 0;
+    
+    mat-list-item {
+      margin-bottom: 8px;
+      border-left: 3px solid #2196f3;
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      
+      mat-icon {
+        color: #2196f3;
+      }
+    }
+  }
+}
+
+/* Delete Options Section */
+.delete-options {
+  margin-bottom: 24px;
+  
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #424242;
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .delete-type-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .delete-option {
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: #2196f3;
+      background-color: #f5f5f5;
+    }
+    
+    .option-content {
+      margin-left: 8px;
+      
+      strong {
+        display: block;
+        font-size: 15px;
+        margin-bottom: 4px;
+      }
+      
+      p {
+        margin: 0;
+        font-size: 13px;
+        color: #757575;
+      }
+      
+      .danger-text {
+        color: #d32f2f;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+/* Member Notification Section */
+.notification-section {
+  margin-bottom: 24px;
+  
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #424242;
+    
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .notification-checkbox {
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    
+    strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    
+    .checkbox-hint {
+      margin: 4px 0 0 0;
+      font-size: 13px;
+      color: #757575;
+      font-weight: normal;
+    }
+  }
+}
+
+/* Confirmation Section */
+.confirmation-section {
+  margin-bottom: 16px;
+  
+  .confirmation-checkbox {
+    padding: 16px;
+    border: 2px solid #d32f2f;
+    border-radius: 8px;
+    background-color: #ffebee;
+    
+    strong {
+      font-size: 15px;
+      color: #c62828;
+    }
+    
+    span {
+      display: block;
+      margin-top: 4px;
+      font-size: 13px;
+      color: #d32f2f;
+      font-weight: 500;
+    }
+  }
+}
+
+/* Dialog Actions */
+.dialog-actions {
+  padding: 16px 24px;
+  gap: 12px;
+  
+  .delete-button {
+    min-width: 140px;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dialog-content {
+    padding: 16px;
+  }
+  
+  .household-summary {
+    .household-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .household-icon {
+      width: 64px;
+      height: 64px;
+      
+      .large-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+      }
+    }
+    
+    .household-details {
+      align-items: center;
+    }
+  }
+  
+  .dialog-actions {
+    flex-direction: column-reverse;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .delete-option {
+    transition: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .household-name,
+  .section-title {
+    color: #e0e0e0;
+  }
+  
+  .detail-row {
+    color: #bdbdbd;
+  }
+  
+  .warning-card {
+    background-color: rgba(255, 152, 0, 0.1);
+  }
+  
+  .delete-option,
+  .notification-checkbox,
+  .confirmation-checkbox {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .warning-card {
+    border-width: 3px;
+  }
+  
+  .delete-option {
+    border-width: 3px;
+  }
+  
+  .confirmation-checkbox {
+    border-width: 3px;
+  }
+}

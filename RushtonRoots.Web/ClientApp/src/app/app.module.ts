@@ -70,6 +70,9 @@ import { HouseholdActivityTimelineComponent } from './household/components/house
 // Import Phase 3.3 (UpdateDesigns.md) Household Form component for Angular Elements registration
 import { HouseholdFormComponent } from './household/components/household-form/household-form.component';
 
+// Import Phase 3.4 (UpdateDesigns.md) Household Delete Dialog component for Angular Elements registration
+import { HouseholdDeleteDialogComponent } from './household/components/household-delete-dialog/household-delete-dialog.component';
+
 // Import Phase 5.1 Partnership Management components for Angular Elements registration
 import { PartnershipIndexComponent } from './partnership/components/partnership-index/partnership-index.component';
 import { PartnershipCardComponent } from './partnership/components/partnership-card/partnership-card.component';
@@ -240,6 +243,9 @@ export class AppModule {
 
     // Register Phase 3.3 (UpdateDesigns.md) Household Form component as Angular Element
     safeDefine('app-household-form', HouseholdFormComponent);
+
+    // Register Phase 3.4 (UpdateDesigns.md) Household Delete Dialog component as Angular Element
+    safeDefine('app-household-delete-dialog', HouseholdDeleteDialogComponent);
 
     // Register Phase 5.1 Partnership Management components as Angular Elements
     safeDefine('app-partnership-index', PartnershipIndexComponent);
