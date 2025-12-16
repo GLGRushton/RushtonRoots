@@ -4262,9 +4262,9 @@ The plan leverages existing work from the UI_DesignPlan.md document, where many 
 | Partnership/Edit.cshtml | PartnershipFormComponent (edit) | 4.3 | ✅ Complete |
 | Partnership/Delete.cshtml | PartnershipDeleteDialogComponent | 4.4 | ✅ Complete |
 | ParentChild/Index.cshtml | ParentChildIndexComponent | 5.1 | ✅ Complete |
-| ParentChild/Details.cshtml | ParentChildDetailsComponent | 5.2 | ⏳ Pending |
-| ParentChild/Create.cshtml | ParentChildFormComponent (create) | 5.3 | ✅ Complete |
-| ParentChild/Edit.cshtml | ParentChildFormComponent (edit) | 5.3 | ✅ Complete |
+| ParentChild/Details.cshtml | ParentChildDetailsComponent | 5.2 | ✅ Component Complete, Razor Integration Pending |
+| ParentChild/Create.cshtml | ParentChildFormComponent (create) | 5.3 | ✅ Component Complete, Razor Integration Pending |
+| ParentChild/Edit.cshtml | ParentChildFormComponent (edit) | 5.3 | ✅ Component Complete, Razor Integration Pending |
 | ParentChild/Delete.cshtml | ParentChildDeleteDialogComponent | 5.4 | ⏳ Pending |
 | Home/Index.cshtml | HomePageComponent | 6.1 | ⏳ Pending |
 | Home/StyleGuide.cshtml | StyleGuideComponent | 6.2 | ✅ Complete |
