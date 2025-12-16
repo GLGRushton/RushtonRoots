@@ -1,0 +1,177 @@
+.household-index {
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.index-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    font-size: 32px;
+    font-weight: 500;
+    color: #2e7d32;
+    
+    .title-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+    }
+  }
+  
+  .create-button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.search-filter-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: center;
+  
+  .search-field {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .sort-field {
+    min-width: 200px;
+  }
+}
+
+.results-summary {
+  margin-bottom: 16px;
+  padding: 8px 0;
+  
+  .result-count {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  
+  p {
+    margin-top: 16px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  
+  .empty-icon {
+    font-size: 72px;
+    width: 72px;
+    height: 72px;
+    color: rgba(0, 0, 0, 0.26);
+    margin-bottom: 16px;
+  }
+  
+  h2 {
+    margin: 0 0 8px 0;
+    color: rgba(0, 0, 0, 0.6);
+  }
+  
+  p {
+    margin: 0 0 24px 0;
+    color: rgba(0, 0, 0, 0.6);
+    max-width: 400px;
+  }
+  
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.household-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 24px;
+}
+
+// Responsive design
+@media (max-width: 1280px) {
+  .household-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 960px) {
+  .household-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .search-filter-bar {
+    flex-direction: column;
+    
+    .search-field,
+    .sort-field {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .household-index {
+    padding: 16px;
+  }
+  
+  .index-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    
+    .page-title {
+      font-size: 24px;
+      
+      .title-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+    
+    .create-button {
+      width: 100%;
+    }
+  }
+  
+  .household-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .search-filter-bar {
+    .search-field {
+      min-width: unset;
+    }
+    
+    .sort-field {
+      min-width: unset;
+    }
+  }
+}

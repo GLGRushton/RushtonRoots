@@ -1,0 +1,98 @@
+<div class="household-index">
+  <!-- Header Section -->
+  <div class="index-header">
+    <h1 class="page-title">
+      <mat-icon class="title-icon">home</mat-icon>
+      Households
+    </h1>
+    
+    <button mat-raised-button 
+            color="primary" 
+            *ngIf="canCreate"
+            (click)="createHousehold()"
+            class="create-button">
+      <mat-icon>add</mat-icon>
+      Create Household
+    </button>
+  </div>
+
+  <!-- Search and Filter Bar -->
+  <div class="search-filter-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search households</mat-label>
+      <input matInput 
+             [(ngModel)]="searchTerm"
+             (ngModelChange)="onSearchChange($event)"
+             placeholder="Search by name or anchor person">
+      <mat-icon matPrefix>search</mat-icon>
+      <button mat-icon-button 
+              matSuffix 
+              *ngIf="searchTerm"
+              (click)="clearFilters()"
+              matTooltip="Clear search">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="sort-field">
+      <mat-label>Sort by</mat-label>
+      <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange($event.value)">
+        <mat-option *ngFor="let option of sortOptions" [value]="option">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>sort</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <!-- Results Summary -->
+  <div class="results-summary">
+    <span class="result-count">
+      Showing {{ filteredHouseholds.length }} of {{ households.length }} households
+    </span>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading households...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && filteredHouseholds.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">home_work</mat-icon>
+    <h2>No Households Found</h2>
+    <p *ngIf="searchTerm">
+      No households match your search criteria. Try adjusting your filters.
+    </p>
+    <p *ngIf="!searchTerm && households.length === 0">
+      Get started by creating your first household.
+    </p>
+    <button mat-raised-button 
+            color="primary" 
+            *ngIf="canCreate && !searchTerm"
+            (click)="createHousehold()">
+      <mat-icon>add</mat-icon>
+      Create Your First Household
+    </button>
+    <button mat-stroked-button 
+            *ngIf="searchTerm"
+            (click)="clearFilters()">
+      <mat-icon>clear</mat-icon>
+      Clear Filters
+    </button>
+  </div>
+
+  <!-- Household Cards Grid -->
+  <div *ngIf="!isLoading && filteredHouseholds.length > 0" 
+       class="household-grid"
+       [style.grid-template-columns]="getGridStyle()">
+    <app-household-card 
+      *ngFor="let household of filteredHouseholds"
+      [household]="household"
+      [canEdit]="canEdit"
+      [canDelete]="canDelete"
+      (action)="onHouseholdAction($event)">
+    </app-household-card>
+  </div>
+</div>
