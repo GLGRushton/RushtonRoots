@@ -14,6 +14,7 @@ import { PersonModule } from './person/person.module';
 import { HouseholdModule } from './household/household.module';
 import { PartnershipModule } from './partnership/partnership.module';
 import { ParentChildModule } from './parent-child/parent-child.module';
+import { AuthModule } from './auth/auth.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -71,6 +72,11 @@ import { RelationshipValidationComponent } from './parent-child/components/relat
 import { RelationshipSuggestionsComponent } from './parent-child/components/relationship-suggestions/relationship-suggestions.component';
 import { BulkRelationshipImportComponent } from './parent-child/components/bulk-relationship-import/bulk-relationship-import.component';
 
+// Import Phase 6.1 Login & Registration components for Angular Elements registration
+import { LoginComponent } from './auth/components/login/login.component';
+import { ForgotPasswordComponent } from './auth/components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './auth/components/reset-password/reset-password.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -87,7 +93,8 @@ import { BulkRelationshipImportComponent } from './parent-child/components/bulk-
     PersonModule,
     HouseholdModule,
     PartnershipModule,
-    ParentChildModule
+    ParentChildModule,
+    AuthModule
   ],
   providers: []
 })
@@ -232,6 +239,16 @@ export class AppModule {
 
     const bulkRelationshipImportElement = createCustomElement(BulkRelationshipImportComponent, { injector: this.injector });
     customElements.define('app-bulk-relationship-import', bulkRelationshipImportElement);
+
+    // Register Phase 6.1 Login & Registration components as Angular Elements
+    const loginElement = createCustomElement(LoginComponent, { injector: this.injector });
+    customElements.define('app-login', loginElement);
+
+    const forgotPasswordElement = createCustomElement(ForgotPasswordComponent, { injector: this.injector });
+    customElements.define('app-forgot-password', forgotPasswordElement);
+
+    const resetPasswordElement = createCustomElement(ResetPasswordComponent, { injector: this.injector });
+    customElements.define('app-reset-password', resetPasswordElement);
   }
 
   ngDoBootstrap() {

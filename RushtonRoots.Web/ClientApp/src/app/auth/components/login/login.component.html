@@ -1,0 +1,112 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="login-icon">account_circle</mat-icon>
+        <h2>Welcome Back</h2>
+      </mat-card-title>
+      <mat-card-subtitle>Sign in to RushtonRoots</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Error message display -->
+      <div class="error-alert" *ngIf="errorMessage">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Login form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input 
+            matInput 
+            type="email" 
+            formControlName="email"
+            placeholder="your@email.com"
+            autocomplete="email">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="hasError('email')">
+            {{ getErrorMessage('email') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input 
+            matInput 
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="Enter your password"
+            autocomplete="current-password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('password')">
+            {{ getErrorMessage('password') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Remember Me checkbox -->
+        <div class="remember-me-section">
+          <mat-checkbox formControlName="rememberMe">
+            Remember me
+          </mat-checkbox>
+          <a routerLink="/Account/ForgotPassword" class="forgot-password-link">
+            Forgot password?
+          </a>
+        </div>
+
+        <!-- Submit button -->
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          class="submit-button full-width"
+          [disabled]="authState.loading">
+          <mat-spinner 
+            *ngIf="authState.loading" 
+            diameter="20" 
+            class="button-spinner">
+          </mat-spinner>
+          <span *ngIf="!authState.loading">Sign In</span>
+          <span *ngIf="authState.loading">Signing in...</span>
+        </button>
+      </form>
+
+      <!-- Social login divider -->
+      <div class="divider">
+        <span>or continue with</span>
+      </div>
+
+      <!-- Social login buttons -->
+      <div class="social-login-buttons">
+        <button 
+          *ngFor="let provider of socialProviders"
+          mat-stroked-button
+          class="social-button"
+          [class.disabled]="!provider.enabled"
+          [disabled]="!provider.enabled || authState.loading"
+          (click)="onSocialLogin(provider.id)"
+          [matTooltip]="provider.enabled ? 'Sign in with ' + provider.name : 'Coming soon'">
+          <mat-icon [style.color]="provider.color">{{ provider.icon }}</mat-icon>
+          <span>{{ provider.name }}</span>
+        </button>
+      </div>
+
+      <!-- Register link -->
+      <div class="register-section">
+        <p>Don't have an account? <a routerLink="/Account/Register">Sign up</a></p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
