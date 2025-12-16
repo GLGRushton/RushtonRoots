@@ -95,7 +95,9 @@
                 </div>
                 <div class="info-item">
                   <span class="info-label">Date of Birth</span>
-                  <span class="info-value">{{ userProfile?.dateOfBirth | date:'mediumDate' || 'Not provided' }}</span>
+                  <span class="info-value">
+                    {{ userProfile?.dateOfBirth ? (userProfile!.dateOfBirth | date:'mediumDate') : 'Not provided' }}
+                  </span>
                 </div>
                 <div class="info-item">
                   <span class="info-label">Location</span>
@@ -104,8 +106,8 @@
                 <div class="info-item full-width">
                   <span class="info-label">Website</span>
                   <span class="info-value">
-                    <a *ngIf="userProfile?.website" [href]="userProfile.website" target="_blank">
-                      {{ userProfile.website }}
+                    <a *ngIf="userProfile?.website" [href]="userProfile!.website" target="_blank">
+                      {{ userProfile!.website }}
                     </a>
                     <span *ngIf="!userProfile?.website">Not provided</span>
                   </span>
