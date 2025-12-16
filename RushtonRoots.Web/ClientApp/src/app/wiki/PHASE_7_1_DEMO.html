@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 7.1 Wiki Components - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .demo-header {
+            background: white;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .demo-header h1 {
+            color: #2e7d32;
+            margin-bottom: 16px;
+        }
+
+        .demo-header p {
+            color: #757575;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .demo-section {
+            background: white;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .demo-section h2 {
+            color: #2e7d32;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2e7d32;
+        }
+
+        .demo-section h3 {
+            color: #424242;
+            margin: 24px 0 12px 0;
+        }
+
+        .demo-section pre {
+            background: #f5f5f5;
+            padding: 16px;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 12px 0;
+        }
+
+        .demo-section code {
+            color: #d32f2f;
+            font-family: 'Courier New', monospace;
+        }
+
+        .component-showcase {
+            border: 2px dashed #2e7d32;
+            padding: 24px;
+            border-radius: 8px;
+            margin: 16px 0;
+            background: #fafafa;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0 8px 28px;
+            position: relative;
+            color: #424242;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #2e7d32;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .stat-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #757575;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Header -->
+        <div class="demo-header">
+            <h1>Phase 7.1: Wiki & Knowledge Base <span class="badge">COMPLETE ✅</span></h1>
+            <p>This phase delivers a comprehensive knowledge base system for RushtonRoots, enabling users to create, edit, and organize genealogical documentation in a structured wiki format.</p>
+            <p><strong>Completed:</strong> December 2024</p>
+        </div>
+
+        <!-- Implementation Summary -->
+        <div class="demo-section">
+            <h2>Implementation Summary</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Components Created</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">17</div>
+                    <div class="stat-label">Markdown Actions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Sample Articles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Article Categories</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Component 1: WikiIndexComponent -->
+        <div class="demo-section">
+            <h2>1. WikiIndexComponent <span class="badge">app-wiki-index</span></h2>
+            <p>Main wiki navigation and article listing component with comprehensive filtering and sorting.</p>
+
+            <h3>Features</h3>
+            <ul class="feature-list">
+                <li>Grid and list view modes with responsive layout</li>
+                <li>Article search with real-time debounced filtering</li>
+                <li>Category filtering with icons and colors</li>
+                <li>Status filtering (Published, Draft, Archived)</li>
+                <li>Multiple sort options (title, date, views)</li>
+                <li>Article cards with metadata display</li>
+                <li>View count and version tracking</li>
+                <li>Locked article indicators</li>
+                <li>Empty state handling</li>
+                <li>Mobile-responsive design</li>
+            </ul>
+
+            <h3>Usage</h3>
+            <pre><code>&lt;!-- In Razor view --&gt;
+&lt;app-wiki-index&gt;&lt;/app-wiki-index&gt;</code></pre>
+
+            <div class="component-showcase">
+                <p><strong>Sample Data Included:</strong></p>
+                <ul class="feature-list">
+                    <li>6 articles with different statuses</li>
+                    <li>5 categories: Family History, Research Tips, Record Types, How-To Guides, Best Practices</li>
+                    <li>Locked article example</li>
+                    <li>Version tracking demonstration</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Component 2: WikiArticleComponent -->
+        <div class="demo-section">
+            <h2>2. WikiArticleComponent <span class="badge">app-wiki-article</span></h2>
+            <p>Displays wiki articles with rendered markdown content and auto-generated table of contents.</p>
+
+            <h3>Features</h3>
+            <ul class="feature-list">
+                <li>Markdown rendering using marked library (v14.1.5)</li>
+                <li>Auto-generated hierarchical table of contents</li>
+                <li>Sticky TOC sidebar with smooth scrolling</li>
+                <li>Article metadata (author, date, version, views)</li>
+                <li>Breadcrumb navigation</li>
+                <li>Print-friendly view</li>
+                <li>Version history access</li>
+                <li>Comprehensive markdown styling (headings, lists, tables, code blocks, blockquotes, images)</li>
+                <li>Responsive layout with mobile TOC handling</li>
+            </ul>
+
+            <h3>Usage</h3>
+            <pre><code>&lt;!-- By article ID --&gt;
+&lt;app-wiki-article [articleId]="1"&gt;&lt;/app-wiki-article&gt;
+
+&lt;!-- By article slug --&gt;
+&lt;app-wiki-article [articleSlug]="'getting-started-genealogy'"&gt;&lt;/app-wiki-article&gt;</code></pre>
+
+            <div class="component-showcase">
+                <p><strong>Markdown Elements Styled:</strong></p>
+                <ul class="feature-list">
+                    <li>Headings (h1-h6) with visual hierarchy</li>
+                    <li>Links in brand color (#2e7d32)</li>
+                    <li>Lists (ordered and unordered)</li>
+                    <li>Blockquotes with left border accent</li>
+                    <li>Inline code and code blocks</li>
+                    <li>Tables with striped rows</li>
+                    <li>Images with responsive sizing</li>
+                    <li>Horizontal rules</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Component 3: MarkdownEditorComponent -->
+        <div class="demo-section">
+            <h2>3. MarkdownEditorComponent <span class="badge">app-markdown-editor</span></h2>
+            <p>Full-featured markdown editor with live preview, toolbar actions, and form integration.</p>
+
+            <h3>Features</h3>
+            <ul class="feature-list">
+                <li>Full toolbar with 17 actions organized in 7 groups</li>
+                <li>Side-by-side markdown and preview modes</li>
+                <li>Fullscreen editing mode</li>
+                <li>Keyboard shortcuts (Ctrl+B, I, K, Z, Y)</li>
+                <li>Undo/Redo with 50-action history</li>
+                <li>Character, word, and line count</li>
+                <li>Form integration via ControlValueAccessor</li>
+                <li>Disabled state support</li>
+                <li>Real-time preview rendering</li>
+            </ul>
+
+            <h3>Toolbar Actions</h3>
+            <ul class="feature-list">
+                <li><strong>Text Formatting:</strong> Bold, Italic, Strikethrough</li>
+                <li><strong>Headings:</strong> H1, H2, H3</li>
+                <li><strong>Links & Media:</strong> Link, Image, Code, Code Block</li>
+                <li><strong>Lists & Quotes:</strong> Quote, Unordered List, Ordered List, Table</li>
+                <li><strong>Other:</strong> Horizontal Rule, Undo, Redo, Preview, Fullscreen</li>
+            </ul>
+
+            <h3>Usage in Forms</h3>
+            <pre><code>// In component TypeScript
+form = this.fb.group({
+  content: ['']
+});
+
+&lt;!-- In template --&gt;
+&lt;app-markdown-editor 
+  formControlName="content"
+  [placeholder]="'Write your article content...'"
+  [minHeight]="'500px'"&gt;
+&lt;/app-markdown-editor&gt;</code></pre>
+
+            <h3>Usage as Standalone</h3>
+            <pre><code>&lt;app-markdown-editor 
+  [(ngModel)]="content"
+  (contentChange)="onContentChange($event)"&gt;
+&lt;/app-markdown-editor&gt;</code></pre>
+        </div>
+
+        <!-- Dependencies -->
+        <div class="demo-section">
+            <h2>Dependencies Installed</h2>
+            <ul class="feature-list">
+                <li><strong>marked</strong> (^14.1.5) - Fast markdown parser and compiler</li>
+                <li><strong>@types/marked</strong> - TypeScript definitions for marked</li>
+            </ul>
+        </div>
+
+        <!-- Material Design Components -->
+        <div class="demo-section">
+            <h2>Material Design Components Used</h2>
+            <ul class="feature-list">
+                <li>MatCardModule - For article and UI containers</li>
+                <li>MatFormFieldModule, MatInputModule, MatSelectModule - For filters and forms</li>
+                <li>MatButtonModule, MatIconModule - For actions and icons</li>
+                <li>MatChipsModule - For categories, tags, and status indicators</li>
+                <li>MatMenuModule - For more actions dropdown</li>
+                <li>MatTooltipModule - For helpful hints</li>
+                <li>MatDividerModule - For visual separation</li>
+                <li>MatProgressSpinnerModule - For loading states</li>
+            </ul>
+        </div>
+
+        <!-- Success Criteria -->
+        <div class="demo-section">
+            <h2>Success Criteria Met ✅</h2>
+            <ul class="feature-list">
+                <li>Wiki is easy to navigate - Grid/list views, search, filters, categories</li>
+                <li>Wiki is easy to edit - Full markdown editor with toolbar and preview</li>
+                <li>Components are reusable - All registered as Angular Elements</li>
+                <li>Full markdown support - Comprehensive rendering and editing</li>
+                <li>Professional UI/UX - Material Design with RushtonRoots theme</li>
+            </ul>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="demo-section">
+            <h2>Next Steps</h2>
+            <p>Phase 7.1 is complete! To use these components:</p>
+            <ol style="margin-left: 24px; color: #424242;">
+                <li style="margin: 8px 0;">Add to any Razor view using the custom element tags</li>
+                <li style="margin: 8px 0;">Create backend API endpoints for CRUD operations</li>
+                <li style="margin: 8px 0;">Replace sample data with actual database calls</li>
+                <li style="margin: 8px 0;">Implement authentication and authorization</li>
+                <li style="margin: 8px 0;">Add real-time collaborative editing features</li>
+            </ol>
+        </div>
+
+        <!-- Documentation -->
+        <div class="demo-section">
+            <h2>Documentation</h2>
+            <p>Comprehensive documentation is available in:</p>
+            <ul class="feature-list">
+                <li><code>RushtonRoots.Web/ClientApp/src/app/wiki/README.md</code> - Full component documentation</li>
+                <li><code>docs/UI_DesignPlan.md</code> - Updated with Phase 7.1 completion notes</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

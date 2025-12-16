@@ -1,0 +1,135 @@
+<div class="wiki-article" *ngIf="article">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="wiki-article__loading">
+    <mat-spinner></mat-spinner>
+    <p>Loading article...</p>
+  </div>
+
+  <!-- Article Content -->
+  <div *ngIf="!loading" class="wiki-article__container">
+    <!-- Table of Contents Sidebar -->
+    <aside class="wiki-article__toc" [class.wiki-article__toc--hidden]="!showToc" *ngIf="tableOfContents.length > 0">
+      <div class="toc">
+        <div class="toc__header">
+          <h3>Table of Contents</h3>
+          <button mat-icon-button (click)="toggleToc()" matTooltip="Hide table of contents">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <nav class="toc__nav">
+          <ng-container *ngTemplateOutlet="tocTree; context: { $implicit: tableOfContents }"></ng-container>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="wiki-article__main">
+      <!-- Article Header -->
+      <header class="wiki-article__header">
+        <div class="wiki-article__breadcrumb">
+          <a class="wiki-article__breadcrumb-link">Knowledge Base</a>
+          <mat-icon>chevron_right</mat-icon>
+          <a class="wiki-article__breadcrumb-link">{{ article.categoryName }}</a>
+          <mat-icon>chevron_right</mat-icon>
+          <span>{{ article.title }}</span>
+        </div>
+
+        <h1 class="wiki-article__title">{{ article.title }}</h1>
+
+        <div class="wiki-article__meta">
+          <div class="wiki-article__meta-item">
+            <mat-icon>person</mat-icon>
+            <span>{{ article.authorName }}</span>
+          </div>
+          <div class="wiki-article__meta-item">
+            <mat-icon>event</mat-icon>
+            <span>Updated {{ formatDate(article.updatedDate) }}</span>
+          </div>
+          <div class="wiki-article__meta-item">
+            <mat-icon>visibility</mat-icon>
+            <span>{{ article.viewCount }} views</span>
+          </div>
+          <div class="wiki-article__meta-item">
+            <mat-icon>history</mat-icon>
+            <span>Version {{ article.version }}</span>
+          </div>
+        </div>
+
+        <div class="wiki-article__tags" *ngIf="article.tags.length > 0">
+          <mat-chip *ngFor="let tag of article.tags">{{ tag }}</mat-chip>
+        </div>
+
+        <div class="wiki-article__actions">
+          <button mat-raised-button color="primary" (click)="onEdit()">
+            <mat-icon>edit</mat-icon>
+            Edit Article
+          </button>
+          <button mat-button (click)="onViewHistory()">
+            <mat-icon>history</mat-icon>
+            Version History
+          </button>
+          <button mat-button (click)="onPrint()">
+            <mat-icon>print</mat-icon>
+            Print
+          </button>
+          <button mat-icon-button *ngIf="tableOfContents.length > 0 && !showToc" 
+                  (click)="toggleToc()"
+                  matTooltip="Show table of contents">
+            <mat-icon>menu</mat-icon>
+          </button>
+        </div>
+      </header>
+
+      <mat-divider></mat-divider>
+
+      <!-- Article Body -->
+      <article class="wiki-article__content markdown-content" [innerHTML]="renderedContent"></article>
+
+      <!-- Article Footer -->
+      <footer class="wiki-article__footer">
+        <mat-divider></mat-divider>
+        <div class="wiki-article__footer-content">
+          <div class="wiki-article__footer-info">
+            <p class="wiki-article__footer-text">
+              <strong>Last updated:</strong> {{ formatDate(article.updatedDate) }} by {{ article.authorName }}
+            </p>
+            <p class="wiki-article__footer-text">
+              <strong>Category:</strong> {{ article.categoryName }}
+            </p>
+          </div>
+          <div class="wiki-article__footer-actions">
+            <button mat-raised-button color="primary" (click)="onEdit()">
+              <mat-icon>edit</mat-icon>
+              Edit this Article
+            </button>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<!-- Table of Contents Tree Template -->
+<ng-template #tocTree let-items>
+  <ul class="toc__list">
+    <li *ngFor="let item of items" class="toc__item" [class.toc__item--level-2]="item.level === 2" [class.toc__item--level-3]="item.level === 3">
+      <a class="toc__link" (click)="scrollToSection(item.anchor)">
+        {{ item.title }}
+      </a>
+      <ng-container *ngIf="item.children && item.children.length > 0">
+        <ng-container *ngTemplateOutlet="tocTree; context: { $implicit: item.children }"></ng-container>
+      </ng-container>
+    </li>
+  </ul>
+</ng-template>
+
+<!-- Empty State -->
+<div *ngIf="!article && !loading" class="wiki-article__empty">
+  <mat-icon class="wiki-article__empty-icon">article</mat-icon>
+  <h2>Article not found</h2>
+  <p>The article you're looking for doesn't exist or has been removed.</p>
+  <button mat-raised-button color="primary" routerLink="/wiki">
+    <mat-icon>arrow_back</mat-icon>
+    Back to Knowledge Base
+  </button>
+</div>

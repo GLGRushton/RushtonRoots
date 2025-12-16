@@ -1,0 +1,48 @@
+<div class="markdown-editor" [class.markdown-editor--fullscreen]="isFullscreen">
+  <!-- Toolbar -->
+  <div class="markdown-editor__toolbar">
+    <div *ngFor="let group of toolbarButtons" class="markdown-editor__toolbar-group">
+      <button *ngFor="let button of group"
+              mat-icon-button
+              [matTooltip]="button.label + (button.shortcut ? ' (' + button.shortcut + ')' : '')"
+              (click)="onToolbarAction(button.action)"
+              [disabled]="disabled || (button.action === 'undo' && !canUndo()) || (button.action === 'redo' && !canRedo())"
+              class="markdown-editor__toolbar-button">
+        <mat-icon>{{ button.icon }}</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Editor Content -->
+  <div class="markdown-editor__content" [class.markdown-editor__content--split]="showPreview">
+    <!-- Editor Pane -->
+    <div class="markdown-editor__pane markdown-editor__pane--editor">
+      <textarea #textarea
+                class="markdown-editor__textarea"
+                [placeholder]="placeholder"
+                [value]="content"
+                [disabled]="disabled"
+                [style.min-height]="minHeight"
+                (input)="onContentChange($event)"
+                (keydown)="onKeyDown($event)"></textarea>
+    </div>
+
+    <!-- Preview Pane -->
+    <div *ngIf="showPreview" class="markdown-editor__pane markdown-editor__pane--preview">
+      <div class="markdown-editor__preview markdown-content" [innerHTML]="previewContent"></div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="markdown-editor__status">
+    <span class="markdown-editor__status-item">
+      Characters: {{ content.length }}
+    </span>
+    <span class="markdown-editor__status-item">
+      Words: {{ getWordCount() }}
+    </span>
+    <span class="markdown-editor__status-item">
+      Lines: {{ getLineCount() }}
+    </span>
+  </div>
+</div>

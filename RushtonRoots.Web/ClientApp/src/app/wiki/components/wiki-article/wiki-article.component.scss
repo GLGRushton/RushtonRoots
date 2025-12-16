@@ -1,0 +1,532 @@
+.wiki-article {
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px;
+    gap: 16px;
+
+    p {
+      color: #757575;
+    }
+  }
+
+  &__container {
+    display: flex;
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  &__toc {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 24px;
+    align-self: flex-start;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    transition: all 0.3s ease;
+
+    &--hidden {
+      width: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &__header {
+    padding: 32px 32px 24px;
+  }
+
+  &__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 0.875rem;
+    color: #757575;
+
+    mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+
+  &__breadcrumb-link {
+    cursor: pointer;
+    color: #2e7d32;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__title {
+    margin: 0 0 16px 0;
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: #212121;
+    line-height: 1.2;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+
+  &__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #757575;
+
+    mat-icon {
+      font-size: 1.125rem;
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    mat-chip {
+      font-size: 0.75rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    button mat-icon {
+      margin-right: 6px;
+    }
+  }
+
+  &__content {
+    padding: 24px 32px 32px;
+  }
+
+  &__footer {
+    padding: 24px 32px 32px;
+  }
+
+  &__footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    gap: 24px;
+  }
+
+  &__footer-info {
+    flex: 1;
+  }
+
+  &__footer-text {
+    margin: 8px 0;
+    color: #757575;
+    font-size: 0.875rem;
+  }
+
+  &__footer-actions {
+    button mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 24px;
+    text-align: center;
+  }
+
+  &__empty-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #bdbdbd;
+    margin-bottom: 16px;
+  }
+}
+
+// Table of Contents Styles
+.toc {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #212121;
+    }
+
+    button {
+      width: 32px;
+      height: 32px;
+      line-height: 32px;
+    }
+  }
+
+  &__nav {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__item {
+    margin: 4px 0;
+
+    &--level-2 {
+      margin-left: 16px;
+    }
+
+    &--level-3 {
+      margin-left: 32px;
+    }
+  }
+
+  &__link {
+    display: block;
+    padding: 6px 12px;
+    color: #424242;
+    text-decoration: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.875rem;
+
+    &:hover {
+      background-color: rgba(46, 125, 50, 0.08);
+      color: #2e7d32;
+    }
+
+    &--active {
+      background-color: rgba(46, 125, 50, 0.12);
+      color: #2e7d32;
+      font-weight: 500;
+    }
+  }
+}
+
+// Markdown Content Styles
+.markdown-content {
+  color: #212121;
+  line-height: 1.6;
+  font-size: 1rem;
+
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: #212121;
+  }
+
+  h1 {
+    font-size: 2rem;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  h5 {
+    font-size: 0.875rem;
+  }
+
+  h6 {
+    font-size: 0.75rem;
+    color: #757575;
+  }
+
+  p {
+    margin: 16px 0;
+  }
+
+  a {
+    color: #2e7d32;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  ul, ol {
+    margin: 16px 0;
+    padding-left: 32px;
+
+    li {
+      margin: 8px 0;
+    }
+  }
+
+  ul {
+    list-style: disc;
+
+    ul {
+      list-style: circle;
+
+      ul {
+        list-style: square;
+      }
+    }
+  }
+
+  blockquote {
+    margin: 16px 0;
+    padding: 12px 16px;
+    border-left: 4px solid #2e7d32;
+    background-color: rgba(46, 125, 50, 0.05);
+    color: #424242;
+
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  code {
+    padding: 2px 6px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875em;
+    color: #d32f2f;
+  }
+
+  pre {
+    margin: 16px 0;
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    overflow-x: auto;
+
+    code {
+      padding: 0;
+      background-color: transparent;
+      color: #212121;
+    }
+  }
+
+  table {
+    margin: 16px 0;
+    border-collapse: collapse;
+    width: 100%;
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    th {
+      background-color: rgba(46, 125, 50, 0.08);
+      font-weight: 500;
+      color: #212121;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  hr {
+    margin: 32px 0;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 16px 0;
+  }
+
+  strong, b {
+    font-weight: 600;
+    color: #212121;
+  }
+
+  em, i {
+    font-style: italic;
+  }
+}
+
+// Print Styles
+@media print {
+  .wiki-article {
+    &__toc {
+      display: none;
+    }
+
+    &__actions {
+      display: none;
+    }
+
+    &__footer-actions {
+      display: none;
+    }
+
+    &__main {
+      box-shadow: none;
+    }
+  }
+
+  .toc {
+    display: none;
+  }
+}
+
+// Responsive Styles
+@media (max-width: 960px) {
+  .wiki-article {
+    &__container {
+      flex-direction: column;
+      padding: 16px;
+    }
+
+    &__toc {
+      position: static;
+      width: 100%;
+      max-height: none;
+      margin-bottom: 24px;
+
+      &--hidden {
+        width: 100%;
+        opacity: 1;
+        pointer-events: all;
+        display: none;
+      }
+    }
+
+    &__header {
+      padding: 24px 16px 16px;
+    }
+
+    &__content {
+      padding: 16px;
+    }
+
+    &__footer {
+      padding: 16px;
+    }
+
+    &__footer-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &__title {
+      font-size: 2rem;
+    }
+
+    &__meta {
+      gap: 16px;
+    }
+  }
+
+  .markdown-content {
+    h1 {
+      font-size: 1.75rem;
+    }
+
+    h2 {
+      font-size: 1.375rem;
+    }
+
+    h3 {
+      font-size: 1.125rem;
+    }
+
+    pre {
+      font-size: 0.875rem;
+    }
+
+    table {
+      font-size: 0.875rem;
+
+      th, td {
+        padding: 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .wiki-article {
+    &__title {
+      font-size: 1.5rem;
+    }
+
+    &__meta {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    &__actions {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+}

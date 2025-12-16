@@ -15,6 +15,7 @@ import { HouseholdModule } from './household/household.module';
 import { PartnershipModule } from './partnership/partnership.module';
 import { ParentChildModule } from './parent-child/parent-child.module';
 import { AuthModule } from './auth/auth.module';
+import { WikiModule } from './wiki/wiki.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -84,6 +85,11 @@ import { PrivacySettingsComponent } from './auth/components/privacy-settings/pri
 import { ConnectedAccountsComponent } from './auth/components/connected-accounts/connected-accounts.component';
 import { AccountDeletionComponent } from './auth/components/account-deletion/account-deletion.component';
 
+// Import Phase 7.1 Wiki & Knowledge Base components for Angular Elements registration
+import { WikiIndexComponent } from './wiki/components/wiki-index/wiki-index.component';
+import { WikiArticleComponent } from './wiki/components/wiki-article/wiki-article.component';
+import { MarkdownEditorComponent } from './wiki/components/markdown-editor/markdown-editor.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -101,7 +107,8 @@ import { AccountDeletionComponent } from './auth/components/account-deletion/acc
     HouseholdModule,
     PartnershipModule,
     ParentChildModule,
-    AuthModule
+    AuthModule,
+    WikiModule
   ],
   providers: []
 })
@@ -272,6 +279,16 @@ export class AppModule {
 
     const accountDeletionElement = createCustomElement(AccountDeletionComponent, { injector: this.injector });
     customElements.define('app-account-deletion', accountDeletionElement);
+
+    // Register Phase 7.1 Wiki & Knowledge Base components as Angular Elements
+    const wikiIndexElement = createCustomElement(WikiIndexComponent, { injector: this.injector });
+    customElements.define('app-wiki-index', wikiIndexElement);
+
+    const wikiArticleElement = createCustomElement(WikiArticleComponent, { injector: this.injector });
+    customElements.define('app-wiki-article', wikiArticleElement);
+
+    const markdownEditorElement = createCustomElement(MarkdownEditorComponent, { injector: this.injector });
+    customElements.define('app-markdown-editor', markdownEditorElement);
   }
 
   ngDoBootstrap() {
