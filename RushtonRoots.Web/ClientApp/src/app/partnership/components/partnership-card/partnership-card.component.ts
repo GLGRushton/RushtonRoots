@@ -7,6 +7,7 @@ import { PartnershipCard, PartnershipActionEvent, PARTNERSHIP_STATUSES } from '.
  */
 @Component({
   selector: 'app-partnership-card',
+  standalone: false,
   templateUrl: './partnership-card.component.html',
   styleUrls: ['./partnership-card.component.scss']
 })

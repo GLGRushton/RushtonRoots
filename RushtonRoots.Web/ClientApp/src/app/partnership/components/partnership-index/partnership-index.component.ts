@@ -15,6 +15,7 @@ import {
  */
 @Component({
   selector: 'app-partnership-index',
+  standalone: false,
   templateUrl: './partnership-index.component.html',
   styleUrls: ['./partnership-index.component.scss']
 })
@@ -128,6 +129,14 @@ export class PartnershipIndexComponent implements OnInit {
       this.filters.searchText = searchText.toLowerCase();
       this.applyFiltersAndSort();
     }, 300);
+  }
+
+  /**
+   * Clear search text
+   */
+  clearSearch(): void {
+    this.searchText = '';
+    this.onSearchChange('');
   }
 
   /**

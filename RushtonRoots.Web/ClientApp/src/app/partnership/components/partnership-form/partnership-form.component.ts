@@ -14,6 +14,7 @@ import { map, startWith, debounceTime, switchMap } from 'rxjs/operators';
  */
 @Component({
   selector: 'app-partnership-form',
+  standalone: false,
   templateUrl: './partnership-form.component.html',
   styleUrls: ['./partnership-form.component.scss']
 })
@@ -239,5 +240,13 @@ export class PartnershipFormComponent implements OnInit {
    */
   getNotesCharCount(): number {
     return this.partnershipForm.value.notes?.length || 0;
+  }
+
+  /**
+   * Get selected partnership type description
+   */
+  getSelectedTypeDescription(): string {
+    const selectedType = this.partnershipTypes.find(t => t.value === this.partnershipForm.value.partnershipType);
+    return selectedType?.description || '';
   }
 }

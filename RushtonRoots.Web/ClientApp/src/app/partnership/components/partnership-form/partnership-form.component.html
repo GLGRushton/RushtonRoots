@@ -126,7 +126,7 @@
           <div class="type-description" *ngIf="partnershipForm.value.partnershipType">
             <mat-icon>info</mat-icon>
             <span>
-              {{ partnershipTypes.find(t => t.value === partnershipForm.value.partnershipType)?.description }}
+              {{ getSelectedTypeDescription() }}
             </span>
           </div>
         </div>

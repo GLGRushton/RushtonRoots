@@ -7,6 +7,7 @@ import { PartnershipCard, PartnershipTimeline, PartnershipTimelineEvent } from '
  */
 @Component({
   selector: 'app-partnership-timeline',
+  standalone: false,
   templateUrl: './partnership-timeline.component.html',
   styleUrls: ['./partnership-timeline.component.scss']
 })
