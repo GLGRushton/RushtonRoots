@@ -29,6 +29,16 @@ param(
 $ErrorActionPreference = "Stop"
 
 # --------------------------------------------------------------------
+# CI Environment Detection
+# --------------------------------------------------------------------
+
+# Skip if running in a CI environment (MSBuild also has this check, but add defense in depth)
+if ($env:CI -eq "true" -or $env:IsCI -eq "true" -or $env:TF_BUILD -eq "true" -or $env:GITHUB_ACTIONS -eq "true") {
+    Write-Host "CI environment detected. Skipping npm watch."
+    exit 0
+}
+
+# --------------------------------------------------------------------
 # Paths
 # --------------------------------------------------------------------
 
@@ -233,10 +243,12 @@ elseif ($pwshExe -or $powershellExe) {
     Write-Host "Using PowerShell window (Windows Terminal not found)..."
     
     $shell = if ($pwshExe) { $pwshExe } else { $powershellExe }
+    # Properly escape the path by using -LiteralPath equivalent approach
+    $escapedPath = $clientAppPath -replace "'", "''"
     $shellArgs = @(
         '-NoExit',
         '-Command',
-        "Set-Location '$clientAppPath'; npm run watch"
+        "Set-Location -LiteralPath '$escapedPath'; npm run watch"
     )
     
     $startedProcess = Start-Process -FilePath $shell -ArgumentList $shellArgs -PassThru -WindowStyle Normal
