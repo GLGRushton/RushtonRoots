@@ -1,0 +1,197 @@
+<!-- 
+  Example Usage of Phase 3.2 Person Details Components
+  
+  This file demonstrates how to use the newly created Person Details & Timeline
+  components in a Razor view (.cshtml file).
+  
+  All components are registered as Angular Elements and can be used as custom HTML elements.
+-->
+
+<!-- Example 1: PersonDetailsComponent with all features -->
+<app-person-details
+  [person]="personData"
+  [timelineEvents]="events"
+  [relationships]="familyRelationships"
+  [photos]="personPhotos"
+  [canEdit]="true"
+  [canDelete]="true"
+  [initialTab]="0"
+  (editClicked)="onEditPerson($event)"
+  (deleteClicked)="onDeletePerson($event)"
+  (shareClicked)="onSharePerson($event)"
+  (relationshipPersonClicked)="navigateToPerson($event)"
+  (photoUploaded)="handlePhotoUpload($event)"
+  (photoDeleted)="handlePhotoDelete($event)"
+  (photoPrimaryChanged)="handlePrimaryPhotoChange($event)"
+  (fieldUpdated)="handleFieldUpdate($event)">
+</app-person-details>
+
+<!-- Example 2: PersonTimelineComponent standalone -->
+<app-person-timeline
+  [personId]="123"
+  [events]="timelineEvents"
+  [dateOfBirth]="'1950-01-15'"
+  [dateOfDeath]="'2020-06-30'"
+  [isDeceased]="true">
+</app-person-timeline>
+
+<!-- Example 3: RelationshipVisualizerComponent standalone -->
+<app-relationship-visualizer
+  [personId]="123"
+  [personName]="'John Doe'"
+  [relationships]="relationships"
+  (personClicked)="navigateToPerson($event)">
+</app-relationship-visualizer>
+
+<!-- Example 4: PhotoGalleryComponent standalone -->
+<app-photo-gallery
+  [personId]="123"
+  [photos]="photos"
+  [canEdit]="true"
+  (photoUploaded)="handlePhotoUpload($event)"
+  (photoDeleted)="handlePhotoDelete($event)"
+  (photoPrimaryChanged)="handlePrimaryPhotoChange($event)"
+  (photoClicked)="handlePhotoClick($event)">
+</app-photo-gallery>
+
+<!-- 
+  Sample Data Structures (TypeScript/JavaScript):
+  
+  personData = {
+    id: 123,
+    firstName: 'John',
+    middleName: 'Paul',
+    lastName: 'Doe',
+    suffix: 'Jr.',
+    fullName: 'John Paul Doe Jr.',
+    dateOfBirth: '1950-01-15',
+    placeOfBirth: 'New York, NY',
+    dateOfDeath: '2020-06-30',
+    placeOfDeath: 'Los Angeles, CA',
+    isDeceased: true,
+    gender: 'Male',
+    householdId: 1,
+    householdName: 'Doe Family',
+    photoUrl: '/images/people/john-doe.jpg',
+    biography: 'John was a dedicated family man and successful businessman...',
+    occupation: 'Engineer',
+    education: 'MIT, BS in Electrical Engineering',
+    notes: 'Loved woodworking and sailing'
+  };
+  
+  events = [
+    {
+      id: 1,
+      personId: 123,
+      title: 'Graduated from MIT',
+      date: '1972-06-15',
+      description: 'Earned Bachelor of Science in Electrical Engineering',
+      eventType: 'education',
+      location: 'Cambridge, MA'
+    },
+    {
+      id: 2,
+      personId: 123,
+      title: 'Married Jane Smith',
+      date: '1975-08-20',
+      description: 'Wedding ceremony',
+      eventType: 'marriage',
+      location: 'Boston, MA'
+    }
+  ];
+  
+  relationships = [
+    {
+      relationshipType: 'parent',
+      relatedPerson: {
+        id: 100,
+        firstName: 'Robert',
+        lastName: 'Doe',
+        fullName: 'Robert Doe',
+        dateOfBirth: '1920-03-10',
+        dateOfDeath: '1995-12-25',
+        isDeceased: true,
+        photoUrl: '/images/people/robert-doe.jpg'
+      }
+    },
+    {
+      relationshipType: 'spouse',
+      relatedPerson: {
+        id: 200,
+        firstName: 'Jane',
+        lastName: 'Doe',
+        fullName: 'Jane Doe',
+        dateOfBirth: '1952-07-22',
+        isDeceased: false,
+        photoUrl: '/images/people/jane-doe.jpg'
+      },
+      startDate: '1975-08-20'
+    },
+    {
+      relationshipType: 'child',
+      relatedPerson: {
+        id: 300,
+        firstName: 'Sarah',
+        lastName: 'Doe',
+        fullName: 'Sarah Doe',
+        dateOfBirth: '1978-04-10',
+        isDeceased: false,
+        photoUrl: '/images/people/sarah-doe.jpg'
+      }
+    }
+  ];
+  
+  photos = [
+    {
+      id: 1,
+      personId: 123,
+      photoUrl: '/images/people/john-doe.jpg',
+      thumbnailUrl: '/images/people/thumbs/john-doe.jpg',
+      title: 'Profile Photo',
+      description: 'Taken at 50th birthday celebration',
+      uploadDate: '2020-01-15',
+      isPrimary: true,
+      tags: ['portrait', 'birthday']
+    },
+    {
+      id: 2,
+      personId: 123,
+      photoUrl: '/images/people/john-doe-wedding.jpg',
+      thumbnailUrl: '/images/people/thumbs/john-doe-wedding.jpg',
+      title: 'Wedding Day',
+      description: 'With Jane on our wedding day',
+      uploadDate: '1975-08-20',
+      isPrimary: false,
+      tags: ['wedding', 'family']
+    }
+  ];
+-->
+
+<!-- 
+  Usage in Razor (.cshtml):
+  
+  In a Razor view, you can pass server-side data to the components like this:
+  
+  @{
+      var personJson = JsonSerializer.Serialize(Model.Person);
+      var eventsJson = JsonSerializer.Serialize(Model.Events);
+      var relationshipsJson = JsonSerializer.Serialize(Model.Relationships);
+      var photosJson = JsonSerializer.Serialize(Model.Photos);
+  }
+  
+  <script>
+      window.personData = @Html.Raw(personJson);
+      window.events = @Html.Raw(eventsJson);
+      window.relationships = @Html.Raw(relationshipsJson);
+      window.photos = @Html.Raw(photosJson);
+  </script>
+  
+  <app-person-details
+      person="personData"
+      timelineEvents="events"
+      relationships="relationships"
+      photos="photos"
+      canEdit="@(User.IsInRole("Editor") ? "true" : "false")"
+      canDelete="@(User.IsInRole("Admin") ? "true" : "false")">
+  </app-person-details>
+-->
