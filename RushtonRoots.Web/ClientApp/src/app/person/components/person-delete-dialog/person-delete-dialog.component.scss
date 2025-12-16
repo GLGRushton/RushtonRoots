@@ -1,0 +1,376 @@
+// Person Delete Dialog Component Styles
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #d32f2f; // Warn color
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0;
+  padding: 16px 24px;
+
+  .warning-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.dialog-content {
+  padding: 0 24px 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+
+  // Person Summary Section
+  .person-summary {
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+
+    .person-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .person-photo {
+        flex-shrink: 0;
+
+        .avatar {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 3px solid #fff;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-placeholder {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          background-color: #e0e0e0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 3px solid #fff;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+          mat-icon {
+            font-size: 48px;
+            width: 48px;
+            height: 48px;
+            color: #757575;
+          }
+        }
+      }
+
+      .person-info {
+        flex: 1;
+
+        .person-name {
+          margin: 0 0 8px 0;
+          font-size: 20px;
+          font-weight: 500;
+          color: #212121;
+        }
+
+        .person-dates,
+        .person-household {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 6px;
+          font-size: 14px;
+          color: #616161;
+
+          .date-icon,
+          .household-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+
+          .death-date {
+            margin-left: 4px;
+          }
+
+          .lifespan {
+            margin-left: 8px;
+            font-style: italic;
+            color: #757575;
+          }
+        }
+
+        .status-chip {
+          margin-top: 8px;
+          font-size: 12px;
+          height: 24px;
+
+          &.deceased {
+            background-color: #757575;
+            color: white;
+          }
+
+          &.living {
+            background-color: #4caf50;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  // Warning Card
+  .warning-card {
+    margin-bottom: 24px;
+    border-left: 4px solid #ff9800;
+    background-color: #fff3e0;
+
+    mat-card-content {
+      padding: 16px;
+
+      .warning-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        color: #e65100;
+
+        mat-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+
+        strong {
+          font-size: 16px;
+        }
+      }
+
+      .warning-text {
+        margin: 0;
+        color: #e65100;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  // Related Data Section
+  .related-data {
+    margin-bottom: 24px;
+
+    .affected-items {
+      margin-top: 12px;
+      background-color: #fafafa;
+      border-radius: 4px;
+      padding: 8px 0;
+
+      mat-list-item {
+        height: auto;
+        min-height: 56px;
+        padding: 8px 16px;
+
+        mat-icon[matListItemIcon] {
+          color: #757575;
+          margin-right: 16px;
+        }
+
+        div[matListItemLine] {
+          color: #616161;
+          font-size: 13px;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+
+  // Section Titles
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #424242;
+    margin: 0 0 12px 0;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: #757575;
+    }
+  }
+
+  // Delete Options Section
+  .delete-options {
+    margin-bottom: 24px;
+
+    .delete-type-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+
+      .delete-option {
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        transition: background-color 0.2s, border-color 0.2s;
+
+        &:hover {
+          background-color: #fafafa;
+        }
+
+        &.mat-mdc-radio-checked {
+          border-color: #1976d2;
+          background-color: #e3f2fd;
+        }
+
+        .option-content {
+          margin-left: 8px;
+
+          strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+
+            &.danger-text {
+              color: #d32f2f;
+            }
+          }
+
+          p {
+            margin: 0;
+            font-size: 13px;
+            color: #616161;
+
+            &.danger-text {
+              color: #d32f2f;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Transfer Section
+  .transfer-section {
+    margin-bottom: 24px;
+
+    .full-width {
+      width: 100%;
+    }
+  }
+
+  // Confirmation Section
+  .confirmation-section {
+    margin-bottom: 16px;
+    padding: 16px;
+    background-color: #ffebee;
+    border-radius: 4px;
+    border: 1px solid #ef5350;
+
+    .confirmation-checkbox {
+      ::ng-deep .mdc-label {
+        color: #c62828;
+        font-weight: 500;
+      }
+
+      span {
+        display: inline;
+      }
+    }
+  }
+}
+
+.dialog-actions {
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+
+  button {
+    margin-left: 8px;
+
+    &.delete-button {
+      mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 600px) {
+  .dialog-content {
+    .person-summary {
+      .person-header {
+        flex-direction: column;
+        text-align: center;
+
+        .person-photo {
+          .avatar,
+          .avatar-placeholder {
+            width: 100px;
+            height: 100px;
+          }
+        }
+
+        .person-info {
+          .person-dates,
+          .person-household {
+            justify-content: center;
+          }
+        }
+      }
+    }
+
+    .delete-options {
+      .delete-type-group {
+        .delete-option {
+          .option-content {
+            strong {
+              font-size: 13px;
+            }
+
+            p {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+
+    button {
+      margin: 4px 0;
+      width: 100%;
+    }
+  }
+}
+
+// Accessibility
+.dialog-content {
+  // High contrast mode support
+  @media (prefers-contrast: high) {
+    .person-summary {
+      border: 2px solid #000;
+    }
+
+    .warning-card {
+      border-width: 3px;
+    }
+  }
+
+  // Reduced motion support
+  @media (prefers-reduced-motion: reduce) {
+    .delete-option {
+      transition: none;
+    }
+  }
+}

@@ -14,6 +14,12 @@ public class Person : BaseEntity
     public bool IsDeceased { get; set; }
     public string? PhotoUrl { get; set; }
     
+    // Soft delete and archive support
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedDateTime { get; set; }
+    public bool IsArchived { get; set; } = false;
+    public DateTime? ArchivedDateTime { get; set; }
+    
     // Navigation properties
     public Household? Household { get; set; }
     public ICollection<ParentChild> ParentRelationships { get; set; } = new List<ParentChild>();
