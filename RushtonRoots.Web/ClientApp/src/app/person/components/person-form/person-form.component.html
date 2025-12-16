@@ -1,0 +1,273 @@
+<mat-card class="person-form-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>person_add</mat-icon>
+      {{ formTitle }}
+    </mat-card-title>
+    <mat-card-subtitle *ngIf="lastSaveTime">
+      Last saved: {{ lastSaveTime | date:'short' }}
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-stepper [linear]="isLinear" #stepper>
+      
+      <!-- Step 1: Basic Information -->
+      <mat-step [stepControl]="basicInfoForm" label="Basic Info" [completed]="basicInfoForm.valid">
+        <ng-template matStepLabel>
+          <mat-icon>person</mat-icon>
+          Basic Information
+        </ng-template>
+        
+        <form [formGroup]="basicInfoForm" class="step-form">
+          <h3>Personal Details</h3>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>First Name *</mat-label>
+              <input matInput formControlName="firstName" placeholder="John" required>
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error *ngIf="basicInfoForm.get('firstName')?.hasError('required')">
+                First name is required
+              </mat-error>
+              <mat-error *ngIf="basicInfoForm.get('firstName')?.hasError('minlength')">
+                First name must be at least 1 character
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Middle Name</mat-label>
+              <input matInput formControlName="middleName" placeholder="Michael">
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Last Name *</mat-label>
+              <input matInput formControlName="lastName" placeholder="Doe" required>
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error *ngIf="basicInfoForm.get('lastName')?.hasError('required')">
+                Last name is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field-small">
+              <mat-label>Suffix</mat-label>
+              <input matInput formControlName="suffix" placeholder="Jr., Sr., III">
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Gender</mat-label>
+              <mat-select formControlName="gender" placeholder="Select gender">
+                <mat-option *ngFor="let gender of genderOptions" [value]="gender">
+                  {{ gender }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>wc</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="step-actions">
+            <button mat-button (click)="onCancel()" type="button">Cancel</button>
+            <button mat-raised-button color="primary" matStepperNext type="button">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 2: Dates & Places -->
+      <mat-step [stepControl]="datesPlacesForm" label="Dates & Places">
+        <ng-template matStepLabel>
+          <mat-icon>event</mat-icon>
+          Dates & Places
+        </ng-template>
+        
+        <form [formGroup]="datesPlacesForm" class="step-form">
+          <h3>Birth Information</h3>
+          
+          <div class="form-row">
+            <app-date-picker 
+              label="Date of Birth"
+              placeholder="MM/DD/YYYY"
+              [maxDate]="datesPlacesForm.get('dateOfDeath')?.value || undefined"
+              hint="When was this person born?"
+              formControlName="dateOfBirth">
+            </app-date-picker>
+
+            <app-location-autocomplete
+              label="Place of Birth"
+              placeholder="City, State, Country"
+              hint="Where was this person born?"
+              formControlName="placeOfBirth">
+            </app-location-autocomplete>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <h3>Death Information</h3>
+          
+          <div class="form-row">
+            <mat-checkbox formControlName="isDeceased" class="deceased-checkbox">
+              This person is deceased
+            </mat-checkbox>
+          </div>
+
+          <div class="form-row" *ngIf="isDeceased">
+            <app-date-picker 
+              label="Date of Death"
+              placeholder="MM/DD/YYYY"
+              [minDate]="datesPlacesForm.get('dateOfBirth')?.value || undefined"
+              hint="When did this person pass away?"
+              formControlName="dateOfDeath">
+            </app-date-picker>
+
+            <app-location-autocomplete
+              label="Place of Death"
+              placeholder="City, State, Country"
+              hint="Where did this person pass away?"
+              formControlName="placeOfDeath">
+            </app-location-autocomplete>
+          </div>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious type="button">
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext type="button">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 3: Additional Information -->
+      <mat-step [stepControl]="additionalInfoForm" label="Additional Info">
+        <ng-template matStepLabel>
+          <mat-icon>description</mat-icon>
+          Additional Information
+        </ng-template>
+        
+        <form [formGroup]="additionalInfoForm" class="step-form">
+          <h3>Life Details</h3>
+          
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Occupation</mat-label>
+              <input matInput formControlName="occupation" placeholder="Software Engineer, Teacher, etc.">
+              <mat-icon matSuffix>work</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Education</mat-label>
+              <input matInput formControlName="education" placeholder="University, degrees, etc.">
+              <mat-icon matSuffix>school</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field-full">
+              <mat-label>Biography</mat-label>
+              <textarea matInput 
+                        formControlName="biography" 
+                        rows="5"
+                        placeholder="Write a brief biography or life story..."
+                        maxlength="5000"></textarea>
+              <mat-hint align="end">
+                {{ additionalInfoForm.get('biography')?.value?.length || 0 }} / 5000
+              </mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field-full">
+              <mat-label>Notes</mat-label>
+              <textarea matInput 
+                        formControlName="notes" 
+                        rows="3"
+                        placeholder="Additional notes, research findings, etc."
+                        maxlength="2000"></textarea>
+              <mat-hint align="end">
+                {{ additionalInfoForm.get('notes')?.value?.length || 0 }} / 2000
+              </mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious type="button">
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button color="primary" matStepperNext type="button">
+              Next
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Step 4: Photo Upload -->
+      <mat-step [stepControl]="photoUploadForm" label="Photo">
+        <ng-template matStepLabel>
+          <mat-icon>photo_camera</mat-icon>
+          Photo Upload
+        </ng-template>
+        
+        <form [formGroup]="photoUploadForm" class="step-form">
+          <h3>Profile Photo (Optional)</h3>
+          
+          <div class="photo-upload-container">
+            <div class="photo-preview" *ngIf="photoPreviewUrl">
+              <img [src]="photoPreviewUrl" alt="Photo preview" class="preview-image">
+              <button mat-mini-fab color="warn" 
+                      class="remove-photo-btn"
+                      (click)="removePhoto()"
+                      type="button"
+                      matTooltip="Remove photo">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+
+            <div class="photo-upload-area" *ngIf="!photoPreviewUrl">
+              <mat-icon class="upload-icon">add_photo_alternate</mat-icon>
+              <p class="upload-text">Click to upload a photo</p>
+              <p class="upload-hint">JPEG, PNG up to 5MB</p>
+              <input type="file" 
+                     #fileInput
+                     accept="image/*"
+                     (change)="onPhotoSelected($event)"
+                     style="display: none;">
+              <button mat-raised-button color="primary" 
+                      (click)="fileInput.click()"
+                      type="button">
+                <mat-icon>upload</mat-icon>
+                Choose Photo
+              </button>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious type="button">
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <button mat-raised-button 
+                    color="primary" 
+                    (click)="onSubmit()"
+                    [disabled]="isSubmitting || !basicInfoForm.valid"
+                    type="button">
+              <mat-icon>save</mat-icon>
+              {{ submitButtonText }}
+              <mat-spinner *ngIf="isSubmitting" diameter="20" class="submit-spinner"></mat-spinner>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+    </mat-stepper>
+  </mat-card-content>
+</mat-card>

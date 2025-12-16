@@ -1,0 +1,16 @@
+<mat-form-field appearance="outline" class="date-picker-field">
+  <mat-label>{{ label }}</mat-label>
+  <input matInput 
+         [matDatepicker]="picker"
+         [placeholder]="placeholder"
+         [min]="minDate"
+         [max]="maxDate"
+         [required]="required"
+         [disabled]="disabled"
+         [(ngModel)]="value"
+         (ngModelChange)="onDateChange($event)"
+         (blur)="onTouched()">
+  <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>

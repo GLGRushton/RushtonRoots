@@ -37,6 +37,11 @@ import { PersonTimelineComponent } from './person/components/person-timeline/per
 import { RelationshipVisualizerComponent } from './person/components/relationship-visualizer/relationship-visualizer.component';
 import { PhotoGalleryComponent } from './person/components/photo-gallery/photo-gallery.component';
 
+// Import Phase 3.3 Person Create & Edit Forms components for Angular Elements registration
+import { PersonFormComponent } from './person/components/person-form/person-form.component';
+import { DatePickerComponent } from './person/components/date-picker/date-picker.component';
+import { LocationAutocompleteComponent } from './person/components/location-autocomplete/location-autocomplete.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -127,6 +132,16 @@ export class AppModule {
 
     const photoGalleryElement = createCustomElement(PhotoGalleryComponent, { injector: this.injector });
     customElements.define('app-photo-gallery', photoGalleryElement);
+
+    // Register Phase 3.3 Person Create & Edit Forms components as Angular Elements
+    const personFormElement = createCustomElement(PersonFormComponent, { injector: this.injector });
+    customElements.define('app-person-form', personFormElement);
+
+    const datePickerElement = createCustomElement(DatePickerComponent, { injector: this.injector });
+    customElements.define('app-date-picker', datePickerElement);
+
+    const locationAutocompleteElement = createCustomElement(LocationAutocompleteComponent, { injector: this.injector });
+    customElements.define('app-location-autocomplete', locationAutocompleteElement);
   }
 
   ngDoBootstrap() {
