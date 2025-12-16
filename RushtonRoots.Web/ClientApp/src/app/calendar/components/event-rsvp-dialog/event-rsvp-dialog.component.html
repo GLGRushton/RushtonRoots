@@ -1,0 +1,78 @@
+<h2 mat-dialog-title>RSVP to Event</h2>
+
+<mat-dialog-content>
+  <!-- Event Summary -->
+  <div class="rsvp-dialog__event-summary">
+    <h3>{{ data.event.title }}</h3>
+    <div class="rsvp-dialog__event-info">
+      <div class="rsvp-dialog__event-info-row">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ getEventDateRange() }}</span>
+      </div>
+      <div class="rsvp-dialog__event-info-row" *ngIf="data.event.location">
+        <mat-icon>place</mat-icon>
+        <span>{{ data.event.location }}</span>
+      </div>
+      <div class="rsvp-dialog__event-info-row">
+        <mat-icon>person</mat-icon>
+        <span>Organized by {{ data.event.organizer.name }}</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- RSVP Form -->
+  <form [formGroup]="rsvpForm" class="rsvp-form">
+    <!-- RSVP Status -->
+    <div class="rsvp-form__section">
+      <label class="rsvp-form__label">Your Response *</label>
+      <mat-radio-group formControlName="status" class="rsvp-form__status-group">
+        <mat-radio-button *ngFor="let status of rsvpStatuses" [value]="status.value" class="rsvp-form__status-option">
+          <div class="rsvp-form__status-content">
+            <mat-icon [style.color]="status.color">{{ status.icon }}</mat-icon>
+            <span>{{ status.label }}</span>
+          </div>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Guest Count -->
+    <mat-form-field appearance="outline" class="rsvp-form__field--full">
+      <mat-label>Number of Additional Guests</mat-label>
+      <input matInput type="number" formControlName="guestCount" min="0" max="20" placeholder="0">
+      <mat-icon matPrefix>people</mat-icon>
+      <mat-hint>Including yourself, how many people will attend?</mat-hint>
+      <mat-error *ngIf="rsvpForm.get('guestCount')?.hasError('min')">
+        Guest count must be at least 0
+      </mat-error>
+      <mat-error *ngIf="rsvpForm.get('guestCount')?.hasError('max')">
+        Guest count cannot exceed 20
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Comment -->
+    <mat-form-field appearance="outline" class="rsvp-form__field--full">
+      <mat-label>Comment (Optional)</mat-label>
+      <textarea matInput formControlName="comment" rows="3" placeholder="Add a comment..."></textarea>
+      <mat-icon matPrefix>comment</mat-icon>
+      <mat-hint>{{ rsvpForm.get('comment')?.value?.length || 0 }} / 500</mat-hint>
+      <mat-error *ngIf="rsvpForm.get('comment')?.hasError('maxlength')">
+        Comment must be less than 500 characters
+      </mat-error>
+    </mat-form-field>
+  </form>
+
+  <!-- Current Selection Summary -->
+  <div class="rsvp-dialog__summary" *ngIf="getSelectedStatusConfig()">
+    <mat-icon [style.color]="getSelectedStatusConfig()!.color">{{ getSelectedStatusConfig()!.icon }}</mat-icon>
+    <span>You are responding as <strong>{{ getSelectedStatusConfig()!.label }}</strong></span>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!rsvpForm.valid">
+    Submit RSVP
+  </button>
+</mat-dialog-actions>

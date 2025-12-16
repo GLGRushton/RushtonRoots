@@ -1,0 +1,364 @@
+@import '../../../../styles/variables';
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// ===========================
+// Calendar Header
+// ===========================
+
+.calendar-header {
+  padding: 16px;
+  
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__navigation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    .today-button {
+      margin: 0 8px;
+    }
+  }
+
+  &__date {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+    color: $text-primary;
+    min-width: 200px;
+  }
+
+  &__views {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    
+    mat-button-toggle-group {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .view-label {
+      margin-left: 4px;
+      
+      @media (max-width: 600px) {
+        display: none;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+// ===========================
+// Calendar Filters
+// ===========================
+
+.calendar-filters {
+  margin-top: 16px;
+  animation: slideDown 0.3s ease-out;
+
+  mat-divider {
+    margin-bottom: 16px;
+  }
+
+  &__content {
+    padding: 0 8px 8px 8px;
+  }
+
+  &__search {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  &__section {
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-secondary;
+    margin: 0 0 8px 0;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    mat-chip-option {
+      mat-icon {
+        margin-right: 4px;
+        font-size: 18px;
+        height: 18px;
+        width: 18px;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+}
+
+// ===========================
+// Calendar Body
+// ===========================
+
+.calendar-body {
+  padding: 16px;
+  min-height: 600px;
+
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 16px;
+
+    p {
+      color: $text-secondary;
+      margin: 0;
+    }
+  }
+
+  &__calendar {
+    // FullCalendar custom styling
+    :host ::ng-deep {
+      .fc {
+        // Calendar header
+        .fc-header-toolbar {
+          margin-bottom: 1.5em;
+        }
+
+        // Events
+        .fc-event {
+          cursor: pointer;
+          border-radius: 4px;
+          padding: 2px 4px;
+          margin: 1px 0;
+          
+          &:hover {
+            opacity: 0.85;
+          }
+        }
+
+        .fc-event-title {
+          font-weight: 500;
+        }
+
+        // Day grid
+        .fc-daygrid-day {
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+          }
+        }
+
+        .fc-daygrid-day-number {
+          padding: 4px;
+          font-weight: 500;
+        }
+
+        .fc-day-today {
+          background-color: rgba(76, 175, 80, 0.1) !important;
+          
+          .fc-daygrid-day-number {
+            color: $primary;
+            font-weight: 700;
+          }
+        }
+
+        // Time grid
+        .fc-timegrid-slot {
+          height: 3em;
+        }
+
+        .fc-timegrid-event {
+          border-radius: 4px;
+          padding: 2px 4px;
+          
+          .fc-event-time {
+            font-weight: 600;
+          }
+        }
+
+        // List view
+        .fc-list-event {
+          cursor: pointer;
+          
+          &:hover td {
+            background-color: rgba(0, 0, 0, 0.02);
+          }
+        }
+
+        // Buttons
+        .fc-button {
+          background-color: $primary;
+          border-color: $primary;
+          
+          &:hover {
+            background-color: $primary-dark;
+            border-color: $primary-dark;
+          }
+
+          &:disabled {
+            opacity: 0.5;
+          }
+        }
+
+        .fc-button-active {
+          background-color: $primary-dark !important;
+          border-color: $primary-dark !important;
+        }
+
+        // More link
+        .fc-more-link {
+          color: $primary;
+          font-weight: 500;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ===========================
+// Animations
+// ===========================
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ===========================
+// Responsive Design
+// ===========================
+
+@media (max-width: 960px) {
+  .calendar-header {
+    &__content {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    &__navigation {
+      justify-content: space-between;
+    }
+
+    &__date {
+      text-align: center;
+      min-width: auto;
+    }
+
+    &__views {
+      mat-button-toggle-group {
+        width: 100%;
+      }
+
+      mat-button-toggle {
+        flex: 1;
+      }
+    }
+
+    &__actions {
+      justify-content: space-between;
+      
+      button:last-child {
+        flex: 1;
+      }
+    }
+  }
+
+  .calendar-body {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .calendar-container {
+    padding: 8px;
+  }
+
+  .calendar-header {
+    padding: 12px;
+
+    &__date {
+      font-size: 18px;
+    }
+  }
+
+  .calendar-filters {
+    &__chips {
+      mat-chip-option {
+        font-size: 12px;
+        
+        mat-icon {
+          font-size: 16px;
+          height: 16px;
+          width: 16px;
+        }
+      }
+    }
+  }
+
+  .calendar-body {
+    min-height: 400px;
+    
+    &__calendar {
+      :host ::ng-deep {
+        .fc {
+          font-size: 12px;
+
+          .fc-toolbar {
+            flex-direction: column;
+            gap: 8px;
+          }
+
+          .fc-toolbar-chunk {
+            display: flex;
+            justify-content: center;
+          }
+
+          .fc-daygrid-day-number {
+            font-size: 12px;
+          }
+
+          .fc-event-title {
+            font-size: 11px;
+          }
+        }
+      }
+    }
+  }
+}

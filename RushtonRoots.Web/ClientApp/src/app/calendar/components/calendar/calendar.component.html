@@ -1,0 +1,114 @@
+<div class="calendar-container">
+  <!-- Calendar Header -->
+  <mat-card class="calendar-header">
+    <div class="calendar-header__content">
+      <!-- Navigation Controls -->
+      <div class="calendar-header__navigation">
+        <button mat-icon-button (click)="goPrevious()" matTooltip="Previous">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        
+        <button mat-raised-button (click)="goToToday()" class="today-button">
+          Today
+        </button>
+        
+        <button mat-icon-button (click)="goNext()" matTooltip="Next">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        
+        <h2 class="calendar-header__date">{{ getCurrentDateRange() }}</h2>
+      </div>
+
+      <!-- View Controls -->
+      <div class="calendar-header__views">
+        <mat-button-toggle-group [(value)]="currentView" (change)="changeView($event.value)">
+          <mat-button-toggle *ngFor="let view of calendarViews" [value]="view.value">
+            <mat-icon>{{ view.icon }}</mat-icon>
+            <span class="view-label">{{ view.label }}</span>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Actions -->
+      <div class="calendar-header__actions">
+        <button mat-icon-button (click)="toggleFilters()" [color]="showFilters ? 'primary' : ''" matTooltip="Filter Events">
+          <mat-icon>filter_list</mat-icon>
+        </button>
+        
+        <button mat-raised-button color="primary" (click)="createEvent()" *ngIf="canEdit">
+          <mat-icon>add</mat-icon>
+          New Event
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Panel -->
+    <div class="calendar-filters" *ngIf="showFilters" [@slideDown]>
+      <mat-divider></mat-divider>
+      
+      <div class="calendar-filters__content">
+        <!-- Search -->
+        <mat-form-field appearance="outline" class="calendar-filters__search">
+          <mat-label>Search events</mat-label>
+          <input matInput [(ngModel)]="filter.searchQuery" (input)="applyFilters()" placeholder="Search by title, location...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <!-- Category Filters -->
+        <div class="calendar-filters__section">
+          <h3 class="calendar-filters__title">Categories</h3>
+          <div class="calendar-filters__chips">
+            <mat-chip-option
+              *ngFor="let category of eventCategories"
+              [selected]="isCategorySelected(category.value)"
+              (click)="toggleCategoryFilter(category.value); applyFilters()">
+              <mat-icon [style.color]="category.color">{{ category.icon }}</mat-icon>
+              {{ category.label }}
+            </mat-chip-option>
+          </div>
+        </div>
+
+        <!-- RSVP Status Filters -->
+        <div class="calendar-filters__section">
+          <h3 class="calendar-filters__title">My RSVP Status</h3>
+          <div class="calendar-filters__chips">
+            <mat-chip-option
+              *ngFor="let status of rsvpStatuses"
+              [selected]="isRsvpStatusSelected(status.value)"
+              (click)="toggleRsvpStatusFilter(status.value); applyFilters()">
+              <mat-icon [style.color]="status.color">{{ status.icon }}</mat-icon>
+              {{ status.label }}
+            </mat-chip-option>
+          </div>
+        </div>
+
+        <!-- Private Events Toggle -->
+        <div class="calendar-filters__section">
+          <mat-checkbox [(ngModel)]="filter.showPrivateEvents" (change)="applyFilters()">
+            Show private events
+          </mat-checkbox>
+        </div>
+
+        <!-- Filter Actions -->
+        <div class="calendar-filters__actions">
+          <button mat-button (click)="clearFilters()">Clear Filters</button>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Calendar Body -->
+  <mat-card class="calendar-body">
+    <div class="calendar-body__loading" *ngIf="isLoading">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Loading events...</p>
+    </div>
+
+    <full-calendar
+      #calendar
+      *ngIf="!isLoading"
+      [options]="calendarOptions"
+      class="calendar-body__calendar">
+    </full-calendar>
+  </mat-card>
+</div>

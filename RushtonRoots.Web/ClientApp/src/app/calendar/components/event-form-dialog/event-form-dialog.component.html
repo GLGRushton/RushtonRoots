@@ -1,0 +1,260 @@
+<h2 mat-dialog-title>{{ getDialogTitle() }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="eventForm" class="event-form">
+    <!-- Basic Information Section -->
+    <div class="event-form__section">
+      <h3 class="event-form__section-title">Basic Information</h3>
+
+      <!-- Title -->
+      <mat-form-field appearance="outline" class="event-form__field--full">
+        <mat-label>Event Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter event title" required>
+        <mat-icon matPrefix>title</mat-icon>
+        <mat-hint>{{ eventForm.get('title')?.value?.length || 0 }} / 200</mat-hint>
+        <mat-error *ngIf="eventForm.get('title')?.hasError('required')">
+          Title is required
+        </mat-error>
+        <mat-error *ngIf="eventForm.get('title')?.hasError('maxlength')">
+          Title must be less than 200 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline" class="event-form__field--full">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="4" placeholder="Enter event description"></textarea>
+        <mat-icon matPrefix>description</mat-icon>
+        <mat-hint>{{ eventForm.get('description')?.value?.length || 0 }} / 2000</mat-hint>
+        <mat-error *ngIf="eventForm.get('description')?.hasError('maxlength')">
+          Description must be less than 2000 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Category -->
+      <mat-form-field appearance="outline" class="event-form__field--full">
+        <mat-label>Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option [value]="null">None</mat-option>
+          <mat-option *ngFor="let category of eventCategories" [value]="category.value">
+            <mat-icon [style.color]="category.color">{{ category.icon }}</mat-icon>
+            {{ category.label }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>category</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Date and Time Section -->
+    <div class="event-form__section">
+      <h3 class="event-form__section-title">Date & Time</h3>
+
+      <!-- All Day Toggle -->
+      <mat-checkbox formControlName="allDay" class="event-form__checkbox">
+        All-day event
+      </mat-checkbox>
+
+      <!-- Start Date and Time -->
+      <div class="event-form__row">
+        <mat-form-field appearance="outline" class="event-form__field--half">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startDatePicker" formControlName="startDate" required>
+          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+          <mat-error *ngIf="eventForm.get('startDate')?.hasError('required')">
+            Start date is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="event-form__field--half" *ngIf="!eventForm.get('allDay')?.value">
+          <mat-label>Start Time</mat-label>
+          <input matInput type="time" formControlName="startTime" required>
+          <mat-icon matPrefix>schedule</mat-icon>
+          <mat-error *ngIf="eventForm.get('startTime')?.hasError('required')">
+            Start time is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- End Date and Time -->
+      <div class="event-form__row">
+        <mat-form-field appearance="outline" class="event-form__field--half">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endDatePicker" formControlName="endDate" required>
+          <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+          <mat-error *ngIf="eventForm.get('endDate')?.hasError('required')">
+            End date is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="event-form__field--half" *ngIf="!eventForm.get('allDay')?.value">
+          <mat-label>End Time</mat-label>
+          <input matInput type="time" formControlName="endTime" required>
+          <mat-icon matPrefix>schedule</mat-icon>
+          <mat-error *ngIf="eventForm.get('endTime')?.hasError('required')">
+            End time is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Location and Attendees Section -->
+    <div class="event-form__section">
+      <h3 class="event-form__section-title">Location & Attendees</h3>
+
+      <!-- Location -->
+      <mat-form-field appearance="outline" class="event-form__field--full">
+        <mat-label>Location</mat-label>
+        <input matInput formControlName="location" placeholder="Enter event location">
+        <mat-icon matPrefix>place</mat-icon>
+        <mat-error *ngIf="eventForm.get('location')?.hasError('maxlength')">
+          Location must be less than 200 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Attendees -->
+      <mat-form-field appearance="outline" class="event-form__field--full">
+        <mat-label>Attendees</mat-label>
+        <mat-select formControlName="attendees" multiple>
+          <mat-option *ngFor="let person of filteredPersonOptions" [value]="person.id">
+            {{ person.name }} ({{ person.email }})
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>people</mat-icon>
+        <mat-hint>Select people to invite to this event</mat-hint>
+      </mat-form-field>
+
+      <!-- RSVP Required -->
+      <mat-checkbox formControlName="rsvpRequired" class="event-form__checkbox">
+        Require RSVP from attendees
+      </mat-checkbox>
+    </div>
+
+    <!-- Recurrence Section -->
+    <div class="event-form__section">
+      <h3 class="event-form__section-title">Recurrence</h3>
+
+      <mat-checkbox formControlName="hasRecurrence" class="event-form__checkbox">
+        Recurring event
+      </mat-checkbox>
+
+      <div class="event-form__recurrence" *ngIf="eventForm.get('hasRecurrence')?.value">
+        <!-- Frequency -->
+        <div class="event-form__row">
+          <mat-form-field appearance="outline" class="event-form__field--half">
+            <mat-label>Repeat</mat-label>
+            <mat-select formControlName="recurrenceFrequency">
+              <mat-option *ngFor="let freq of recurrenceFrequencies" [value]="freq.value">
+                {{ freq.label }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>repeat</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="event-form__field--half">
+            <mat-label>Every</mat-label>
+            <input matInput type="number" formControlName="recurrenceInterval" min="1" max="99">
+            <mat-hint>e.g., "2" for every 2 weeks</mat-hint>
+            <mat-error *ngIf="eventForm.get('recurrenceInterval')?.hasError('min')">
+              Must be at least 1
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Days of Week (for weekly recurrence) -->
+        <div class="event-form__days-of-week" *ngIf="eventForm.get('recurrenceFrequency')?.value === 'weekly'">
+          <label class="event-form__label">Repeat on:</label>
+          <div class="event-form__days-of-week-buttons">
+            <button
+              type="button"
+              mat-stroked-button
+              *ngFor="let day of daysOfWeek"
+              [class.selected]="isDayOfWeekSelected(day.value)"
+              (click)="toggleDayOfWeek(day.value)">
+              {{ day.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- End Type -->
+        <mat-radio-group formControlName="recurrenceEndType" class="event-form__radio-group">
+          <mat-radio-button value="occurrences">
+            After
+            <mat-form-field appearance="outline" class="event-form__inline-field">
+              <input matInput type="number" formControlName="recurrenceOccurrences" min="1" max="999" placeholder="10">
+            </mat-form-field>
+            occurrences
+          </mat-radio-button>
+          
+          <mat-radio-button value="date">
+            Until
+            <mat-form-field appearance="outline" class="event-form__inline-field">
+              <input matInput [matDatepicker]="recurrenceEndDatePicker" formControlName="recurrenceEndDate">
+              <mat-datepicker-toggle matSuffix [for]="recurrenceEndDatePicker"></mat-datepicker-toggle>
+              <mat-datepicker #recurrenceEndDatePicker></mat-datepicker>
+            </mat-form-field>
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <!-- Reminders Section -->
+    <div class="event-form__section">
+      <h3 class="event-form__section-title">Reminders</h3>
+
+      <div formArrayName="reminders" class="event-form__reminders">
+        <div *ngFor="let reminder of reminders.controls; let i = index" [formGroupName]="i" class="event-form__reminder">
+          <mat-checkbox formControlName="enabled" class="event-form__reminder-enabled">
+            Reminder {{ i + 1 }}
+          </mat-checkbox>
+
+          <div class="event-form__reminder-fields" *ngIf="reminder.get('enabled')?.value">
+            <mat-form-field appearance="outline" class="event-form__field--third">
+              <mat-label>When</mat-label>
+              <mat-select formControlName="minutesBefore">
+                <mat-option *ngFor="let option of reminderTimeOptions" [value]="option.minutes">
+                  {{ option.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="event-form__field--third">
+              <mat-label>Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option *ngFor="let type of reminderTypes" [value]="type.value">
+                  {{ type.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button mat-icon-button type="button" color="warn" (click)="removeReminder(i)" *ngIf="reminders.length > 1">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button mat-stroked-button type="button" (click)="addReminder()" class="event-form__add-reminder">
+          <mat-icon>add</mat-icon>
+          Add Reminder
+        </button>
+      </div>
+    </div>
+
+    <!-- Privacy Section -->
+    <div class="event-form__section">
+      <h3 class="event-form__section-title">Privacy</h3>
+
+      <mat-checkbox formControlName="isPrivate" class="event-form__checkbox">
+        Private event (only visible to invited attendees)
+      </mat-checkbox>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!eventForm.valid">
+    {{ isEditMode ? 'Save Changes' : 'Create Event' }}
+  </button>
+</mat-dialog-actions>

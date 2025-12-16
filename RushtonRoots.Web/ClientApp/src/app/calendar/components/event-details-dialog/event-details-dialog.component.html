@@ -1,0 +1,170 @@
+<h2 mat-dialog-title>
+  <div class="event-details-header">
+    <span>{{ data.event.title }}</span>
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</h2>
+
+<mat-dialog-content>
+  <div class="event-details">
+    <!-- Category Badge -->
+    <div class="event-details__category" *ngIf="getCategoryConfig()">
+      <mat-chip [style.background-color]="getCategoryConfig()!.color + '20'" [style.color]="getCategoryConfig()!.color">
+        <mat-icon>{{ getCategoryConfig()!.icon }}</mat-icon>
+        {{ getCategoryConfig()!.label }}
+      </mat-chip>
+      <mat-chip *ngIf="data.event.isPrivate">
+        <mat-icon>lock</mat-icon>
+        Private
+      </mat-chip>
+    </div>
+
+    <!-- Date and Time -->
+    <div class="event-details__section">
+      <div class="event-details__row">
+        <mat-icon>schedule</mat-icon>
+        <div class="event-details__content">
+          <strong>When</strong>
+          <p>{{ getEventDateRange() }}</p>
+          <p class="event-details__all-day" *ngIf="data.event.allDay">
+            <mat-chip>All Day</mat-chip>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="event-details__section" *ngIf="data.event.location">
+      <div class="event-details__row">
+        <mat-icon>place</mat-icon>
+        <div class="event-details__content">
+          <strong>Where</strong>
+          <p>{{ data.event.location }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="event-details__section" *ngIf="data.event.description">
+      <div class="event-details__row">
+        <mat-icon>description</mat-icon>
+        <div class="event-details__content">
+          <strong>Description</strong>
+          <p class="event-details__description">{{ data.event.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Organizer -->
+    <div class="event-details__section">
+      <div class="event-details__row">
+        <mat-icon>person</mat-icon>
+        <div class="event-details__content">
+          <strong>Organizer</strong>
+          <p>{{ data.event.organizer.name }} ({{ data.event.organizer.email }})</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendees -->
+    <div class="event-details__section" *ngIf="data.event.attendees.length > 0">
+      <div class="event-details__row">
+        <mat-icon>people</mat-icon>
+        <div class="event-details__content">
+          <strong>Attendees ({{ data.event.attendees.length }})</strong>
+          <div class="event-details__attendees">
+            <div *ngFor="let attendee of data.event.attendees" class="event-details__attendee">
+              <div class="event-details__attendee-info">
+                <div class="event-details__attendee-avatar" *ngIf="attendee.avatarUrl">
+                  <img [src]="attendee.avatarUrl" [alt]="attendee.name">
+                </div>
+                <div class="event-details__attendee-avatar event-details__attendee-avatar--placeholder" *ngIf="!attendee.avatarUrl">
+                  {{ attendee.name.charAt(0) }}
+                </div>
+                <div class="event-details__attendee-details">
+                  <span class="event-details__attendee-name">{{ attendee.name }}</span>
+                  <span class="event-details__attendee-email">{{ attendee.email }}</span>
+                </div>
+              </div>
+              <div class="event-details__attendee-rsvp" *ngIf="data.event.rsvpRequired">
+                <mat-chip
+                  *ngIf="getRsvpStatusConfig(attendee.rsvpStatus)"
+                  [style.background-color]="getRsvpStatusConfig(attendee.rsvpStatus)!.color + '20'"
+                  [style.color]="getRsvpStatusConfig(attendee.rsvpStatus)!.color">
+                  <mat-icon>{{ getRsvpStatusConfig(attendee.rsvpStatus)!.icon }}</mat-icon>
+                  {{ getRsvpStatusConfig(attendee.rsvpStatus)!.label }}
+                </mat-chip>
+                <span *ngIf="attendee.guestCount && attendee.guestCount > 0" class="event-details__guest-count">
+                  +{{ attendee.guestCount }} guest<span *ngIf="attendee.guestCount > 1">s</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <p class="event-details__attendee-summary" *ngIf="data.event.rsvpRequired">
+            {{ getAttendingCount() }} attending
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recurrence -->
+    <div class="event-details__section" *ngIf="data.event.recurrence">
+      <div class="event-details__row">
+        <mat-icon>repeat</mat-icon>
+        <div class="event-details__content">
+          <strong>Recurrence</strong>
+          <p>{{ getRecurrenceDescription() }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reminders -->
+    <div class="event-details__section" *ngIf="data.event.reminders.length > 0">
+      <div class="event-details__row">
+        <mat-icon>notifications</mat-icon>
+        <div class="event-details__content">
+          <strong>Reminders</strong>
+          <ul class="event-details__reminder-list">
+            <li *ngFor="let reminder of getReminderDescriptions()">{{ reminder }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Created/Updated Metadata -->
+    <div class="event-details__metadata">
+      <span class="event-details__metadata-item">
+        Created {{ data.event.createdAt | date: 'MMM d, y' }}
+      </span>
+      <span class="event-details__metadata-item" *ngIf="data.event.updatedAt !== data.event.createdAt">
+        Updated {{ data.event.updatedAt | date: 'MMM d, y' }}
+      </span>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="exportToICal()">
+    <mat-icon>file_download</mat-icon>
+    Export to iCal
+  </button>
+
+  <span class="event-details__actions-spacer"></span>
+
+  <button mat-button (click)="openRsvpDialog()" *ngIf="data.event.rsvpRequired" color="accent">
+    <mat-icon>how_to_reg</mat-icon>
+    RSVP
+  </button>
+
+  <button mat-button (click)="openEditDialog()" *ngIf="data.canEdit">
+    <mat-icon>edit</mat-icon>
+    Edit
+  </button>
+
+  <button mat-button (click)="deleteEvent()" *ngIf="data.canEdit" color="warn">
+    <mat-icon>delete</mat-icon>
+    Delete
+  </button>
+</mat-dialog-actions>
