@@ -65,6 +65,11 @@ export class HouseholdFormComponent implements OnInit {
   filteredPeople: PersonOption[] = [];
   filteredMembers: PersonOption[] = [];
 
+  // Display function for autocomplete
+  displayPersonFn = (person: PersonOption | null): string => {
+    return person ? person.fullName : '';
+  };
+
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar
