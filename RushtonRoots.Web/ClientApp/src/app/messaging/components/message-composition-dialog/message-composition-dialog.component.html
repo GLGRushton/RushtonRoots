@@ -1,0 +1,157 @@
+<h2 mat-dialog-title>
+  <mat-icon>add_comment</mat-icon>
+  {{ data.replyToMessageId ? 'Reply to Message' : 'New Message' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="messageForm" class="message-composition-form">
+    <!-- Recipients -->
+    <div class="form-section">
+      <label class="section-label">To:</label>
+      
+      <!-- Selected recipients -->
+      <div class="selected-recipients" *ngIf="selectedRecipients.length > 0">
+        <mat-chip-set aria-label="Recipients">
+          <mat-chip *ngFor="let recipient of selectedRecipients"
+                    (removed)="removeRecipient(recipient)">
+            <img *ngIf="recipient.avatarUrl" 
+                 [src]="recipient.avatarUrl" 
+                 [alt]="recipient.firstName"
+                 class="recipient-avatar"
+                 matChipAvatar>
+            <div *ngIf="!recipient.avatarUrl" 
+                 class="recipient-avatar-placeholder"
+                 matChipAvatar>
+              {{ getParticipantInitials(recipient) }}
+            </div>
+            {{ recipient.firstName }} {{ recipient.lastName }}
+            <button matChipRemove aria-label="Remove recipient">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+
+      <!-- Recipient autocomplete -->
+      <mat-form-field appearance="outline" class="recipient-field">
+        <mat-label>Add recipients</mat-label>
+        <input matInput
+               type="text"
+               placeholder="Search family members..."
+               [matAutocomplete]="recipientAuto"
+               aria-label="Search recipients">
+        <mat-icon matPrefix>person_add</mat-icon>
+        
+        <mat-autocomplete #recipientAuto="matAutocomplete"
+                          (optionSelected)="addRecipient($event.option.value)">
+          <mat-option *ngFor="let participant of availableRecipients" 
+                      [value]="participant"
+                      [disabled]="isRecipientSelected(participant)">
+            <div class="recipient-option">
+              <img *ngIf="participant.avatarUrl" 
+                   [src]="participant.avatarUrl" 
+                   [alt]="participant.firstName"
+                   class="option-avatar">
+              <div *ngIf="!participant.avatarUrl" 
+                   class="option-avatar-placeholder">
+                {{ getParticipantInitials(participant) }}
+              </div>
+              <div class="option-info">
+                <span class="option-name">{{ participant.firstName }} {{ participant.lastName }}</span>
+                <span class="option-email">{{ participant.email }}</span>
+              </div>
+              <mat-icon *ngIf="participant.isOnline" class="online-icon">fiber_manual_record</mat-icon>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      
+      <mat-error *ngIf="messageForm.get('recipients')?.hasError('required') && messageForm.get('recipients')?.touched">
+        Please select at least one recipient
+      </mat-error>
+    </div>
+
+    <!-- Subject (optional) -->
+    <div class="form-section">
+      <mat-form-field appearance="outline" class="subject-field">
+        <mat-label>Subject (optional)</mat-label>
+        <input matInput 
+               formControlName="subject"
+               placeholder="Enter subject..."
+               aria-label="Message subject">
+        <mat-icon matPrefix>subject</mat-icon>
+        <mat-hint align="end">{{ getCharacterCount('subject') }}</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Message content -->
+    <div class="form-section">
+      <mat-form-field appearance="outline" class="message-field">
+        <mat-label>Message</mat-label>
+        <textarea matInput
+                  formControlName="content"
+                  placeholder="Type your message here..."
+                  rows="6"
+                  cdkTextareaAutosize
+                  cdkAutosizeMinRows="6"
+                  cdkAutosizeMaxRows="12"
+                  aria-label="Message content"></textarea>
+        <mat-icon matPrefix>message</mat-icon>
+        <mat-hint align="end">{{ getCharacterCount('content') }}</mat-hint>
+        <mat-error *ngIf="messageForm.get('content')?.hasError('required')">
+          Message is required
+        </mat-error>
+        <mat-error *ngIf="messageForm.get('content')?.hasError('maxlength')">
+          Message is too long
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- File attachments -->
+    <div class="form-section">
+      <div class="attachments-header">
+        <label class="section-label">Attachments</label>
+        <button mat-stroked-button 
+                type="button"
+                (click)="fileInput.click()"
+                aria-label="Add attachment">
+          <mat-icon>attach_file</mat-icon>
+          Add File
+        </button>
+        <input #fileInput
+               type="file"
+               (change)="onFileSelected($event)"
+               multiple
+               style="display: none">
+      </div>
+
+      <!-- Attached files list -->
+      <div class="attached-files" *ngIf="attachedFiles.length > 0">
+        <div *ngFor="let file of attachedFiles; let i = index" class="attached-file">
+          <mat-icon>insert_drive_file</mat-icon>
+          <div class="file-info">
+            <span class="file-name">{{ file.name }}</span>
+            <span class="file-size">{{ formatFileSize(file.size) }}</span>
+          </div>
+          <button mat-icon-button 
+                  type="button"
+                  (click)="removeFile(i)"
+                  aria-label="Remove attachment">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button 
+          color="primary" 
+          (click)="onSend()"
+          [disabled]="!messageForm.valid">
+    <mat-icon>send</mat-icon>
+    Send Message
+  </button>
+</mat-dialog-actions>
