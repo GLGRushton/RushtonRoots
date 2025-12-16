@@ -47,6 +47,13 @@ import { LocationAutocompleteComponent } from './person/components/location-auto
 import { HouseholdIndexComponent } from './household/components/household-index/household-index.component';
 import { HouseholdCardComponent } from './household/components/household-card/household-card.component';
 
+// Import Phase 4.2 Household Details & Members components for Angular Elements registration
+import { HouseholdDetailsComponent } from './household/components/household-details/household-details.component';
+import { HouseholdMembersComponent } from './household/components/household-members/household-members.component';
+import { MemberInviteDialogComponent } from './household/components/member-invite-dialog/member-invite-dialog.component';
+import { HouseholdSettingsComponent } from './household/components/household-settings/household-settings.component';
+import { HouseholdActivityTimelineComponent } from './household/components/household-activity-timeline/household-activity-timeline.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -155,6 +162,22 @@ export class AppModule {
 
     const householdCardElement = createCustomElement(HouseholdCardComponent, { injector: this.injector });
     customElements.define('app-household-card', householdCardElement);
+
+    // Register Phase 4.2 Household Details & Members components as Angular Elements
+    const householdDetailsElement = createCustomElement(HouseholdDetailsComponent, { injector: this.injector });
+    customElements.define('app-household-details', householdDetailsElement);
+
+    const householdMembersElement = createCustomElement(HouseholdMembersComponent, { injector: this.injector });
+    customElements.define('app-household-members', householdMembersElement);
+
+    const memberInviteDialogElement = createCustomElement(MemberInviteDialogComponent, { injector: this.injector });
+    customElements.define('app-member-invite-dialog', memberInviteDialogElement);
+
+    const householdSettingsElement = createCustomElement(HouseholdSettingsComponent, { injector: this.injector });
+    customElements.define('app-household-settings', householdSettingsElement);
+
+    const householdActivityTimelineElement = createCustomElement(HouseholdActivityTimelineComponent, { injector: this.injector });
+    customElements.define('app-household-activity-timeline', householdActivityTimelineElement);
   }
 
   ngDoBootstrap() {

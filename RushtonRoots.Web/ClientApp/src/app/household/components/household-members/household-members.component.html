@@ -1,0 +1,184 @@
+<div class="household-members-container">
+  <!-- Header with invite button -->
+  <div class="members-header">
+    <h2>Household Members</h2>
+    <button mat-raised-button color="primary" (click)="onInviteMember()" *ngIf="canManage">
+      <mat-icon>person_add</mat-icon>
+      Invite Member
+    </button>
+  </div>
+
+  <!-- Active Members -->
+  <div class="members-section" *ngIf="getActiveMembers().length > 0">
+    <h3 class="section-title">
+      <mat-icon>people</mat-icon>
+      Active Members ({{ getActiveMembers().length }})
+    </h3>
+    
+    <div class="members-grid">
+      <mat-card class="member-card" *ngFor="let member of getActiveMembers()">
+        <mat-card-content>
+          <div class="member-header">
+            <div class="member-avatar-container">
+              <img *ngIf="member.photoUrl" 
+                   [src]="member.photoUrl" 
+                   alt="{{ member.fullName }}"
+                   class="member-avatar">
+              <div *ngIf="!member.photoUrl" class="member-avatar-placeholder">
+                <mat-icon>person</mat-icon>
+              </div>
+              <mat-icon class="current-user-badge" *ngIf="isCurrentUser(member)" matTooltip="You">
+                star
+              </mat-icon>
+            </div>
+            
+            <div class="member-info">
+              <h4 class="member-name">{{ member.fullName }}</h4>
+              <p class="member-relationship" *ngIf="member.relationship">
+                {{ member.relationship }}
+              </p>
+              
+              <div class="member-badges">
+                <mat-chip-set>
+                  <mat-chip [highlighted]="true">
+                    <mat-icon>{{ getRoleConfig(member.role).icon }}</mat-icon>
+                    {{ getRoleConfig(member.role).label }}
+                  </mat-chip>
+                  <mat-chip *ngIf="member.isAnchor" [highlighted]="true">
+                    <mat-icon>anchor</mat-icon>
+                    Anchor
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+            </div>
+
+            <button mat-icon-button 
+                    [matMenuTriggerFor]="memberMenu" 
+                    *ngIf="canModifyMember(member)"
+                    class="member-menu-button">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #memberMenu="matMenu">
+              <button mat-menu-item (click)="onViewProfile(member)">
+                <mat-icon>person</mat-icon>
+                <span>View Profile</span>
+              </button>
+              <button mat-menu-item (click)="onChangeRole(member)">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>Change Role</span>
+              </button>
+              <button mat-menu-item (click)="onRemoveMember(member)">
+                <mat-icon color="warn">person_remove</mat-icon>
+                <span>Remove Member</span>
+              </button>
+            </mat-menu>
+          </div>
+
+          <mat-divider class="member-divider"></mat-divider>
+
+          <div class="member-details">
+            <div class="detail-row" *ngIf="member.email">
+              <mat-icon class="detail-icon">email</mat-icon>
+              <span class="detail-text">{{ member.email }}</span>
+            </div>
+            <div class="detail-row" *ngIf="member.phone">
+              <mat-icon class="detail-icon">phone</mat-icon>
+              <span class="detail-text">{{ member.phone }}</span>
+            </div>
+            <div class="detail-row">
+              <mat-icon class="detail-icon">calendar_today</mat-icon>
+              <span class="detail-text">Joined {{ formatDate(member.joinedDate) }}</span>
+            </div>
+            <div class="detail-row" *ngIf="member.lastActive">
+              <mat-icon class="detail-icon">access_time</mat-icon>
+              <span class="detail-text">Last active {{ formatDate(member.lastActive) }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Invited Members -->
+  <div class="members-section" *ngIf="getInvitedMembers().length > 0">
+    <h3 class="section-title">
+      <mat-icon>mail</mat-icon>
+      Pending Invitations ({{ getInvitedMembers().length }})
+    </h3>
+    
+    <div class="members-grid">
+      <mat-card class="member-card invited-card" *ngFor="let member of getInvitedMembers()">
+        <mat-card-content>
+          <div class="member-header">
+            <div class="member-avatar-container">
+              <div class="member-avatar-placeholder">
+                <mat-icon>mail_outline</mat-icon>
+              </div>
+            </div>
+            
+            <div class="member-info">
+              <h4 class="member-name">{{ member.fullName }}</h4>
+              
+              <div class="member-badges">
+                <mat-chip-set>
+                  <mat-chip [highlighted]="true">
+                    <mat-icon>{{ getStatusIcon(member.status) }}</mat-icon>
+                    Invited
+                  </mat-chip>
+                  <mat-chip>
+                    {{ getRoleConfig(member.role).label }}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+            </div>
+
+            <button mat-icon-button 
+                    [matMenuTriggerFor]="invitedMenu" 
+                    *ngIf="canManage"
+                    class="member-menu-button">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #invitedMenu="matMenu">
+              <button mat-menu-item (click)="onResendInvite(member)">
+                <mat-icon>send</mat-icon>
+                <span>Resend Invitation</span>
+              </button>
+              <button mat-menu-item (click)="onRemoveMember(member)">
+                <mat-icon color="warn">cancel</mat-icon>
+                <span>Cancel Invitation</span>
+              </button>
+            </mat-menu>
+          </div>
+
+          <mat-divider class="member-divider"></mat-divider>
+
+          <div class="member-details">
+            <div class="detail-row" *ngIf="member.email">
+              <mat-icon class="detail-icon">email</mat-icon>
+              <span class="detail-text">{{ member.email }}</span>
+            </div>
+            <div class="detail-row">
+              <mat-icon class="detail-icon">calendar_today</mat-icon>
+              <span class="detail-text">Invited {{ formatDate(member.joinedDate) }}</span>
+            </div>
+            <div class="detail-row" *ngIf="member.invitedBy">
+              <mat-icon class="detail-icon">person</mat-icon>
+              <span class="detail-text">Invited by {{ member.invitedBy }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="members.length === 0">
+    <mat-icon class="empty-icon">people_outline</mat-icon>
+    <h3>No members yet</h3>
+    <p>Start building your household by inviting members.</p>
+    <button mat-raised-button color="primary" (click)="onInviteMember()" *ngIf="canManage">
+      <mat-icon>person_add</mat-icon>
+      Invite First Member
+    </button>
+  </div>
+</div>

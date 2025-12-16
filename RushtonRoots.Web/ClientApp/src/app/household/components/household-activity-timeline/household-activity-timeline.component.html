@@ -1,0 +1,66 @@
+<div class="activity-timeline-container">
+  <h2 class="timeline-header">
+    <mat-icon>history</mat-icon>
+    Activity Timeline
+  </h2>
+
+  <div class="timeline" *ngIf="getSortedEvents().length > 0">
+    <div class="timeline-item" *ngFor="let event of getSortedEvents(); let last = last">
+      <div class="timeline-marker" [style.background-color]="getEventColor(event.eventType)">
+        <mat-icon>{{ getEventIcon(event.eventType) }}</mat-icon>
+      </div>
+      
+      <div class="timeline-content" [class.last-item]="last">
+        <mat-card class="event-card">
+          <mat-card-content>
+            <div class="event-header">
+              <div class="event-main-info">
+                <div class="event-user" *ngIf="event.userName">
+                  <img *ngIf="event.userPhotoUrl" 
+                       [src]="event.userPhotoUrl" 
+                       alt="{{ event.userName }}"
+                       class="user-avatar">
+                  <div *ngIf="!event.userPhotoUrl" class="user-avatar-placeholder">
+                    <mat-icon>person</mat-icon>
+                  </div>
+                  <span class="user-name">{{ event.userName }}</span>
+                </div>
+                
+                <h4 class="event-title">{{ event.title }}</h4>
+                <p class="event-timestamp">{{ formatTimestamp(event.timestamp) }}</p>
+              </div>
+
+              <button mat-icon-button 
+                      *ngIf="event.description || event.metadata"
+                      (click)="toggleEventDetails(event.id)"
+                      [matTooltip]="isEventExpanded(event.id) ? 'Hide details' : 'Show details'">
+                <mat-icon>{{ isEventExpanded(event.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </div>
+
+            <div class="event-details" *ngIf="isEventExpanded(event.id)">
+              <mat-divider class="details-divider"></mat-divider>
+              
+              <p class="event-description" *ngIf="event.description">
+                {{ event.description }}
+              </p>
+
+              <div class="event-metadata" *ngIf="event.metadata">
+                <div class="metadata-item" *ngFor="let item of event.metadata | keyvalue">
+                  <strong>{{ item.key }}:</strong> {{ item.value }}
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="getSortedEvents().length === 0">
+    <mat-icon class="empty-icon">history</mat-icon>
+    <h3>No activity yet</h3>
+    <p>Activity in this household will appear here.</p>
+  </div>
+</div>
