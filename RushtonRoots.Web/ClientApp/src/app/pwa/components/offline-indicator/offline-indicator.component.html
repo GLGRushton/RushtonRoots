@@ -1,0 +1,38 @@
+<div class="offline-indicator" 
+     *ngIf="show"
+     [class.offline-indicator--top]="config.position === 'top'"
+     [class.offline-indicator--bottom]="config.position === 'bottom'"
+     [ngClass]="getIndicatorClass()">
+  <div class="offline-indicator__content">
+    <div class="offline-indicator__icon">
+      <mat-icon *ngIf="!networkStatus?.online">cloud_off</mat-icon>
+      <mat-icon *ngIf="networkStatus?.online && (networkStatus?.effectiveType === 'slow-2g' || networkStatus?.effectiveType === '2g')">
+        network_check
+      </mat-icon>
+      <mat-icon *ngIf="networkStatus?.online && networkStatus?.effectiveType !== 'slow-2g' && networkStatus?.effectiveType !== '2g'">
+        cloud_done
+      </mat-icon>
+    </div>
+    
+    <div class="offline-indicator__message">
+      {{ getConnectionMessage() }}
+    </div>
+
+    <div class="offline-indicator__actions">
+      <button mat-button 
+              *ngIf="config.showRetry && !networkStatus?.online" 
+              (click)="onRetry()"
+              [disabled]="retrying"
+              class="offline-indicator__retry">
+        <mat-spinner *ngIf="retrying" diameter="16"></mat-spinner>
+        <span *ngIf="!retrying">Retry</span>
+      </button>
+
+      <button mat-icon-button 
+              (click)="onDismiss()"
+              class="offline-indicator__close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

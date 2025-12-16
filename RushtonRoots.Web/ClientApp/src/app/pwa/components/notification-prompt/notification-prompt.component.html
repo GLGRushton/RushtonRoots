@@ -1,0 +1,36 @@
+<div class="notification-prompt" *ngIf="showPrompt && subscriptionState">
+  <mat-card class="notification-prompt__card">
+    <div class="notification-prompt__content">
+      <div class="notification-prompt__icon">
+        <mat-icon>notifications_active</mat-icon>
+      </div>
+
+      <div class="notification-prompt__text">
+        <h3 class="notification-prompt__title">Enable Notifications</h3>
+        <p class="notification-prompt__message">{{ getPermissionMessage() }}</p>
+        <ul class="notification-prompt__benefits">
+          <li>Get notified about family events</li>
+          <li>Receive updates on new family members</li>
+          <li>Stay connected with your family tree</li>
+        </ul>
+      </div>
+
+      <div class="notification-prompt__actions">
+        <button mat-raised-button 
+                color="primary" 
+                (click)="onEnable()"
+                [disabled]="loading || subscriptionState.permission === 'denied'"
+                class="notification-prompt__enable-btn">
+          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          <span *ngIf="!loading">Enable Notifications</span>
+        </button>
+
+        <button mat-button 
+                (click)="onDismiss()"
+                class="notification-prompt__dismiss-btn">
+          Not Now
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>
