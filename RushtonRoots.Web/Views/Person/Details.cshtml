@@ -33,7 +33,7 @@
             relationshipType = "parent",
             relatedPerson = new
             {
-                id = parent.ParentId,
+                id = parent.ParentPersonId,
                 firstName = parent.ParentName?.Split(' ').FirstOrDefault() ?? "",
                 lastName = parent.ParentName?.Split(' ').Skip(1).FirstOrDefault() ?? "",
                 fullName = parent.ParentName,
@@ -52,7 +52,7 @@
             relationshipType = "child",
             relatedPerson = new
             {
-                id = child.ChildId,
+                id = child.ChildPersonId,
                 firstName = child.ChildName?.Split(' ').FirstOrDefault() ?? "",
                 lastName = child.ChildName?.Split(' ').Skip(1).FirstOrDefault() ?? "",
                 fullName = child.ChildName,
