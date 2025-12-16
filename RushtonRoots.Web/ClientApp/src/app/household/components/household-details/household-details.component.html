@@ -1,0 +1,194 @@
+<div class="household-details-container">
+  <!-- Header with action buttons -->
+  <div class="household-header">
+    <div class="household-title-section">
+      <h1 class="household-name">{{ household.householdName }}</h1>
+      <mat-chip-set>
+        <mat-chip [highlighted]="true">
+          <mat-icon>{{ getPrivacyIcon() }}</mat-icon>
+          {{ household.privacy }}
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+    
+    <div class="action-buttons" *ngIf="canEdit || canDelete">
+      <button mat-raised-button color="primary" (click)="onEdit()" *ngIf="canEdit">
+        <mat-icon>edit</mat-icon>
+        Edit Household
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #moreMenu="matMenu">
+        <button mat-menu-item (click)="onDelete()" *ngIf="canDelete">
+          <mat-icon color="warn">delete</mat-icon>
+          <span>Delete Household</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- Tabbed content -->
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" class="household-tabs">
+    <!-- Overview Tab -->
+    <mat-tab [label]="tabs[0].label">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">{{ tabs[0].icon }}</mat-icon>
+        {{ tabs[0].label }}
+      </ng-template>
+      
+      <div class="tab-content">
+        <mat-card class="info-card">
+          <mat-card-header>
+            <mat-card-title>Household Information</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <!-- Anchor Person -->
+            <div class="info-row" *ngIf="household.anchorPersonId">
+              <span class="info-label">
+                <mat-icon>person</mat-icon>
+                Anchor Person
+              </span>
+              <span class="info-value">
+                <a href="javascript:void(0)" (click)="onAnchorPersonClick()" class="person-link">
+                  <img *ngIf="household.anchorPersonPhotoUrl" 
+                       [src]="household.anchorPersonPhotoUrl" 
+                       alt="{{ household.anchorPersonName }}"
+                       class="person-avatar-small">
+                  {{ household.anchorPersonName }}
+                </a>
+              </span>
+            </div>
+
+            <!-- Member Count -->
+            <div class="info-row">
+              <span class="info-label">
+                <mat-icon>groups</mat-icon>
+                Members
+              </span>
+              <span class="info-value">{{ household.memberCount }}</span>
+            </div>
+
+            <!-- Created Info -->
+            <div class="info-row">
+              <span class="info-label">
+                <mat-icon>calendar_today</mat-icon>
+                Created
+              </span>
+              <span class="info-value">
+                {{ formatDate(household.createdDateTime) }}
+                <span *ngIf="household.createdByUserName" class="text-muted">
+                  by {{ household.createdByUserName }}
+                </span>
+              </span>
+            </div>
+
+            <!-- Last Updated -->
+            <div class="info-row">
+              <span class="info-label">
+                <mat-icon>update</mat-icon>
+                Last Updated
+              </span>
+              <span class="info-value">{{ formatDate(household.updatedDateTime) }}</span>
+            </div>
+
+            <!-- Privacy -->
+            <div class="info-row">
+              <span class="info-label">
+                <mat-icon>{{ getPrivacyIcon() }}</mat-icon>
+                Privacy
+              </span>
+              <span class="info-value">{{ household.privacy }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Description Section -->
+        <mat-card class="description-card">
+          <mat-card-header>
+            <mat-card-title>Description</mat-card-title>
+            <button mat-icon-button 
+                    *ngIf="canEdit && !isEditingDescription" 
+                    (click)="startEditingDescription()"
+                    matTooltip="Edit description">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="!isEditingDescription">
+              <p class="description-text">
+                {{ household.description || 'No description provided.' }}
+              </p>
+            </div>
+            <div *ngIf="isEditingDescription" class="edit-description">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea matInput 
+                          [(ngModel)]="editedDescription"
+                          rows="4"
+                          placeholder="Enter household description..."></textarea>
+              </mat-form-field>
+              <div class="edit-actions">
+                <button mat-raised-button color="primary" (click)="saveDescription()">
+                  <mat-icon>save</mat-icon>
+                  Save
+                </button>
+                <button mat-button (click)="cancelEditingDescription()">Cancel</button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <!-- Members Tab -->
+    <mat-tab [label]="tabs[1].label">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">{{ tabs[1].icon }}</mat-icon>
+        {{ tabs[1].label }}
+        <span class="tab-badge" *ngIf="tabs[1].badge">{{ tabs[1].badge }}</span>
+      </ng-template>
+      
+      <div class="tab-content">
+        <app-household-members
+          [members]="members"
+          [canManage]="canManageMembers"
+          [currentUserId]="currentUserId"
+          (memberAction)="onMemberAction($event)"
+          (inviteMember)="onInviteMember()">
+        </app-household-members>
+      </div>
+    </mat-tab>
+
+    <!-- Settings Tab -->
+    <mat-tab [label]="tabs[2].label">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">{{ tabs[2].icon }}</mat-icon>
+        {{ tabs[2].label }}
+      </ng-template>
+      
+      <div class="tab-content">
+        <app-household-settings
+          [household]="household"
+          [canEdit]="canEditSettings"
+          (settingsUpdated)="onSettingsUpdate($event)">
+        </app-household-settings>
+      </div>
+    </mat-tab>
+
+    <!-- Activity Tab -->
+    <mat-tab [label]="tabs[3].label">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">{{ tabs[3].icon }}</mat-icon>
+        {{ tabs[3].label }}
+      </ng-template>
+      
+      <div class="tab-content">
+        <app-household-activity-timeline
+          [events]="activityEvents"
+          [householdId]="household.id">
+        </app-household-activity-timeline>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

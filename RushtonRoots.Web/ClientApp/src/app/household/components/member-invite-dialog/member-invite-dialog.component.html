@@ -1,0 +1,103 @@
+<h2 mat-dialog-title>
+  <mat-icon class="dialog-icon">person_add</mat-icon>
+  Invite Member to {{ data.householdName }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <p class="dialog-description">
+    Send an invitation to join this household. They will receive an email with a link to accept the invitation.
+  </p>
+
+  <form class="invite-form">
+    <!-- Email Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email Address</mat-label>
+      <input matInput 
+             type="email" 
+             [(ngModel)]="invitation.email" 
+             name="email"
+             placeholder="member@example.com"
+             required>
+      <mat-icon matPrefix>email</mat-icon>
+      <mat-hint>Required</mat-hint>
+      <mat-error *ngIf="!isEmailValid()">Please enter a valid email address</mat-error>
+    </mat-form-field>
+
+    <!-- Name Fields -->
+    <div class="name-fields">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>First Name</mat-label>
+        <input matInput 
+               [(ngModel)]="invitation.firstName" 
+               name="firstName"
+               placeholder="John">
+        <mat-hint>Optional</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Last Name</mat-label>
+        <input matInput 
+               [(ngModel)]="invitation.lastName" 
+               name="lastName"
+               placeholder="Doe">
+        <mat-hint>Optional</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Role Selection -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Role</mat-label>
+      <mat-select [(ngModel)]="invitation.role" name="role" required>
+        <mat-option *ngFor="let role of roles" [value]="role.role">
+          <div class="role-option">
+            <mat-icon [style.color]="role.color === 'primary' ? '#2e7d32' : ''">
+              {{ role.icon }}
+            </mat-icon>
+            <span class="role-label">{{ role.label }}</span>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>admin_panel_settings</mat-icon>
+      <mat-hint>{{ getRoleDescription(invitation.role) }}</mat-hint>
+    </mat-form-field>
+
+    <!-- Personal Message -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Personal Message</mat-label>
+      <textarea matInput 
+                [(ngModel)]="invitation.personalMessage" 
+                name="message"
+                rows="3"
+                placeholder="Add a personal message to the invitation..."></textarea>
+      <mat-icon matPrefix>message</mat-icon>
+      <mat-hint>Optional - Will be included in the invitation email</mat-hint>
+    </mat-form-field>
+  </form>
+
+  <!-- Role Information Panel -->
+  <mat-card class="role-info-card">
+    <mat-card-content>
+      <div class="role-info-header">
+        <mat-icon>info</mat-icon>
+        <strong>Role Permissions</strong>
+      </div>
+      <ul class="permission-list">
+        <li *ngFor="let role of roles" class="permission-item">
+          <mat-icon class="permission-icon">{{ role.icon }}</mat-icon>
+          <strong>{{ role.label }}:</strong> {{ role.description }}
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button 
+          color="primary" 
+          (click)="onSend()"
+          [disabled]="!isValid()">
+    <mat-icon>send</mat-icon>
+    Send Invitation
+  </button>
+</mat-dialog-actions>

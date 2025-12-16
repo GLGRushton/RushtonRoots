@@ -14,15 +14,34 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRadioModule } from '@angular/material/radio';
 
-// Components
+// Components - Phase 4.1
 import { HouseholdCardComponent } from './components/household-card/household-card.component';
 import { HouseholdIndexComponent } from './components/household-index/household-index.component';
 
+// Components - Phase 4.2
+import { HouseholdDetailsComponent } from './components/household-details/household-details.component';
+import { HouseholdMembersComponent } from './components/household-members/household-members.component';
+import { MemberInviteDialogComponent } from './components/member-invite-dialog/member-invite-dialog.component';
+import { HouseholdSettingsComponent } from './components/household-settings/household-settings.component';
+import { HouseholdActivityTimelineComponent } from './components/household-activity-timeline/household-activity-timeline.component';
+
 @NgModule({
   declarations: [
+    // Phase 4.1
     HouseholdCardComponent,
-    HouseholdIndexComponent
+    HouseholdIndexComponent,
+    // Phase 4.2
+    HouseholdDetailsComponent,
+    HouseholdMembersComponent,
+    MemberInviteDialogComponent,
+    HouseholdSettingsComponent,
+    HouseholdActivityTimelineComponent
   ],
   imports: [
     CommonModule,
@@ -37,11 +56,23 @@ import { HouseholdIndexComponent } from './components/household-index/household-
     MatInputModule,
     MatSelectModule,
     MatDividerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTabsModule,
+    MatChipsModule,
+    MatDialogModule,
+    MatSlideToggleModule,
+    MatRadioModule
   ],
   exports: [
+    // Phase 4.1
     HouseholdCardComponent,
-    HouseholdIndexComponent
+    HouseholdIndexComponent,
+    // Phase 4.2
+    HouseholdDetailsComponent,
+    HouseholdMembersComponent,
+    MemberInviteDialogComponent,
+    HouseholdSettingsComponent,
+    HouseholdActivityTimelineComponent
   ]
 })
 export class HouseholdModule { }
