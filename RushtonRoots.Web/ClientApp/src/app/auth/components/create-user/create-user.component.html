@@ -1,0 +1,198 @@
+<div class="create-user-container">
+  <mat-card class="create-user-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="create-user-icon">person_add</mat-icon>
+        <h2>Create New User</h2>
+      </mat-card-title>
+      <mat-card-subtitle>Create a new user account for a family member</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Success message display -->
+      <div class="success-alert" *ngIf="successMessage">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ successMessage }}</span>
+      </div>
+
+      <!-- Error message display -->
+      <div class="error-alert" *ngIf="errorMessage">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Form-level error display -->
+      <div class="error-alert" *ngIf="getFormError()">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ getFormError() }}</span>
+      </div>
+
+      <!-- Create user form -->
+      <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+        <!-- Email field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email Address</mat-label>
+          <input 
+            matInput 
+            type="email" 
+            formControlName="email"
+            placeholder="user@example.com"
+            autocomplete="email">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="hasError('email')">
+            {{ getErrorMessage('email') }}
+          </mat-error>
+          <mat-hint>The email address for the new user account</mat-hint>
+        </mat-form-field>
+
+        <!-- Person ID field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Person ID</mat-label>
+          <input 
+            matInput 
+            type="number" 
+            formControlName="personId"
+            placeholder="Enter the Person ID from the family tree"
+            min="1">
+          <mat-icon matPrefix>badge</mat-icon>
+          <mat-error *ngIf="hasError('personId')">
+            {{ getErrorMessage('personId') }}
+          </mat-error>
+          <mat-hint>Link this user account to a person in the family tree</mat-hint>
+        </mat-form-field>
+
+        <!-- Password field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input 
+            matInput 
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="Enter password"
+            autocomplete="new-password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="'Toggle password visibility'"
+            [attr.aria-pressed]="!hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('password')">
+            {{ getErrorMessage('password') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password strength indicator -->
+        <div class="password-strength" *ngIf="createUserForm.get('password')?.value">
+          <div class="strength-label">
+            <span>Password Strength: </span>
+            <span [class]="'strength-value ' + getPasswordStrengthClass()">
+              {{ getPasswordStrengthLabel() }}
+            </span>
+          </div>
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="passwordStrength?.score || 0"
+            [class]="'strength-bar ' + getPasswordStrengthClass()">
+          </mat-progress-bar>
+          <div class="password-requirements" *ngIf="passwordStrength && passwordStrength.feedback.length > 0">
+            <p class="requirements-title">Password requirements:</p>
+            <ul>
+              <li *ngFor="let requirement of passwordStrength.feedback">{{ requirement }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Confirm Password field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirm Password</mat-label>
+          <input 
+            matInput 
+            [type]="hideConfirmPassword ? 'password' : 'text'"
+            formControlName="confirmPassword"
+            placeholder="Re-enter password"
+            autocomplete="new-password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button 
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="'Toggle confirm password visibility'"
+            [attr.aria-pressed]="!hideConfirmPassword">
+            <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="hasError('confirmPassword')">
+            {{ getErrorMessage('confirmPassword') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Role selection dropdown -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role">
+            <mat-option *ngFor="let role of roleOptions" [value]="role.value">
+              {{ role.label }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>admin_panel_settings</mat-icon>
+          <mat-hint>Assign a role to define user permissions (optional)</mat-hint>
+        </mat-form-field>
+
+        <!-- Household ID field (optional) -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Household ID (Optional)</mat-label>
+          <input 
+            matInput 
+            type="number" 
+            formControlName="householdId"
+            placeholder="Enter Household ID to assign"
+            min="1">
+          <mat-icon matPrefix>home</mat-icon>
+          <mat-hint>Optionally assign the user to a household</mat-hint>
+        </mat-form-field>
+
+        <!-- Send invitation email checkbox -->
+        <div class="invitation-section">
+          <mat-checkbox formControlName="sendInvitationEmail">
+            Send invitation email to the new user
+          </mat-checkbox>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="action-buttons">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit"
+            class="submit-button"
+            [disabled]="isLoading">
+            <mat-spinner 
+              *ngIf="isLoading" 
+              diameter="20" 
+              class="button-spinner">
+            </mat-spinner>
+            <span *ngIf="!isLoading">
+              <mat-icon>person_add</mat-icon>
+              Create User
+            </span>
+            <span *ngIf="isLoading">Creating User...</span>
+          </button>
+          
+          <button 
+            mat-stroked-button 
+            type="button"
+            class="cancel-button"
+            (click)="onCancel()"
+            [disabled]="isLoading">
+            <mat-icon>cancel</mat-icon>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
