@@ -238,3 +238,66 @@ export interface ValidationWarning {
   message: string;
   details?: string;
 }
+
+/**
+ * Parent-child relationship details for details view
+ */
+export interface ParentChildDetails {
+  id: number;
+  parentPersonId: number;
+  childPersonId: number;
+  parentName: string;
+  childName: string;
+  parentPhotoUrl?: string;
+  childPhotoUrl?: string;
+  parentBirthDate?: Date;
+  parentDeathDate?: Date;
+  childBirthDate?: Date;
+  childDeathDate?: Date;
+  relationshipType: string;
+  relationshipTypeDisplay: string;
+  relationshipTypeIcon: string;
+  relationshipTypeColor: string;
+  relationshipTypeDescription: string;
+  isVerified: boolean;
+  confidence?: number;
+  notes?: string;
+  createdDateTime: Date;
+  updatedDateTime: Date;
+}
+
+/**
+ * Evidence item for relationship
+ */
+export interface ParentChildEvidence {
+  id: number;
+  type: 'source' | 'document' | 'dna' | 'photo' | 'other';
+  title: string;
+  description?: string;
+  url?: string;
+  documentUrl?: string;
+  addedDate: Date;
+}
+
+/**
+ * Timeline event for parent-child relationship
+ */
+export interface ParentChildEvent {
+  id: number;
+  title: string;
+  date: Date;
+  description?: string;
+  type: 'birth' | 'adoption' | 'guardianship' | 'other';
+  icon: string;
+  color: string;
+}
+
+/**
+ * Tab configuration for details component
+ */
+export interface ParentChildDetailsTab {
+  label: string;
+  icon: string;
+  content: string;
+  badge?: number;
+}

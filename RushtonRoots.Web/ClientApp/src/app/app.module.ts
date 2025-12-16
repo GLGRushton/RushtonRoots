@@ -89,6 +89,7 @@ import { PartnershipDeleteDialogComponent } from './partnership/components/partn
 import { ParentChildIndexComponent } from './parent-child/components/parent-child-index/parent-child-index.component';
 import { ParentChildCardComponent } from './parent-child/components/parent-child-card/parent-child-card.component';
 import { ParentChildFormComponent } from './parent-child/components/parent-child-form/parent-child-form.component';
+import { ParentChildDetailsComponent } from './parent-child/components/parent-child-details/parent-child-details.component';
 import { FamilyTreeMiniComponent } from './parent-child/components/family-tree-mini/family-tree-mini.component';
 import { RelationshipValidationComponent } from './parent-child/components/relationship-validation/relationship-validation.component';
 import { RelationshipSuggestionsComponent } from './parent-child/components/relationship-suggestions/relationship-suggestions.component';
@@ -269,6 +270,7 @@ export class AppModule {
     safeDefine('app-parent-child-index', ParentChildIndexComponent);
     safeDefine('app-parent-child-card', ParentChildCardComponent);
     safeDefine('app-parent-child-form', ParentChildFormComponent);
+    safeDefine('app-parent-child-details', ParentChildDetailsComponent);
     safeDefine('app-family-tree-mini', FamilyTreeMiniComponent);
     safeDefine('app-relationship-validation', RelationshipValidationComponent);
     safeDefine('app-relationship-suggestions', RelationshipSuggestionsComponent);
