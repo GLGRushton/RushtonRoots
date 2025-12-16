@@ -1,7 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HouseholdDeleteDialogData, HouseholdDeleteOptions } from '../../models/household-delete.model';
+import { HouseholdDeleteDialogData, HouseholdDeleteOptions, HouseholdRelatedData } from '../../models/household-delete.model';
 
 /**
  * HouseholdDeleteDialogComponent - Confirmation dialog for household deletion
@@ -15,19 +14,16 @@ import { HouseholdDeleteDialogData, HouseholdDeleteOptions } from '../../models/
  * - Soft delete, archive, and hard delete options
  * - Admin-only hard delete option
  * 
- * Usage:
- * constructor(private dialog: MatDialog) {}
- * 
- * const dialogRef = this.dialog.open(HouseholdDeleteDialogComponent, {
- *   width: '600px',
- *   data: householdDeleteData
- * });
- * 
- * dialogRef.afterClosed().subscribe(result => {
- *   if (result) {
- *     // Handle deletion based on result.deleteType
- *   }
- * });
+ * Usage as Angular Element in Razor view:
+ * <app-household-delete-dialog
+ *   household-id="123"
+ *   household-name="Smith Family"
+ *   anchor-person-name="John Smith"
+ *   member-count="5"
+ *   created-date="2020-01-15"
+ *   is-admin="true"
+ *   related-data='{"members":5,"events":12,"sharedMedia":45,"documents":8,"permissions":15}'>
+ * </app-household-delete-dialog>
  */
 @Component({
   selector: 'app-household-delete-dialog',
@@ -36,28 +32,79 @@ import { HouseholdDeleteDialogData, HouseholdDeleteOptions } from '../../models/
   styleUrls: ['./household-delete-dialog.component.scss']
 })
 export class HouseholdDeleteDialogComponent implements OnInit {
+  @Input('household-id') householdId: number = 0;
+  @Input('household-name') householdName: string = '';
+  @Input('anchor-person-name') anchorPersonName?: string;
+  @Input('anchor-person-id') anchorPersonId?: number;
+  @Input('member-count') memberCount: number = 0;
+  @Input('created-date') createdDate?: string;
+  @Input('is-admin') isAdmin: string = 'false';
+  @Input('related-data') relatedDataJson: string = '{}';
+  
+  @Output() deleteConfirmed = new EventEmitter<HouseholdDeleteOptions>();
+  @Output() deleteCancelled = new EventEmitter<void>();
+  
   deleteForm: FormGroup;
-  isAdmin = false;
   selectedDeleteType: 'soft' | 'archive' | 'hard' = 'soft';
-
-  constructor(
-    public dialogRef: MatDialogRef<HouseholdDeleteDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: HouseholdDeleteDialogData,
-    private fb: FormBuilder
-  ) {
-    this.isAdmin = data.isAdmin || false;
+  data: HouseholdDeleteDialogData;
+  
+  constructor(private fb: FormBuilder) {
     this.deleteForm = this.fb.group({
       deleteType: ['soft', Validators.required],
       notifyMembers: [true], // Default to notifying members
       confirmationCheckbox: [false, Validators.requiredTrue]
     });
+    
+    // Initialize data with defaults
+    this.data = {
+      householdId: 0,
+      householdName: '',
+      memberCount: 0,
+      relatedData: {
+        members: 0,
+        events: 0,
+        sharedMedia: 0,
+        documents: 0,
+        permissions: 0
+      }
+    };
   }
 
   ngOnInit(): void {
+    // Parse inputs and populate data object
+    this.data = {
+      householdId: this.householdId,
+      householdName: this.householdName,
+      anchorPersonName: this.anchorPersonName,
+      anchorPersonId: this.anchorPersonId,
+      memberCount: this.memberCount,
+      createdDate: this.createdDate,
+      isAdmin: this.isAdmin === 'true',
+      relatedData: this.parseRelatedData()
+    };
+    
     // Subscribe to delete type changes
     this.deleteForm.get('deleteType')?.valueChanges.subscribe(value => {
       this.selectedDeleteType = value;
     });
+  }
+  
+  /**
+   * Parse related data JSON string
+   */
+  private parseRelatedData(): HouseholdRelatedData {
+    try {
+      return JSON.parse(this.relatedDataJson);
+    } catch (e) {
+      console.error('Failed to parse related data JSON:', e);
+      return {
+        members: 0,
+        events: 0,
+        sharedMedia: 0,
+        documents: 0,
+        permissions: 0
+      };
+    }
   }
 
   /**
@@ -142,7 +189,7 @@ export class HouseholdDeleteDialogComponent implements OnInit {
    * Handle cancel button click
    */
   onCancel(): void {
-    this.dialogRef.close(null);
+    this.deleteCancelled.emit();
   }
 
   /**
@@ -155,7 +202,7 @@ export class HouseholdDeleteDialogComponent implements OnInit {
         notifyMembers: this.deleteForm.value.notifyMembers,
         confirmed: this.deleteForm.value.confirmationCheckbox
       };
-      this.dialogRef.close(result);
+      this.deleteConfirmed.emit(result);
     }
   }
 }

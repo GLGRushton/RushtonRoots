@@ -1,13 +1,23 @@
 /* Household Delete Dialog Component Styles */
 
+/* Container */
+.household-delete-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Dialog Title */
 .dialog-title {
   display: flex;
   align-items: center;
   gap: 12px;
   color: #d32f2f; /* Material red */
-  margin: 0;
-  padding: 20px 24px 0;
+  margin: 0 0 24px 0;
+  padding: 0;
   
   .warning-icon {
     font-size: 32px;
@@ -18,9 +28,7 @@
 
 /* Dialog Content */
 .dialog-content {
-  padding: 20px 24px;
-  max-height: 70vh;
-  overflow-y: auto;
+  padding: 0;
 }
 
 /* Household Summary Section */
@@ -276,8 +284,11 @@
 
 /* Dialog Actions */
 .dialog-actions {
-  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 0 0;
   gap: 12px;
+  margin-top: 24px;
   
   .delete-button {
     min-width: 140px;
@@ -286,8 +297,14 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .dialog-content {
+  .household-delete-container {
     padding: 16px;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .dialog-content {
+    padding: 0;
   }
   
   .household-summary {

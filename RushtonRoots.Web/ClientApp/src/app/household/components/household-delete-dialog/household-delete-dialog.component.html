@@ -1,149 +1,151 @@
-<h2 mat-dialog-title class="dialog-title">
-  <mat-icon class="warning-icon">warning</mat-icon>
-  Delete Household
-</h2>
+<div class="household-delete-container">
+  <h2 class="dialog-title">
+    <mat-icon class="warning-icon">warning</mat-icon>
+    Delete Household
+  </h2>
 
-<mat-dialog-content class="dialog-content">
-  <form [formGroup]="deleteForm">
-    <!-- Household Summary Section -->
-    <section class="household-summary">
-      <div class="household-header">
-        <div class="household-icon">
-          <mat-icon class="large-icon">home</mat-icon>
-        </div>
-        <div class="household-info">
-          <h3 class="household-name">{{ data.householdName }}</h3>
-          <div class="household-details">
-            <div class="detail-row" *ngIf="data.anchorPersonName">
-              <mat-icon class="detail-icon">person</mat-icon>
-              <span><strong>Anchor Person:</strong> {{ data.anchorPersonName }}</span>
+  <div class="dialog-content">
+    <form [formGroup]="deleteForm">
+      <!-- Household Summary Section -->
+      <section class="household-summary">
+        <div class="household-header">
+          <div class="household-icon">
+            <mat-icon class="large-icon">home</mat-icon>
+          </div>
+          <div class="household-info">
+            <h3 class="household-name">{{ data.householdName }}</h3>
+            <div class="household-details">
+              <div class="detail-row" *ngIf="data.anchorPersonName">
+                <mat-icon class="detail-icon">person</mat-icon>
+                <span><strong>Anchor Person:</strong> {{ data.anchorPersonName }}</span>
+              </div>
+              <div class="detail-row">
+                <mat-icon class="detail-icon">people</mat-icon>
+                <span><strong>Members:</strong> {{ data.memberCount }} {{ data.memberCount === 1 ? 'member' : 'members' }}</span>
+              </div>
+              <div class="detail-row" *ngIf="data.createdDate">
+                <mat-icon class="detail-icon">event</mat-icon>
+                <span><strong>Created:</strong> {{ formatDate(data.createdDate) }}</span>
+              </div>
             </div>
-            <div class="detail-row">
-              <mat-icon class="detail-icon">people</mat-icon>
-              <span><strong>Members:</strong> {{ data.memberCount }} {{ data.memberCount === 1 ? 'member' : 'members' }}</span>
-            </div>
-            <div class="detail-row" *ngIf="data.createdDate">
-              <mat-icon class="detail-icon">event</mat-icon>
-              <span><strong>Created:</strong> {{ formatDate(data.createdDate) }}</span>
-            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Warning Message -->
-    <mat-card class="warning-card" appearance="outlined">
-      <mat-card-content>
-        <div class="warning-header">
-          <mat-icon color="warn">error_outline</mat-icon>
-          <strong>Warning: This action will affect household members and related data</strong>
-        </div>
-        <p class="warning-text">{{ getWarningMessage() }}</p>
-      </mat-card-content>
-    </mat-card>
-
-    <!-- Related Data Section -->
-    <section class="related-data" *ngIf="hasRelatedData()">
-      <h4 class="section-title">
-        <mat-icon>link</mat-icon>
-        Data That Will Be Affected ({{ getTotalRelatedItems() }} items)
-      </h4>
-      
-      <mat-list class="affected-items">
-        <!-- Members -->
-        <mat-list-item *ngIf="data.relatedData.members > 0">
-          <mat-icon matListItemIcon>people</mat-icon>
-          <div matListItemTitle>Household Members</div>
-          <div matListItemLine>{{ data.relatedData.members }} member(s) will lose household access</div>
-        </mat-list-item>
-
-        <!-- Events -->
-        <mat-list-item *ngIf="data.relatedData.events > 0">
-          <mat-icon matListItemIcon>event</mat-icon>
-          <div matListItemTitle>Events Associated with Household</div>
-          <div matListItemLine>{{ data.relatedData.events }} event(s)</div>
-        </mat-list-item>
-
-        <!-- Shared Media -->
-        <mat-list-item *ngIf="data.relatedData.sharedMedia > 0">
-          <mat-icon matListItemIcon>photo_library</mat-icon>
-          <div matListItemTitle>Shared Media and Documents</div>
-          <div matListItemLine>{{ data.relatedData.sharedMedia }} photo(s)/video(s), {{ data.relatedData.documents }} document(s)</div>
-        </mat-list-item>
-
-        <!-- Permissions -->
-        <mat-list-item *ngIf="data.relatedData.permissions > 0">
-          <mat-icon matListItemIcon>security</mat-icon>
-          <div matListItemTitle>Member Permissions</div>
-          <div matListItemLine>{{ data.relatedData.permissions }} permission setting(s)</div>
-        </mat-list-item>
-      </mat-list>
-    </section>
-
-    <!-- Delete Type Selection -->
-    <section class="delete-options">
-      <h4 class="section-title">
-        <mat-icon>settings</mat-icon>
-        Deletion Options
-      </h4>
-
-      <mat-radio-group formControlName="deleteType" class="delete-type-group">
-        <mat-radio-button value="soft" class="delete-option">
-          <div class="option-content">
-            <strong>Soft Delete (Recommended)</strong>
-            <p>Mark as deleted, can be restored by admin</p>
+      <!-- Warning Message -->
+      <mat-card class="warning-card" appearance="outlined">
+        <mat-card-content>
+          <div class="warning-header">
+            <mat-icon color="warn">error_outline</mat-icon>
+            <strong>Warning: This action will affect household members and related data</strong>
           </div>
-        </mat-radio-button>
+          <p class="warning-text">{{ getWarningMessage() }}</p>
+        </mat-card-content>
+      </mat-card>
 
-        <mat-radio-button value="archive" class="delete-option">
-          <div class="option-content">
-            <strong>Archive</strong>
-            <p>Move to archive, preserve for history</p>
-          </div>
-        </mat-radio-button>
+      <!-- Related Data Section -->
+      <section class="related-data" *ngIf="hasRelatedData()">
+        <h4 class="section-title">
+          <mat-icon>link</mat-icon>
+          Data That Will Be Affected ({{ getTotalRelatedItems() }} items)
+        </h4>
+        
+        <mat-list class="affected-items">
+          <!-- Members -->
+          <mat-list-item *ngIf="data.relatedData.members > 0">
+            <mat-icon matListItemIcon>people</mat-icon>
+            <div matListItemTitle>Household Members</div>
+            <div matListItemLine>{{ data.relatedData.members }} member(s) will lose household access</div>
+          </mat-list-item>
 
-        <mat-radio-button value="hard" class="delete-option" *ngIf="isAdmin">
-          <div class="option-content">
-            <strong class="danger-text">Hard Delete (Admin Only)</strong>
-            <p class="danger-text">Permanently delete all data - CANNOT BE UNDONE</p>
-          </div>
-        </mat-radio-button>
-      </mat-radio-group>
-    </section>
+          <!-- Events -->
+          <mat-list-item *ngIf="data.relatedData.events > 0">
+            <mat-icon matListItemIcon>event</mat-icon>
+            <div matListItemTitle>Events Associated with Household</div>
+            <div matListItemLine>{{ data.relatedData.events }} event(s)</div>
+          </mat-list-item>
 
-    <!-- Member Notification Option -->
-    <section class="notification-section" *ngIf="data.relatedData.members > 0">
-      <h4 class="section-title">
-        <mat-icon>email</mat-icon>
-        Member Notifications
-      </h4>
-      <mat-checkbox formControlName="notifyMembers" color="primary" class="notification-checkbox">
-        <strong>Send notification emails to all household members</strong>
-        <p class="checkbox-hint">Members will be informed about the household deletion and next steps</p>
-      </mat-checkbox>
-    </section>
+          <!-- Shared Media -->
+          <mat-list-item *ngIf="data.relatedData.sharedMedia > 0">
+            <mat-icon matListItemIcon>photo_library</mat-icon>
+            <div matListItemTitle>Shared Media and Documents</div>
+            <div matListItemLine>{{ data.relatedData.sharedMedia }} photo(s)/video(s), {{ data.relatedData.documents }} document(s)</div>
+          </mat-list-item>
 
-    <!-- Confirmation Checkbox -->
-    <section class="confirmation-section">
-      <mat-checkbox formControlName="confirmationCheckbox" color="warn" class="confirmation-checkbox">
-        <strong>I understand this action cannot be undone</strong>
-        <span *ngIf="selectedDeleteType === 'hard'"> and all data will be permanently lost</span>
-      </mat-checkbox>
-    </section>
-  </form>
-</mat-dialog-content>
+          <!-- Permissions -->
+          <mat-list-item *ngIf="data.relatedData.permissions > 0">
+            <mat-icon matListItemIcon>security</mat-icon>
+            <div matListItemTitle>Member Permissions</div>
+            <div matListItemLine>{{ data.relatedData.permissions }} permission setting(s)</div>
+          </mat-list-item>
+        </mat-list>
+      </section>
 
-<mat-dialog-actions align="end" class="dialog-actions">
-  <button mat-button (click)="onCancel()" cdkFocusInitial>
-    Cancel
-  </button>
-  <button 
-    mat-raised-button 
-    [color]="getDeleteButtonColor()" 
-    (click)="onDelete()"
-    [disabled]="!deleteForm.valid"
-    class="delete-button">
-    <mat-icon>delete</mat-icon>
-    {{ getDeleteButtonText() }}
-  </button>
-</mat-dialog-actions>
+      <!-- Delete Type Selection -->
+      <section class="delete-options">
+        <h4 class="section-title">
+          <mat-icon>settings</mat-icon>
+          Deletion Options
+        </h4>
+
+        <mat-radio-group formControlName="deleteType" class="delete-type-group">
+          <mat-radio-button value="soft" class="delete-option">
+            <div class="option-content">
+              <strong>Soft Delete (Recommended)</strong>
+              <p>Mark as deleted, can be restored by admin</p>
+            </div>
+          </mat-radio-button>
+
+          <mat-radio-button value="archive" class="delete-option">
+            <div class="option-content">
+              <strong>Archive</strong>
+              <p>Move to archive, preserve for history</p>
+            </div>
+          </mat-radio-button>
+
+          <mat-radio-button value="hard" class="delete-option" *ngIf="data.isAdmin">
+            <div class="option-content">
+              <strong class="danger-text">Hard Delete (Admin Only)</strong>
+              <p class="danger-text">Permanently delete all data - CANNOT BE UNDONE</p>
+            </div>
+          </mat-radio-button>
+        </mat-radio-group>
+      </section>
+
+      <!-- Member Notification Option -->
+      <section class="notification-section" *ngIf="data.relatedData.members > 0">
+        <h4 class="section-title">
+          <mat-icon>email</mat-icon>
+          Member Notifications
+        </h4>
+        <mat-checkbox formControlName="notifyMembers" color="primary" class="notification-checkbox">
+          <strong>Send notification emails to all household members</strong>
+          <p class="checkbox-hint">Members will be informed about the household deletion and next steps</p>
+        </mat-checkbox>
+      </section>
+
+      <!-- Confirmation Checkbox -->
+      <section class="confirmation-section">
+        <mat-checkbox formControlName="confirmationCheckbox" color="warn" class="confirmation-checkbox">
+          <strong>I understand this action cannot be undone</strong>
+          <span *ngIf="selectedDeleteType === 'hard'"> and all data will be permanently lost</span>
+        </mat-checkbox>
+      </section>
+    </form>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-button (click)="onCancel()">
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      [color]="getDeleteButtonColor()" 
+      (click)="onDelete()"
+      [disabled]="!deleteForm.valid"
+      class="delete-button">
+      <mat-icon>delete</mat-icon>
+      {{ getDeleteButtonText() }}
+    </button>
+  </div>
+</div>
