@@ -34,7 +34,7 @@
     </PackageReference>
   </ItemGroup>
 
-  <Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('$(SpaRoot)node_modules')">
+  <Target Name="NpmInstall" BeforeTargets="Build">
     <Exec Command="npm install" WorkingDirectory="$(SpaRoot)" />
   </Target>
 
