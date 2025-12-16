@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Starts or manages the Angular watch build process for development.
+    Starts or manages the npm watch build process for Angular development.
 
 .DESCRIPTION
     This script manages an Angular watch build process (npm run watch) in a separate terminal window.
@@ -172,7 +172,7 @@ if (-not (Test-Path $nodeModules)) {
 
 # Quick check that npm is available
 try {
-    $null = npm -v 2>&1 | Out-Null
+    $null = Get-Command npm -ErrorAction Stop
 }
 catch {
     Write-Error "npm is not available on PATH in this session. Make sure Node/npm are installed and restart your shell/VS."
