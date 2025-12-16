@@ -1,0 +1,131 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.relationships-container {
+  padding: $spacing-md;
+}
+
+.relationship-section {
+  margin-bottom: $spacing-xl;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-sm;
+  border-bottom: 2px solid $primary-light;
+
+  mat-icon {
+    color: $primary;
+    margin-right: $spacing-sm;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+    color: $text-primary;
+  }
+}
+
+.relationship-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+
+  @media (max-width: $breakpoint-sm) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: $spacing-sm;
+  }
+}
+
+.person-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:focus {
+    outline: 2px solid $primary;
+    outline-offset: 2px;
+  }
+
+  mat-card-content {
+    padding: $spacing-md;
+    text-align: center;
+
+    h4 {
+      margin: 0 0 $spacing-xs 0;
+      font-size: 16px;
+      font-weight: 500;
+      color: $text-primary;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: $text-secondary;
+
+      &.life-span {
+        margin-bottom: $spacing-xs;
+      }
+
+      &.relationship-duration {
+        font-size: 12px;
+        font-style: italic;
+      }
+    }
+  }
+}
+
+.person-avatar {
+  width: 100%;
+  padding-top: 100%; // 1:1 aspect ratio
+  position: relative;
+  overflow: hidden;
+  background: $background;
+  border-bottom: 1px solid #e0e0e0;
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.no-relationships {
+  text-align: center;
+  padding: $spacing-xxl;
+  color: $text-secondary;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: $spacing-md;
+    opacity: 0.5;
+  }
+
+  p {
+    font-size: 16px;
+    margin: 0;
+  }
+}

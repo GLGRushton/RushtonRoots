@@ -1,0 +1,36 @@
+<div class="timeline-container">
+  <div class="timeline" *ngIf="sortedEvents.length > 0; else noEvents">
+    <div class="timeline-item" *ngFor="let event of sortedEvents; let i = index">
+      <div class="timeline-connector" *ngIf="i > 0"></div>
+      
+      <div class="timeline-marker" [ngClass]="'timeline-marker-' + getEventColor(event)">
+        <mat-icon>{{ getEventIcon(event) }}</mat-icon>
+      </div>
+
+      <mat-card class="timeline-content">
+        <mat-card-header>
+          <mat-card-title>
+            {{ event.title }}
+            <span class="event-age" *ngIf="getAge(event.date) !== null">
+              (Age {{ getAge(event.date) }})
+            </span>
+          </mat-card-title>
+          <mat-card-subtitle>
+            {{ formatDate(event.date) }}
+            <span *ngIf="event.location"> • {{ event.location }}</span>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content *ngIf="event.description">
+          <p>{{ event.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <ng-template #noEvents>
+    <div class="no-events">
+      <mat-icon>event_busy</mat-icon>
+      <p>No timeline events available</p>
+    </div>
+  </ng-template>
+</div>

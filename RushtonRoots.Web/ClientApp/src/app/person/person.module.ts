@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Material Modules
 import { MatCardModule } from '@angular/material/card';
@@ -19,21 +19,32 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
 
 // Components
 import { PersonIndexComponent } from './components/person-index/person-index.component';
 import { PersonTableComponent } from './components/person-table/person-table.component';
 import { PersonSearchComponent } from './components/person-search/person-search.component';
+import { PersonDetailsComponent } from './components/person-details/person-details.component';
+import { PersonTimelineComponent } from './components/person-timeline/person-timeline.component';
+import { RelationshipVisualizerComponent } from './components/relationship-visualizer/relationship-visualizer.component';
+import { PhotoGalleryComponent } from './components/photo-gallery/photo-gallery.component';
 
 @NgModule({
   declarations: [
     PersonIndexComponent,
     PersonTableComponent,
-    PersonSearchComponent
+    PersonSearchComponent,
+    PersonDetailsComponent,
+    PersonTimelineComponent,
+    RelationshipVisualizerComponent,
+    PhotoGalleryComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -49,12 +60,18 @@ import { PersonSearchComponent } from './components/person-search/person-search.
     MatDatepickerModule,
     MatNativeDateModule,
     MatDividerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTabsModule,
+    MatMenuModule
   ],
   exports: [
     PersonIndexComponent,
     PersonTableComponent,
-    PersonSearchComponent
+    PersonSearchComponent,
+    PersonDetailsComponent,
+    PersonTimelineComponent,
+    RelationshipVisualizerComponent,
+    PhotoGalleryComponent
   ]
 })
 export class PersonModule { }
