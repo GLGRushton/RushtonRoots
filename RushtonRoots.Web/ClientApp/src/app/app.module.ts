@@ -84,7 +84,7 @@ import { LoginComponent } from './auth/components/login/login.component';
 import { ForgotPasswordComponent } from './auth/components/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './auth/components/reset-password/reset-password.component';
 
-// Import Phase 6.1.2 Password Confirmation and Email Verification components for Angular Elements registration
+// Import Phase 1.2 Password Confirmation and Email Verification components for Angular Elements registration
 import { ForgotPasswordConfirmationComponent } from './auth/components/forgot-password-confirmation/forgot-password-confirmation.component';
 import { ResetPasswordConfirmationComponent } from './auth/components/reset-password-confirmation/reset-password-confirmation.component';
 import { ConfirmEmailComponent } from './auth/components/confirm-email/confirm-email.component';
@@ -243,7 +243,7 @@ export class AppModule {
     safeDefine('app-forgot-password', ForgotPasswordComponent);
     safeDefine('app-reset-password', ResetPasswordComponent);
 
-    // Register Phase 6.1.2 Password Confirmation and Email Verification components as Angular Elements
+    // Register Phase 1.2 Password Confirmation and Email Verification components as Angular Elements
     safeDefine('app-forgot-password-confirmation', ForgotPasswordConfirmationComponent);
     safeDefine('app-reset-password-confirmation', ResetPasswordConfirmationComponent);
     safeDefine('app-confirm-email', ConfirmEmailComponent);

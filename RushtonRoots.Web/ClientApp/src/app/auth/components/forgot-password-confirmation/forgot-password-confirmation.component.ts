@@ -33,6 +33,7 @@ export class ForgotPasswordConfirmationComponent {
 
   /**
    * Handle resend email request
+   * TODO: Integrate with actual API service for resending emails
    */
   onResendEmail(): void {
     if (!this.resendLoading && this.email) {
@@ -41,6 +42,7 @@ export class ForgotPasswordConfirmationComponent {
       this.resendEmail.emit(this.email);
       
       // Simulate success feedback after a delay
+      // TODO: Replace with actual API response handling
       setTimeout(() => {
         this.resendLoading = false;
         this.resendSuccess = true;

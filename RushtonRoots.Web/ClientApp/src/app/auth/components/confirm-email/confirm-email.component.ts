@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 
 /**
  * Email confirmation status
@@ -31,7 +31,7 @@ export interface EmailConfirmationStatus {
   styleUrls: ['./confirm-email.component.scss'],
   standalone: false
 })
-export class ConfirmEmailComponent implements OnInit {
+export class ConfirmEmailComponent implements OnInit, OnChanges {
   /** Confirmation status from server */
   @Input() status: EmailConfirmationStatus | null = null;
   
@@ -68,6 +68,7 @@ export class ConfirmEmailComponent implements OnInit {
 
   /**
    * Handle resend confirmation email request
+   * TODO: Integrate with actual API service for resending confirmation emails
    */
   onResendEmail(): void {
     if (!this.resendLoading && this.email) {
@@ -76,6 +77,7 @@ export class ConfirmEmailComponent implements OnInit {
       this.resendEmail.emit(this.email);
       
       // Simulate success feedback after a delay
+      // TODO: Replace with actual API response handling
       setTimeout(() => {
         this.resendLoading = false;
         this.resendSuccess = true;

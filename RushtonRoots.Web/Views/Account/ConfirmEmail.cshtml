@@ -2,6 +2,7 @@
     ViewData["Title"] = "Email Confirmed";
 }
 
+@* TODO: Replace hard-coded status with actual confirmation result from server *@
 <app-confirm-email 
     [status]="{ success: true, message: 'Your email has been confirmed successfully.' }"
     email="@ViewData["Email"]">
