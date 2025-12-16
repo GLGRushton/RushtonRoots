@@ -1,0 +1,96 @@
+<div class="album-manager">
+  <div class="manager-header">
+    <h2>Albums</h2>
+    <div class="header-actions">
+      <button mat-icon-button (click)="viewMode = viewMode === 'grid' ? 'list' : 'grid'">
+        <mat-icon>{{ viewMode === 'grid' ? 'view_list' : 'view_module' }}</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" (click)="startCreating()" *ngIf="canEdit">
+        <mat-icon>add</mat-icon>
+        Create Album
+      </button>
+    </div>
+  </div>
+
+  <!-- Album Form -->
+  <mat-card *ngIf="isCreatingAlbum || editingAlbumId" class="album-form-card">
+    <mat-card-header>
+      <mat-card-title>{{ editingAlbumId ? 'Edit Album' : 'Create New Album' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="albumForm" (ngSubmit)="saveAlbum()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Album Name</mat-label>
+          <input matInput formControlName="name" required>
+          <mat-error *ngIf="albumForm.get('name')?.hasError('required')">Name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="isPrivate">Private Album</mat-checkbox>
+
+        <div class="form-actions">
+          <button type="button" mat-button (click)="cancelEditing()">Cancel</button>
+          <button type="submit" mat-raised-button color="primary" [disabled]="albumForm.invalid">
+            {{ editingAlbumId ? 'Update' : 'Create' }} Album
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Albums Grid/List -->
+  <div class="albums-container" [ngClass]="'view-' + viewMode">
+    <mat-card *ngFor="let album of albums" class="album-card">
+      <div class="album-cover" (click)="viewAlbum(album)">
+        <img *ngIf="album.coverPhotoUrl" [src]="album.coverPhotoUrl" [alt]="album.name">
+        <div *ngIf="!album.coverPhotoUrl" class="no-cover">
+          <mat-icon>photo_album</mat-icon>
+        </div>
+        <div class="photo-count-badge">
+          <mat-icon>photo</mat-icon>
+          {{ album.mediaCount }}
+        </div>
+      </div>
+      
+      <mat-card-content>
+        <h3>{{ album.name }}</h3>
+        <p *ngIf="album.description">{{ album.description }}</p>
+        <div class="album-meta">
+          <span><mat-icon>calendar_today</mat-icon>{{ formatDate(album.createdDate) }}</span>
+          <mat-chip *ngIf="album.isPrivate"><mat-icon>lock</mat-icon>Private</mat-chip>
+        </div>
+      </mat-card-content>
+      
+      <mat-card-actions>
+        <button mat-button (click)="viewAlbum(album)">View</button>
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="startEditing(album)" *ngIf="canEdit">
+            <mat-icon>edit</mat-icon>Edit
+          </button>
+          <button mat-menu-item (click)="shareAlbum(album)">
+            <mat-icon>share</mat-icon>Share
+          </button>
+          <button mat-menu-item (click)="deleteAlbum(album)" *ngIf="canEdit">
+            <mat-icon color="warn">delete</mat-icon>Delete
+          </button>
+        </mat-menu>
+      </mat-card-actions>
+    </mat-card>
+
+    <div class="empty-state" *ngIf="albums.length === 0">
+      <mat-icon>photo_album</mat-icon>
+      <h3>No albums yet</h3>
+      <p>Create your first album to organize your photos</p>
+      <button mat-raised-button color="primary" (click)="startCreating()" *ngIf="canEdit">
+        <mat-icon>add</mat-icon>Create Album
+      </button>
+    </div>
+  </div>
+</div>

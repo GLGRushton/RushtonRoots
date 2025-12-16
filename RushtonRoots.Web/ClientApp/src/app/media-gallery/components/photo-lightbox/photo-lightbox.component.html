@@ -1,0 +1,240 @@
+<div class="lightbox-overlay" (click)="onClose()">
+  <div class="lightbox-container" (click)="$event.stopPropagation()">
+    
+    <!-- Close Button -->
+    <button 
+      mat-icon-button 
+      class="lightbox-btn close-btn" 
+      (click)="onClose()"
+      [class.hidden]="!showControls"
+      matTooltip="Close (ESC)"
+      aria-label="Close lightbox">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <!-- Navigation Buttons -->
+    <button 
+      mat-icon-button 
+      class="lightbox-btn nav-btn prev-btn" 
+      *ngIf="canGoPrevious()"
+      (click)="previous()"
+      [class.hidden]="!showControls"
+      matTooltip="Previous (←)"
+      aria-label="Previous photo">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <button 
+      mat-icon-button 
+      class="lightbox-btn nav-btn next-btn" 
+      *ngIf="canGoNext()"
+      (click)="next()"
+      [class.hidden]="!showControls"
+      matTooltip="Next (→)"
+      aria-label="Next photo">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+
+    <!-- Image Container -->
+    <div 
+      #imageContainer 
+      class="image-container"
+      (mousedown)="onMouseDown($event)">
+      <img 
+        *ngIf="currentPhoto"
+        [src]="currentPhoto.url" 
+        [alt]="currentPhoto.title || 'Photo'"
+        [style.transform]="getImageTransform()"
+        class="lightbox-image">
+    </div>
+
+    <!-- Top Toolbar -->
+    <div class="top-toolbar" [class.hidden]="!showControls">
+      <div class="photo-counter">
+        {{ currentIndex + 1 }} / {{ photos.length }}
+      </div>
+
+      <div class="toolbar-actions">
+        <!-- Zoom Controls -->
+        <button 
+          mat-icon-button 
+          (click)="zoomOut()"
+          [disabled]="zoomLevel <= minZoom"
+          matTooltip="Zoom out (-)"
+          aria-label="Zoom out">
+          <mat-icon>zoom_out</mat-icon>
+        </button>
+
+        <span class="zoom-level">{{ (zoomLevel * 100).toFixed(0) }}%</span>
+
+        <button 
+          mat-icon-button 
+          (click)="zoomIn()"
+          [disabled]="zoomLevel >= maxZoom"
+          matTooltip="Zoom in (+)"
+          aria-label="Zoom in">
+          <mat-icon>zoom_in</mat-icon>
+        </button>
+
+        <button 
+          mat-icon-button 
+          (click)="resetZoom()"
+          [disabled]="zoomLevel === 1"
+          matTooltip="Reset zoom (0)"
+          aria-label="Reset zoom">
+          <mat-icon>zoom_out_map</mat-icon>
+        </button>
+
+        <mat-divider [vertical]="true"></mat-divider>
+
+        <!-- Info Toggle -->
+        <button 
+          mat-icon-button 
+          (click)="toggleMetadata()"
+          [color]="showMetadata ? 'primary' : ''"
+          matTooltip="Info (I)"
+          aria-label="Toggle information">
+          <mat-icon>info</mat-icon>
+        </button>
+
+        <!-- Edit -->
+        <button 
+          mat-icon-button 
+          (click)="onEdit()"
+          matTooltip="Edit"
+          aria-label="Edit photo">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <!-- Download -->
+        <a 
+          mat-icon-button 
+          *ngIf="currentPhoto"
+          [href]="currentPhoto.url" 
+          [download]="currentPhoto.fileName"
+          matTooltip="Download"
+          aria-label="Download photo">
+          <mat-icon>download</mat-icon>
+        </a>
+
+        <!-- Delete -->
+        <button 
+          mat-icon-button 
+          (click)="onDelete()"
+          matTooltip="Delete"
+          aria-label="Delete photo">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Info Panel -->
+    <div class="bottom-panel" *ngIf="currentPhoto && showInfo" [class.expanded]="showMetadata">
+      <div class="photo-info">
+        <h3 *ngIf="currentPhoto.title">{{ currentPhoto.title }}</h3>
+        <p *ngIf="currentPhoto.description" class="photo-description">{{ currentPhoto.description }}</p>
+        
+        <!-- Tags -->
+        <div class="photo-tags" *ngIf="currentPhoto.tags.length > 0">
+          <mat-chip-set>
+            <mat-chip 
+              *ngFor="let tag of currentPhoto.tags" 
+              (click)="onTagClick(tag, $event)"
+              [style.background-color]="tag.color">
+              <mat-icon *ngIf="tag.personId">person</mat-icon>
+              {{ tag.name }}
+            </mat-chip>
+          </mat-chip-set>
+        </div>
+
+        <!-- Basic Metadata -->
+        <div class="photo-meta">
+          <div class="meta-item">
+            <mat-icon>calendar_today</mat-icon>
+            <span>{{ formatDate(currentPhoto.uploadDate) }}</span>
+          </div>
+          <div class="meta-item" *ngIf="currentPhoto.fileSize">
+            <mat-icon>storage</mat-icon>
+            <span>{{ formatFileSize(currentPhoto.fileSize) }}</span>
+          </div>
+          <div class="meta-item" *ngIf="getDimensions()">
+            <mat-icon>aspect_ratio</mat-icon>
+            <span>{{ getDimensions() }}</span>
+          </div>
+        </div>
+
+        <!-- Expanded Metadata -->
+        <div class="expanded-metadata" *ngIf="showMetadata && currentPhoto.metadata">
+          <mat-divider></mat-divider>
+          
+          <div class="metadata-section">
+            <h4>Camera Information</h4>
+            <div class="metadata-grid">
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.camera">
+                <span class="label">Camera:</span>
+                <span class="value">{{ currentPhoto.metadata.camera }}</span>
+              </div>
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.lens">
+                <span class="label">Lens:</span>
+                <span class="value">{{ currentPhoto.metadata.lens }}</span>
+              </div>
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.iso">
+                <span class="label">ISO:</span>
+                <span class="value">{{ currentPhoto.metadata.iso }}</span>
+              </div>
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.aperture">
+                <span class="label">Aperture:</span>
+                <span class="value">{{ currentPhoto.metadata.aperture }}</span>
+              </div>
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.shutterSpeed">
+                <span class="label">Shutter Speed:</span>
+                <span class="value">{{ currentPhoto.metadata.shutterSpeed }}</span>
+              </div>
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.focalLength">
+                <span class="label">Focal Length:</span>
+                <span class="value">{{ currentPhoto.metadata.focalLength }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="metadata-section" *ngIf="currentPhoto.metadata.location">
+            <h4>Location</h4>
+            <div class="metadata-grid">
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.location.address">
+                <span class="label">Address:</span>
+                <span class="value">{{ currentPhoto.metadata.location.address }}</span>
+              </div>
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.location.city">
+                <span class="label">City:</span>
+                <span class="value">{{ currentPhoto.metadata.location.city }}</span>
+              </div>
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.location.state">
+                <span class="label">State:</span>
+                <span class="value">{{ currentPhoto.metadata.location.state }}</span>
+              </div>
+              <div class="metadata-item" *ngIf="currentPhoto.metadata.location.country">
+                <span class="label">Country:</span>
+                <span class="value">{{ currentPhoto.metadata.location.country }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expand/Collapse Toggle -->
+      <button 
+        mat-icon-button 
+        class="expand-toggle"
+        (click)="toggleMetadata()"
+        [matTooltip]="showMetadata ? 'Show less' : 'Show more'"
+        aria-label="Toggle metadata">
+        <mat-icon>{{ showMetadata ? 'expand_more' : 'expand_less' }}</mat-icon>
+      </button>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" *ngIf="!currentPhoto">
+      <mat-spinner diameter="60"></mat-spinner>
+    </div>
+  </div>
+</div>

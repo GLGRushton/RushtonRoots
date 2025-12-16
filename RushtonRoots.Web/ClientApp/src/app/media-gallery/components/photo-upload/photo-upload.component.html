@@ -1,0 +1,62 @@
+<div class="photo-upload">
+  <div 
+    class="drop-zone"
+    [class.dragging]="isDragging"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)"
+    (click)="triggerFileInput()">
+    
+    <mat-icon>cloud_upload</mat-icon>
+    <h3>Drag and drop photos here</h3>
+    <p>or click to browse files</p>
+    <input 
+      #fileInput 
+      type="file" 
+      multiple 
+      accept="image/*,video/*"
+      (change)="onFileSelect($event)"
+      style="display: none;">
+  </div>
+
+  <div class="upload-list" *ngIf="uploadFiles.length > 0">
+    <div class="list-header">
+      <h3>Files ({{ uploadFiles.length }})</h3>
+      <button mat-button (click)="clearAll()">Clear All</button>
+    </div>
+
+    <div class="upload-item" *ngFor="let uploadFile of uploadFiles; let i = index">
+      <img [src]="uploadFile.preview" [alt]="uploadFile.file.name" class="preview">
+      
+      <div class="file-info">
+        <div class="file-name">{{ uploadFile.file.name }}</div>
+        <div class="file-size">{{ formatFileSize(uploadFile.file.size) }}</div>
+        
+        <mat-progress-bar 
+          *ngIf="uploadFile.status === 'uploading'"
+          mode="determinate"
+          [value]="uploadFile.progress">
+        </mat-progress-bar>
+        
+        <div class="status-message">
+          <mat-icon *ngIf="uploadFile.status === 'success'" color="primary">check_circle</mat-icon>
+          <mat-icon *ngIf="uploadFile.status === 'error'" color="warn">error</mat-icon>
+          <span *ngIf="uploadFile.status === 'uploading'">Uploading...</span>
+          <span *ngIf="uploadFile.status === 'success'">Complete</span>
+          <span *ngIf="uploadFile.status === 'error'">{{ uploadFile.error }}</span>
+        </div>
+      </div>
+
+      <button mat-icon-button (click)="removeFile(i)" [disabled]="uploadFile.status === 'uploading'">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="upload-actions">
+      <button mat-raised-button color="primary" (click)="startUpload()" [disabled]="uploadFiles.length === 0">
+        <mat-icon>cloud_upload</mat-icon>
+        Upload {{ uploadFiles.length }} Files
+      </button>
+    </div>
+  </div>
+</div>

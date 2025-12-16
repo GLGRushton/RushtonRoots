@@ -1,0 +1,268 @@
+<div class="media-gallery">
+  <!-- Header -->
+  <div class="gallery-header">
+    <div class="header-left">
+      <h2>Media Gallery</h2>
+      <span class="item-count">{{ displayedItems.length }} items</span>
+    </div>
+
+    <div class="header-actions">
+      <button mat-raised-button color="primary" *ngIf="canEdit" (click)="uploadRequested.emit()">
+        <mat-icon>cloud_upload</mat-icon>
+        Upload
+      </button>
+
+      <button mat-icon-button [matMenuTriggerFor]="viewMenu" matTooltip="View mode">
+        <mat-icon>view_module</mat-icon>
+      </button>
+      <mat-menu #viewMenu="matMenu">
+        <button mat-menu-item (click)="setViewMode('grid')" [class.active]="viewMode === 'grid'">
+          <mat-icon>view_module</mat-icon>
+          <span>Grid</span>
+        </button>
+        <button mat-menu-item (click)="setViewMode('masonry')" [class.active]="viewMode === 'masonry'">
+          <mat-icon>view_comfy</mat-icon>
+          <span>Masonry</span>
+        </button>
+        <button mat-menu-item (click)="setViewMode('list')" [class.active]="viewMode === 'list'">
+          <mat-icon>view_list</mat-icon>
+          <span>List</span>
+        </button>
+      </mat-menu>
+
+      <button mat-icon-button (click)="toggleSelectionMode()" matTooltip="Select multiple">
+        <mat-icon [color]="selectionMode ? 'primary' : ''">checklist</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Search and Filters Bar -->
+  <div class="search-filter-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Search media</mat-label>
+      <input 
+        matInput 
+        [(ngModel)]="searchText" 
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Search by title, description, tags...">
+      <button mat-icon-button matSuffix *ngIf="searchText" (click)="searchText = ''; onSearchChange('')">
+        <mat-icon>clear</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="album-select">
+      <mat-label>Album</mat-label>
+      <mat-select [(value)]="selectedAlbumId" (selectionChange)="setAlbum($event.value)">
+        <mat-option [value]="undefined">All Albums</mat-option>
+        <mat-option *ngFor="let album of albums" [value]="album.id">
+          {{ album.name }} ({{ album.mediaCount }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="sort-select">
+      <mat-label>Sort by</mat-label>
+      <mat-select [(value)]="sortOption" (selectionChange)="setSortOption($event.value)">
+        <mat-option *ngFor="let option of sortOptions" [value]="option">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-stroked-button (click)="toggleFilters()">
+      <mat-icon>filter_list</mat-icon>
+      Filters
+      <mat-icon>{{ showFilters ? 'expand_less' : 'expand_more' }}</mat-icon>
+    </button>
+
+    <button mat-stroked-button (click)="clearFilters()" *ngIf="filters && Object.keys(filters).length > 0">
+      <mat-icon>clear_all</mat-icon>
+      Clear
+    </button>
+  </div>
+
+  <!-- Advanced Filters -->
+  <div class="advanced-filters" *ngIf="showFilters">
+    <mat-card>
+      <mat-card-content>
+        <div class="filter-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Media Type</mat-label>
+            <mat-select [(ngModel)]="filters.mediaType" (ngModelChange)="applyFiltersAndSort()">
+              <mat-option [value]="undefined">All Types</mat-option>
+              <mat-option value="photo">Photos</mat-option>
+              <mat-option value="video">Videos</mat-option>
+              <mat-option value="audio">Audio</mat-option>
+              <mat-option value="document">Documents</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>From Date</mat-label>
+            <input matInput [matDatepicker]="fromPicker" [(ngModel)]="filters.dateFrom" (ngModelChange)="applyFiltersAndSort()">
+            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>To Date</mat-label>
+            <input matInput [matDatepicker]="toPicker" [(ngModel)]="filters.dateTo" (ngModelChange)="applyFiltersAndSort()">
+            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-checkbox [(ngModel)]="filters.isFavorite" (ngModelChange)="applyFiltersAndSort()">
+            Favorites Only
+          </mat-checkbox>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Selection Toolbar -->
+  <div class="selection-toolbar" *ngIf="selectionMode">
+    <div class="selection-info">
+      <span>{{ selectedItems.size }} selected</span>
+      <button mat-button (click)="selectAll()">Select All</button>
+      <button mat-button (click)="deselectAll()">Deselect All</button>
+    </div>
+
+    <div class="selection-actions">
+      <button mat-button (click)="deleteSelected()" [disabled]="selectedItems.size === 0" *ngIf="canDelete">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+      <button mat-button (click)="toggleSelectionMode()">
+        <mat-icon>close</mat-icon>
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Media Grid -->
+  <div 
+    class="media-container" 
+    [ngClass]="'view-mode-' + viewMode"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="300"
+    (scrolled)="onScroll()">
+    
+    <div class="media-item" *ngFor="let item of displayedItems" [class.selected]="isSelected(item.id)">
+      <div class="media-wrapper" (click)="onMediaClick(item)">
+        <!-- Selection Checkbox -->
+        <div class="selection-overlay" *ngIf="selectionMode">
+          <mat-checkbox 
+            [checked]="isSelected(item.id)"
+            (change)="toggleSelection(item.id)"
+            (click)="$event.stopPropagation()">
+          </mat-checkbox>
+        </div>
+
+        <!-- Media Thumbnail -->
+        <div class="media-thumbnail">
+          <img 
+            *ngIf="item.type === 'photo'" 
+            [src]="item.thumbnailUrl" 
+            [alt]="item.title || 'Photo'">
+          
+          <div *ngIf="item.type === 'video'" class="video-thumbnail">
+            <img [src]="item.thumbnailUrl" [alt]="item.title || 'Video'">
+            <div class="video-overlay">
+              <mat-icon>play_circle_outline</mat-icon>
+              <span class="video-duration" *ngIf="item.duration">{{ formatDuration(item.duration) }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="item.type !== 'photo' && item.type !== 'video'" class="file-icon">
+            <mat-icon>{{ getMediaTypeIcon(item.type) }}</mat-icon>
+          </div>
+
+          <!-- Favorite Badge -->
+          <div class="favorite-badge" *ngIf="item.isFavorite">
+            <mat-icon>favorite</mat-icon>
+          </div>
+        </div>
+
+        <!-- Media Info -->
+        <div class="media-info" *ngIf="viewMode !== 'grid'">
+          <h4>{{ item.title || item.fileName }}</h4>
+          <p *ngIf="item.description" class="media-description">{{ item.description }}</p>
+          <div class="media-meta">
+            <span class="meta-item">
+              <mat-icon>calendar_today</mat-icon>
+              {{ formatDate(item.uploadDate) }}
+            </span>
+            <span class="meta-item">
+              <mat-icon>storage</mat-icon>
+              {{ formatFileSize(item.fileSize) }}
+            </span>
+            <span class="meta-item" *ngIf="item.viewCount > 0">
+              <mat-icon>visibility</mat-icon>
+              {{ item.viewCount }}
+            </span>
+          </div>
+          <div class="media-tags" *ngIf="item.tags.length > 0">
+            <mat-chip-set>
+              <mat-chip *ngFor="let tag of item.tags" [style.background-color]="tag.color">
+                {{ tag.name }}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="media-actions" *ngIf="!selectionMode">
+        <button mat-icon-button [matMenuTriggerFor]="actionMenu" (click)="$event.stopPropagation()">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #actionMenu="matMenu">
+          <button mat-menu-item (click)="onMediaAction('view', item)">
+            <mat-icon>visibility</mat-icon>
+            <span>View</span>
+          </button>
+          <button mat-menu-item (click)="onMediaAction('favorite', item)">
+            <mat-icon>{{ item.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+            <span>{{ item.isFavorite ? 'Unfavorite' : 'Favorite' }}</span>
+          </button>
+          <button mat-menu-item (click)="onMediaAction('download', item)">
+            <mat-icon>download</mat-icon>
+            <span>Download</span>
+          </button>
+          <button mat-menu-item (click)="onMediaAction('share', item)">
+            <mat-icon>share</mat-icon>
+            <span>Share</span>
+          </button>
+          <button mat-menu-item (click)="onMediaAction('edit', item)" *ngIf="canEdit && item.type === 'photo'">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <mat-divider *ngIf="canDelete"></mat-divider>
+          <button mat-menu-item (click)="onMediaAction('delete', item)" *ngIf="canDelete">
+            <mat-icon color="warn">delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" *ngIf="isLoading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="displayedItems.length === 0 && !isLoading">
+      <mat-icon>photo_library</mat-icon>
+      <h3>No media found</h3>
+      <p *ngIf="filters && Object.keys(filters).length > 0">Try adjusting your filters</p>
+      <p *ngIf="!filters || Object.keys(filters).length === 0">Upload your first photo or video</p>
+      <button mat-raised-button color="primary" *ngIf="canEdit" (click)="uploadRequested.emit()">
+        <mat-icon>cloud_upload</mat-icon>
+        Upload Media
+      </button>
+    </div>
+  </div>
+</div>

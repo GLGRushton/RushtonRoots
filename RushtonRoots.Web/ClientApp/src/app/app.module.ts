@@ -17,6 +17,7 @@ import { ParentChildModule } from './parent-child/parent-child.module';
 import { AuthModule } from './auth/auth.module';
 import { WikiModule } from './wiki/wiki.module';
 import { ContentModule } from './content/content.module';
+import { MediaGalleryModule } from './media-gallery/media-gallery.module';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -98,6 +99,15 @@ import { StoryCardComponent } from './content/components/story-card/story-card.c
 import { TraditionCardComponent } from './content/components/tradition-card/tradition-card.component';
 import { ContentGridComponent } from './content/components/content-grid/content-grid.component';
 
+// Import Phase 8.1 Media Gallery Enhancements components for Angular Elements registration
+import { MediaGalleryComponent } from './media-gallery/components/media-gallery/media-gallery.component';
+import { PhotoLightboxComponent } from './media-gallery/components/photo-lightbox/photo-lightbox.component';
+import { PhotoTaggingComponent } from './media-gallery/components/photo-tagging/photo-tagging.component';
+import { AlbumManagerComponent } from './media-gallery/components/album-manager/album-manager.component';
+import { PhotoUploadComponent } from './media-gallery/components/photo-upload/photo-upload.component';
+import { PhotoEditorComponent } from './media-gallery/components/photo-editor/photo-editor.component';
+import { VideoPlayerComponent } from './media-gallery/components/video-player/video-player.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -117,7 +127,8 @@ import { ContentGridComponent } from './content/components/content-grid/content-
     ParentChildModule,
     AuthModule,
     WikiModule,
-    ContentModule
+    ContentModule,
+    MediaGalleryModule
   ],
   providers: []
 })
@@ -314,6 +325,28 @@ export class AppModule {
 
     const contentGridElement = createCustomElement(ContentGridComponent, { injector: this.injector });
     customElements.define('app-content-grid', contentGridElement);
+
+    // Register Phase 8.1 Media Gallery Enhancements components as Angular Elements
+    const mediaGalleryElement = createCustomElement(MediaGalleryComponent, { injector: this.injector });
+    customElements.define('app-media-gallery', mediaGalleryElement);
+
+    const photoLightboxElement = createCustomElement(PhotoLightboxComponent, { injector: this.injector });
+    customElements.define('app-photo-lightbox', photoLightboxElement);
+
+    const photoTaggingElement = createCustomElement(PhotoTaggingComponent, { injector: this.injector });
+    customElements.define('app-photo-tagging', photoTaggingElement);
+
+    const albumManagerElement = createCustomElement(AlbumManagerComponent, { injector: this.injector });
+    customElements.define('app-album-manager', albumManagerElement);
+
+    const photoUploadElement = createCustomElement(PhotoUploadComponent, { injector: this.injector });
+    customElements.define('app-photo-upload', photoUploadElement);
+
+    const photoEditorElement = createCustomElement(PhotoEditorComponent, { injector: this.injector });
+    customElements.define('app-photo-editor', photoEditorElement);
+
+    const videoPlayerElement = createCustomElement(VideoPlayerComponent, { injector: this.injector });
+    customElements.define('app-video-player', videoPlayerElement);
   }
 
   ngDoBootstrap() {
