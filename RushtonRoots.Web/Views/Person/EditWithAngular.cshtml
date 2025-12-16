@@ -11,19 +11,10 @@
         person-id="@Model.Id"
         initial-data='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(new {
             firstName = Model.FirstName,
-            middleName = Model.MiddleName,
             lastName = Model.LastName,
-            suffix = Model.Suffix,
-            gender = Model.Gender,
             dateOfBirth = Model.DateOfBirth?.ToString("yyyy-MM-dd"),
-            placeOfBirth = Model.PlaceOfBirth,
             isDeceased = Model.IsDeceased,
             dateOfDeath = Model.DateOfDeath?.ToString("yyyy-MM-dd"),
-            placeOfDeath = Model.PlaceOfDeath,
-            biography = Model.Biography,
-            occupation = Model.Occupation,
-            education = Model.Education,
-            notes = Model.Notes,
             photoUrl = Model.PhotoUrl
         }))'>
     </app-person-form>
