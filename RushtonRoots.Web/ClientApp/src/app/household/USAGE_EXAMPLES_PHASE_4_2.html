@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Household Details & Members Components - Usage Examples</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #2e7d32;
+            border-bottom: 3px solid #4caf50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #1b5e20;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2e7d32;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-left: 4px solid #2e7d32;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #e8f5e9;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .note {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .success {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #2e7d32;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏠 Household Details & Members Components - Usage Examples</h1>
+    <p><strong>Phase 4.2 Implementation</strong> | RushtonRoots Family Tree Application</p>
+
+    <div class="success">
+        <strong>✅ All components are registered as Angular Elements and ready to use in Razor views!</strong>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- HouseholdDetailsComponent -->
+    <!-- ========================================== -->
+    <div class="section">
+        <h2>1. HouseholdDetailsComponent</h2>
+        <p>Main component displaying household information with tabbed interface.</p>
+
+        <h3>TypeScript Usage</h3>
+        <pre><code>import { HouseholdDetails, HouseholdMemberDetails, HouseholdActivityEvent } from './models/household-details.model';
+
+// Component
+export class HouseholdDetailsPageComponent {
+  household: HouseholdDetails;
+  members: HouseholdMemberDetails[] = [];
+  activityEvents: HouseholdActivityEvent[] = [];
+  
+  onEdit(householdId: number): void {
+    // Navigate to edit page or open edit dialog
+  }
+  
+  onMemberAction(event: MemberActionEvent): void {
+    // Handle member action (edit, remove, change role, etc.)
+  }
+  
+  onInviteMember(): void {
+    // Open invite dialog
+  }
+  
+  onSettingsUpdate(settings: any): void {
+    // Save settings to backend
+  }
+}</code></pre>
+
+        <h3>Angular Template Usage</h3>
+        <pre><code>&lt;app-household-details
+  [household]="household"
+  [members]="members"
+  [activityEvents]="activityEvents"
+  [canEdit]="true"
+  [canDelete]="false"
+  [canManageMembers]="true"
+  [canEditSettings]="true"
+  [currentUserId]="123"
+  [initialTab]="0"
+  (editClicked)="onEdit($event)"
+  (deleteClicked)="onDelete($event)"
+  (memberActionClicked)="onMemberAction($event)"
+  (inviteMemberClicked)="onInviteMember()"
+  (settingsUpdated)="onSettingsUpdate($event)"
+  (anchorPersonClicked)="navigateToPerson($event)"&gt;
+&lt;/app-household-details&gt;</code></pre>
+
+        <h3>Razor View Usage (.cshtml)</h3>
+        <pre><code>@model HouseholdDetailsViewModel
+
+&lt;app-household-details
+    household='@Json.Serialize(Model.Household)'
+    members='@Json.Serialize(Model.Members)'
+    activity-events='@Json.Serialize(Model.ActivityEvents)'
+    can-edit="@Model.CanEdit.ToString().ToLower()"
+    can-manage-members="@Model.CanManageMembers.ToString().ToLower()"
+    current-user-id="@Model.CurrentUserId"&gt;
+&lt;/app-household-details&gt;</code></pre>
+
+        <h3>C# Controller Example</h3>
+        <pre><code>public class HouseholdController : Controller
+{
+    [HttpGet]
+    public async Task&lt;IActionResult&gt; Details(int id)
+    {
+        var household = await _householdService.GetDetailsAsync(id);
+        var members = await _householdService.GetMembersAsync(id);
+        var activityEvents = await _householdService.GetActivityAsync(id);
+        
+        var viewModel = new HouseholdDetailsViewModel
+        {
+            Household = household,
+            Members = members,
+            ActivityEvents = activityEvents,
+            CanEdit = User.HasPermission("EditHousehold"),
+            CanManageMembers = User.HasPermission("ManageMembers"),
+            CurrentUserId = User.GetUserId()
+        };
+        
+        return View(viewModel);
+    }
+}</code></pre>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- HouseholdMembersComponent -->
+    <!-- ========================================== -->
+    <div class="section">
+        <h2>2. HouseholdMembersComponent</h2>
+        <p>Displays household members with role badges and management actions.</p>
+
+        <h3>TypeScript Usage</h3>
+        <pre><code>export class HouseholdMembersPageComponent {
+  members: HouseholdMemberDetails[] = [];
+  
+  handleMemberAction(event: MemberActionEvent): void {
+    switch(event.action) {
+      case 'edit':
+        this.editMember(event.memberPersonId);
+        break;
+      case 'remove':
+        this.removeMember(event.memberPersonId);
+        break;
+      case 'change-role':
+        this.changeRole(event.memberPersonId, event.data.currentRole);
+        break;
+      case 'view-profile':
+        this.navigateToProfile(event.memberPersonId);
+        break;
+    }
+  }
+  
+  openInviteDialog(): void {
+    // Open MemberInviteDialogComponent
+  }
+}</code></pre>
+
+        <h3>Angular Template Usage</h3>
+        <pre><code>&lt;app-household-members
+  [members]="members"
+  [canManage]="true"
+  [currentUserId]="currentUser.id"
+  (memberAction)="handleMemberAction($event)"
+  (inviteMember)="openInviteDialog()"&gt;
+&lt;/app-household-members&gt;</code></pre>
+
+        <h3>Razor View Usage</h3>
+        <pre><code>&lt;app-household-members
+    members='@Json.Serialize(Model.Members)'
+    can-manage="true"
+    current-user-id="@Model.CurrentUserId"&gt;
+&lt;/app-household-members&gt;</code></pre>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MemberInviteDialogComponent -->
+    <!-- ========================================== -->
+    <div class="section">
+        <h2>3. MemberInviteDialogComponent</h2>
+        <p>Dialog for inviting new members to the household.</p>
+
+        <h3>TypeScript Usage (Opening Dialog)</h3>
+        <pre><code>import { MatDialog } from '@angular/material/dialog';
+import { MemberInviteDialogComponent } from './components/member-invite-dialog/member-invite-dialog.component';
+
+export class HouseholdComponent {
+  constructor(private dialog: MatDialog) {}
+  
+  openInviteDialog(): void {
+    const dialogRef = this.dialog.open(MemberInviteDialogComponent, {
+      width: '600px',
+      data: { householdName: this.household.householdName }
+    });
+    
+    dialogRef.afterClosed().subscribe((invitation: MemberInvitation) => {
+      if (invitation) {
+        this.sendInvitation(invitation);
+      }
+    });
+  }
+  
+  async sendInvitation(invitation: MemberInvitation): Promise&lt;void&gt; {
+    try {
+      await this.householdService.inviteMember(this.household.id, invitation);
+      this.snackBar.open('Invitation sent successfully!', 'Close', { duration: 3000 });
+    } catch (error) {
+      this.snackBar.open('Failed to send invitation', 'Close', { duration: 3000 });
+    }
+  }
+}</code></pre>
+
+        <div class="note">
+            <strong>Note:</strong> The dialog component is typically used programmatically via MatDialog service rather than in templates.
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- HouseholdSettingsComponent -->
+    <!-- ========================================== -->
+    <div class="section">
+        <h2>4. HouseholdSettingsComponent</h2>
+        <p>Manage household settings including privacy and permissions.</p>
+
+        <h3>TypeScript Usage</h3>
+        <pre><code>export class HouseholdSettingsPageComponent {
+  household: HouseholdDetails;
+  
+  async onSettingsUpdate(settings: HouseholdSettings): Promise&lt;void&gt; {
+    try {
+      await this.householdService.updateSettings(this.household.id, settings);
+      this.snackBar.open('Settings saved successfully!', 'Close', { duration: 3000 });
+      // Reload household data
+      this.household = await this.householdService.getDetails(this.household.id);
+    } catch (error) {
+      this.snackBar.open('Failed to save settings', 'Close', { duration: 3000 });
+    }
+  }
+}</code></pre>
+
+        <h3>Angular Template Usage</h3>
+        <pre><code>&lt;app-household-settings
+  [household]="household"
+  [canEdit]="true"
+  (settingsUpdated)="onSettingsUpdate($event)"&gt;
+&lt;/app-household-settings&gt;</code></pre>
+
+        <h3>Razor View Usage</h3>
+        <pre><code>&lt;app-household-settings
+    household='@Json.Serialize(Model.Household)'
+    can-edit="@Model.CanEditSettings.ToString().ToLower()"&gt;
+&lt;/app-household-settings&gt;</code></pre>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- HouseholdActivityTimelineComponent -->
+    <!-- ========================================== -->
+    <div class="section">
+        <h2>5. HouseholdActivityTimelineComponent</h2>
+        <p>Display chronological timeline of household activity events.</p>
+
+        <h3>TypeScript Usage</h3>
+        <pre><code>export class HouseholdActivityPageComponent implements OnInit {
+  activityEvents: HouseholdActivityEvent[] = [];
+  householdId: number;
+  
+  async ngOnInit(): Promise&lt;void&gt; {
+    this.activityEvents = await this.householdService.getActivity(this.householdId);
+  }
+}</code></pre>
+
+        <h3>Angular Template Usage</h3>
+        <pre><code>&lt;app-household-activity-timeline
+  [events]="activityEvents"
+  [householdId]="household.id"&gt;
+&lt;/app-household-activity-timeline&gt;</code></pre>
+
+        <h3>Razor View Usage</h3>
+        <pre><code>&lt;app-household-activity-timeline
+    events='@Json.Serialize(Model.ActivityEvents)'
+    household-id="@Model.HouseholdId"&gt;
+&lt;/app-household-activity-timeline&gt;</code></pre>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- Data Models Reference -->
+    <!-- ========================================== -->
+    <div class="section">
+        <h2>Data Models Reference</h2>
+
+        <h3>HouseholdDetails</h3>
+        <table>
+            <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>number</td>
+                <td>Household ID</td>
+            </tr>
+            <tr>
+                <td>householdName</td>
+                <td>string</td>
+                <td>Name of the household</td>
+            </tr>
+            <tr>
+                <td>description</td>
+                <td>string?</td>
+                <td>Optional description</td>
+            </tr>
+            <tr>
+                <td>privacy</td>
+                <td>'Public' | 'FamilyOnly' | 'Private'</td>
+                <td>Privacy setting</td>
+            </tr>
+            <tr>
+                <td>memberCount</td>
+                <td>number</td>
+                <td>Number of members</td>
+            </tr>
+            <tr>
+                <td>members</td>
+                <td>HouseholdMemberDetails[]?</td>
+                <td>Optional member list</td>
+            </tr>
+        </table>
+
+        <h3>HouseholdMemberDetails</h3>
+        <table>
+            <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>personId</td>
+                <td>number</td>
+                <td>Person ID</td>
+            </tr>
+            <tr>
+                <td>fullName</td>
+                <td>string</td>
+                <td>Member full name</td>
+            </tr>
+            <tr>
+                <td>role</td>
+                <td>HouseholdRole</td>
+                <td>'Owner' | 'Admin' | 'Member' | 'Viewer'</td>
+            </tr>
+            <tr>
+                <td>status</td>
+                <td>'Active' | 'Invited' | 'Inactive'</td>
+                <td>Member status</td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>string?</td>
+                <td>Member email</td>
+            </tr>
+            <tr>
+                <td>photoUrl</td>
+                <td>string?</td>
+                <td>Profile photo URL</td>
+            </tr>
+        </table>
+
+        <h3>HouseholdActivityEvent</h3>
+        <table>
+            <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>id</td>
+                <td>number</td>
+                <td>Event ID</td>
+            </tr>
+            <tr>
+                <td>eventType</td>
+                <td>string</td>
+                <td>'member_joined', 'member_left', 'household_updated', etc.</td>
+            </tr>
+            <tr>
+                <td>title</td>
+                <td>string</td>
+                <td>Event title</td>
+            </tr>
+            <tr>
+                <td>description</td>
+                <td>string?</td>
+                <td>Optional event description</td>
+            </tr>
+            <tr>
+                <td>timestamp</td>
+                <td>Date | string</td>
+                <td>Event timestamp</td>
+            </tr>
+            <tr>
+                <td>userName</td>
+                <td>string?</td>
+                <td>User who triggered event</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- API Integration -->
+    <!-- ========================================== -->
+    <div class="section">
+        <h2>Backend API Integration</h2>
+
+        <h3>Required API Endpoints</h3>
+        <table>
+            <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/households/{id}</td>
+                <td>Get household details</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/households/{id}/members</td>
+                <td>Get household members</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/api/households/{id}/activity</td>
+                <td>Get activity events</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/api/households/{id}/members/invite</td>
+                <td>Invite new member</td>
+            </tr>
+            <tr>
+                <td>PUT</td>
+                <td>/api/households/{id}/settings</td>
+                <td>Update household settings</td>
+            </tr>
+            <tr>
+                <td>PATCH</td>
+                <td>/api/households/{id}/members/{memberId}/role</td>
+                <td>Change member role</td>
+            </tr>
+            <tr>
+                <td>DELETE</td>
+                <td>/api/households/{id}/members/{memberId}</td>
+                <td>Remove member</td>
+            </tr>
+        </table>
+
+        <h3>C# Service Example</h3>
+        <pre><code>public class HouseholdService : IHouseholdService
+{
+    private readonly RushtonRootsDbContext _context;
+    
+    public async Task&lt;HouseholdDetails&gt; GetDetailsAsync(int id)
+    {
+        var household = await _context.Households
+            .Include(h => h.AnchorPerson)
+            .FirstOrDefaultAsync(h => h.Id == id);
+            
+        return _mapper.MapToDetails(household);
+    }
+    
+    public async Task&lt;List&lt;HouseholdMemberDetails&gt;&gt; GetMembersAsync(int id)
+    {
+        var members = await _context.HouseholdMembers
+            .Where(m => m.HouseholdId == id)
+            .Include(m => m.Person)
+            .ToListAsync();
+            
+        return _mapper.MapToMemberDetails(members);
+    }
+    
+    public async Task InviteMemberAsync(int householdId, MemberInvitation invitation)
+    {
+        // Create invitation record
+        // Send email
+        // Log activity event
+    }
+}</code></pre>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- Best Practices -->
+    <!-- ========================================== -->
+    <div class="section">
+        <h2>Best Practices</h2>
+
+        <h3>1. Permission Checking</h3>
+        <pre><code>// Always check permissions on both frontend and backend
+[canEdit]="user.hasPermission('EditHousehold')"
+[canManageMembers]="user.hasPermission('ManageMembers')"</code></pre>
+
+        <h3>2. Error Handling</h3>
+        <pre><code>async onSettingsUpdate(settings: HouseholdSettings): Promise&lt;void&gt; {
+  try {
+    await this.householdService.updateSettings(this.household.id, settings);
+    this.showSuccess('Settings saved successfully!');
+  } catch (error) {
+    this.showError('Failed to save settings: ' + error.message);
+    console.error('Settings update error:', error);
+  }
+}</code></pre>
+
+        <h3>3. Loading States</h3>
+        <pre><code>isLoading = false;
+
+async loadHouseholdData(): Promise&lt;void&gt; {
+  this.isLoading = true;
+  try {
+    this.household = await this.householdService.getDetails(this.id);
+    this.members = await this.householdService.getMembers(this.id);
+  } finally {
+    this.isLoading = false;
+  }
+}</code></pre>
+
+        <h3>4. Real-time Updates</h3>
+        <pre><code>// Consider using SignalR for real-time member updates
+this.hubConnection.on('MemberJoined', (member) => {
+  this.members.push(member);
+  this.activityEvents.unshift(this.createActivityEvent('member_joined', member));
+});</code></pre>
+    </div>
+
+    <div class="success">
+        <h3>✨ Quick Start</h3>
+        <p>To use these components in your Razor view:</p>
+        <ol>
+            <li>Ensure Angular build is running (<code>npm run watch</code>)</li>
+            <li>Reference the Angular bundle in your layout</li>
+            <li>Use the custom elements as shown in the examples above</li>
+            <li>Pass data as JSON-serialized attributes</li>
+        </ol>
+    </div>
+
+    <div class="note">
+        <strong>📚 Additional Resources:</strong>
+        <ul>
+            <li><a href="./README.md">Component Documentation</a></li>
+            <li><a href="../../../../docs/UI_DesignPlan.md">UI Design Plan</a></li>
+            <li><a href="https://material.angular.io/">Angular Material Documentation</a></li>
+        </ul>
+    </div>
+</body>
+</html>
