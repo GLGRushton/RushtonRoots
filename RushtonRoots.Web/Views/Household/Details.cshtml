@@ -1,61 +1,175 @@
 @model RushtonRoots.Domain.UI.Models.HouseholdViewModel
+@using System.Text.Json
 @{
     ViewData["Title"] = "Household Details";
+    
+    var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    var canDelete = User.IsInRole("Admin");
+    var canManageMembers = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    var canEditSettings = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+    
+    // Transform HouseholdViewModel to HouseholdDetails interface format
+    var householdDetails = new {
+        id = Model.Id,
+        householdName = Model.HouseholdName,
+        description = (string?)null, // Not available in current ViewModel
+        anchorPersonId = Model.AnchorPersonId,
+        anchorPersonName = Model.AnchorPersonName,
+        anchorPersonPhotoUrl = (string?)null, // Not available in current ViewModel
+        memberCount = Model.MemberCount,
+        createdDateTime = Model.CreatedDateTime.ToString("o"),
+        updatedDateTime = Model.UpdatedDateTime.ToString("o"),
+        createdByUserId = (int?)null, // Not available in current ViewModel
+        createdByUserName = (string?)null, // Not available in current ViewModel
+        privacy = "FamilyOnly", // Default - not available in current ViewModel
+        allowMemberInvites = true // Default - not available in current ViewModel
+    };
+    
+    var householdJson = JsonSerializer.Serialize(householdDetails, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Household Details</h2>
-        <div>
-            @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
-            {
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+<!-- Angular Household Details Component -->
+<app-household-details 
+    household='@Html.Raw(householdJson)'
+    members='[]'
+    activity-events='[]'
+    can-edit='@canEdit.ToString().ToLower()'
+    can-delete='@canDelete.ToString().ToLower()'
+    can-manage-members='@canManageMembers.ToString().ToLower()'
+    can-edit-settings='@canEditSettings.ToString().ToLower()'>
+</app-household-details>
+
+<script>
+    (function() {
+        const householdDetailsElement = document.querySelector('app-household-details');
+        
+        if (!householdDetailsElement) {
+            console.error('app-household-details element not found');
+            return;
+        }
+        
+        // Handle edit button click
+        householdDetailsElement.addEventListener('editClicked', function(event) {
+            const householdId = event.detail;
+            window.location.href = '@Url.Action("Edit", "Household")/' + householdId;
+        });
+        
+        // Handle delete button click
+        householdDetailsElement.addEventListener('deleteClicked', function(event) {
+            const householdId = event.detail;
+            window.location.href = '@Url.Action("Delete", "Household")/' + householdId;
+        });
+        
+        // Handle anchor person click
+        householdDetailsElement.addEventListener('anchorPersonClicked', function(event) {
+            const personId = event.detail;
+            window.location.href = '@Url.Action("Details", "Person")/' + personId;
+        });
+        
+        // Handle member action clicks
+        householdDetailsElement.addEventListener('memberActionClicked', function(event) {
+            const action = event.detail;
+            
+            switch (action.action) {
+                case 'view-profile':
+                    window.location.href = '@Url.Action("Details", "Person")/' + action.memberPersonId;
+                    break;
+                case 'edit':
+                    window.location.href = '@Url.Action("Edit", "Person")/' + action.memberPersonId;
+                    break;
+                case 'remove':
+                    if (confirm('Are you sure you want to remove this member from the household?')) {
+                        // TODO: Implement member removal endpoint
+                        console.log('Remove member:', action.memberId);
+                    }
+                    break;
+                case 'change-role':
+                    // TODO: Implement role change endpoint
+                    console.log('Change role for member:', action.memberId, action.data);
+                    break;
+                case 'resend-invite':
+                    // TODO: Implement resend invite endpoint
+                    console.log('Resend invite for member:', action.memberId);
+                    break;
+                default:
+                    console.warn('Unknown member action:', action.action);
             }
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
-            }
-            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        });
+        
+        // Handle invite member button click
+        householdDetailsElement.addEventListener('inviteMemberClicked', function(event) {
+            // TODO: Implement member invitation modal/page
+            console.log('Invite new member to household');
+            alert('Member invitation feature coming soon!');
+        });
+        
+        // Handle settings update
+        householdDetailsElement.addEventListener('settingsUpdated', function(event) {
+            const settings = event.detail;
+            
+            // TODO: Implement settings update endpoint
+            console.log('Update household settings:', settings);
+            
+            // Example of how to send settings to backend:
+            /*
+            fetch('@Url.Action("UpdateSettings", "Household")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify({
+                    householdId: @Model.Id,
+                    ...settings
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Settings updated successfully!');
+                } else {
+                    alert('Error updating settings: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating settings.');
+            });
+            */
+        });
+    })();
+</script>
+
+<!-- Anti-forgery token for AJAX requests -->
+@Html.AntiForgeryToken()
+
+<!-- Fallback content for browsers without JavaScript -->
+<noscript>
+    <div class="container mt-4">
+        <div class="alert alert-warning">
+            <strong>JavaScript is disabled.</strong> This page requires JavaScript to display household details.
+            Please enable JavaScript in your browser settings.
         </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Household Name</dt>
-                <dd class="col-sm-9">@Model.HouseholdName</dd>
-
-                <dt class="col-sm-3">Anchor Person</dt>
-                <dd class="col-sm-9">
-                    @if (Model.AnchorPersonId.HasValue)
-                    {
-                        <a asp-controller="Person" asp-action="Details" asp-route-id="@Model.AnchorPersonId">@Model.AnchorPersonName</a>
-                    }
-                    else
-                    {
-                        <span class="text-muted">Not set</span>
-                    }
-                </dd>
-
-                <dt class="col-sm-3">Members</dt>
-                <dd class="col-sm-9">
-                    <a asp-action="Members" asp-route-id="@Model.Id">
-                        @Model.MemberCount @(Model.MemberCount == 1 ? "member" : "members")
-                    </a>
-                </dd>
-
-                <dt class="col-sm-3">Created</dt>
-                <dd class="col-sm-9">@Model.CreatedDateTime.ToString("MMMM dd, yyyy hh:mm tt")</dd>
-
-                <dt class="col-sm-3">Last Updated</dt>
-                <dd class="col-sm-9">@Model.UpdatedDateTime.ToString("MMMM dd, yyyy hh:mm tt")</dd>
-            </dl>
-
-            <div class="mt-4">
-                <a asp-action="Members" asp-route-id="@Model.Id" class="btn btn-primary">
-                    <i class="bi bi-people"></i> View All Members
-                </a>
+        <div class="card">
+            <div class="card-body">
+                <h2>@Model.HouseholdName</h2>
+                <dl class="row">
+                    <dt class="col-sm-3">Anchor Person</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.AnchorPersonId.HasValue)
+                        {
+                            <a asp-controller="Person" asp-action="Details" asp-route-id="@Model.AnchorPersonId">@Model.AnchorPersonName</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not set</span>
+                        }
+                    </dd>
+                    <dt class="col-sm-3">Members</dt>
+                    <dd class="col-sm-9">@Model.MemberCount</dd>
+                </dl>
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
         </div>
     </div>
-</div>
+</noscript>
