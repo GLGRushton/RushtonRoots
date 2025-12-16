@@ -145,9 +145,12 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
         try {
           return {
             ...r,
-            childBirthDate: r.childBirthDate ? new Date(r.childBirthDate) : undefined,
-            createdDateTime: new Date(r.createdDateTime),
-            updatedDateTime: new Date(r.updatedDateTime)
+            // Handle both Date objects and string dates
+            childBirthDate: r.childBirthDate 
+              ? (r.childBirthDate instanceof Date ? r.childBirthDate : new Date(r.childBirthDate as any)) 
+              : undefined,
+            createdDateTime: r.createdDateTime instanceof Date ? r.createdDateTime : new Date(r.createdDateTime as any),
+            updatedDateTime: r.updatedDateTime instanceof Date ? r.updatedDateTime : new Date(r.updatedDateTime as any)
           };
         } catch (error) {
           console.error('Error parsing dates for relationship:', r.id, error);

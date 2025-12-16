@@ -153,7 +153,8 @@ public class ParentChildService : IParentChildService
             var today = DateTime.Today;
             var birthDate = parentChild.ChildPerson.DateOfBirth.Value;
             var age = today.Year - birthDate.Year;
-            if (birthDate.Date > today.AddYears(-age)) age--;
+            // Adjust age if birthday hasn't occurred yet this year
+            if (birthDate.AddYears(age) > today) age--;
             childAge = age;
         }
 
