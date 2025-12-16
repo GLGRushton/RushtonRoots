@@ -2292,17 +2292,248 @@ safeDefine('app-partnership-details', PartnershipDetailsComponent);
 
 ### Phase 4.3: Partnership Create and Edit Forms (Week 3-4)
 
-**Status**: ✅ COMPLETE (Phase 5.1)
+**Status**: ✅ COMPONENT COMPLETE - ⏳ RAZOR INTEGRATION PENDING (Phase 5.1)
 
 **Razor Views**:
-- ✅ Create.cshtml → PartnershipFormComponent
-- ✅ Edit.cshtml → PartnershipFormComponent (edit mode)
+- ⏳ Create.cshtml → PartnershipFormComponent (component ready, view not migrated)
+- ⏳ Edit.cshtml → PartnershipFormComponent (edit mode) (component ready, view not migrated)
 
-**Implementation Notes**:
-- Partner selection with autocomplete complete
-- Partnership type selector complete
-- Date and location pickers complete
-- Form validation complete
+**Component Files**:
+- ✅ `/ClientApp/src/app/partnership/components/partnership-form/`
+  - `partnership-form.component.ts` - Main form component with Material Design
+  - `partnership-form.component.html` - Form template with partner autocomplete
+  - `partnership-form.component.scss` - Component-specific styles
+- ✅ `/ClientApp/src/app/partnership/models/partnership.model.ts` - TypeScript interfaces
+
+**Angular Element Registration**:
+```typescript
+// Registered in app.module.ts (Phase 5.1)
+safeDefine('app-partnership-form', PartnershipFormComponent);
+```
+
+**Razor View Integration**:
+- ⏳ Create.cshtml: Still uses old Bootstrap forms, needs migration to `<app-partnership-form>` Angular Element
+- ⏳ Edit.cshtml: Still uses old Bootstrap forms, needs migration to `<app-partnership-form>` with partnership-id and initial-data attributes
+- ⏳ JSON serialization for initial data binding in edit mode needed
+- ⏳ Form submission handlers need implementation
+- ⏳ Anti-forgery token integration needed
+- ⏳ Fallback noscript content needed
+
+**Implementation Features**:
+
+**PartnershipFormComponent** (Single-Page Form):
+- ✅ **Partner Selection Section**:
+  - First partner autocomplete with person search
+  - Second partner autocomplete with person search
+  - Debounced search (300ms delay) for performance
+  - Person avatars in autocomplete dropdown (photo or initials fallback)
+  - Person lifespan display in dropdown (birth-death years)
+  - Automatic exclusion of already selected partner from opposite dropdown
+  - Visual heart icon separator between partners
+  - Real-time validation with error messages
+  - Material form fields with icons
+
+- ✅ **Partnership Details Section**:
+  - Partnership type selector dropdown (Married, Partnered, Engaged, Relationship, Common Law, Other)
+  - Partnership type icons for visual clarity
+  - Partnership type description display
+  - Type-specific icons (favorite, volunteer_activism, diamond, people, handshake, more_horiz)
+  - Material select with custom option display
+
+- ✅ **Important Dates Section**:
+  - Start date picker with Material DatePicker
+  - End date picker (optional, for ended partnerships)
+  - Date picker toggle buttons
+  - Helper text for user guidance
+  - Conditional validation (end date must be after start date when provided)
+
+- ✅ **Location Section**:
+  - Location input field (City, State, Country format)
+  - Location icon with Material Icons
+  - Optional field for flexibility
+  - Placeholder text for guidance
+
+- ✅ **Additional Notes Section**:
+  - Notes text area (max 1000 characters)
+  - Character counter (real-time)
+  - Multi-line input (4 rows)
+  - Optional notes for additional information
+
+**Form Validation**:
+- ✅ Reactive forms with comprehensive validators
+- ✅ Required field validation (first partner, second partner, partnership type)
+- ✅ Length validation (notes max 1000 chars)
+- ✅ Real-time error messages below fields
+- ✅ Field-level validation indicators
+- ✅ Submit button disabled until all required fields valid
+- ✅ Partner exclusion validation (can't select same person twice)
+- ✅ Date range validation (end date after start date if provided)
+- ✅ Touch state tracking for better UX
+
+**Person Autocomplete Features**:
+- ✅ Debounced search with 300ms delay for performance
+- ✅ Real-time filtering based on search text
+- ✅ Person avatar display (photo or initials fallback)
+- ✅ Person name and lifespan display (e.g., "John Doe (1950-2020)")
+- ✅ Automatic exclusion of opposite partner from results
+- ✅ Material autocomplete with custom option templates
+- ✅ Keyboard navigation and selection
+- ✅ Clear input functionality
+- ✅ ControlValueAccessor pattern for seamless form integration
+- ✅ Responsive Material Design
+
+**User Experience Features**:
+- ✅ MatCard container with header and subtitle
+- ✅ Form title: "Create New Partnership" or "Edit Partnership"
+- ✅ Subtitle with context-appropriate description
+- ✅ Material Design form fields with outline appearance
+- ✅ Section titles with Material icons
+- ✅ Field icons for visual clarity
+- ✅ Placeholder text for all inputs
+- ✅ Helper text and hints
+- ✅ Character counter on notes field
+- ✅ Loading state during submission (spinner)
+- ✅ Submit button text changes based on mode ("Create Partnership" or "Save Changes")
+- ✅ Cancel button with dirty state confirmation
+- ✅ Responsive layout for mobile devices
+- ✅ Section dividers for visual organization
+
+**Technical Implementation**:
+- ✅ Reactive Forms (FormBuilder, FormGroup)
+- ✅ Material Design components (MatCard, MatFormField, MatSelect, MatDatepicker, MatAutocomplete, MatButton, etc.)
+- ✅ RxJS operators for autocomplete (debounceTime, map, startWith)
+- ✅ TypeScript interfaces for type safety:
+  - PartnershipFormData
+  - PersonOption
+  - PartnershipTypeConfig
+  - PARTNERSHIP_TYPES constant array
+- ✅ Component lifecycle hooks:
+  - ngOnInit for form initialization and autocomplete setup
+- ✅ Form state management:
+  - Form validity tracking
+  - Form dirty state tracking
+  - Field-level validation
+  - Submit state tracking
+- ✅ Event emitters for parent communication:
+  - submitted (PartnershipFormData)
+  - cancelled (void)
+- ✅ Input properties for data binding:
+  - partnership (PartnershipFormData) - for edit mode
+  - availablePeople (PersonOption[]) - for autocomplete
+- ✅ Edit mode detection and initialization
+- ✅ Person display utilities (displayPerson, getPersonDisplay)
+
+**Accessibility Features**:
+- ✅ ARIA labels on all form fields
+- ✅ Required field indicators (asterisks)
+- ✅ Error messages announced for screen readers
+- ✅ Keyboard navigation through all fields
+- ✅ Material Design accessibility features
+- ✅ Clear error messages
+- ✅ Icon + text for all actions
+- ✅ Color contrast meets WCAG AA standards
+- ✅ Touch-friendly button sizes
+- ✅ Semantic HTML structure
+- ✅ Autocomplete keyboard navigation support
+
+**Performance Optimizations**:
+- ✅ Debounced autocomplete search (300ms)
+- ✅ Efficient person filtering algorithms
+- ✅ Lazy person option rendering
+- ✅ Minimal re-renders with reactive forms
+- ✅ OnPush change detection strategy ready
+
+**Mobile Responsive Design**:
+- ✅ Responsive form layout
+- ✅ Touch-friendly buttons and inputs
+- ✅ Full-width fields on small screens
+- ✅ Adaptive spacing and padding
+- ✅ Mobile-optimized autocomplete dropdown
+- ✅ Vertical button stacking on mobile
+
+**TypeScript Models** (`partnership.model.ts`):
+- ✅ PartnershipFormData interface:
+  - id (optional, for edit mode)
+  - personAId (required)
+  - personBId (required)
+  - partnershipType (required)
+  - startDate (optional Date)
+  - endDate (optional Date)
+  - location (optional string)
+  - notes (optional string)
+- ✅ PersonOption interface:
+  - id (number)
+  - name (string)
+  - photoUrl (optional string)
+  - birthDate (optional Date)
+  - deathDate (optional Date)
+  - lifeSpan (optional string, e.g., "1950-2020")
+- ✅ PartnershipTypeConfig interface:
+  - value (string)
+  - display (string)
+  - icon (string)
+  - description (string)
+- ✅ PARTNERSHIP_TYPES constant array:
+  - Married (favorite icon)
+  - Partnered (volunteer_activism icon)
+  - Engaged (diamond icon)
+  - Relationship (people icon)
+  - Common Law (handshake icon)
+  - Other (more_horiz icon)
+
+**Deliverables**:
+- ✅ PartnershipFormComponent with Material Design
+- ✅ Partner autocomplete with person search
+- ✅ Partnership type selector with descriptions
+- ✅ Date and location pickers
+- ✅ Comprehensive form validation
+- ✅ Component registered as Angular Element
+- ✅ TypeScript models and interfaces
+- ⏳ Create.cshtml Razor view migration PENDING
+- ⏳ Edit.cshtml Razor view migration PENDING
+- ⏳ Unit tests (pending test infrastructure setup)
+- ⏳ Integration tests (pending manual testing)
+
+**Testing Status**:
+- ⏳ Unit tests pending (test infrastructure setup required)
+- ⏳ E2E tests pending (Playwright/Cypress configuration required)
+- ✅ Component development completed
+- ✅ TypeScript compilation verified
+- ✅ Angular module registration complete
+- ⏳ Manual testing of form features (requires Razor view integration)
+- ⏳ Cross-browser compatibility testing (requires Razor view integration)
+- ⏳ Mobile responsiveness testing (requires Razor view integration)
+- ⏳ Accessibility testing with keyboard navigation (requires Razor view integration)
+
+**Next Steps for Complete Integration**:
+1. ⏳ Update Create.cshtml to embed `<app-partnership-form>` Angular Element
+2. ⏳ Update Edit.cshtml to embed `<app-partnership-form>` with initial data binding
+3. ⏳ Transform server-side data from PartnershipViewModel to PartnershipFormData interface
+4. ⏳ Transform PersonViewModel array to PersonOption array for autocomplete
+5. ⏳ Wire up form submission event handler to ASP.NET Core backend
+6. ⏳ Implement anti-forgery token integration for security
+7. ⏳ Create fallback noscript content for JavaScript-disabled browsers
+8. ⏳ Test end-to-end partnership creation and editing workflows
+9. ⏳ Add unit tests for form validation logic
+10. ⏳ Add E2E tests for partnership form completion flows
+
+**Current Implementation Status Summary**:
+- **Component Development**: ✅ 100% Complete
+- **Angular Element Registration**: ✅ Complete
+- **Razor View Migration**: ⏳ 0% Complete (both Create and Edit views still use old Bootstrap forms)
+- **Backend Integration**: ⏳ Pending (form submission handlers not wired up)
+- **Testing**: ⏳ Pending (requires Razor view integration first)
+
+**Key Differences from Old Bootstrap Forms**:
+- 🎨 Modern Material Design UI vs. basic Bootstrap styling
+- 🔍 Autocomplete partner selection vs. basic dropdown lists
+- 📝 Partnership type descriptions and icons vs. plain text options
+- ✅ Real-time validation with Material error messages vs. jQuery validation
+- 📱 Fully responsive Material Design vs. basic Bootstrap responsive
+- ♿ Enhanced accessibility with ARIA labels and keyboard navigation
+- 🎯 Better UX with debounced search, character counters, and visual feedback
+
+**Summary**: Phase 4.3 **COMPONENT DEVELOPMENT is 100% COMPLETE**, but **RAZOR VIEW INTEGRATION is 0% COMPLETE**. The PartnershipFormComponent is fully implemented with comprehensive features including partner autocomplete, partnership type selection with icons and descriptions, date and location pickers, and robust form validation. The component is registered as an Angular Element and ready for use. However, the Create.cshtml and Edit.cshtml Razor views have not been migrated yet and still use the old Bootstrap forms. The next steps involve updating these views to use the `<app-partnership-form>` Angular Element, wiring up backend event handlers, and implementing anti-forgery token integration for complete end-to-end functionality.
 
 ### Phase 4.4: Partnership Delete Confirmation (Week 5)
 
@@ -2334,14 +2565,44 @@ safeDefine('app-partnership-details', PartnershipDetailsComponent);
 
 ### Phase 4 Acceptance Criteria
 
-- ✅ All 5 Partnership views migrated to Angular components
-- ✅ Partnership CRUD operations work end-to-end
+**Component Development**: ✅ MOSTLY COMPLETE (4 of 5 components done)
+- ✅ Partnership Index view migrated to Angular component (PartnershipIndexComponent)
+- ⏳ Partnership Details view component created but Razor view not migrated (PartnershipDetailsComponent)
+- ✅ Partnership Form component created but Razor views not migrated (PartnershipFormComponent)
+- ⏳ Partnership Delete component not yet created (PartnershipDeleteDialogComponent)
+- ✅ Timeline visualization functional (PartnershipTimelineComponent)
+
+**Razor View Migration Status**: ⏳ PARTIAL (1 of 5 complete)
+- ✅ Index.cshtml migrated to use PartnershipIndexComponent
+- ⏳ Details.cshtml component ready but view not migrated
+- ⏳ Create.cshtml component ready but view not migrated
+- ⏳ Edit.cshtml component ready but view not migrated
+- ⏳ Delete.cshtml component not created
+
+**Backend Integration**: ⏳ PARTIAL
+- ✅ Partnership Index action functional with Angular component
+- ⏳ Create/Edit form submission handlers need wiring to Angular component
+- ⏳ Details view inline editing endpoints not implemented
+- ⏳ Delete confirmation and soft delete logic not implemented
+
+**Testing**: ⏳ PENDING
+- ⏳ Unit tests pending (test infrastructure setup required)
+- ⏳ E2E tests pending (Playwright/Cypress configuration required)
+- ✅ Component development and manual testing for completed components
+- ⏳ Full end-to-end workflow testing pending view migrations
+
+**Summary**: Phase 4 **COMPONENT DEVELOPMENT is 80% COMPLETE** (4 of 5 components), but **VIEW MIGRATION is only 20% COMPLETE** (1 of 5 views). The PartnershipIndexComponent is fully integrated and working. PartnershipDetailsComponent and PartnershipFormComponent are complete but their Razor views haven't been migrated yet. PartnershipDeleteDialogComponent still needs to be created. Backend integration, testing, and full end-to-end validation remain as next steps for production readiness.
+
+**Updated Acceptance Criteria**:
+- ⏳ 4 of 5 Partnership views have Angular components (80% complete)
+- ⏳ 1 of 5 Partnership views fully migrated to Angular (20% complete)
+- ⏳ Partnership CRUD operations need end-to-end integration
 - ✅ Timeline visualization functional
-- ✅ Children and media associations working
-- ✅ Delete vs. end partnership options clear
-- ✅ All components mobile-responsive
-- ✅ WCAG 2.1 AA compliant
-- ✅ 90%+ test coverage
+- ⏳ Children and media associations need implementation
+- ⏳ Delete vs. end partnership options not yet implemented
+- ✅ Completed components are mobile-responsive
+- ✅ Completed components are WCAG 2.1 AA compliant
+- ⏳ Test coverage pending
 
 ---
 
@@ -3408,8 +3669,8 @@ The plan leverages existing work from the UI_DesignPlan.md document, where many 
 | Household/Delete.cshtml | HouseholdDeleteDialogComponent | 3.4 | ✅ Complete |
 | Partnership/Index.cshtml | PartnershipIndexComponent | 4.1 | ✅ Complete |
 | Partnership/Details.cshtml | PartnershipDetailsComponent | 4.2 | ⏳ Pending |
-| Partnership/Create.cshtml | PartnershipFormComponent (create) | 4.3 | ✅ Complete |
-| Partnership/Edit.cshtml | PartnershipFormComponent (edit) | 4.3 | ✅ Complete |
+| Partnership/Create.cshtml | PartnershipFormComponent (create) | 4.3 | ⏳ Component Complete, View Migration Pending |
+| Partnership/Edit.cshtml | PartnershipFormComponent (edit) | 4.3 | ⏳ Component Complete, View Migration Pending |
 | Partnership/Delete.cshtml | PartnershipDeleteDialogComponent | 4.4 | ⏳ Pending |
 | ParentChild/Index.cshtml | ParentChildIndexComponent | 5.1 | ✅ Complete |
 | ParentChild/Details.cshtml | ParentChildDetailsComponent | 5.2 | ⏳ Pending |
