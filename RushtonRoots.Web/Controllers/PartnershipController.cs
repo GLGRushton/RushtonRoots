@@ -13,11 +13,13 @@ public class PartnershipController : Controller
 {
     private readonly IPartnershipService _partnershipService;
     private readonly IPersonService _personService;
+    private readonly ILogger<PartnershipController> _logger;
 
-    public PartnershipController(IPartnershipService partnershipService, IPersonService personService)
+    public PartnershipController(IPartnershipService partnershipService, IPersonService personService, ILogger<PartnershipController> logger)
     {
         _partnershipService = partnershipService;
         _personService = personService;
+        _logger = logger;
     }
 
     // GET: Partnership
@@ -50,8 +52,11 @@ public class PartnershipController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [Obsolete("This MVC POST endpoint is deprecated. Use POST /api/partnership instead. This endpoint will be removed in a future version (planned: 3 sprints). Migration guide: https://github.com/GLGRushton/RushtonRoots/blob/main/docs/ApiEndpointsImplementationPlan.md#phase-43-deprecate-old-mvc-post-patterns")]
     public async Task<IActionResult> Create(CreatePartnershipRequest request)
     {
+        _logger.LogWarning("DEPRECATED: POST /Partnership/Create was called. This endpoint is deprecated and will be removed in a future version. Please migrate to POST /api/partnership. User: {User}", User?.Identity?.Name ?? "Unknown");
+        
         if (!ModelState.IsValid)
         {
             ViewBag.People = await _personService.GetAllAsync();
@@ -105,8 +110,11 @@ public class PartnershipController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [Obsolete("This MVC POST endpoint is deprecated. Use PUT /api/partnership/{id} instead. This endpoint will be removed in a future version (planned: 3 sprints). Migration guide: https://github.com/GLGRushton/RushtonRoots/blob/main/docs/ApiEndpointsImplementationPlan.md#phase-43-deprecate-old-mvc-post-patterns")]
     public async Task<IActionResult> Edit(int id, UpdatePartnershipRequest request)
     {
+        _logger.LogWarning("DEPRECATED: POST /Partnership/Edit was called. This endpoint is deprecated and will be removed in a future version. Please migrate to PUT /api/partnership. User: {User}, PartnershipId: {PartnershipId}", User?.Identity?.Name ?? "Unknown", id);
+        
         if (id != request.Id)
         {
             return BadRequest();
@@ -153,8 +161,11 @@ public class PartnershipController : Controller
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [Obsolete("This MVC POST endpoint is deprecated. Use DELETE /api/partnership/{id} instead. This endpoint will be removed in a future version (planned: 3 sprints). Migration guide: https://github.com/GLGRushton/RushtonRoots/blob/main/docs/ApiEndpointsImplementationPlan.md#phase-43-deprecate-old-mvc-post-patterns")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
+        _logger.LogWarning("DEPRECATED: POST /Partnership/Delete was called. This endpoint is deprecated and will be removed in a future version. Please migrate to DELETE /api/partnership. User: {User}, PartnershipId: {PartnershipId}", User?.Identity?.Name ?? "Unknown", id);
+        
         try
         {
             await _partnershipService.DeleteAsync(id);

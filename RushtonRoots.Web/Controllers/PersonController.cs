@@ -13,11 +13,13 @@ public class PersonController : Controller
 {
     private readonly IPersonService _personService;
     private readonly IHouseholdService _householdService;
+    private readonly ILogger<PersonController> _logger;
 
-    public PersonController(IPersonService personService, IHouseholdService householdService)
+    public PersonController(IPersonService personService, IHouseholdService householdService, ILogger<PersonController> logger)
     {
         _personService = personService;
         _householdService = householdService;
+        _logger = logger;
     }
 
     // GET: Person
@@ -61,8 +63,11 @@ public class PersonController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [Obsolete("This MVC POST endpoint is deprecated. Use POST /api/person instead. This endpoint will be removed in a future version (planned: 3 sprints). Migration guide: https://github.com/GLGRushton/RushtonRoots/blob/main/docs/ApiEndpointsImplementationPlan.md#phase-43-deprecate-old-mvc-post-patterns")]
     public async Task<IActionResult> Create(CreatePersonRequest request)
     {
+        _logger.LogWarning("DEPRECATED: POST /Person/Create was called. This endpoint is deprecated and will be removed in a future version. Please migrate to POST /api/person. User: {User}", User?.Identity?.Name ?? "Unknown");
+        
         if (!ModelState.IsValid)
         {
             ViewBag.Households = await _householdService.GetAllAsync();
@@ -99,8 +104,11 @@ public class PersonController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [Obsolete("This MVC POST endpoint is deprecated. Use PUT /api/person/{id} instead. This endpoint will be removed in a future version (planned: 3 sprints). Migration guide: https://github.com/GLGRushton/RushtonRoots/blob/main/docs/ApiEndpointsImplementationPlan.md#phase-43-deprecate-old-mvc-post-patterns")]
     public async Task<IActionResult> Edit(int id, UpdatePersonRequest request)
     {
+        _logger.LogWarning("DEPRECATED: POST /Person/Edit was called. This endpoint is deprecated and will be removed in a future version. Please migrate to PUT /api/person. User: {User}, PersonId: {PersonId}", User?.Identity?.Name ?? "Unknown", id);
+        
         if (id != request.Id)
         {
             return BadRequest();
@@ -145,8 +153,11 @@ public class PersonController : Controller
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [Obsolete("This MVC POST endpoint is deprecated. Use DELETE /api/person/{id} instead. This endpoint will be removed in a future version (planned: 3 sprints). Migration guide: https://github.com/GLGRushton/RushtonRoots/blob/main/docs/ApiEndpointsImplementationPlan.md#phase-43-deprecate-old-mvc-post-patterns")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
+        _logger.LogWarning("DEPRECATED: POST /Person/Delete was called. This endpoint is deprecated and will be removed in a future version. Please migrate to DELETE /api/person. User: {User}, PersonId: {PersonId}", User?.Identity?.Name ?? "Unknown", id);
+        
         try
         {
             await _personService.DeleteAsync(id);
