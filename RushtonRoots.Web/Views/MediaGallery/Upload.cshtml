@@ -1,0 +1,250 @@
+@{
+    ViewData["Title"] = "Upload Media";
+    var canTagPeople = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+}
+
+<div class="upload-media-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1>@ViewData["Title"]</h1>
+            <p class="page-subtitle">Upload photos and videos to your family gallery</p>
+        </div>
+        <div class="page-actions">
+            <a href="/MediaGallery" class="btn btn-secondary">
+                <i class="material-icons">arrow_back</i>
+                Back to Gallery
+            </a>
+        </div>
+    </div>
+
+    <!-- Angular Photo Upload Component -->
+    <app-photo-upload
+        api-endpoint="/api/media/upload"
+        max-file-size="104857600"
+        accepted-types="image/*,video/*"
+        can-tag-people="@canTagPeople"
+        user-id="@User.Identity?.Name"
+        redirect-url="/MediaGallery">
+    </app-photo-upload>
+</div>
+
+<!-- Fallback content for browsers without JavaScript -->
+<noscript>
+    <div class="noscript-fallback">
+        <div class="upload-container">
+            <section class="info-section">
+                <h2>Upload Media</h2>
+                <p>
+                    The media upload feature requires JavaScript to be enabled. 
+                    Please enable JavaScript in your browser to upload photos and videos.
+                </p>
+                <div class="upload-info">
+                    <h3>Upload Requirements:</h3>
+                    <ul>
+                        <li>Accepted formats: JPEG, PNG, GIF, MP4, MOV, AVI</li>
+                        <li>Maximum file size: 100 MB</li>
+                        <li>You can upload multiple files at once</li>
+                        <li>Add titles and descriptions to your media</li>
+                        <li>Tag people in photos</li>
+                        <li>Organize media into albums</li>
+                    </ul>
+                </div>
+                <div class="actions">
+                    <a href="/MediaGallery" class="btn btn-secondary">Back to Gallery</a>
+                    <a href="/" class="btn btn-secondary">Go to Home</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <style>
+        .noscript-fallback {
+            padding: 20px;
+        }
+
+        .upload-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+            border-left: 6px solid #4caf50;
+        }
+
+        .info-section h2 {
+            color: #2e7d32;
+            margin: 0 0 20px 0;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .info-section p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+        }
+
+        .upload-info {
+            margin: 30px 0;
+        }
+
+        .upload-info h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .upload-info ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .upload-info li {
+            padding: 8px 0 8px 30px;
+            position: relative;
+            color: #666;
+        }
+
+        .upload-info li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background-color: #666;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        @@media (max-width: 768px) {
+            .info-section {
+                padding: 25px;
+            }
+
+            .info-section h2 {
+                font-size: 1.5em;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</noscript>
+
+<style>
+    .upload-media-page {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .header-content h1 {
+        color: #2e7d32;
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .page-subtitle {
+        color: #666;
+        margin: 5px 0 0 0;
+        font-size: 1.1em;
+    }
+
+    .page-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-secondary {
+        background-color: #666;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #555;
+    }
+
+    .material-icons {
+        font-size: 20px;
+    }
+
+    /* Responsive styles for mobile devices */
+    @@media (max-width: 768px) {
+        /* Main page styles */
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-content h1 {
+            font-size: 2em;
+        }
+
+        .page-actions {
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            justify-content: center;
+        }
+    }
+</style>
