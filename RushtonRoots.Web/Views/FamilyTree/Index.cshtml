@@ -1,0 +1,296 @@
+@{
+    ViewData["Title"] = "Family Tree";
+    var personId = ViewData["PersonId"]?.ToString();
+    var viewMode = ViewData["ViewMode"]?.ToString() ?? "descendant";
+    var generations = (int)(ViewData["Generations"] ?? 3);
+    var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
+}
+
+<div class="family-tree-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1>@ViewData["Title"]</h1>
+            <p class="page-subtitle">Explore your family's ancestry and descendants</p>
+        </div>
+        <div class="page-actions">
+            @if (canEdit)
+            {
+                <a href="/Person/Create" class="btn btn-primary">
+                    <i class="material-icons">person_add</i>
+                    Add Person
+                </a>
+            }
+            <a href="/Person" class="btn btn-secondary">
+                <i class="material-icons">list</i>
+                View All
+            </a>
+        </div>
+    </div>
+
+    <!-- Angular Family Tree Component -->
+    <app-family-tree
+        person-id="@(personId ?? "")"
+        view-mode="@viewMode"
+        generations="@generations"
+        can-edit="@canEdit"
+        user-id="@User.Identity?.Name">
+    </app-family-tree>
+</div>
+
+<!-- Fallback content for browsers without JavaScript -->
+<noscript>
+    <div class="noscript-fallback">
+        <div class="family-tree-container">
+            <section class="info-section">
+                <h2>Family Tree Visualization</h2>
+                <p>
+                    The interactive family tree requires JavaScript to be enabled. 
+                    Please enable JavaScript in your browser to view and explore your family tree.
+                </p>
+                <div class="feature-list">
+                    <h3>Family Tree Features:</h3>
+                    <ul>
+                        <li>Interactive visualization of family relationships</li>
+                        <li>Multiple view modes: Descendant Chart, Pedigree Chart, and Fan Chart</li>
+                        <li>Focus on specific family members</li>
+                        <li>Zoom and pan controls for large family trees</li>
+                        <li>Navigate between generations easily</li>
+                        <li>View person details including birth and death dates</li>
+                        <li>Print family tree for physical records</li>
+                        <li>Visual indicators for deceased family members</li>
+                    </ul>
+                </div>
+                <div class="actions">
+                    @if (canEdit)
+                    {
+                        <a href="/Person/Create" class="btn btn-primary">Add Person</a>
+                    }
+                    <a href="/Person" class="btn btn-primary">Browse People</a>
+                    <a href="/" class="btn btn-secondary">Go to Home</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <style>
+        .noscript-fallback {
+            padding: 20px;
+        }
+
+        .family-tree-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+            border-left: 6px solid #4caf50;
+        }
+
+        .info-section h2 {
+            color: #2e7d32;
+            margin: 0 0 20px 0;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .info-section p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            margin: 30px 0;
+        }
+
+        .feature-list h3 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .feature-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0 8px 30px;
+            position: relative;
+            color: #666;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+
+        .btn-secondary {
+            background-color: #666;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        @@media (max-width: 768px) {
+            .info-section {
+                padding: 25px;
+            }
+
+            .info-section h2 {
+                font-size: 1.5em;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</noscript>
+
+<style>
+    .family-tree-page {
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .header-content h1 {
+        color: #2e7d32;
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .page-subtitle {
+        color: #666;
+        margin: 5px 0 0 0;
+        font-size: 1.1em;
+    }
+
+    .page-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #4caf50;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #45a049;
+    }
+
+    .btn-secondary {
+        background-color: #666;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #555;
+    }
+
+    .material-icons {
+        font-size: 20px;
+    }
+
+    /* Responsive styles for mobile devices */
+    @@media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header-content h1 {
+            font-size: 2em;
+        }
+
+        .page-actions {
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            justify-content: center;
+            min-width: 150px;
+        }
+    }
+
+    /* Print styles */
+    @@media print {
+        .page-header,
+        .page-actions {
+            display: none;
+        }
+
+        .family-tree-page {
+            padding: 0;
+        }
+    }
+</style>
