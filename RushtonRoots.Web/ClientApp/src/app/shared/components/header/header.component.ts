@@ -34,28 +34,28 @@ export interface UserInfo {
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  private _userInfo: UserInfo = {
-    name: '',
-    role: '',
-    isAuthenticated: false,
-    isAdmin: false,
-    isHouseholdAdmin: false
-  };
+  private _userInfo: UserInfo | null = null;
 
   @Input() 
-  set userinfo(value: string | UserInfo) {
+  set userinfo(value: string | UserInfo | null) {
+    if (!value) {
+      this._userInfo = null;
+      return;
+    }
+    
     if (typeof value === 'string') {
       try {
         this._userInfo = JSON.parse(value);
       } catch (e) {
         console.error('Failed to parse userinfo:', e);
+        this._userInfo = null;
       }
     } else {
       this._userInfo = value;
     }
   }
   
-  get userInfo(): UserInfo {
+  get userInfo(): UserInfo | null {
     return this._userInfo;
   }
 

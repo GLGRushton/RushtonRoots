@@ -24,7 +24,7 @@ import { UserInfo } from '../header/header.component';
   styleUrls: ['./user-menu.component.scss']
 })
 export class UserMenuComponent {
-  @Input() userInfo!: UserInfo;
+  @Input() userInfo?: UserInfo;
   @Output() logout = new EventEmitter<void>();
 
   onLogout(): void {

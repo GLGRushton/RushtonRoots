@@ -20,7 +20,7 @@
 
     <!-- Navigation Links (Desktop) -->
     <app-navigation 
-      *ngIf="userInfo.isAuthenticated"
+      *ngIf="userInfo && userInfo.isAuthenticated"
       [userInfo]="userInfo"
       [isMobile]="false"
       class="desktop-nav">
@@ -29,7 +29,7 @@
     <!-- Right Section: Search, Notifications, User Menu -->
     <div class="actions-section">
       <!-- Global Search -->
-      <div class="search-container" *ngIf="showSearch && userInfo.isAuthenticated">
+      <div class="search-container" *ngIf="showSearch && userInfo && userInfo.isAuthenticated">
         <mat-form-field appearance="outline" class="search-field">
           <mat-icon matPrefix>search</mat-icon>
           <input 
@@ -43,7 +43,7 @@
       <!-- Notification Bell -->
       <button 
         mat-icon-button 
-        *ngIf="showNotifications && userInfo.isAuthenticated"
+        *ngIf="showNotifications && userInfo && userInfo.isAuthenticated"
         aria-label="Notifications"
         class="notification-button">
         <mat-icon [matBadge]="0" matBadgeColor="warn" [matBadgeHidden]="true">notifications</mat-icon>
@@ -51,14 +51,14 @@
 
       <!-- User Menu -->
       <app-user-menu 
-        *ngIf="userInfo.isAuthenticated"
+        *ngIf="userInfo && userInfo.isAuthenticated"
         [userInfo]="userInfo"
         (logout)="onLogout()">
       </app-user-menu>
 
       <!-- Login Link (when not authenticated) -->
       <a 
-        *ngIf="!userInfo.isAuthenticated" 
+        *ngIf="userInfo && !userInfo.isAuthenticated" 
         (click)="navigateTo('/Account/Login')"
         class="login-link"
         mat-raised-button>
@@ -68,7 +68,7 @@
   </div>
 
   <!-- Mobile Navigation (Collapsible) -->
-  <div class="mobile-nav" *ngIf="isMobileMenuOpen && userInfo.isAuthenticated">
+  <div class="mobile-nav" *ngIf="isMobileMenuOpen && userInfo && userInfo.isAuthenticated">
     <app-navigation 
       [userInfo]="userInfo"
       [isMobile]="true">

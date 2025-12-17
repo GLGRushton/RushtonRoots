@@ -9,12 +9,12 @@
         <span class="avatar-initial">{{ getUserInitial() }}</span>
       </div>
       <div class="user-info">
-        <span class="user-name">{{ userInfo.name }}</span>
+        <span class="user-name">{{ userInfo?.name || 'User' }}</span>
         <span 
           class="user-role" 
-          [class.admin]="userInfo.isAdmin"
-          [class.household-admin]="userInfo.isHouseholdAdmin">
-          {{ userInfo.role }}
+          [class.admin]="userInfo?.isAdmin"
+          [class.household-admin]="userInfo?.isHouseholdAdmin">
+          {{ userInfo?.role || 'Member' }}
         </span>
       </div>
       <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
@@ -29,11 +29,11 @@
           <span class="avatar-initial">{{ getUserInitial() }}</span>
         </div>
         <div class="menu-header-info">
-          <p class="menu-user-name">{{ userInfo.name }}</p>
+          <p class="menu-user-name">{{ userInfo?.name || 'User' }}</p>
           <span 
             class="role-badge"
-            [attr.data-role]="userInfo.isAdmin ? 'admin' : userInfo.isHouseholdAdmin ? 'household-admin' : 'member'">
-            {{ userInfo.role }}
+            [attr.data-role]="userInfo?.isAdmin ? 'admin' : userInfo?.isHouseholdAdmin ? 'household-admin' : 'member'">
+            {{ userInfo?.role || 'Member' }}
           </span>
         </div>
       </div>
