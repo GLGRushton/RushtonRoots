@@ -69,6 +69,11 @@ export class RoleGuard implements CanActivate {
    * that manages user roles and permissions.
    */
   private checkUserRole(requiredRoles: string[]): boolean {
+    // Admin has access to everything
+    if (this.isAdmin()) {
+      return true;
+    }
+
     // Try to get user role from meta tag (if set by server)
     const roleMetaTag = document.querySelector('meta[name="user-role"]');
     if (roleMetaTag) {
@@ -84,13 +89,8 @@ export class RoleGuard implements CanActivate {
       return true;
     }
 
-    // Admin role check - if user is admin, they have access to everything
-    if (this.isAdmin() && requiredRoles.includes('Admin')) {
-      return true;
-    }
-
     // HouseholdAdmin role check
-    if (this.isHouseholdAdmin() && (requiredRoles.includes('HouseholdAdmin') || requiredRoles.includes('Admin'))) {
+    if (this.isHouseholdAdmin() && requiredRoles.includes('HouseholdAdmin')) {
       return true;
     }
 

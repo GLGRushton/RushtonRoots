@@ -61,18 +61,24 @@ const routes: Routes = [
   },
 
   // Recipe routes (lazy loaded)
+  // NOTE: ContentModule handles recipes, stories, and traditions
+  // Child routes within ContentModule differentiate between content types
   {
     path: 'recipes',
     loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
   },
 
   // Story routes (lazy loaded)
+  // NOTE: ContentModule handles recipes, stories, and traditions
+  // Child routes within ContentModule differentiate between content types
   {
     path: 'stories',
     loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
   },
 
   // Tradition routes (lazy loaded)
+  // NOTE: ContentModule handles recipes, stories, and traditions
+  // Child routes within ContentModule differentiate between content types
   {
     path: 'traditions',
     loadChildren: () => import('./content/content.module').then(m => m.ContentModule)
