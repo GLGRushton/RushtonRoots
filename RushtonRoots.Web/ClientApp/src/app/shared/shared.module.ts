@@ -16,6 +16,7 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { UserMenuComponent } from './components/user-menu/user-menu.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { PageLayoutComponent } from './components/page-layout/page-layout.component';
+import { LayoutWrapperComponent } from './components/layout-wrapper/layout-wrapper.component';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -49,6 +50,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSliderModule } from '@angular/material/slider';
+
+// Import Accessibility Module for SkipNavigationComponent
+import { AccessibilityModule } from '../accessibility/accessibility.module';
 
 const materialModules = [
   MatButtonModule,
@@ -102,17 +106,20 @@ const materialModules = [
     NavigationComponent,
     UserMenuComponent,
     FooterComponent,
-    PageLayoutComponent
+    PageLayoutComponent,
+    LayoutWrapperComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
-    ...materialModules
+    ...materialModules,
+    AccessibilityModule
   ],
   exports: [
     CommonModule,
     FormsModule,
     ...materialModules,
+    AccessibilityModule,
     PersonCardComponent,
     PersonListComponent,
     SearchBarComponent,
@@ -125,7 +132,8 @@ const materialModules = [
     NavigationComponent,
     UserMenuComponent,
     FooterComponent,
-    PageLayoutComponent
+    PageLayoutComponent,
+    LayoutWrapperComponent
   ]
 })
 export class SharedModule { }

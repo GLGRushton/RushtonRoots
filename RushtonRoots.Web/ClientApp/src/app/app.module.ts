@@ -40,6 +40,7 @@ import { NavigationComponent } from './shared/components/navigation/navigation.c
 import { UserMenuComponent } from './shared/components/user-menu/user-menu.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { PageLayoutComponent } from './shared/components/page-layout/page-layout.component';
+import { LayoutWrapperComponent } from './shared/components/layout-wrapper/layout-wrapper.component';
 
 // Import Phase 3.1 Person Index & Search components for Angular Elements registration
 import { PersonIndexComponent } from './person/components/person-index/person-index.component';
@@ -233,6 +234,9 @@ export class AppModule {
     // Register Phase 2.2 Footer & Page Layout components as Angular Elements
     safeDefine('app-footer', FooterComponent);
     safeDefine('app-page-layout', PageLayoutComponent);
+
+    // Register Phase 11.1 Layout Wrapper component as Angular Element
+    safeDefine('app-layout-wrapper', LayoutWrapperComponent);
 
     // Register Phase 3.1 Person Index & Search components as Angular Elements
     safeDefine('app-person-index', PersonIndexComponent);
