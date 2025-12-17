@@ -23,6 +23,8 @@ import { QuickActionsComponent } from './components/quick-actions/quick-actions.
 import { BackToTopComponent } from './components/back-to-top/back-to-top.component';
 import { ContextualHelpComponent } from './components/contextual-help/contextual-help.component';
 import { KeyboardShortcutsDialogComponent } from './components/keyboard-shortcuts-dialog/keyboard-shortcuts-dialog.component';
+// Phase 12.4 Components
+import { ShareDialogComponent } from './components/share-dialog/share-dialog.component';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -118,7 +120,9 @@ const materialModules = [
     QuickActionsComponent,
     BackToTopComponent,
     ContextualHelpComponent,
-    KeyboardShortcutsDialogComponent
+    KeyboardShortcutsDialogComponent,
+    // Phase 12.4 Components
+    ShareDialogComponent
   ],
   imports: [
     CommonModule,
@@ -149,7 +153,9 @@ const materialModules = [
     QuickActionsComponent,
     BackToTopComponent,
     ContextualHelpComponent,
-    KeyboardShortcutsDialogComponent
+    KeyboardShortcutsDialogComponent,
+    // Phase 12.4 Components
+    ShareDialogComponent
   ]
 })
 export class SharedModule { }

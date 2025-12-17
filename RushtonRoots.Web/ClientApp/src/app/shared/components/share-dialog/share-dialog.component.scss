@@ -1,0 +1,202 @@
+.share-dialog {
+  min-width: 400px;
+
+  @media (max-width: 600px) {
+    min-width: 300px;
+  }
+}
+
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+mat-dialog-content {
+  padding: 1.5rem;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+mat-dialog-actions {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+// Share Preview
+.share-preview {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color, #2e7d32);
+
+  .preview-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  .preview-text {
+    margin: 0;
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.6);
+    line-height: 1.4;
+  }
+}
+
+// Link Container
+.link-container {
+  margin-bottom: 1.5rem;
+
+  .full-width {
+    width: 100%;
+  }
+
+  mat-form-field {
+    input {
+      font-size: 0.9rem;
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
+}
+
+// Share Actions (Native Share)
+.share-actions {
+  margin-bottom: 1.5rem;
+
+  .share-button {
+    height: 48px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+}
+
+// Share Options
+.share-options {
+  .options-title {
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .share-option-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    margin: 0.5rem;
+    min-width: 100px;
+    height: 80px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    @media (max-width: 600px) {
+      min-width: 80px;
+      height: 70px;
+      padding: 0.75rem;
+      margin: 0.25rem;
+    }
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    span {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    // Social Media Button Colors
+    &.facebook {
+      &:hover {
+        background-color: #1877f2;
+        color: white;
+        border-color: #1877f2;
+      }
+    }
+
+    &.twitter {
+      &:hover {
+        background-color: #1da1f2;
+        color: white;
+        border-color: #1da1f2;
+      }
+    }
+
+    &.linkedin {
+      &:hover {
+        background-color: #0a66c2;
+        color: white;
+        border-color: #0a66c2;
+      }
+    }
+
+    &.whatsapp {
+      &:hover {
+        background-color: #25d366;
+        color: white;
+        border-color: #25d366;
+      }
+    }
+  }
+
+  .social-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+}
+
+// Full Width Utility
+.full-width {
+  width: 100%;
+}
+
+// Accessibility
+@media (prefers-contrast: high) {
+  .share-preview {
+    border-left-width: 6px;
+  }
+
+  .share-option-button {
+    border-width: 2px;
+  }
+}
+
+// Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+  .share-option-button {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
