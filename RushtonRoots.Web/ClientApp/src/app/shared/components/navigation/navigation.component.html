@@ -1,27 +1,123 @@
-<nav class="navigation" [class.mobile]="isMobile">
+<nav class="navigation" [class.mobile]="isMobile" role="navigation" aria-label="Primary navigation">
   <!-- Desktop Navigation -->
   <div *ngIf="!isMobile" class="nav-list-horizontal">
-    <a 
-      *ngFor="let item of visibleItems"
-      (click)="navigateTo(item.url)"
-      class="nav-link"
-      [class.active]="isActive(item.url)"
-      [attr.aria-current]="isActive(item.url) ? 'page' : null">
-      <mat-icon *ngIf="item.icon" class="nav-icon">{{ item.icon }}</mat-icon>
-      <span class="nav-label">{{ item.label }}</span>
-    </a>
+    <ng-container *ngFor="let item of visibleItems; let i = index">
+      <!-- Menu item without children (direct link) -->
+      <a 
+        *ngIf="!item.children || item.children.length === 0"
+        (click)="navigateTo(item.url)"
+        class="nav-link"
+        [class.active]="isActive(item.url)"
+        [attr.aria-current]="isActive(item.url) ? 'page' : null"
+        [attr.aria-label]="item.label"
+        tabindex="0">
+        <mat-icon *ngIf="item.icon" class="nav-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+
+      <!-- Menu item with children (dropdown) -->
+      <div 
+        *ngIf="item.children && item.children.length > 0"
+        class="nav-dropdown"
+        [class.open]="isMenuOpen(i)">
+        <button 
+          class="nav-link nav-dropdown-toggle"
+          (click)="toggleMenu(i)"
+          (mouseenter)="!isMobile && toggleMenu(i)"
+          [attr.aria-expanded]="isMenuOpen(i)"
+          [attr.aria-haspopup]="true"
+          [attr.aria-label]="item.label + ' menu'"
+          tabindex="0">
+          <mat-icon *ngIf="item.icon" class="nav-icon">{{ item.icon }}</mat-icon>
+          <span class="nav-label">{{ item.label }}</span>
+          <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
+        </button>
+
+        <!-- Dropdown menu -->
+        <div 
+          class="nav-dropdown-menu"
+          [class.show]="isMenuOpen(i)"
+          (mouseleave)="!isMobile && closeMenu()"
+          role="menu"
+          [attr.aria-label]="item.label + ' submenu'">
+          <ng-container *ngFor="let child of item.children">
+            <!-- Divider -->
+            <div *ngIf="child.divider" class="nav-dropdown-divider" role="separator"></div>
+            
+            <!-- Regular menu item -->
+            <a 
+              *ngIf="!child.divider && isItemVisible(child)"
+              (click)="navigateTo(child.url); closeMenu()"
+              class="nav-dropdown-item"
+              [class.active]="isActive(child.url)"
+              [attr.aria-current]="isActive(child.url) ? 'page' : null"
+              role="menuitem"
+              tabindex="0">
+              <mat-icon *ngIf="child.icon" class="dropdown-item-icon">{{ child.icon }}</mat-icon>
+              <span class="dropdown-item-label">{{ child.label }}</span>
+            </a>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
   </div>
 
   <!-- Mobile Navigation -->
   <mat-nav-list *ngIf="isMobile" class="nav-list-vertical">
-    <a 
-      mat-list-item
-      *ngFor="let item of visibleItems"
-      (click)="navigateTo(item.url)"
-      [class.active]="isActive(item.url)"
-      [attr.aria-current]="isActive(item.url) ? 'page' : null">
-      <mat-icon matListItemIcon *ngIf="item.icon">{{ item.icon }}</mat-icon>
-      <span matListItemTitle>{{ item.label }}</span>
-    </a>
+    <ng-container *ngFor="let item of visibleItems; let i = index">
+      <!-- Menu item without children (direct link) -->
+      <a 
+        mat-list-item
+        *ngIf="!item.children || item.children.length === 0"
+        (click)="navigateTo(item.url)"
+        [class.active]="isActive(item.url)"
+        [attr.aria-current]="isActive(item.url) ? 'page' : null"
+        [attr.aria-label]="item.label"
+        tabindex="0">
+        <mat-icon matListItemIcon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+        <span matListItemTitle>{{ item.label }}</span>
+      </a>
+
+      <!-- Menu item with children (expandable) -->
+      <div *ngIf="item.children && item.children.length > 0" class="mobile-nav-group">
+        <a 
+          mat-list-item
+          (click)="toggleMenu(i)"
+          [class.expanded]="isMenuOpen(i)"
+          [attr.aria-expanded]="isMenuOpen(i)"
+          [attr.aria-label]="item.label + ' menu'"
+          tabindex="0">
+          <mat-icon matListItemIcon *ngIf="item.icon">{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+          <mat-icon matListItemMeta class="expand-icon">
+            {{ isMenuOpen(i) ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </a>
+
+        <!-- Expandable submenu -->
+        <div 
+          class="mobile-submenu"
+          [class.show]="isMenuOpen(i)"
+          [attr.aria-hidden]="!isMenuOpen(i)">
+          <ng-container *ngFor="let child of item.children">
+            <!-- Divider -->
+            <mat-divider *ngIf="child.divider"></mat-divider>
+            
+            <!-- Regular submenu item -->
+            <a 
+              mat-list-item
+              *ngIf="!child.divider && isItemVisible(child)"
+              (click)="navigateTo(child.url)"
+              [class.active]="isActive(child.url)"
+              [class.submenu-item]="true"
+              [attr.aria-current]="isActive(child.url) ? 'page' : null"
+              tabindex="0">
+              <mat-icon matListItemIcon *ngIf="child.icon">{{ child.icon }}</mat-icon>
+              <span matListItemTitle>{{ child.label }}</span>
+            </a>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
   </mat-nav-list>
 </nav>
