@@ -9,6 +9,15 @@ public class ParentChild : BaseEntity
     public int ChildPersonId { get; set; }
     public string RelationshipType { get; set; } = string.Empty; // e.g. 'Biological', 'Adopted', 'Step', 'Guardian'
     
+    // Soft delete support
+    public bool IsDeleted { get; set; } = false;
+    public DateTime? DeletedDateTime { get; set; }
+    
+    // Disputed relationship support
+    public bool IsDisputed { get; set; } = false;
+    public DateTime? DisputedDateTime { get; set; }
+    public string? DisputeReason { get; set; }
+    
     // Navigation properties
     public Person? ParentPerson { get; set; }
     public Person? ChildPerson { get; set; }

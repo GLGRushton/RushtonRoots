@@ -93,6 +93,9 @@ import { ParentChildDetailsComponent } from './parent-child/components/parent-ch
 import { FamilyTreeMiniComponent } from './parent-child/components/family-tree-mini/family-tree-mini.component';
 import { RelationshipValidationComponent } from './parent-child/components/relationship-validation/relationship-validation.component';
 import { RelationshipSuggestionsComponent } from './parent-child/components/relationship-suggestions/relationship-suggestions.component';
+
+// Import Phase 5.4 Parent-Child Delete Dialog component
+import { ParentChildDeleteDialogComponent } from './parent-child/components/parent-child-delete-dialog/parent-child-delete-dialog.component';
 import { BulkRelationshipImportComponent } from './parent-child/components/bulk-relationship-import/bulk-relationship-import.component';
 
 // Import Phase 6.1 Login & Registration components for Angular Elements registration
@@ -274,6 +277,9 @@ export class AppModule {
     safeDefine('app-family-tree-mini', FamilyTreeMiniComponent);
     safeDefine('app-relationship-validation', RelationshipValidationComponent);
     safeDefine('app-relationship-suggestions', RelationshipSuggestionsComponent);
+    
+    // Register Phase 5.4 Parent-Child Delete Dialog component as Angular Element
+    safeDefine('app-parent-child-delete-dialog', ParentChildDeleteDialogComponent);
     safeDefine('app-bulk-relationship-import', BulkRelationshipImportComponent);
 
     // Register Phase 6.1 Login & Registration components as Angular Elements

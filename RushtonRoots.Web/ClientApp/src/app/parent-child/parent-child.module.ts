@@ -25,6 +25,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
+import { MatRadioModule } from '@angular/material/radio';
 
 // Components - Phase 5.2
 import { ParentChildIndexComponent } from './components/parent-child-index/parent-child-index.component';
@@ -36,6 +37,9 @@ import { RelationshipValidationComponent } from './components/relationship-valid
 import { RelationshipSuggestionsComponent } from './components/relationship-suggestions/relationship-suggestions.component';
 import { BulkRelationshipImportComponent } from './components/bulk-relationship-import/bulk-relationship-import.component';
 
+// Components - Phase 5.4
+import { ParentChildDeleteDialogComponent } from './components/parent-child-delete-dialog/parent-child-delete-dialog.component';
+
 @NgModule({
   declarations: [
     // Phase 5.2
@@ -46,7 +50,9 @@ import { BulkRelationshipImportComponent } from './components/bulk-relationship-
     FamilyTreeMiniComponent,
     RelationshipValidationComponent,
     RelationshipSuggestionsComponent,
-    BulkRelationshipImportComponent
+    BulkRelationshipImportComponent,
+    // Phase 5.4
+    ParentChildDeleteDialogComponent
   ],
   imports: [
     CommonModule,
@@ -73,7 +79,8 @@ import { BulkRelationshipImportComponent } from './components/bulk-relationship-
     MatSlideToggleModule,
     MatButtonToggleModule,
     MatTabsModule,
-    MatListModule
+    MatListModule,
+    MatRadioModule
   ],
   exports: [
     // Phase 5.2
@@ -84,7 +91,9 @@ import { BulkRelationshipImportComponent } from './components/bulk-relationship-
     FamilyTreeMiniComponent,
     RelationshipValidationComponent,
     RelationshipSuggestionsComponent,
-    BulkRelationshipImportComponent
+    BulkRelationshipImportComponent,
+    // Phase 5.4
+    ParentChildDeleteDialogComponent
   ]
 })
 export class ParentChildModule { }

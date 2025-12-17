@@ -1,30 +1,141 @@
 @model RushtonRoots.Domain.UI.Models.ParentChildViewModel
 @{
     ViewData["Title"] = "Delete Relationship";
+    
+    // Calculate related data for the delete dialog
+    var relatedData = new {
+        lineageImpact = new {
+            ancestorsLost = 5, // TODO: Calculate from actual data
+            descendantsLost = 3, // TODO: Calculate from actual data
+            generationsAffected = 2 // TODO: Calculate from actual data
+        },
+        siblings = 2, // TODO: Calculate from actual ParentChild data
+        treeNodes = 8, // TODO: Calculate from family tree
+        evidence = 0, // TODO: Calculate from evidence data
+        photos = 1, // TODO: Calculate from photo tags
+        stories = 0 // TODO: Calculate from story data
+    };
 }
 
 <div class="container mt-4">
-    <h2>Delete Parent-Child Relationship</h2>
-    <hr />
+    <app-parent-child-delete-dialog
+        relationship-id="@Model.Id"
+        parent-id="@Model.ParentPersonId"
+        parent-name="@Model.ParentName"
+        parent-photo-url=""
+        parent-birth-date=""
+        parent-death-date=""
+        parent-is-deceased="false"
+        child-id="@Model.ChildPersonId"
+        child-name="@Model.ChildName"
+        child-photo-url=""
+        child-birth-date=""
+        child-death-date=""
+        child-is-deceased="false"
+        relationship-type="@Model.RelationshipType"
+        is-verified="false"
+        related-data='@Html.Raw(System.Text.Json.JsonSerializer.Serialize(relatedData))'
+        is-admin="@User.IsInRole("Admin")">
+    </app-parent-child-delete-dialog>
 
-    <div class="alert alert-warning">
-        <h4>Are you sure you want to delete this relationship?</h4>
-    </div>
+    <noscript>
+        <!-- Fallback content for non-JavaScript browsers -->
+        <div class="alert alert-warning">
+            <h4>JavaScript Required</h4>
+            <p>This page requires JavaScript to function properly. Please enable JavaScript in your browser.</p>
+        </div>
+        
+        <h2>Delete Parent-Child Relationship</h2>
+        <hr />
 
-    <dl class="row">
-        <dt class="col-sm-3">Parent</dt>
-        <dd class="col-sm-9">@Model.ParentName</dd>
+        <div class="alert alert-warning">
+            <h4>Are you sure you want to delete this relationship?</h4>
+        </div>
 
-        <dt class="col-sm-3">Child</dt>
-        <dd class="col-sm-9">@Model.ChildName</dd>
+        <dl class="row">
+            <dt class="col-sm-3">Parent</dt>
+            <dd class="col-sm-9">@Model.ParentName</dd>
 
-        <dt class="col-sm-3">Relationship Type</dt>
-        <dd class="col-sm-9">@Model.RelationshipType</dd>
-    </dl>
+            <dt class="col-sm-3">Child</dt>
+            <dd class="col-sm-9">@Model.ChildName</dd>
 
-    <form asp-action="Delete" method="post">
-        <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </form>
+            <dt class="col-sm-3">Relationship Type</dt>
+            <dd class="col-sm-9">@Model.RelationshipType</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </form>
+    </noscript>
 </div>
+
+@section Scripts {
+    <script>
+        (function() {
+            // Get the Angular component element
+            const deleteDialog = document.querySelector('app-parent-child-delete-dialog');
+            
+            if (!deleteDialog) {
+                console.error('Delete dialog element not found');
+                return;
+            }
+
+            // Handle delete confirmed event
+            deleteDialog.addEventListener('deleteConfirmed', function(event) {
+                const options = event.detail;
+                console.log('Delete confirmed with options:', options);
+                
+                // Get anti-forgery token
+                const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                
+                // Submit delete request to backend
+                const formData = new FormData();
+                formData.append('id', '@Model.Id');
+                formData.append('deleteType', options.deleteType);
+                
+                if (options.deleteType === 'disputed' && options.disputeReason) {
+                    formData.append('disputeReason', options.disputeReason);
+                }
+                
+                if (antiForgeryToken) {
+                    formData.append('__RequestVerificationToken', antiForgeryToken);
+                }
+                
+                // Use Fetch API to submit
+                fetch('@Url.Action("Delete", "ParentChild")', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'RequestVerificationToken': antiForgeryToken || ''
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to index on success
+                        window.location.href = '@Url.Action("Index", "ParentChild")';
+                    } else {
+                        console.error('Delete failed:', response.statusText);
+                        alert('Failed to delete relationship. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    alert('An error occurred while deleting the relationship.');
+                });
+            });
+
+            // Handle delete cancelled event
+            deleteDialog.addEventListener('deleteCancelled', function() {
+                console.log('Delete cancelled');
+                // Redirect back to index
+                window.location.href = '@Url.Action("Index", "ParentChild")';
+            });
+        })();
+    </script>
+    
+    <!-- Anti-forgery token for AJAX requests -->
+    @Html.AntiForgeryToken()
+}
+
