@@ -329,6 +329,8 @@ export class AppModule {
     safeDefine('app-story-details', StoryDetailsComponent);
     safeDefine('app-story-index', StoryIndexComponent);
     safeDefine('app-tradition-card', TraditionCardComponent);
+    safeDefine('app-tradition-details', TraditionDetailsComponent);
+    safeDefine('app-tradition-index', TraditionIndexComponent);
     safeDefine('app-content-grid', ContentGridComponent);
 
     // Register Phase 8.1 Media Gallery Enhancements components as Angular Elements

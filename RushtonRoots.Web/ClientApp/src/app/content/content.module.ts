@@ -25,6 +25,8 @@ import { StoryCardComponent } from './components/story-card/story-card.component
 import { StoryDetailsComponent } from './components/story-details/story-details.component';
 import { StoryIndexComponent } from './components/story-index/story-index.component';
 import { TraditionCardComponent } from './components/tradition-card/tradition-card.component';
+import { TraditionDetailsComponent } from './components/tradition-details/tradition-details.component';
+import { TraditionIndexComponent } from './components/tradition-index/tradition-index.component';
 import { ContentGridComponent } from './components/content-grid/content-grid.component';
 
 // Shared Module for BreadcrumbComponent
@@ -44,6 +46,8 @@ import { SharedModule } from '../shared/shared.module';
     StoryDetailsComponent,
     StoryIndexComponent,
     TraditionCardComponent,
+    TraditionDetailsComponent,
+    TraditionIndexComponent,
     ContentGridComponent
   ],
   imports: [
@@ -73,6 +77,8 @@ import { SharedModule } from '../shared/shared.module';
     StoryDetailsComponent,
     StoryIndexComponent,
     TraditionCardComponent,
+    TraditionDetailsComponent,
+    TraditionIndexComponent,
     ContentGridComponent
   ]
 })
