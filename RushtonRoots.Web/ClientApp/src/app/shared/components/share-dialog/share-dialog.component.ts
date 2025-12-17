@@ -46,6 +46,7 @@ export interface ShareDialogData {
  */
 @Component({
   selector: 'app-share-dialog',
+  standalone: false,
   templateUrl: './share-dialog.component.html',
   styleUrls: ['./share-dialog.component.scss']
 })

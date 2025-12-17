@@ -136,7 +136,7 @@
                 <div class="member-avatar">
                   <img *ngIf="member.photoUrl" [src]="member.photoUrl" [alt]="member.fullName">
                   <div *ngIf="!member.photoUrl" class="avatar-placeholder">
-                    {{ member.fullName.split(' ')[0][0] }}{{ member.fullName.split(' ')[1]?.[0] || '' }}
+                    {{ member.fullName.split(' ')[0][0] }}{{ member.fullName.split(' ')[1] && member.fullName.split(' ')[1][0] || '' }}
                   </div>
                 </div>
                 <div class="member-info">
