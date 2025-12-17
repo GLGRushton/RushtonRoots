@@ -1,0 +1,90 @@
+<div class="share-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>share</mat-icon>
+    Share
+  </h2>
+
+  <mat-dialog-content>
+    <!-- Title and Text Preview -->
+    <div class="share-preview">
+      <h3 class="preview-title">{{ data.title }}</h3>
+      <p class="preview-text">{{ data.text }}</p>
+    </div>
+
+    <!-- Link Display -->
+    <div class="link-container">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Share Link</mat-label>
+        <input matInput [value]="data.url" readonly>
+        <button mat-icon-button matSuffix *ngIf="data.showCopyButton" 
+                (click)="copyLink()" 
+                [matTooltip]="linkCopied ? 'Copied!' : 'Copy link'">
+          <mat-icon [color]="linkCopied ? 'accent' : 'primary'">
+            {{ linkCopied ? 'check' : 'content_copy' }}
+          </mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <!-- Native Share Button (Mobile) -->
+    <div class="share-actions" *ngIf="isNativeShareSupported">
+      <button mat-raised-button color="primary" class="share-button full-width"
+              (click)="shareNative()">
+        <mat-icon>share</mat-icon>
+        Share
+      </button>
+    </div>
+
+    <!-- Share Options Grid -->
+    <div class="share-options">
+      <h3 class="options-title">Share via:</h3>
+      
+      <!-- Copy Link Button -->
+      <button mat-stroked-button *ngIf="data.showCopyButton"
+              class="share-option-button"
+              (click)="copyLink()">
+        <mat-icon>link</mat-icon>
+        <span>Copy Link</span>
+      </button>
+
+      <!-- Email Button -->
+      <button mat-stroked-button *ngIf="data.showEmailButton"
+              class="share-option-button"
+              (click)="shareEmail()">
+        <mat-icon>email</mat-icon>
+        <span>Email</span>
+      </button>
+
+      <!-- Social Media Buttons -->
+      <div class="social-buttons" *ngIf="data.showSocialButtons">
+        <button mat-stroked-button class="share-option-button facebook"
+                (click)="shareFacebook()">
+          <mat-icon svgIcon="facebook">public</mat-icon>
+          <span>Facebook</span>
+        </button>
+
+        <button mat-stroked-button class="share-option-button twitter"
+                (click)="shareTwitter()">
+          <mat-icon>chat</mat-icon>
+          <span>Twitter</span>
+        </button>
+
+        <button mat-stroked-button class="share-option-button linkedin"
+                (click)="shareLinkedIn()">
+          <mat-icon>work</mat-icon>
+          <span>LinkedIn</span>
+        </button>
+
+        <button mat-stroked-button class="share-option-button whatsapp"
+                (click)="shareWhatsApp()">
+          <mat-icon>chat_bubble</mat-icon>
+          <span>WhatsApp</span>
+        </button>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Close</button>
+  </mat-dialog-actions>
+</div>
