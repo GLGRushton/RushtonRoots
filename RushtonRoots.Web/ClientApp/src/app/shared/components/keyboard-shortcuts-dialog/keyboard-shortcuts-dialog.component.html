@@ -1,0 +1,43 @@
+<div class="keyboard-shortcuts-dialog">
+  <h2 mat-dialog-title>
+    <mat-icon>keyboard</mat-icon>
+    Keyboard Shortcuts
+  </h2>
+
+  <mat-dialog-content>
+    <p class="dialog-subtitle">
+      Use these keyboard shortcuts to navigate faster
+    </p>
+
+    <div class="shortcuts-container">
+      <div 
+        *ngFor="let group of shortcutGroups" 
+        class="shortcut-group">
+        <h3 class="group-title">{{ group.title }}</h3>
+        
+        <div class="shortcuts-list">
+          <div 
+            *ngFor="let shortcut of group.shortcuts" 
+            class="shortcut-item">
+            <span class="shortcut-description">{{ shortcut.description }}</span>
+            <kbd class="shortcut-keys">{{ formatShortcut(shortcut) }}</kbd>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-note">
+      <mat-icon>info</mat-icon>
+      <span>Press <kbd>?</kbd> (Shift + /) to show this dialog at any time</span>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button 
+      mat-button 
+      color="primary"
+      (click)="close()">
+      Close
+    </button>
+  </mat-dialog-actions>
+</div>

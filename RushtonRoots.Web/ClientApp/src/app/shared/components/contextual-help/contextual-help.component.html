@@ -1,0 +1,21 @@
+<div class="contextual-help" *ngIf="helpInfo">
+  <button
+    mat-button
+    *ngIf="!iconOnly"
+    class="help-button"
+    [attr.aria-label]="'Help: ' + helpInfo.title"
+    (click)="navigateToHelp()">
+    <mat-icon *ngIf="showIcon">help_outline</mat-icon>
+    <span>{{ helpInfo.title }}</span>
+  </button>
+
+  <button
+    mat-icon-button
+    *ngIf="iconOnly"
+    class="help-icon-button"
+    [attr.aria-label]="'Help: ' + helpInfo.title"
+    [matTooltip]="helpInfo.title"
+    (click)="navigateToHelp()">
+    <mat-icon>help_outline</mat-icon>
+  </button>
+</div>
