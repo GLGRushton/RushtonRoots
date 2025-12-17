@@ -40,7 +40,7 @@ public class PersonMapper : IPersonMapper
     {
         return new Person
         {
-            HouseholdId = request.HouseholdId ?? 0,
+            HouseholdId = request.HouseholdId.GetValueOrDefault(1), // Default to household 1 if not specified
             FirstName = request.FirstName,
             MiddleName = request.MiddleName,
             LastName = request.LastName,

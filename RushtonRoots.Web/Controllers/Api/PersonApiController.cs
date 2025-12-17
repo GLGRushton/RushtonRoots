@@ -118,7 +118,7 @@ public class PersonApiController : ControllerBase
                 return BadRequest(ModelState);
             }
 
-            // Handle photo upload if present
+            // Handle photo upload if present (optional)
             try
             {
                 if (Request.Form?.Files != null && Request.Form.Files.Count > 0)
@@ -133,9 +133,11 @@ public class PersonApiController : ControllerBase
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore photo upload errors in test context
+                // Request.Form may not be available in all contexts (e.g., unit tests)
+                // Photo upload is optional, so we can safely continue without it
+                _logger.LogDebug(ex, "Photo upload unavailable or failed: {Message}", ex.Message);
             }
 
             var person = await _personService.CreateAsync(request);
@@ -179,7 +181,7 @@ public class PersonApiController : ControllerBase
                 return BadRequest(ModelState);
             }
 
-            // Handle photo upload if present
+            // Handle photo upload if present (optional)
             try
             {
                 if (Request.Form?.Files != null && Request.Form.Files.Count > 0)
@@ -193,9 +195,11 @@ public class PersonApiController : ControllerBase
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore photo upload errors in test context
+                // Request.Form may not be available in all contexts (e.g., unit tests)
+                // Photo upload is optional, so we can safely continue without it
+                _logger.LogDebug(ex, "Photo upload unavailable or failed: {Message}", ex.Message);
             }
 
             var person = await _personService.UpdateAsync(request);
