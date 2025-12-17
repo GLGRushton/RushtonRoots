@@ -1,0 +1,38 @@
+<div class="quick-actions-container" *ngIf="visible && visibleActions.length > 0">
+  <!-- Backdrop -->
+  <div 
+    class="fab-backdrop" 
+    *ngIf="isExpanded"
+    (click)="onBackdropClick()"
+    [@fadeInOut]>
+  </div>
+
+  <!-- Action buttons (expanded state) -->
+  <div class="fab-actions" *ngIf="isExpanded" [@slideInOut]>
+    <button
+      *ngFor="let action of visibleActions; let i = index"
+      mat-mini-fab
+      [color]="action.color || 'primary'"
+      [attr.aria-label]="action.label"
+      [style.animation-delay.ms]="i * 50"
+      class="fab-action-button"
+      (click)="onActionClick(action.action)">
+      <mat-icon>{{ action.icon }}</mat-icon>
+      <span class="fab-action-label">{{ action.label }}</span>
+    </button>
+  </div>
+
+  <!-- Main FAB button -->
+  <button
+    mat-fab
+    color="primary"
+    class="fab-main-button"
+    [class.fab-expanded]="isExpanded"
+    [attr.aria-label]="isExpanded ? 'Close quick actions' : 'Open quick actions'"
+    [attr.aria-expanded]="isExpanded"
+    (click)="toggleExpand()">
+    <mat-icon [@rotate]="isExpanded ? 'rotated' : 'default'">
+      {{ isExpanded ? 'close' : 'add' }}
+    </mat-icon>
+  </button>
+</div>

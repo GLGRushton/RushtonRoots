@@ -58,9 +58,31 @@ export class KeyboardNavigationService {
    * Register default application shortcuts
    */
   private registerDefaultShortcuts(): void {
+    // Navigation shortcuts (Phase 12.3)
+    this.registerShortcut('nav-home', {
+      key: 'h',
+      altKey: true,
+      description: 'Go to Home',
+      action: () => this.navigateToHome()
+    });
+
+    this.registerShortcut('nav-people', {
+      key: 'p',
+      altKey: true,
+      description: 'Go to People',
+      action: () => this.navigateToPeople()
+    });
+
+    this.registerShortcut('nav-search', {
+      key: 's',
+      altKey: true,
+      description: 'Go to Search',
+      action: () => this.navigateToSearch()
+    });
+
     // Skip to main content
     this.registerShortcut('skip-main', {
-      key: 's',
+      key: 'm',
       altKey: true,
       description: 'Skip to main content',
       action: () => this.skipToMain()
@@ -168,6 +190,27 @@ export class KeyboardNavigationService {
         (firstLink as HTMLElement).focus();
       }
     }
+  }
+
+  /**
+   * Navigate to Home page (Phase 12.3)
+   */
+  private navigateToHome(): void {
+    window.location.href = '/';
+  }
+
+  /**
+   * Navigate to People page (Phase 12.3)
+   */
+  private navigateToPeople(): void {
+    window.location.href = '/Person';
+  }
+
+  /**
+   * Navigate to Search page (Phase 12.3)
+   */
+  private navigateToSearch(): void {
+    window.location.href = '/Person?search=true';
   }
 
   /**

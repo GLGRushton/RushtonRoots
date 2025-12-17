@@ -1,0 +1,67 @@
+@use '../../../../styles/variables' as *;
+
+.back-to-top-button {
+  position: fixed;
+  bottom: $spacing-lg;
+  left: $spacing-lg;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  &:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+
+  mat-icon {
+    font-size: 24px;
+  }
+}
+
+// Mobile responsive
+@media (max-width: 600px) {
+  .back-to-top-button {
+    bottom: $spacing-md;
+    left: $spacing-md;
+    width: 48px;
+    height: 48px;
+
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+// Adjust position when quick actions are present
+// Quick actions are on the right, back to top on the left, so no conflict
+// But on mobile, we may need to adjust
+
+@media (max-width: 600px) {
+  // If both FAB and back-to-top are present, stack them vertically on mobile
+  .back-to-top-button {
+    bottom: 80px; // Offset for quick actions FAB
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .back-to-top-button {
+    border: 2px solid currentColor;
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top-button {
+    transition: none !important;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}

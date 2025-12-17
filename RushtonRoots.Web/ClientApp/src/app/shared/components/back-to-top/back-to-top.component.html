@@ -1,0 +1,10 @@
+<button
+  *ngIf="isVisible"
+  mat-fab
+  color="accent"
+  class="back-to-top-button"
+  [attr.aria-label]="'Back to top'"
+  [@fadeSlideIn]
+  (click)="scrollToTop()">
+  <mat-icon>arrow_upward</mat-icon>
+</button>

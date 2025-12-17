@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Component imports
 import { PersonCardComponent } from './components/person-card/person-card.component';
@@ -17,6 +18,11 @@ import { UserMenuComponent } from './components/user-menu/user-menu.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { PageLayoutComponent } from './components/page-layout/page-layout.component';
 import { LayoutWrapperComponent } from './components/layout-wrapper/layout-wrapper.component';
+// Phase 12.3 Components
+import { QuickActionsComponent } from './components/quick-actions/quick-actions.component';
+import { BackToTopComponent } from './components/back-to-top/back-to-top.component';
+import { ContextualHelpComponent } from './components/contextual-help/contextual-help.component';
+import { KeyboardShortcutsDialogComponent } from './components/keyboard-shortcuts-dialog/keyboard-shortcuts-dialog.component';
 
 // Angular Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -107,7 +113,12 @@ const materialModules = [
     UserMenuComponent,
     FooterComponent,
     PageLayoutComponent,
-    LayoutWrapperComponent
+    LayoutWrapperComponent,
+    // Phase 12.3 Components
+    QuickActionsComponent,
+    BackToTopComponent,
+    ContextualHelpComponent,
+    KeyboardShortcutsDialogComponent
   ],
   imports: [
     CommonModule,
@@ -133,7 +144,12 @@ const materialModules = [
     UserMenuComponent,
     FooterComponent,
     PageLayoutComponent,
-    LayoutWrapperComponent
+    LayoutWrapperComponent,
+    // Phase 12.3 Components
+    QuickActionsComponent,
+    BackToTopComponent,
+    ContextualHelpComponent,
+    KeyboardShortcutsDialogComponent
   ]
 })
 export class SharedModule { }

@@ -1,0 +1,142 @@
+@use '../../../../styles/variables' as *;
+
+.quick-actions-container {
+  position: fixed;
+  bottom: $spacing-lg;
+  right: $spacing-lg;
+  z-index: 1000;
+
+  .fab-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+  }
+
+  .fab-actions {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    z-index: 1001;
+
+    .fab-action-button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      animation: slideIn 0.3s ease-out;
+
+      mat-icon {
+        margin-right: 0;
+      }
+
+      .fab-action-label {
+        position: absolute;
+        right: 56px;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius-sm;
+        white-space: nowrap;
+        font-size: 0.875rem;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+      }
+
+      &:hover .fab-action-label,
+      &:focus .fab-action-label {
+        opacity: 1;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $primary;
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  .fab-main-button {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    &.fab-expanded {
+      transform: scale(1.1);
+    }
+
+    &:focus-visible {
+      outline: 2px solid white;
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Mobile responsive
+@media (max-width: 600px) {
+  .quick-actions-container {
+    bottom: $spacing-md;
+    right: $spacing-md;
+
+    .fab-main-button {
+      width: 48px;
+      height: 48px;
+    }
+
+    .fab-actions {
+      bottom: 64px;
+
+      .fab-action-button {
+        width: 40px;
+        height: 40px;
+
+        .fab-action-label {
+          right: 48px;
+          font-size: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .quick-actions-container {
+    .fab-main-button,
+    .fab-actions .fab-action-button {
+      border: 2px solid currentColor;
+    }
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .fab-action-button {
+    animation: none !important;
+  }
+
+  .fab-main-button {
+    transition: none !important;
+  }
+}

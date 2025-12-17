@@ -1,0 +1,152 @@
+@use '../../../../styles/variables' as *;
+
+.keyboard-shortcuts-dialog {
+  min-width: 500px;
+  max-width: 700px;
+
+  h2[mat-dialog-title] {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-md;
+
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
+  .dialog-subtitle {
+    color: $text-secondary;
+    margin-bottom: $spacing-lg;
+  }
+
+  .shortcuts-container {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+
+    .shortcut-group {
+      .group-title {
+        font-size: 1rem;
+        font-weight: $font-weight-medium;
+        color: $primary;
+        margin-bottom: $spacing-sm;
+        padding-bottom: $spacing-xs;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+      }
+
+      .shortcuts-list {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-sm;
+
+        .shortcut-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: $spacing-sm;
+          border-radius: $border-radius-sm;
+          transition: background-color 0.2s ease;
+
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+          }
+
+          .shortcut-description {
+            font-size: 0.875rem;
+            color: $text-primary;
+          }
+
+          .shortcut-keys {
+            display: inline-block;
+            padding: $spacing-xs $spacing-sm;
+            background-color: $surface;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: $border-radius-sm;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            font-weight: $font-weight-medium;
+            color: $text-primary;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+          }
+        }
+      }
+    }
+  }
+
+  .help-note {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-top: $spacing-lg;
+    padding: $spacing-sm;
+    background-color: rgba(33, 150, 243, 0.1);
+    border-left: 3px solid #2196F3;
+    border-radius: $border-radius-sm;
+    font-size: 0.875rem;
+    color: $text-secondary;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: #2196F3;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      background-color: white;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      border-radius: $border-radius-sm;
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      font-weight: $font-weight-medium;
+    }
+  }
+}
+
+// Mobile responsive
+@media (max-width: 600px) {
+  .keyboard-shortcuts-dialog {
+    min-width: auto;
+    max-width: 100%;
+
+    .shortcuts-container {
+      .shortcut-group {
+        .shortcuts-list {
+          .shortcut-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: $spacing-xs;
+
+            .shortcut-keys {
+              align-self: flex-start;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .keyboard-shortcuts-dialog {
+    .shortcuts-container {
+      .shortcut-group {
+        .shortcuts-list {
+          .shortcut-item {
+            border: 1px solid currentColor;
+          }
+        }
+      }
+    }
+
+    .help-note {
+      border-width: 2px;
+    }
+  }
+}
