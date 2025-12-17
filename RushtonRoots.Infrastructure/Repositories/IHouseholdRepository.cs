@@ -14,4 +14,7 @@ public interface IHouseholdRepository
     Task DeleteAsync(int id);
     Task<bool> ExistsAsync(int id);
     Task<int> GetMemberCountAsync(int householdId);
+    Task<IEnumerable<Person>> GetMembersAsync(int householdId);
+    Task AddMemberAsync(int householdId, int personId);
+    Task RemoveMemberAsync(int householdId, int personId);
 }

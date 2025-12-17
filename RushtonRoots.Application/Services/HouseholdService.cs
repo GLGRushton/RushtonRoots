@@ -98,4 +98,114 @@ public class HouseholdService : IHouseholdService
 
         await _householdRepository.DeleteAsync(id);
     }
+
+    public async Task<IEnumerable<PersonViewModel>> GetMembersAsync(int householdId)
+    {
+        var exists = await _householdRepository.ExistsAsync(householdId);
+        if (!exists)
+        {
+            throw new NotFoundException($"Household with ID {householdId} not found.");
+        }
+
+        var members = await _householdRepository.GetMembersAsync(householdId);
+        // We don't have a person mapper here, so we'll return a simple mapping
+        // In a real implementation, you'd inject IPersonMapper and use it
+        return members.Select(m => new PersonViewModel
+        {
+            Id = m.Id,
+            FirstName = m.FirstName,
+            LastName = m.LastName,
+            MiddleName = m.MiddleName,
+            Suffix = m.Suffix,
+            Gender = m.Gender,
+            DateOfBirth = m.DateOfBirth,
+            PlaceOfBirth = m.PlaceOfBirth,
+            DateOfDeath = m.DateOfDeath,
+            PlaceOfDeath = m.PlaceOfDeath,
+            IsDeceased = m.IsDeceased,
+            Biography = m.Biography,
+            Occupation = m.Occupation,
+            Education = m.Education,
+            Notes = m.Notes,
+            PhotoUrl = m.PhotoUrl,
+            HouseholdId = m.HouseholdId,
+            CreatedDateTime = m.CreatedDateTime,
+            UpdatedDateTime = m.UpdatedDateTime
+        });
+    }
+
+    public async Task AddMemberAsync(AddHouseholdMemberRequest request)
+    {
+        // Basic validation
+        if (request.HouseholdId <= 0)
+        {
+            throw new ValidationException("Invalid household ID.");
+        }
+
+        if (request.PersonId <= 0)
+        {
+            throw new ValidationException("Invalid person ID.");
+        }
+
+        try
+        {
+            await _householdRepository.AddMemberAsync(request.HouseholdId, request.PersonId);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            throw new NotFoundException(ex.Message);
+        }
+    }
+
+    public async Task RemoveMemberAsync(int householdId, int personId)
+    {
+        if (householdId <= 0)
+        {
+            throw new ValidationException("Invalid household ID.");
+        }
+
+        if (personId <= 0)
+        {
+            throw new ValidationException("Invalid person ID.");
+        }
+
+        try
+        {
+            await _householdRepository.RemoveMemberAsync(householdId, personId);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            throw new NotFoundException(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new ValidationException(ex.Message);
+        }
+    }
+
+    public async Task<HouseholdViewModel> UpdateSettingsAsync(UpdateHouseholdSettingsRequest request)
+    {
+        var household = await _householdRepository.GetByIdAsync(request.Id);
+        if (household == null)
+        {
+            throw new NotFoundException($"Household with ID {request.Id} not found.");
+        }
+
+        household.IsArchived = request.IsArchived;
+        if (request.IsArchived && household.ArchivedDateTime == null)
+        {
+            household.ArchivedDateTime = DateTime.UtcNow;
+        }
+        else if (!request.IsArchived)
+        {
+            household.ArchivedDateTime = null;
+        }
+
+        var updatedHousehold = await _householdRepository.UpdateAsync(household);
+
+        // Reload to get navigation properties
+        var reloadedHousehold = await _householdRepository.GetByIdAsync(updatedHousehold.Id);
+        var memberCount = await _householdRepository.GetMemberCountAsync(updatedHousehold.Id);
+        return _householdMapper.MapToViewModel(reloadedHousehold!, memberCount);
+    }
 }
