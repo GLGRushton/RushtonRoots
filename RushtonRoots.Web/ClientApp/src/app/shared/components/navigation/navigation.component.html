@@ -26,20 +26,19 @@
           (mouseenter)="!isMobile && toggleMenu(i)"
           [attr.aria-expanded]="isMenuOpen(i)"
           [attr.aria-haspopup]="true"
-          [attr.aria-label]="item.label + ' menu'"
+          [attr.aria-label]="(item.label || 'Menu') + ' menu'"
           tabindex="0">
           <mat-icon *ngIf="item.icon" class="nav-icon">{{ item.icon }}</mat-icon>
           <span class="nav-label">{{ item.label }}</span>
           <mat-icon class="dropdown-arrow">arrow_drop_down</mat-icon>
         </button>
 
-        <!-- Dropdown menu -->
         <div 
           class="nav-dropdown-menu"
           [class.show]="isMenuOpen(i)"
           (mouseleave)="!isMobile && closeMenu()"
           role="menu"
-          [attr.aria-label]="item.label + ' submenu'">
+          [attr.aria-label]="(item.label || 'Menu') + ' submenu'">
           <ng-container *ngFor="let child of item.children">
             <!-- Divider -->
             <div *ngIf="child.divider" class="nav-dropdown-divider" role="separator"></div>
@@ -85,7 +84,7 @@
           (click)="toggleMenu(i)"
           [class.expanded]="isMenuOpen(i)"
           [attr.aria-expanded]="isMenuOpen(i)"
-          [attr.aria-label]="item.label + ' menu'"
+          [attr.aria-label]="(item.label || 'Menu') + ' menu'"
           tabindex="0">
           <mat-icon matListItemIcon *ngIf="item.icon">{{ item.icon }}</mat-icon>
           <span matListItemTitle>{{ item.label }}</span>

@@ -1,7 +1,7 @@
 import { Component, Input, HostListener } from '@angular/core';
 
 export interface NavigationItem {
-  label: string;
+  label?: string;
   url?: string;
   icon?: string;
   requireAuth?: boolean;
