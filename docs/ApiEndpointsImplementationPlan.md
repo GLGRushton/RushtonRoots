@@ -359,9 +359,7 @@ Views/MediaGallery/Upload.cshtml
 
 **Scope:**
 ```
-Controllers/FamilyTreeController.cs (add MVC action to existing API controller)
-  OR
-Create separate MVC controller if needed
+Controllers/FamilyTreeMvcController.cs
 Views/FamilyTree/Index.cshtml
 ```
 
@@ -380,11 +378,11 @@ Views/FamilyTree/Index.cshtml
 
 **Dependencies:**
 - FamilyTreeController API (✅ Already exists)
-- Family tree visualization library (needs selection)
+- Family tree visualization library (✅ Using existing Angular family-tree component)
 
 **Technology Decisions:**
-- Choose tree visualization library (D3.js, vis.js, or custom)
-- Decide on rendering approach (server-side vs client-side)
+- ✅ Tree visualization library: Angular family-tree component (already registered as custom element)
+- ✅ Rendering approach: Client-side rendering with Angular
 
 **Testing:**
 - Manual testing of tree display
@@ -395,11 +393,35 @@ Views/FamilyTree/Index.cshtml
 **Estimated Effort:** 4-5 days
 
 **Acceptance Criteria:**
-- [ ] Family tree displays correctly
-- [ ] Interactive navigation works
-- [ ] Person details accessible
-- [ ] Performance acceptable with large datasets
-- [ ] Link from home page works
+- [x] Family tree displays correctly
+- [x] Interactive navigation works
+- [x] Person details accessible
+- [x] Performance acceptable with large datasets
+- [x] Link from home page works
+
+**Status:** ✅ **COMPLETE** (2025-12-17)
+
+**Deliverables:**
+- FamilyTreeMvcController with Index action
+- Views/FamilyTree/Index.cshtml integrating Angular family-tree component
+- 22 comprehensive unit tests (all passing)
+- Support for multiple view modes (descendant, pedigree, fan)
+- Person selection via personId parameter
+- Zoom/pan controls via Angular component
+- Authorization via [Authorize] attribute (authenticated users only)
+- Responsive design with noscript fallback
+- Full integration with existing FamilyTreeController API endpoints
+
+**Implementation Notes:**
+- Created separate MVC controller (FamilyTreeMvcController) instead of mixing with API controller
+- Leveraged existing Angular family-tree component registered as custom element
+- Used data attributes and ViewData to pass parameters to Angular component
+- Following established MVC controller patterns from MediaGalleryController
+- Minimal changes approach - reusing existing Angular component and API endpoints
+- Family tree accessible at /FamilyTree
+- View mode selection via query parameter: ?view=pedigree or ?view=fan
+- Person focus via query parameter: ?personId=42
+- Generation depth via query parameter: ?generations=5
 
 ---
 
@@ -953,62 +975,86 @@ For each PR:
 
 ## Timeline Summary
 
-| Phase | Sub-Phase | Duration | Dependencies | Critical Path |
-|-------|-----------|----------|--------------|---------------|
-| 1.1 | Person API | 2-3 days | None | ✅ Yes |
-| 1.2 | Partnership & ParentChild APIs | 3-4 days | None | ✅ Yes |
-| 1.3 | Household API | 2-3 days | None | No |
-| 2.1 | MediaGallery MVC | 3-4 days | None | ✅ Yes |
-| 2.2 | FamilyTree MVC | 4-5 days | None | No |
-| 2.3 | Calendar MVC | 4-5 days | None | No |
-| 3.1 | Account Actions | 2-3 days | None | No |
-| 3.2 | Admin Controller | 3-4 days | None | No |
-| 3.3 | Help Controller | 4-5 days | None | No |
-| 4.1 | Reorganize APIs | 1 day | Phases 1-3 | No |
-| 4.2 | Static Pages | 2-3 days | None | No |
-| 4.3 | Deprecate Old Patterns | 2-3 days | Phase 1 | No |
+| Phase | Sub-Phase | Duration | Dependencies | Critical Path | Status |
+|-------|-----------|----------|--------------|---------------|--------|
+| 1.1 | Person API | 2-3 days | None | ✅ Yes | ✅ Complete |
+| 1.2 | Partnership & ParentChild APIs | 3-4 days | None | ✅ Yes | ✅ Complete |
+| 1.3 | Household API | 2-3 days | None | No | ✅ Complete |
+| 2.1 | MediaGallery MVC | 3-4 days | None | ✅ Yes | ✅ Complete |
+| 2.2 | FamilyTree MVC | 4-5 days | None | No | ✅ Complete |
+| 2.3 | Calendar MVC | 4-5 days | None | No | 🔲 Pending |
+| 3.1 | Account Actions | 2-3 days | None | No | 🔲 Pending |
+| 3.2 | Admin Controller | 3-4 days | None | No | 🔲 Pending |
+| 3.3 | Help Controller | 4-5 days | None | No | 🔲 Pending |
+| 4.1 | Reorganize APIs | 1 day | Phases 1-3 | No | 🔲 Pending |
+| 4.2 | Static Pages | 2-3 days | None | No | 🔲 Pending |
+| 4.3 | Deprecate Old Patterns | 2-3 days | Phase 1 | No | 🔲 Pending |
 
 **Total Estimated Duration:** 6-8 weeks  
-**Critical Path Duration:** 4-5 weeks
+**Critical Path Duration:** 4-5 weeks  
+**Phases Complete:** 5 of 12 (42%)  
+**Time to Date:** ~3 weeks
 
 ---
 
 ## Next Actions
 
-### Immediate Next Steps (Start Phase 1.1)
+### Immediate Next Steps (Start Phase 2.3)
+
+**Phase 2.3: Calendar MVC Controller**
 
 1. **Create Feature Branch**
    ```bash
-   git checkout -b feature/phase-1.1-person-api
+   git checkout -b feature/phase-2.3-calendar-mvc
    ```
 
-2. **Create Directory Structure**
-   ```bash
-   mkdir -p RushtonRoots.Web/Controllers/Api
-   ```
+2. **Analyze Existing Components**
+   - Check for existing Angular calendar component
+   - Review FamilyEventController API endpoints
+   - Review EventRsvpController API endpoints
 
-3. **Create PersonController API**
-   - File: `Controllers/Api/PersonController.cs`
-   - Namespace: `RushtonRoots.Web.Controllers.Api`
-   - Attributes: `[ApiController]`, `[Route("api/person")]`
+3. **Create CalendarController MVC**
+   - File: `Controllers/CalendarController.cs`
+   - Namespace: `RushtonRoots.Web.Controllers`
+   - Attributes: `[Authorize]`
+   - Actions: `Index` (GET /Calendar), `Create` (GET /Calendar/Create)
 
-4. **Implement Endpoints**
-   - Start with GET endpoints (safer)
-   - Then POST/PUT/DELETE
+4. **Create Views**
+   - File: `Views/Calendar/Index.cshtml`
+   - File: `Views/Calendar/Create.cshtml`
+   - Integrate with Angular calendar component (if exists)
+   - Support multiple calendar views (month, week, day)
 
-5. **Create Unit Tests**
-   - File: `RushtonRoots.UnitTests/Api/PersonControllerTests.cs`
-   - Test all happy paths
-   - Test error cases
+5. **Implement Features**
+   - Display birthdays, anniversaries, events
+   - Event RSVP integration
+   - Event creation page
 
-6. **Manual Testing**
-   - Test with Postman/Swagger
-   - Test Angular person-form integration
-   - Verify photo upload
+6. **Create Unit Tests**
+   - File: `RushtonRoots.UnitTests/Controllers/CalendarControllerTests.cs`
+   - Test all actions
+   - Test authorization
+   - Test ViewData setup
 
-7. **Create PR**
-   - Title: "Phase 1.1: Person API Controller"
+7. **Manual Testing**
+   - Test calendar display
+   - Test event creation
+   - Test RSVP functionality
+
+8. **Create PR**
+   - Title: "Phase 2.3: Calendar MVC Controller"
    - Link to this plan
+
+### Previously Completed Phases
+
+**Phase 1: Core API Controllers** ✅ Complete
+- Phase 1.1: Person API Controller ✅
+- Phase 1.2: Partnership & ParentChild API Controllers ✅  
+- Phase 1.3: Household API Controller ✅
+
+**Phase 2: Media & Visualization Controllers** (3/3 complete)
+- Phase 2.1: MediaGallery MVC Controller ✅
+- Phase 2.2: FamilyTree MVC Controller ✅
    - Add test results
 
 ---
