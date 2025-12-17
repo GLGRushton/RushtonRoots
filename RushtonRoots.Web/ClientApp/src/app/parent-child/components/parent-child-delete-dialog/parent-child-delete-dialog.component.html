@@ -1,0 +1,188 @@
+<mat-card class="delete-dialog-card">
+  <mat-card-header>
+    <mat-card-title>Delete Parent-Child Relationship</mat-card-title>
+    <mat-card-subtitle>Confirm relationship deletion</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Relationship Summary Section -->
+    <section class="relationship-summary">
+      <h3>Relationship Details</h3>
+      <div class="people-row">
+        <!-- Parent -->
+        <div class="person-info">
+          <div class="person-avatar">
+            <img *ngIf="parentPhotoUrl" [src]="parentPhotoUrl" [alt]="parentName + ' photo'" />
+            <div *ngIf="!parentPhotoUrl" class="avatar-placeholder">{{ getParentInitials() }}</div>
+          </div>
+          <div class="person-details">
+            <h4>{{ parentName }}</h4>
+            <p class="person-role">Parent</p>
+            <p class="person-lifespan">{{ getLifespan(parentBirthDate, parentDeathDate, parentIsDeceased) }}</p>
+            <mat-chip *ngIf="parentIsDeceased" class="status-chip deceased">Deceased</mat-chip>
+          </div>
+        </div>
+
+        <!-- Relationship Icon -->
+        <div class="relationship-icon">
+          <mat-icon>arrow_downward</mat-icon>
+          <span class="relationship-type-label">{{ relationshipType }}</span>
+        </div>
+
+        <!-- Child -->
+        <div class="person-info">
+          <div class="person-avatar">
+            <img *ngIf="childPhotoUrl" [src]="childPhotoUrl" [alt]="childName + ' photo'" />
+            <div *ngIf="!childPhotoUrl" class="avatar-placeholder">{{ getChildInitials() }}</div>
+          </div>
+          <div class="person-details">
+            <h4>{{ childName }}</h4>
+            <p class="person-role">Child</p>
+            <p class="person-lifespan">{{ getLifespan(childBirthDate, childDeathDate, childIsDeceased) }}</p>
+            <mat-chip *ngIf="childIsDeceased" class="status-chip deceased">Deceased</mat-chip>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Status -->
+      <div class="verification-status">
+        <mat-chip *ngIf="isVerified" class="verified-chip">
+          <mat-icon>verified</mat-icon>
+          Verified Relationship
+        </mat-chip>
+        <mat-chip *ngIf="!isVerified" class="unverified-chip">
+          <mat-icon>help_outline</mat-icon>
+          Unverified Relationship
+        </mat-chip>
+      </div>
+    </section>
+
+    <!-- Impact Warnings Section -->
+    <section class="impact-warnings" *ngIf="impactSummaries.length > 0">
+      <h3>Impact of Deletion</h3>
+      <mat-card class="warning-card">
+        <mat-icon class="warning-icon">warning</mat-icon>
+        <div class="warning-content">
+          <h4>The following will be affected:</h4>
+          <ul class="impact-list">
+            <li *ngFor="let impact of impactSummaries" [class]="'impact-' + impact.severity">
+              <mat-icon [color]="impact.color">{{ impact.icon }}</mat-icon>
+              <span>{{ impact.description }}</span>
+            </li>
+          </ul>
+        </div>
+      </mat-card>
+    </section>
+
+    <!-- Family Tree Context (Mini Tree) -->
+    <section class="family-tree-context" *ngIf="relatedData.treeNodes > 0">
+      <h3>Family Tree Context</h3>
+      <p class="context-description">
+        This relationship connects {{ relatedData.treeNodes }} nodes in the family tree. 
+        Deleting it will disconnect these branches.
+      </p>
+      <!-- Placeholder for FamilyTreeMiniComponent integration -->
+      <div class="mini-tree-placeholder">
+        <mat-icon>account_tree</mat-icon>
+        <p>Family tree visualization will be displayed here</p>
+        <small>Showing affected lineage branches</small>
+      </div>
+    </section>
+
+    <!-- Delete Options Form -->
+    <form [formGroup]="deleteForm" class="delete-form">
+      <h3>Deletion Options</h3>
+      
+      <!-- Delete Type Selection -->
+      <mat-radio-group formControlName="deleteType" class="delete-type-group">
+        <!-- Soft Delete Option -->
+        <mat-radio-button value="soft" class="delete-option">
+          <div class="option-content">
+            <div class="option-header">
+              <mat-icon color="warn">delete_outline</mat-icon>
+              <strong>Soft Delete (Recommended)</strong>
+            </div>
+            <p class="option-description">
+              Mark this relationship as deleted. It can be restored by an administrator. 
+              All related data will be preserved.
+            </p>
+          </div>
+        </mat-radio-button>
+
+        <!-- Disputed Option -->
+        <mat-radio-button value="disputed" class="delete-option">
+          <div class="option-content">
+            <div class="option-header">
+              <mat-icon color="accent">help_outline</mat-icon>
+              <strong>Mark as Disputed</strong>
+            </div>
+            <p class="option-description">
+              Mark this relationship as disputed or uncertain. It will remain visible 
+              but with a disputed indicator. Useful for questionable relationships.
+            </p>
+          </div>
+        </mat-radio-button>
+
+        <!-- Hard Delete Option (Admin Only) -->
+        <mat-radio-button *ngIf="isAdmin" value="hard" class="delete-option hard-delete">
+          <div class="option-content">
+            <div class="option-header">
+              <mat-icon class="danger-icon">delete_forever</mat-icon>
+              <strong>Hard Delete (Permanent)</strong>
+            </div>
+            <p class="option-description danger-text">
+              Permanently delete this relationship and all related data. 
+              <strong>This action cannot be undone!</strong>
+            </p>
+          </div>
+        </mat-radio-button>
+      </mat-radio-group>
+
+      <!-- Dispute Reason (shown when "disputed" is selected) -->
+      <mat-form-field *ngIf="selectedDeleteType === 'disputed'" appearance="outline" class="full-width">
+        <mat-label>Reason for Dispute</mat-label>
+        <textarea 
+          matInput 
+          formControlName="disputeReason" 
+          rows="3"
+          placeholder="Explain why this relationship is disputed (e.g., conflicting records, DNA evidence contradicts, etc.)"
+          maxlength="500"></textarea>
+        <mat-hint>Minimum 10 characters required</mat-hint>
+        <mat-error *ngIf="deleteForm.get('disputeReason')?.hasError('required')">
+          Please provide a reason for disputing this relationship
+        </mat-error>
+        <mat-error *ngIf="deleteForm.get('disputeReason')?.hasError('minlength')">
+          Reason must be at least 10 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Warning Message Based on Selection -->
+      <mat-card [ngClass]="getWarningClass()" class="action-warning">
+        <mat-icon>info</mat-icon>
+        <p>{{ getWarningMessage() }}</p>
+      </mat-card>
+
+      <!-- Confirmation Checkbox -->
+      <mat-checkbox formControlName="confirmationCheckbox" class="confirmation-checkbox">
+        <strong>I understand this action and its consequences</strong>
+      </mat-checkbox>
+    </form>
+  </mat-card-content>
+
+  <!-- Action Buttons -->
+  <mat-card-actions class="action-buttons">
+    <button mat-button (click)="onCancel()" type="button">
+      <mat-icon>cancel</mat-icon>
+      Cancel
+    </button>
+    <button 
+      mat-raised-button 
+      [color]="getDeleteButtonColor()" 
+      (click)="onConfirm()"
+      [disabled]="!deleteForm.valid"
+      type="button">
+      <mat-icon>{{ selectedDeleteType === 'disputed' ? 'help_outline' : 'delete' }}</mat-icon>
+      {{ getDeleteButtonText() }}
+    </button>
+  </mat-card-actions>
+</mat-card>
