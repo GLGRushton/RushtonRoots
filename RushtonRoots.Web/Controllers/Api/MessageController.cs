@@ -4,18 +4,18 @@ using RushtonRoots.Application.Services;
 using RushtonRoots.Domain.UI.Requests;
 using System.Security.Claims;
 
-namespace RushtonRoots.Web.Controllers;
+namespace RushtonRoots.Web.Controllers.Api;
 
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class ChatRoomController : ControllerBase
+public class MessageController : ControllerBase
 {
-    private readonly IChatRoomService _chatRoomService;
+    private readonly IMessageService _messageService;
 
-    public ChatRoomController(IChatRoomService chatRoomService)
+    public MessageController(IMessageService messageService)
     {
-        _chatRoomService = chatRoomService;
+        _messageService = messageService;
     }
 
     [HttpGet("{id}")]
@@ -27,20 +27,22 @@ public class ChatRoomController : ControllerBase
             return Unauthorized();
         }
 
-        var chatRoom = await _chatRoomService.GetByIdAsync(id);
-        if (chatRoom == null) return NotFound();
+        var message = await _messageService.GetByIdAsync(id);
+        if (message == null) return NotFound();
         
-        // Verify user is a member of the chat room
-        if (!chatRoom.Members.Any(m => m.UserId == userIdClaim && m.IsActive))
+        // Verify user is sender, recipient, or member of chat room
+        if (message.SenderUserId != userIdClaim && 
+            message.RecipientUserId != userIdClaim && 
+            message.ChatRoomId == null)
         {
             return Forbid();
         }
         
-        return Ok(chatRoom);
+        return Ok(message);
     }
 
-    [HttpGet("my-chatrooms")]
-    public async Task<IActionResult> GetMyChatRooms()
+    [HttpGet("direct/{otherUserId}")]
+    public async Task<IActionResult> GetDirectMessages(string otherUserId, [FromQuery] int pageSize = 50, [FromQuery] int pageNumber = 1)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdClaim))
@@ -48,19 +50,27 @@ public class ChatRoomController : ControllerBase
             return Unauthorized();
         }
 
-        var chatRooms = await _chatRoomService.GetUserChatRoomsAsync(userIdClaim);
-        return Ok(chatRooms);
+        var messages = await _messageService.GetDirectMessagesAsync(userIdClaim, otherUserId, pageSize, pageNumber);
+        return Ok(messages);
     }
 
-    [HttpGet("household/{householdId}")]
-    public async Task<IActionResult> GetHouseholdChatRooms(int householdId)
+    [HttpGet("chatroom/{chatRoomId}")]
+    public async Task<IActionResult> GetChatRoomMessages(int chatRoomId, [FromQuery] int pageSize = 50, [FromQuery] int pageNumber = 1)
     {
-        var chatRooms = await _chatRoomService.GetHouseholdChatRoomsAsync(householdId);
-        return Ok(chatRooms);
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return Unauthorized();
+        }
+
+        // Note: In a production system, we should verify the user is a member of the chat room
+        // This would require injecting IChatRoomService to check membership
+        var messages = await _messageService.GetChatRoomMessagesAsync(chatRoomId, pageSize, pageNumber);
+        return Ok(messages);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateChatRoomRequest request)
+    public async Task<IActionResult> Send([FromBody] CreateMessageRequest request)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdClaim))
@@ -70,8 +80,8 @@ public class ChatRoomController : ControllerBase
 
         try
         {
-            var chatRoom = await _chatRoomService.CreateChatRoomAsync(request, userIdClaim);
-            return CreatedAtAction(nameof(GetById), new { id = chatRoom.Id }, chatRoom);
+            var message = await _messageService.SendMessageAsync(request, userIdClaim);
+            return CreatedAtAction(nameof(GetById), new { id = message.Id }, message);
         }
         catch (Exception ex)
         {
@@ -80,7 +90,7 @@ public class ChatRoomController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateChatRoomRequest request)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateMessageRequest request)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdClaim))
@@ -90,8 +100,8 @@ public class ChatRoomController : ControllerBase
 
         try
         {
-            var chatRoom = await _chatRoomService.UpdateChatRoomAsync(id, request, userIdClaim);
-            return Ok(chatRoom);
+            var message = await _messageService.UpdateMessageAsync(id, request, userIdClaim);
+            return Ok(message);
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -118,63 +128,7 @@ public class ChatRoomController : ControllerBase
 
         try
         {
-            await _chatRoomService.DeleteChatRoomAsync(id, userIdClaim);
-            return NoContent();
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Forbid(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return NotFound(new { error = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
-    }
-
-    [HttpPost("{id}/members")]
-    public async Task<IActionResult> AddMember(int id, [FromBody] AddChatRoomMemberRequest request)
-    {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userIdClaim))
-        {
-            return Unauthorized();
-        }
-
-        try
-        {
-            var member = await _chatRoomService.AddMemberAsync(id, request, userIdClaim);
-            return Ok(member);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Forbid(ex.Message);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
-    }
-
-    [HttpDelete("{id}/members/{userId}")]
-    public async Task<IActionResult> RemoveMember(int id, string userId)
-    {
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userIdClaim))
-        {
-            return Unauthorized();
-        }
-
-        try
-        {
-            await _chatRoomService.RemoveMemberAsync(id, userId, userIdClaim);
+            await _messageService.DeleteMessageAsync(id, userIdClaim);
             return NoContent();
         }
         catch (UnauthorizedAccessException ex)
@@ -192,7 +146,7 @@ public class ChatRoomController : ControllerBase
     }
 
     [HttpPost("{id}/read")]
-    public async Task<IActionResult> UpdateLastRead(int id)
+    public async Task<IActionResult> MarkAsRead(int id)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdClaim))
@@ -202,8 +156,12 @@ public class ChatRoomController : ControllerBase
 
         try
         {
-            await _chatRoomService.UpdateLastReadAsync(id, userIdClaim);
+            await _messageService.MarkAsReadAsync(id, userIdClaim);
             return NoContent();
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
         }
         catch (InvalidOperationException ex)
         {
@@ -213,5 +171,18 @@ public class ChatRoomController : ControllerBase
         {
             return BadRequest(new { error = ex.Message });
         }
+    }
+
+    [HttpGet("unread-count")]
+    public async Task<IActionResult> GetUnreadCount()
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userIdClaim))
+        {
+            return Unauthorized();
+        }
+
+        var count = await _messageService.GetUnreadDirectMessageCountAsync(userIdClaim);
+        return Ok(new { count });
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RushtonRoots.Application.Services;
 using RushtonRoots.Domain.UI.Requests;
 
-namespace RushtonRoots.Web.Controllers;
+namespace RushtonRoots.Web.Controllers.Api;
 
 /// <summary>
 /// API Controller for advanced search and discovery operations.

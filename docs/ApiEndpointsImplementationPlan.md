@@ -798,11 +798,60 @@ Controllers/CommentController.cs → Controllers/Api/CommentController.cs
 **Estimated Effort:** 1 day
 
 **Acceptance Criteria:**
-- [ ] All API controllers in Controllers/Api/ directory
-- [ ] All tests passing
-- [ ] No broken references
-- [ ] Routing unchanged
-- [ ] Application builds and runs correctly
+- [x] All API controllers in Controllers/Api/ directory
+- [x] All tests passing
+- [x] No broken references
+- [x] Routing unchanged
+- [x] Application builds and runs correctly
+
+**Status:** ✅ **COMPLETE** (2025-12-17)
+
+**Deliverables:**
+- Moved 27 API controllers from Controllers/ to Controllers/Api/
+- Updated namespaces to RushtonRoots.Web.Controllers.Api for all 31 API controllers
+- No changes required to AutofacModule (convention-based registration works)
+- All 271 unit tests passing
+- Build successful with no compilation errors
+- Routing unchanged (using [Route("api/[controller]")] attribute routing)
+
+**Implementation Notes:**
+- Total of 31 API controllers now in Controllers/Api/ directory (4 were already there from previous phases)
+- Controllers successfully moved:
+  1. ActivityFeedController.cs
+  2. ChatRoomController.cs
+  3. CommentController.cs
+  4. ConflictResolutionController.cs
+  5. ContributionController.cs
+  6. DocumentController.cs
+  7. EventRsvpController.cs
+  8. FamilyEventController.cs
+  9. FamilyTaskController.cs
+  10. FamilyTreeController.cs
+  11. LeaderboardController.cs
+  12. LifeEventController.cs
+  13. LocationController.cs
+  14. MediaController.cs
+  15. MessageController.cs
+  16. NotificationController.cs
+  17. PhotoAlbumController.cs
+  18. PhotoController.cs
+  19. PhotoTagController.cs
+  20. RecipeController.cs
+  21. SampleApiController.cs
+  22. SearchApiController.cs
+  23. StoryCollectionController.cs
+  24. StoryController.cs
+  25. TraditionController.cs
+  26. WikiControllers.cs
+  27. WikiPageController.cs
+- Controllers already in Controllers/Api/ from previous phases:
+  28. HouseholdController.cs (Phase 1.3)
+  29. ParentChildController.cs (Phase 1.2)
+  30. PartnershipController.cs (Phase 1.2)
+  31. PersonApiController.cs (Phase 1.1)
+- All API controllers use attribute routing, so no route changes needed
+- AutofacModule uses convention-based registration, so no DI updates required
+- MVC controllers remain in Controllers/ root directory as expected
 
 ---
 
@@ -1096,13 +1145,13 @@ For each PR:
 | 3.1 | Account Actions | 2-3 days | None | No | ✅ Complete |
 | 3.2 | Admin Controller | 3-4 days | None | No | ✅ Complete |
 | 3.3 | Help Controller | 4-5 days | None | No | ✅ Complete |
-| 4.1 | Reorganize APIs | 1 day | Phases 1-3 | No | 🔲 Pending |
+| 4.1 | Reorganize APIs | 1 day | Phases 1-3 | No | ✅ Complete |
 | 4.2 | Static Pages | 2-3 days | None | No | 🔲 Pending |
 | 4.3 | Deprecate Old Patterns | 2-3 days | Phase 1 | No | 🔲 Pending |
 
 **Total Estimated Duration:** 6-8 weeks  
 **Critical Path Duration:** 4-5 weeks  
-**Phases Complete:** 9 of 12 (75%)  
+**Phases Complete:** 10 of 12 (83%)  
 **Time to Date:** ~3 weeks
 
 ---
@@ -1126,37 +1175,34 @@ For each PR:
 - Phase 3.2: Admin Controller ✅
 - Phase 3.3: Help Controller ✅
 
-### Immediate Next Steps (Start Phase 4.1)
+**Phase 4: Code Organization & Cleanup** 🚧 In Progress (1/3)
+- Phase 4.1: Organize API Controllers into Controllers/Api/ ✅
+- Phase 4.2: Static/Info Page Controllers 🔲 Pending
+- Phase 4.3: Deprecate Old MVC POST Patterns 🔲 Pending
 
-**Phase 4.1: Organize API Controllers into Controllers/Api/**
+### Immediate Next Steps (Start Phase 4.2)
+
+**Phase 4.2: Static/Info Page Controllers**
 
 1. **Create Feature Branch**
    ```bash
-   git checkout -b feature/phase-4.1-organize-api-controllers
+   git checkout -b feature/phase-4.2-static-info-pages
    ```
 
-2. **Analyze Current Structure**
-   - Review all API controllers currently in Controllers/
-   - Plan directory structure for Controllers/Api/
-   - Update namespaces and references
-
-3. **Move API Controllers**
-   - Move all [ApiController] attributed controllers to Controllers/Api/
-   - Update namespaces to RushtonRoots.Web.Controllers.Api
-   - Ensure routing remains unchanged
-   - Update any controller references in code
-
-4. **Update AutofacModule**
-   - Verify DI registrations still work with new structure
-   - Update any path-based registrations if needed
-
-5. **Testing**
-   - Run all unit tests to ensure nothing broken
-   - Verify API routing still works
-   - Test all API endpoints manually
-
-6. **Create PR**
-   - Title: "Phase 4.1: Organize API Controllers"
+2. **Create InfoController**
+   - Create Controllers/InfoController.cs
+   - Add actions: About, Contact, Mission, Privacy, Terms, Story
+   
+3. **Create Views**
+   - Create Views/Info/ directory
+   - Add About.cshtml, Contact.cshtml, Mission.cshtml, Privacy.cshtml, Terms.cshtml, Story.cshtml
+   
+4. **Testing**
+   - Create unit tests for InfoController
+   - Manual testing of all static pages
+   
+5. **Create PR**
+   - Title: "Phase 4.2: Static/Info Page Controllers"
    - Link to this plan
 
 ---

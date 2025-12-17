@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using RushtonRoots.Application.Services;
 using RushtonRoots.Domain.UI.Models;
 
-namespace RushtonRoots.Web.Controllers;
+namespace RushtonRoots.Web.Controllers.Api;
 
 /// <summary>
 /// API Controller for Family Tree data and visualizations.
