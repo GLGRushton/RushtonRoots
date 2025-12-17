@@ -12,15 +12,17 @@
         var articleId = Context.Request.Query["articleId"].ToString();
         var articleSlug = Context.Request.Query["slug"].ToString();
         var showArticle = !string.IsNullOrEmpty(articleId) || !string.IsNullOrEmpty(articleSlug);
+        
+        // Build article attributes for cleaner rendering
+        var articleIdAttr = !string.IsNullOrEmpty(articleId) ? $"article-id=\"{articleId}\"" : "";
+        var articleSlugAttr = !string.IsNullOrEmpty(articleSlug) ? $"article-slug=\"{articleSlug}\"" : "";
+        var articleAttrs = string.Join(" ", new[] { articleIdAttr, articleSlugAttr }.Where(a => !string.IsNullOrEmpty(a)));
     }
 
     @if (showArticle)
     {
         <!-- Display Wiki Article -->
-        <app-wiki-article 
-            @if (!string.IsNullOrEmpty(articleId)) { <text>article-id="@articleId"</text> }
-            @if (!string.IsNullOrEmpty(articleSlug)) { <text>article-slug="@articleSlug"</text> }>
-        </app-wiki-article>
+        <app-wiki-article @Html.Raw(articleAttrs)></app-wiki-article>
         
         <noscript>
             <div class="alert alert-warning">

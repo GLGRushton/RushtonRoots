@@ -172,10 +172,25 @@ Genealogy research is a rewarding journey that connects you to your past. Take y
     
     this.breadcrumbs = [
       { label: 'Home', url: '/', icon: 'home' },
-      { label: 'Wiki', url: '/Wiki', icon: 'library_books' },
-      { label: this.article.categoryName || 'Uncategorized', url: `/Wiki?category=${this.article.categoryId}` },
-      { label: this.article.title }
+      { label: 'Wiki', url: '/Wiki', icon: 'library_books' }
     ];
+    
+    // Add category breadcrumb if available
+    if (this.article.categoryName && this.article.categoryId) {
+      this.breadcrumbs.push({
+        label: this.article.categoryName,
+        url: `/Wiki?category=${this.article.categoryId}`
+      });
+    } else if (this.article.categoryName) {
+      this.breadcrumbs.push({
+        label: this.article.categoryName
+      });
+    }
+    
+    // Add article title as final breadcrumb
+    this.breadcrumbs.push({
+      label: this.article.title
+    });
   }
   
   private renderContent(): void {
