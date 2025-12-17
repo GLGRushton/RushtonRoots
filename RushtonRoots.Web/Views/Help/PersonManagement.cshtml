@@ -1,0 +1,198 @@
+@{
+    ViewData["Title"] = "Person Management Help";
+}
+
+<div class="help-page">
+    <nav class="breadcrumb">
+        <a href="/Help">Help</a>
+        <span class="separator">/</span>
+        <span class="current">Person Management</span>
+    </nav>
+
+    <div class="page-header">
+        <div class="header-content">
+            <h1>@ViewData["Title"]</h1>
+            <p class="page-subtitle">Add, edit, and manage individual family members</p>
+        </div>
+    </div>
+
+    <div class="help-container">
+        <section class="content-section">
+            <h2><i class="material-icons">person_add</i> Adding a New Person</h2>
+            <p>To add a new family member to your tree:</p>
+            <ol>
+                <li>Navigate to the Person Management section</li>
+                <li>Click the <strong>"Add Person"</strong> button</li>
+                <li>Fill in the person's information:
+                    <ul>
+                        <li><strong>Basic Information:</strong> First name, middle name, last name, maiden name</li>
+                        <li><strong>Birth Details:</strong> Birth date, birth place</li>
+                        <li><strong>Death Details:</strong> Death date, death place (if applicable)</li>
+                        <li><strong>Gender:</strong> Male, Female, Other, or Prefer not to say</li>
+                        <li><strong>Photo:</strong> Upload a profile photo</li>
+                        <li><strong>Biography:</strong> Brief life story or description</li>
+                    </ul>
+                </li>
+                <li>Click "Save" to add the person to your family tree</li>
+            </ol>
+            <div class="tip-box">
+                <i class="material-icons">lightbulb</i>
+                <div>
+                    <strong>Tip:</strong> You don't need to fill in all fields at once. You can always come back 
+                    and add more information later as you discover it.
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">edit</i> Editing Person Information</h2>
+            <p>To update information for an existing person:</p>
+            <ol>
+                <li>Find the person in the Person Management list or family tree</li>
+                <li>Click on their name to view their profile</li>
+                <li>Click the <strong>"Edit"</strong> button</li>
+                <li>Update the desired information</li>
+                <li>Click "Save Changes" to update</li>
+            </ol>
+            <h3>What You Can Edit</h3>
+            <ul>
+                <li>All name fields (first, middle, last, maiden)</li>
+                <li>Birth and death information</li>
+                <li>Profile photo</li>
+                <li>Biography and life story</li>
+                <li>Contact information (for living relatives)</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">photo_camera</i> Managing Photos</h2>
+            <p>Add and manage profile photos for family members:</p>
+            <h3>Uploading a Photo</h3>
+            <ul>
+                <li>Click "Upload Photo" when adding or editing a person</li>
+                <li>Select an image file (JPG, PNG, GIF supported)</li>
+                <li>Crop or adjust the image if needed</li>
+                <li>Save to set as the profile photo</li>
+            </ul>
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Use clear, well-lit photos</li>
+                <li>Individual portraits work best for profile photos</li>
+                <li>Upload additional photos to the Media Gallery</li>
+                <li>Tag people in photos to link them to their profiles</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">description</i> Writing Biographies</h2>
+            <p>Document life stories and important information:</p>
+            <h3>What to Include</h3>
+            <ul>
+                <li>Occupation and career highlights</li>
+                <li>Education and achievements</li>
+                <li>Hobbies and interests</li>
+                <li>Military service</li>
+                <li>Notable life events</li>
+                <li>Character traits and personality</li>
+                <li>Memorable stories or anecdotes</li>
+            </ul>
+            <div class="tip-box">
+                <i class="material-icons">lightbulb</i>
+                <div>
+                    <strong>Tip:</strong> Interview older relatives to gather stories and details about ancestors. 
+                    Record these conversations to preserve family history.
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">privacy_tip</i> Privacy Settings</h2>
+            <p>Control visibility of person information:</p>
+            <h3>Living vs. Deceased</h3>
+            <ul>
+                <li><strong>Deceased individuals:</strong> All information is typically public within the household</li>
+                <li><strong>Living individuals:</strong> Sensitive information can be restricted
+                    <ul>
+                        <li>Birth dates can show only year or be hidden</li>
+                        <li>Contact information can be private</li>
+                        <li>Living person profiles can be marked private</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">search</i> Finding People</h2>
+            <p>Locate family members in your tree:</p>
+            <ul>
+                <li>Use the <strong>Search</strong> function to find by name</li>
+                <li>Filter by generation, household, or living status</li>
+                <li>Sort alphabetically or by birth date</li>
+                <li>Use the family tree visualization to browse relationships</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">delete</i> Removing People</h2>
+            <p>If you need to remove someone from the family tree:</p>
+            <ol>
+                <li>Go to the person's profile page</li>
+                <li>Click the "Delete" button (Admin or HouseholdAdmin only)</li>
+                <li>Confirm the deletion</li>
+            </ol>
+            <div class="warning-box">
+                <i class="material-icons">warning</i>
+                <div>
+                    <strong>Warning:</strong> Deleting a person will also remove their relationships. 
+                    Consider carefully before deleting, as this action may not be reversible.
+                </div>
+            </div>
+        </section>
+
+        <section class="help-navigation">
+            <a href="/Help" class="btn btn-secondary">
+                <i class="material-icons">arrow_back</i>
+                Back to Help Index
+            </a>
+            <a href="/Person" class="btn btn-primary">
+                <i class="material-icons">person</i>
+                Manage People
+            </a>
+        </section>
+    </div>
+</div>
+
+<style>
+    .help-page { padding: 20px; min-height: 100vh; background-color: #f5f5f5; }
+    .breadcrumb { max-width: 900px; margin: 0 auto 20px; padding: 10px 0; color: #666; font-size: 0.95em; }
+    .breadcrumb a { color: #1976d2; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .separator { margin: 0 8px; }
+    .breadcrumb .current { color: #333; font-weight: 500; }
+    .page-header { margin-bottom: 30px; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; max-width: 900px; margin-left: auto; margin-right: auto; }
+    .header-content h1 { color: #1976d2; margin: 0; font-size: 2.5em; font-weight: 700; }
+    .page-subtitle { color: #666; margin: 10px 0 0 0; font-size: 1.2em; }
+    .help-container { max-width: 900px; margin: 0 auto; }
+    .content-section { background: white; border-radius: 8px; padding: 30px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .content-section h2 { color: #1976d2; margin: 0 0 15px 0; font-size: 1.8em; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .content-section h2 .material-icons { font-size: 1.2em; }
+    .content-section h3 { color: #333; margin: 20px 0 10px 0; font-size: 1.3em; font-weight: 600; }
+    .content-section p { color: #555; line-height: 1.8; font-size: 1.05em; margin: 0 0 15px 0; }
+    .content-section ul, .content-section ol { color: #555; line-height: 1.8; font-size: 1.05em; margin: 10px 0 15px 20px; }
+    .content-section li { margin: 8px 0; }
+    .tip-box { display: flex; gap: 15px; padding: 15px; background: #e3f2fd; border-left: 4px solid #1976d2; border-radius: 4px; margin: 15px 0; }
+    .tip-box .material-icons { color: #1976d2; font-size: 24px; flex-shrink: 0; }
+    .tip-box strong { color: #1565c0; }
+    .warning-box { display: flex; gap: 15px; padding: 15px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px; margin: 15px 0; }
+    .warning-box .material-icons { color: #ff9800; font-size: 24px; flex-shrink: 0; }
+    .warning-box strong { color: #f57c00; }
+    .help-navigation { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: 500; border: none; cursor: pointer; transition: background-color 0.2s; }
+    .btn-primary { background-color: #1976d2; color: white; }
+    .btn-primary:hover { background-color: #1565c0; }
+    .btn-secondary { background-color: #666; color: white; }
+    .btn-secondary:hover { background-color: #555; }
+    .material-icons { font-size: 20px; }
+    @@media (max-width: 768px) { .page-header { padding: 25px; } .header-content h1 { font-size: 2em; } .content-section { padding: 20px; } .help-navigation { flex-direction: column; } .btn { width: 100%; justify-content: center; } }
+    @@media print { .help-page { padding: 0; background: white; } .help-navigation { display: none; } }
+</style>

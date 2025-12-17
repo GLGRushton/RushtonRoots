@@ -1,0 +1,353 @@
+@{
+    ViewData["Title"] = "Calendar Help";
+}
+
+<div class="help-page">
+    <nav class="breadcrumb">
+        <a href="/Help">Help</a>
+        <span class="separator">/</span>
+        <span class="current">Calendar Help</span>
+    </nav>
+
+    <div class="page-header">
+        <div class="header-content">
+            <h1>@ViewData["Title"]</h1>
+            <p class="page-subtitle">Manage family events, birthdays, and anniversaries</p>
+        </div>
+    </div>
+
+    <div class="help-container">
+        <section class="content-section">
+            <h2><i class="material-icons">event</i> Family Calendar Overview</h2>
+            <p>
+                The Family Calendar helps you track and manage important family dates, events, and gatherings.
+                It automatically displays birthdays and anniversaries from your family tree and allows you to
+                create custom events.
+            </p>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">add_circle</i> Creating Events</h2>
+            <p>To create a new family event:</p>
+            <ol>
+                <li>Navigate to the <strong>Calendar</strong> page</li>
+                <li>Click the <strong>"Create Event"</strong> button or click on a date</li>
+                <li>Fill in the event details:
+                    <ul>
+                        <li>Event title and description</li>
+                        <li>Date and time (start and end)</li>
+                        <li>Location (optional)</li>
+                        <li>Event type (gathering, celebration, reunion, etc.)</li>
+                        <li>Privacy settings (who can see it)</li>
+                    </ul>
+                </li>
+                <li>Set recurrence if needed (weekly, monthly, yearly)</li>
+                <li>Enable RSVP tracking if desired</li>
+                <li>Click "Save" to create the event</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">view_module</i> Calendar Views</h2>
+            <p>The calendar offers multiple view options:</p>
+            <ul>
+                <li><strong>Month View:</strong> See the entire month at a glance</li>
+                <li><strong>Week View:</strong> Detailed view of a single week with time slots</li>
+                <li><strong>Day View:</strong> Hour-by-hour view of a single day</li>
+                <li><strong>List View:</strong> See upcoming events in a list format</li>
+            </ul>
+            <p>Switch between views using the view selector in the calendar toolbar.</p>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">cake</i> Automatic Birthdays & Anniversaries</h2>
+            <p>
+                The calendar automatically displays birthdays and anniversaries from your family tree:
+            </p>
+            <ul>
+                <li>Birthdays are shown for all family members with birth dates</li>
+                <li>Wedding anniversaries appear for partnerships with marriage dates</li>
+                <li>Death anniversaries are shown respectfully for deceased family members</li>
+            </ul>
+            <div class="tip-box">
+                <i class="material-icons">lightbulb</i>
+                <div>
+                    <strong>Tip:</strong> These events are automatically created when you add birth dates
+                    and partnership information in the family tree.
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">how_to_reg</i> RSVP Management</h2>
+            <p>Track who's attending your family events:</p>
+            <h3>Enabling RSVP</h3>
+            <ul>
+                <li>When creating or editing an event, enable "Track RSVPs"</li>
+                <li>Family members can respond: Attending, Not Attending, or Maybe</li>
+                <li>View RSVP responses on the event details page</li>
+            </ul>
+            <h3>Responding to Events</h3>
+            <ol>
+                <li>Click on an event in the calendar</li>
+                <li>Select your RSVP status</li>
+                <li>Optionally add a comment</li>
+                <li>Save your response</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">repeat</i> Recurring Events</h2>
+            <p>Set up events that repeat on a regular schedule:</p>
+            <ul>
+                <li><strong>Daily:</strong> Every day or every X days</li>
+                <li><strong>Weekly:</strong> Specific days of the week</li>
+                <li><strong>Monthly:</strong> Same date each month or specific day (e.g., first Monday)</li>
+                <li><strong>Yearly:</strong> Annual events like birthdays</li>
+            </ul>
+            <p>
+                When editing a recurring event, you can choose to update just that instance or all future instances.
+            </p>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">notifications</i> Event Reminders</h2>
+            <p>Never miss an important event with automatic reminders:</p>
+            <ul>
+                <li>Set reminders for 1 day, 1 week, or custom time before event</li>
+                <li>Receive notifications via email and/or in-app</li>
+                <li>Configure default reminder settings in your account preferences</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">file_download</i> Exporting Events</h2>
+            <p>Export calendar events to use in other applications:</p>
+            <ul>
+                <li>Export individual events or entire calendar</li>
+                <li>Download as iCal (.ics) format</li>
+                <li>Import into Google Calendar, Outlook, Apple Calendar, etc.</li>
+            </ul>
+        </section>
+
+        <section class="help-navigation">
+            <a href="/Help" class="btn btn-secondary">
+                <i class="material-icons">arrow_back</i>
+                Back to Help Index
+            </a>
+            <a href="/Calendar" class="btn btn-primary">
+                <i class="material-icons">event</i>
+                Go to Calendar
+            </a>
+        </section>
+    </div>
+</div>
+
+<style>
+    .help-page {
+        padding: 20px;
+        min-height: 100vh;
+        background-color: #f5f5f5;
+    }
+
+    .breadcrumb {
+        max-width: 900px;
+        margin: 0 auto 20px;
+        padding: 10px 0;
+        color: #666;
+        font-size: 0.95em;
+    }
+
+    .breadcrumb a {
+        color: #1976d2;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb .separator {
+        margin: 0 8px;
+    }
+
+    .breadcrumb .current {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .header-content h1 {
+        color: #1976d2;
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .page-subtitle {
+        color: #666;
+        margin: 10px 0 0 0;
+        font-size: 1.2em;
+    }
+
+    .help-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .content-section {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .content-section h2 {
+        color: #1976d2;
+        margin: 0 0 15px 0;
+        font-size: 1.8em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .content-section h2 .material-icons {
+        font-size: 1.2em;
+    }
+
+    .content-section h3 {
+        color: #333;
+        margin: 20px 0 10px 0;
+        font-size: 1.3em;
+        font-weight: 600;
+    }
+
+    .content-section p {
+        color: #555;
+        line-height: 1.8;
+        font-size: 1.05em;
+        margin: 0 0 15px 0;
+    }
+
+    .content-section ul,
+    .content-section ol {
+        color: #555;
+        line-height: 1.8;
+        font-size: 1.05em;
+        margin: 10px 0 15px 20px;
+    }
+
+    .content-section li {
+        margin: 8px 0;
+    }
+
+    .tip-box {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+        background: #e3f2fd;
+        border-left: 4px solid #1976d2;
+        border-radius: 4px;
+        margin: 15px 0;
+    }
+
+    .tip-box .material-icons {
+        color: #1976d2;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .tip-box strong {
+        color: #1565c0;
+    }
+
+    .help-navigation {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #1976d2;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #1565c0;
+    }
+
+    .btn-secondary {
+        background-color: #666;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #555;
+    }
+
+    .material-icons {
+        font-size: 20px;
+    }
+
+    @@media (max-width: 768px) {
+        .page-header {
+            padding: 25px;
+        }
+
+        .header-content h1 {
+            font-size: 2em;
+        }
+
+        .content-section {
+            padding: 20px;
+        }
+
+        .help-navigation {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @@media print {
+        .help-page {
+            padding: 0;
+            background: white;
+        }
+
+        .help-navigation {
+            display: none;
+        }
+    }
+</style>
