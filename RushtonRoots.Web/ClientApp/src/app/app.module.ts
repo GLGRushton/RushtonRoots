@@ -135,6 +135,8 @@ import { RecipeCardComponent } from './content/components/recipe-card/recipe-car
 import { RecipeDetailsComponent } from './content/components/recipe-details/recipe-details.component';
 import { RecipeIndexComponent } from './content/components/recipe-index/recipe-index.component';
 import { StoryCardComponent } from './content/components/story-card/story-card.component';
+import { StoryDetailsComponent } from './content/components/story-details/story-details.component';
+import { StoryIndexComponent } from './content/components/story-index/story-index.component';
 import { TraditionCardComponent } from './content/components/tradition-card/tradition-card.component';
 import { ContentGridComponent } from './content/components/content-grid/content-grid.component';
 
@@ -324,6 +326,8 @@ export class AppModule {
     safeDefine('app-recipe-details', RecipeDetailsComponent);
     safeDefine('app-recipe-index', RecipeIndexComponent);
     safeDefine('app-story-card', StoryCardComponent);
+    safeDefine('app-story-details', StoryDetailsComponent);
+    safeDefine('app-story-index', StoryIndexComponent);
     safeDefine('app-tradition-card', TraditionCardComponent);
     safeDefine('app-content-grid', ContentGridComponent);
 

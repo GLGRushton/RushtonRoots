@@ -1,0 +1,144 @@
+<div class="story-index">
+  <!-- Breadcrumb Navigation -->
+  <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+  <!-- List View -->
+  <div *ngIf="viewMode === 'list'" class="story-index__list">
+    <!-- Page Header -->
+    <div class="story-index__header">
+      <h1>Family Stories & Memories</h1>
+      <p class="tagline">Preserving our family's stories for future generations</p>
+      
+      <!-- Create Button -->
+      <button *ngIf="canEdit" 
+              mat-raised-button 
+              color="primary" 
+              (click)="onEditStory(0)"
+              class="create-button">
+        <mat-icon>add</mat-icon>
+        Create New Story
+      </button>
+    </div>
+
+    <!-- Category Navigation -->
+    <div class="story-index__categories" *ngIf="categories.length > 0">
+      <h2>Browse by Category</h2>
+      <mat-chip-set>
+        <mat-chip 
+          *ngFor="let category of categories"
+          [class.selected]="searchFilters.categoryId === category.id"
+          (click)="onCategoryChange(category.id)">
+          <mat-icon *ngIf="category.icon">{{ category.icon }}</mat-icon>
+          {{ category.name }}
+        </mat-chip>
+        <mat-chip 
+          *ngIf="searchFilters.categoryId"
+          (click)="onCategoryChange(0)"
+          class="clear-filter">
+          <mat-icon>close</mat-icon>
+          Clear Filter
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Featured Stories -->
+    <div class="story-index__featured" *ngIf="featuredStories.length > 0 && !searchFilters.searchText && !searchFilters.categoryId">
+      <h2>
+        <mat-icon>stars</mat-icon>
+        Featured Stories
+      </h2>
+      <div class="featured-stories-grid">
+        <app-story-card
+          *ngFor="let story of featuredStories"
+          [story]="story"
+          [canEdit]="canEdit"
+          [elevation]="4"
+          (viewStory)="onViewStory($event)"
+          (editStory)="onEditStory($event)"
+          (deleteStory)="onDeleteStory($event)"
+          (viewPerson)="onViewPerson($event)">
+        </app-story-card>
+      </div>
+    </div>
+
+    <!-- Recent Stories (when no filter applied) -->
+    <div class="story-index__recent" *ngIf="recentStories.length > 0 && !searchFilters.searchText && !searchFilters.categoryId">
+      <h2>
+        <mat-icon>schedule</mat-icon>
+        Recently Shared
+      </h2>
+      <div class="recent-stories-grid">
+        <app-story-card
+          *ngFor="let story of recentStories.slice(0, 6)"
+          [story]="story"
+          [canEdit]="canEdit"
+          (viewStory)="onViewStory($event)"
+          (editStory)="onEditStory($event)"
+          (deleteStory)="onDeleteStory($event)"
+          (viewPerson)="onViewPerson($event)">
+        </app-story-card>
+      </div>
+    </div>
+
+    <!-- All Stories Grid with Search and Filtering -->
+    <div class="story-index__all">
+      <h2 *ngIf="!searchFilters.searchText && !searchFilters.categoryId">All Stories</h2>
+      <h2 *ngIf="searchFilters.searchText || searchFilters.categoryId">
+        {{ getFilteredStories().length }} {{ getFilteredStories().length === 1 ? 'Story' : 'Stories' }} Found
+      </h2>
+      
+      <app-content-grid
+        [items]="getFilteredStories()"
+        [categories]="categories"
+        [contentType]="'story'"
+        [showSearch]="true"
+        [showFilters]="true"
+        [showSort]="true"
+        [canEdit]="canEdit"
+        (itemClicked)="onViewStory($event)"
+        (itemEdited)="onEditStory($event)"
+        (itemDeleted)="onDeleteStory($event)"
+        (personClicked)="onViewPerson($event)"
+        (searchChanged)="onSearch($event)">
+      </app-content-grid>
+    </div>
+  </div>
+
+  <!-- Detail View -->
+  <div *ngIf="viewMode === 'detail' && selectedStory" class="story-index__detail">
+    <app-story-details
+      [story]="selectedStory"
+      [comments]="storyComments"
+      [relatedStories]="relatedStories"
+      [canEdit]="canEdit"
+      [hasLiked]="hasLiked"
+      [hasFavorited]="hasFavorited"
+      (editStory)="onEditStory($event)"
+      (deleteStory)="onDeleteStory($event)"
+      (shareStory)="onShareStory($event)"
+      (printStory)="onPrintStory($event)"
+      (likeStory)="onLikeStory($event)"
+      (favoriteStory)="onFavoriteStory($event)"
+      (submitComment)="onSubmitComment($event)"
+      (viewPerson)="onViewPerson($event)"
+      (viewRelatedStory)="onViewStory($event)">
+    </app-story-details>
+  </div>
+
+  <!-- No Story Found -->
+  <div *ngIf="viewMode === 'detail' && !selectedStory" class="story-index__not-found">
+    <mat-card>
+      <mat-card-content>
+        <div class="not-found-content">
+          <mat-icon>search_off</mat-icon>
+          <h2>Story Not Found</h2>
+          <p>The story you're looking for could not be found.</p>
+          <button mat-raised-button color="primary" (click)="viewMode = 'list'; buildListBreadcrumbs()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Stories
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

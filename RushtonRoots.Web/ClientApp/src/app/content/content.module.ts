@@ -22,6 +22,8 @@ import { RecipeCardComponent } from './components/recipe-card/recipe-card.compon
 import { RecipeDetailsComponent } from './components/recipe-details/recipe-details.component';
 import { RecipeIndexComponent } from './components/recipe-index/recipe-index.component';
 import { StoryCardComponent } from './components/story-card/story-card.component';
+import { StoryDetailsComponent } from './components/story-details/story-details.component';
+import { StoryIndexComponent } from './components/story-index/story-index.component';
 import { TraditionCardComponent } from './components/tradition-card/tradition-card.component';
 import { ContentGridComponent } from './components/content-grid/content-grid.component';
 
@@ -39,6 +41,8 @@ import { SharedModule } from '../shared/shared.module';
     RecipeDetailsComponent,
     RecipeIndexComponent,
     StoryCardComponent,
+    StoryDetailsComponent,
+    StoryIndexComponent,
     TraditionCardComponent,
     ContentGridComponent
   ],
@@ -66,6 +70,8 @@ import { SharedModule } from '../shared/shared.module';
     RecipeDetailsComponent,
     RecipeIndexComponent,
     StoryCardComponent,
+    StoryDetailsComponent,
+    StoryIndexComponent,
     TraditionCardComponent,
     ContentGridComponent
   ]

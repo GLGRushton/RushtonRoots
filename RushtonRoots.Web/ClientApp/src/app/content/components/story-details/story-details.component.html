@@ -1,0 +1,372 @@
+<div class="story-details" [class.print-view]="isPrintView">
+  <!-- Story Header -->
+  <div class="story-details__header">
+    <!-- Featured Badge -->
+    <div *ngIf="story.featured" class="story-details__featured-badge">
+      <mat-icon>stars</mat-icon>
+      <span>Featured Story</span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="story-details__title">{{ story.title }}</h1>
+
+    <!-- Summary -->
+    <p class="story-details__summary">{{ story.summary }}</p>
+
+    <!-- Event Date and Location -->
+    <div class="story-details__event-info">
+      <div *ngIf="story.dateOfEvent" class="story-details__event-date">
+        <mat-icon>event</mat-icon>
+        <span>{{ getEventDate() }}</span>
+      </div>
+      <div *ngIf="story.location" class="story-details__location">
+        <mat-icon>place</mat-icon>
+        <span>{{ story.location }}</span>
+      </div>
+    </div>
+
+    <!-- Related People -->
+    <div class="story-details__people" *ngIf="story.relatedPeople.length > 0">
+      <div class="story-details__people-label">
+        <mat-icon>people</mat-icon>
+        <span>People in this story:</span>
+      </div>
+      <div class="story-details__people-list">
+        <button mat-button
+                *ngFor="let person of story.relatedPeople"
+                (click)="onPersonClick(person.personId)"
+                class="person-button">
+          <img [src]="person.personAvatar || 'assets/images/default-avatar.png'"
+               [alt]="person.personName"
+               class="person-avatar">
+          <div class="person-info">
+            <span class="person-name">{{ person.personName }}</span>
+            <span class="person-role" *ngIf="person.role">{{ person.role }}</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Author and Publication Info -->
+    <div class="story-details__meta">
+      <div class="story-details__author">
+        <img [src]="story.authorAvatar || 'assets/images/default-avatar.png'"
+             [alt]="story.authorName"
+             class="author-avatar">
+        <div class="author-info">
+          <span class="author-name">By {{ story.authorName }}</span>
+          <span class="publish-date">Published {{ story.publishedDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
+      <div class="story-details__stats">
+        <div class="stat">
+          <mat-icon>visibility</mat-icon>
+          <span>{{ story.viewCount }} views</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="story-details__actions" *ngIf="!isPrintView">
+      <button mat-raised-button color="primary" (click)="onLike()" [class.active]="hasLiked">
+        <mat-icon>{{ hasLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+        Like
+      </button>
+      <button mat-raised-button (click)="onFavorite()" [class.active]="hasFavorited">
+        <mat-icon>{{ hasFavorited ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+        Favorite
+      </button>
+      <button mat-raised-button (click)="onShare()">
+        <mat-icon>share</mat-icon>
+        Share
+      </button>
+      <button mat-raised-button (click)="onPrint()">
+        <mat-icon>print</mat-icon>
+        Print
+      </button>
+      <button mat-raised-button color="accent" *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs for Story Content, Media, Comments, Related Stories -->
+  <mat-tab-group [(selectedIndex)]="selectedTab" class="story-details__tabs" *ngIf="!isPrintView">
+    <!-- Story Content Tab -->
+    <mat-tab label="Story">
+      <div class="story-details__content">
+        <!-- Full Story Content (supports markdown) -->
+        <div class="story-content" [innerHTML]="story.content"></div>
+      </div>
+    </mat-tab>
+
+    <!-- Media Tab -->
+    <mat-tab label="Media" *ngIf="story.media.length > 0">
+      <div class="story-details__media">
+        <!-- Photo Gallery -->
+        <div class="media-section" *ngIf="getPhotos().length > 0">
+          <h3>Photos ({{ getPhotos().length }})</h3>
+          <div class="photo-gallery">
+            <div *ngFor="let photo of getPhotos(); let i = index"
+                 class="photo-item"
+                 (click)="openMediaLightbox(i)">
+              <img [src]="photo.thumbnailUrl || photo.url"
+                   [alt]="photo.caption || 'Story photo'"
+                   loading="lazy">
+              <div class="photo-caption" *ngIf="photo.caption">
+                {{ photo.caption }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Player -->
+        <div class="media-section" *ngIf="getVideos().length > 0">
+          <h3>Videos ({{ getVideos().length }})</h3>
+          <div class="video-list">
+            <div *ngFor="let video of getVideos()" class="video-item">
+              <video controls [poster]="video.thumbnailUrl">
+                <source [src]="video.url" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+              <div class="video-caption" *ngIf="video.caption">
+                {{ video.caption }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audio Clips -->
+        <div class="media-section" *ngIf="getAudioClips().length > 0">
+          <h3>Audio Clips ({{ getAudioClips().length }})</h3>
+          <div class="audio-list">
+            <div *ngFor="let audio of getAudioClips()" class="audio-item">
+              <audio controls>
+                <source [src]="audio.url" type="audio/mpeg">
+                Your browser does not support the audio tag.
+              </audio>
+              <div class="audio-caption" *ngIf="audio.caption">
+                {{ audio.caption }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Comments Tab -->
+    <mat-tab label="Comments">
+      <div class="story-details__comments">
+        <!-- Comment Form -->
+        <div class="comment-form">
+          <h3>Leave a Comment</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Your comment</mat-label>
+            <textarea matInput
+                      [(ngModel)]="newComment"
+                      rows="4"
+                      placeholder="Share your thoughts about this story..."
+                      maxlength="2000"></textarea>
+            <mat-hint>{{ newComment.length }}/2000</mat-hint>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="onSubmitComment()" [disabled]="!newComment.trim()">
+            <mat-icon>send</mat-icon>
+            Post Comment
+          </button>
+        </div>
+
+        <!-- Comments List -->
+        <div class="comments-list">
+          <h3>Comments ({{ comments.length }})</h3>
+          <div *ngIf="getTopLevelComments().length === 0" class="no-comments">
+            <p>No comments yet. Be the first to share your thoughts!</p>
+          </div>
+
+          <!-- Top-level Comments -->
+          <div *ngFor="let comment of getTopLevelComments()" class="comment">
+            <div class="comment-header">
+              <img [src]="comment.userAvatar || 'assets/images/default-avatar.png'"
+                   [alt]="comment.userName"
+                   class="comment-avatar">
+              <div class="comment-meta">
+                <span class="comment-author">{{ comment.userName }}</span>
+                <span class="comment-date">{{ formatDate(comment.createdDate) }}</span>
+              </div>
+            </div>
+            <div class="comment-body">
+              {{ comment.comment }}
+            </div>
+            <div class="comment-actions">
+              <button mat-button (click)="onReplyToComment(comment.id)">
+                <mat-icon>reply</mat-icon>
+                Reply
+              </button>
+            </div>
+
+            <!-- Reply Form -->
+            <div class="reply-form" *ngIf="replyToCommentId === comment.id">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Your reply</mat-label>
+                <textarea matInput
+                          [(ngModel)]="replyText"
+                          rows="3"
+                          placeholder="Write your reply..."
+                          maxlength="1000"></textarea>
+              </mat-form-field>
+              <div class="reply-actions">
+                <button mat-raised-button color="primary" (click)="onSubmitReply()" [disabled]="!replyText.trim()">
+                  Post Reply
+                </button>
+                <button mat-button (click)="onCancelReply()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+
+            <!-- Replies -->
+            <div class="replies" *ngIf="getReplies(comment.id).length > 0">
+              <div *ngFor="let reply of getReplies(comment.id)" class="comment reply">
+                <div class="comment-header">
+                  <img [src]="reply.userAvatar || 'assets/images/default-avatar.png'"
+                       [alt]="reply.userName"
+                       class="comment-avatar">
+                  <div class="comment-meta">
+                    <span class="comment-author">{{ reply.userName }}</span>
+                    <span class="comment-date">{{ formatDate(reply.createdDate) }}</span>
+                  </div>
+                </div>
+                <div class="comment-body">
+                  {{ reply.comment }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Related Stories Tab -->
+    <mat-tab label="Related Stories" *ngIf="relatedStories.length > 0">
+      <div class="story-details__related">
+        <!-- Same Time Period -->
+        <div class="related-section" *ngIf="getRelatedByTimePeriod().length > 0">
+          <h3>
+            <mat-icon>schedule</mat-icon>
+            Stories from the Same Time Period
+          </h3>
+          <div class="related-stories-grid">
+            <mat-card *ngFor="let related of getRelatedByTimePeriod()"
+                      class="related-story-card"
+                      (click)="onRelatedStoryClick(related.id)">
+              <img mat-card-image
+                   [src]="related.imageUrl || 'assets/images/story-placeholder.jpg'"
+                   [alt]="related.title">
+              <mat-card-content>
+                <h4>{{ related.title }}</h4>
+                <p>{{ related.summary }}</p>
+                <span class="related-date" *ngIf="related.dateOfEvent">
+                  {{ related.dateOfEvent | date:'mediumDate' }}
+                </span>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Same People -->
+        <div class="related-section" *ngIf="getRelatedByPeople().length > 0">
+          <h3>
+            <mat-icon>people</mat-icon>
+            Stories About the Same People
+          </h3>
+          <div class="related-stories-grid">
+            <mat-card *ngFor="let related of getRelatedByPeople()"
+                      class="related-story-card"
+                      (click)="onRelatedStoryClick(related.id)">
+              <img mat-card-image
+                   [src]="related.imageUrl || 'assets/images/story-placeholder.jpg'"
+                   [alt]="related.title">
+              <mat-card-content>
+                <h4>{{ related.title }}</h4>
+                <p>{{ related.summary }}</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Same Location -->
+        <div class="related-section" *ngIf="getRelatedByLocation().length > 0">
+          <h3>
+            <mat-icon>place</mat-icon>
+            Stories from the Same Location
+          </h3>
+          <div class="related-stories-grid">
+            <mat-card *ngFor="let related of getRelatedByLocation()"
+                      class="related-story-card"
+                      (click)="onRelatedStoryClick(related.id)">
+              <img mat-card-image
+                   [src]="related.imageUrl || 'assets/images/story-placeholder.jpg'"
+                   [alt]="related.title">
+              <mat-card-content>
+                <h4>{{ related.title }}</h4>
+                <p>{{ related.summary }}</p>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Print View (shows all content without tabs) -->
+  <div *ngIf="isPrintView" class="print-content">
+    <div class="story-details__content">
+      <div class="story-content" [innerHTML]="story.content"></div>
+    </div>
+    
+    <div class="story-details__media" *ngIf="story.media.length > 0">
+      <h2>Media</h2>
+      <div class="photo-gallery" *ngIf="getPhotos().length > 0">
+        <div *ngFor="let photo of getPhotos()" class="photo-item">
+          <img [src]="photo.url" [alt]="photo.caption || 'Story photo'">
+          <p *ngIf="photo.caption">{{ photo.caption }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Media Lightbox -->
+  <div class="media-lightbox" *ngIf="selectedMediaIndex >= 0" (click)="closeMediaLightbox()">
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+      <button mat-icon-button class="lightbox-close" (click)="closeMediaLightbox()">
+        <mat-icon>close</mat-icon>
+      </button>
+      
+      <button mat-icon-button
+              class="lightbox-nav lightbox-prev"
+              (click)="previousMedia()"
+              [disabled]="selectedMediaIndex === 0">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      <div class="lightbox-media">
+        <img [src]="story.media[selectedMediaIndex]?.url"
+             [alt]="story.media[selectedMediaIndex]?.caption || 'Story media'">
+        <p class="lightbox-caption" *ngIf="story.media[selectedMediaIndex]?.caption">
+          {{ story.media[selectedMediaIndex].caption }}
+        </p>
+      </div>
+
+      <button mat-icon-button
+              class="lightbox-nav lightbox-next"
+              (click)="nextMedia()"
+              [disabled]="selectedMediaIndex === story.media.length - 1">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+
+      <div class="lightbox-counter">
+        {{ selectedMediaIndex + 1 }} / {{ story.media.length }}
+      </div>
+    </div>
+  </div>
+</div>
