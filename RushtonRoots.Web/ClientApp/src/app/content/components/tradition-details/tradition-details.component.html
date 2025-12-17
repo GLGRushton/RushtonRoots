@@ -289,10 +289,10 @@
               </div>
               <div class="occurrence-location" *ngIf="nextOccurrence?.location">
                 <mat-icon>place</mat-icon>
-                <span>{{ nextOccurrence.location }}</span>
+                <span>{{ nextOccurrence!.location }}</span>
               </div>
               <div class="occurrence-notes" *ngIf="nextOccurrence?.notes">
-                <p>{{ nextOccurrence.notes }}</p>
+                <p>{{ nextOccurrence!.notes }}</p>
               </div>
               <button mat-raised-button color="primary" (click)="onCreateCalendarEvent()">
                 <mat-icon>add</mat-icon>

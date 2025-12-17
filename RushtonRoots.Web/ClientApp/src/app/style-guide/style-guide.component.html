@@ -586,9 +586,9 @@
             <p class="mb-md">
               The application uses a custom Angular Material theme defined in <code>styles.scss</code>:
             </p>
-            <pre class="code-block"><code>@use '@angular/material' as mat;
+            <pre class="code-block"><code>&#64;use '&#64;angular/material' as mat;
 
-@include mat.core();
+&#64;include mat.core();
 
 $rushton-primary: mat.define-palette(mat.$green-palette, 700, 500, 900);
 $rushton-accent: mat.define-palette(mat.$light-green-palette, 400, 300, 600);
@@ -602,11 +602,11 @@ $rushton-theme: mat.define-light-theme((
   )
 ));
 
-@include mat.all-component-themes($rushton-theme);</code></pre>
+&#64;include mat.all-component-themes($rushton-theme);</code></pre>
 
             <h3 class="mt-lg mb-md">Custom Component Theming</h3>
             <p class="mb-md">
-              Components can access theme colors using the <code>@include mat.all-component-themes()</code> mixin.
+              Components can access theme colors using the <code>&#64;include mat.all-component-themes()</code> mixin.
             </p>
             
             <h3 class="mt-lg mb-md">Theme Colors</h3>
@@ -640,9 +640,9 @@ $rushton-theme: mat.define-light-theme((
             </p>
             <pre class="code-block"><code>&lt;!-- In Razor View --&gt;
 &lt;app-person-index
-  [people]="@Html.Raw(Json.Serialize(Model.People))"
-  [can-edit]="@(User.IsInRole("Admin"))"
-  [can-delete]="@(User.IsInRole("Admin"))"&gt;
+  [people]="&#64;Html.Raw(Json.Serialize(Model.People))"
+  [can-edit]="&#64;(User.IsInRole("Admin"))"
+  [can-delete]="&#64;(User.IsInRole("Admin"))"&gt;
 &lt;/app-person-index&gt;</code></pre>
           </mat-card-content>
         </mat-card>
@@ -653,25 +653,25 @@ $rushton-theme: mat.define-light-theme((
             <mat-card-subtitle>Standard pattern for form components</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <pre class="code-block"><code>import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+            <pre class="code-block"><code>import {{ '{' }} FormBuilder, FormGroup, Validators {{ '}' }} from '&#64;angular/forms';
 
-export class MyFormComponent {
+export class MyFormComponent {{ '{' }}
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({
+  constructor(private fb: FormBuilder) {{ '{' }}
+    this.form = this.fb.group({{ '{' }}
       firstName: ['', [Validators.required, Validators.maxLength(100)]],
       lastName: ['', [Validators.required, Validators.maxLength(100)]],
       email: ['', [Validators.required, Validators.email]]
-    });
-  }
+    {{ '}' }});
+  {{ '}' }}
 
-  onSubmit(): void {
-    if (this.form.valid) {
+  onSubmit(): void {{ '{' }}
+    if (this.form.valid) {{ '{' }}
       // Handle form submission
-    }
-  }
-}</code></pre>
+    {{ '}' }}
+  {{ '}' }}
+{{ '}' }}</code></pre>
           </mat-card-content>
         </mat-card>
 

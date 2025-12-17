@@ -89,17 +89,14 @@
       
       <app-content-grid
         [items]="getFilteredStories()"
-        [categories]="categories"
-        [contentType]="'story'"
-        [showSearch]="true"
+        [contentType]="ContentType.Story"
         [showFilters]="true"
         [showSort]="true"
         [canEdit]="canEdit"
-        (itemClicked)="onViewStory($event)"
-        (itemEdited)="onEditStory($event)"
-        (itemDeleted)="onDeleteStory($event)"
-        (personClicked)="onViewPerson($event)"
-        (searchChanged)="onSearch($event)">
+        (viewItem)="onViewStory($event.id)"
+        (editItem)="onEditStory($event.id)"
+        (deleteItem)="onDeleteStory($event.id)"
+        (filtersChange)="onSearch($event)">
       </app-content-grid>
     </div>
   </div>
