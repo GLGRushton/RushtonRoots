@@ -1,0 +1,684 @@
+@{
+    ViewData["Title"] = "System Settings";
+}
+
+<div class="admin-settings-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1>@ViewData["Title"]</h1>
+            <p class="page-subtitle">Configure system-wide settings and preferences</p>
+        </div>
+        <div class="page-actions">
+            <a href="/Admin/Dashboard" class="btn btn-secondary">
+                <i class="material-icons">dashboard</i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Settings Content -->
+    <div class="settings-container">
+        <!-- General Settings Section -->
+        <section class="settings-section">
+            <h2>
+                <i class="material-icons">settings</i>
+                General Settings
+            </h2>
+            <div class="settings-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Site Name</strong>
+                        <p class="setting-description">The name of your family tree site</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" class="form-control" value="RushtonRoots" placeholder="Enter site name">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Site Description</strong>
+                        <p class="setting-description">Brief description of your family tree site</p>
+                    </div>
+                    <div class="setting-control">
+                        <textarea class="form-control" rows="3" placeholder="Enter site description">Our family genealogy and history</textarea>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Time Zone</strong>
+                        <p class="setting-description">Default time zone for events and dates</p>
+                    </div>
+                    <div class="setting-control">
+                        <select class="form-control">
+                            <option>UTC</option>
+                            <option selected>America/New_York</option>
+                            <option>America/Chicago</option>
+                            <option>America/Denver</option>
+                            <option>America/Los_Angeles</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Management Settings -->
+        <section class="settings-section">
+            <h2>
+                <i class="material-icons">people</i>
+                User Management
+            </h2>
+            <div class="settings-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Allow User Registration</strong>
+                        <p class="setting-description">Allow new users to register for accounts</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Require Email Verification</strong>
+                        <p class="setting-description">Users must verify email before accessing the site</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Default User Role</strong>
+                        <p class="setting-description">Role assigned to new users by default</p>
+                    </div>
+                    <div class="setting-control">
+                        <select class="form-control">
+                            <option selected>Viewer</option>
+                            <option>Contributor</option>
+                            <option>Editor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy & Security Settings -->
+        <section class="settings-section">
+            <h2>
+                <i class="material-icons">security</i>
+                Privacy & Security
+            </h2>
+            <div class="settings-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Default Privacy Level</strong>
+                        <p class="setting-description">Default privacy setting for new content</p>
+                    </div>
+                    <div class="setting-control">
+                        <select class="form-control">
+                            <option>Public</option>
+                            <option selected>Family Only</option>
+                            <option>Private</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Enable Two-Factor Authentication</strong>
+                        <p class="setting-description">Require 2FA for admin accounts</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Session Timeout</strong>
+                        <p class="setting-description">Automatic logout after inactivity (minutes)</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="number" class="form-control" value="60" min="15" max="1440">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Media Settings -->
+        <section class="settings-section">
+            <h2>
+                <i class="material-icons">photo_library</i>
+                Media Settings
+            </h2>
+            <div class="settings-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Maximum Upload Size</strong>
+                        <p class="setting-description">Maximum file size for uploads (MB)</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="number" class="form-control" value="10" min="1" max="100">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Allowed File Types</strong>
+                        <p class="setting-description">File extensions allowed for upload</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" class="form-control" value=".jpg,.jpeg,.png,.gif,.pdf">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Auto-Generate Thumbnails</strong>
+                        <p class="setting-description">Automatically create thumbnails for images</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Email Settings -->
+        <section class="settings-section">
+            <h2>
+                <i class="material-icons">email</i>
+                Email Settings
+            </h2>
+            <div class="settings-group">
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>SMTP Server</strong>
+                        <p class="setting-description">Email server for sending notifications</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="text" class="form-control" placeholder="smtp.example.com">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>From Email Address</strong>
+                        <p class="setting-description">Email address used as sender</p>
+                    </div>
+                    <div class="setting-control">
+                        <input type="email" class="form-control" placeholder="noreply@example.com">
+                    </div>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <strong>Enable Email Notifications</strong>
+                        <p class="setting-description">Send email notifications to users</p>
+                    </div>
+                    <div class="setting-control">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Save Button -->
+        <div class="settings-actions">
+            <button type="button" class="btn btn-primary btn-lg">
+                <i class="material-icons">save</i>
+                Save Settings
+            </button>
+            <button type="button" class="btn btn-secondary btn-lg">
+                <i class="material-icons">refresh</i>
+                Reset to Defaults
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Fallback content for browsers without JavaScript -->
+<noscript>
+    <div class="noscript-fallback">
+        <div class="admin-container">
+            <section class="info-section">
+                <h2>System Settings</h2>
+                <p>
+                    The system settings page allows administrators to configure site-wide settings. 
+                    JavaScript is not required for basic functionality.
+                </p>
+                <div class="feature-list">
+                    <h3>Settings Categories:</h3>
+                    <ul>
+                        <li>General site configuration (name, description, timezone)</li>
+                        <li>User management and registration settings</li>
+                        <li>Privacy and security settings</li>
+                        <li>Media upload and storage settings</li>
+                        <li>Email notification configuration</li>
+                    </ul>
+                </div>
+                <div class="actions">
+                    <a href="/Admin/Dashboard" class="btn btn-primary">Admin Dashboard</a>
+                    <a href="/" class="btn btn-secondary">Go to Home</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <style>
+        .noscript-fallback {
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.15);
+            border-left: 6px solid #9c27b0;
+        }
+
+        .info-section h2 {
+            color: #7b1fa2;
+            margin: 0 0 20px 0;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .info-section p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            margin: 30px 0;
+        }
+
+        .feature-list h3 {
+            color: #7b1fa2;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .feature-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0 8px 30px;
+            position: relative;
+            color: #666;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #9c27b0;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #9c27b0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #7b1fa2;
+        }
+
+        .btn-secondary {
+            background-color: #666;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        @@media (max-width: 768px) {
+            .info-section {
+                padding: 25px;
+            }
+
+            .info-section h2 {
+                font-size: 1.5em;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</noscript>
+
+<style>
+    .admin-settings-page {
+        padding: 20px;
+        min-height: 100vh;
+        background-color: #f5f5f5;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-content h1 {
+        color: #7b1fa2;
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .page-subtitle {
+        color: #666;
+        margin: 5px 0 0 0;
+        font-size: 1.1em;
+    }
+
+    .page-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #9c27b0;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #7b1fa2;
+    }
+
+    .btn-secondary {
+        background-color: #666;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #555;
+    }
+
+    .btn-lg {
+        padding: 12px 30px;
+        font-size: 1.1em;
+    }
+
+    .material-icons {
+        font-size: 20px;
+    }
+
+    .settings-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .settings-section {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .settings-section h2 {
+        color: #7b1fa2;
+        margin: 0 0 25px 0;
+        font-size: 1.5em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .settings-section h2 .material-icons {
+        font-size: 28px;
+    }
+
+    .settings-group {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .setting-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .setting-label {
+        flex: 1;
+    }
+
+    .setting-label strong {
+        color: #333;
+        font-size: 1.05em;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .setting-description {
+        color: #666;
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    .setting-control {
+        min-width: 300px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1em;
+        transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #9c27b0;
+    }
+
+    /* Toggle Switch Styles */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #9c27b0;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px #9c27b0;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    .settings-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+        padding-top: 30px;
+    }
+
+    /* Responsive styles for mobile devices */
+    @@media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .header-content h1 {
+            font-size: 2em;
+        }
+
+        .page-actions {
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        .settings-section {
+            padding: 20px;
+        }
+
+        .setting-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .setting-control {
+            min-width: 100%;
+            width: 100%;
+        }
+
+        .settings-actions {
+            flex-direction: column;
+        }
+
+        .settings-actions .btn {
+            width: 100%;
+        }
+    }
+
+    /* Print styles */
+    @@media print {
+        .page-header .page-actions,
+        .settings-actions {
+            display: none;
+        }
+
+        .admin-settings-page {
+            padding: 0;
+            background: white;
+        }
+
+        .switch {
+            display: none;
+        }
+    }
+</style>
