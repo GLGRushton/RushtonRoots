@@ -24,6 +24,21 @@
     gap: 30px;
   }
 
+  .welcome-wrapper {
+    h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+    }
+
+    .tagline {
+      font-size: 1.3em;
+      font-style: italic;
+      margin: 0;
+      opacity: 0.95;
+    }
+  }
+
   .hero-actions {
     display: flex;
     flex-direction: column;
@@ -197,6 +212,31 @@
 
   mat-card-content {
     padding: 20px;
+  }
+
+  .family-tree-placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+
+    .tree-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: #667eea;
+      margin-bottom: 16px;
+    }
+
+    p {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
+    .note {
+      font-size: 14px;
+      font-style: italic;
+      color: #999;
+    }
   }
 
   .tree-actions {

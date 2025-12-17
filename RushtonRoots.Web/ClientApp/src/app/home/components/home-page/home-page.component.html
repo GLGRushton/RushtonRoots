@@ -2,10 +2,10 @@
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-content">
-      <app-welcome 
-        [name]="userName || 'Guest'" 
-        [message]="homePageData.familyTagline || 'Welcome to Rushton Roots'">
-      </app-welcome>
+      <div class="welcome-wrapper">
+        <h1>Welcome{{ userName ? ', ' + userName : '' }}!</h1>
+        <p class="tagline">{{ homePageData.familyTagline || 'Discover, Preserve, and Celebrate Your Family Heritage' }}</p>
+      </div>
       
       <div class="hero-actions">
         <!-- Quick Search Bar -->
@@ -163,7 +163,11 @@
     </h2>
     <mat-card>
       <mat-card-content>
-        <app-family-tree></app-family-tree>
+        <div class="family-tree-placeholder">
+          <mat-icon class="tree-icon">account_tree</mat-icon>
+          <p>Family tree visualization will appear here</p>
+          <p class="note">The interactive family tree component will be loaded from the Razor view</p>
+        </div>
         <div class="tree-actions">
           <button mat-raised-button color="primary" (click)="onViewTree()">
             <mat-icon>open_in_full</mat-icon>

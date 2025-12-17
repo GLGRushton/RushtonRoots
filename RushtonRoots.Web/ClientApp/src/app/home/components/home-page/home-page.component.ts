@@ -23,7 +23,8 @@ import {
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss']
+  styleUrls: ['./home-page.component.scss'],
+  standalone: false
 })
 export class HomePageComponent implements OnInit {
   @Input() data?: string; // JSON string from Razor view
@@ -103,7 +104,7 @@ export class HomePageComponent implements OnInit {
     }
     
     // Ensure quick links are set
-    if (!this.homePageData.quickLinks || this.homePageData.quickLinks.length === 0) {
+    if (this.homePageData && (!this.homePageData.quickLinks || this.homePageData.quickLinks.length === 0)) {
       this.homePageData.quickLinks = this.defaultQuickLinks;
     }
     
