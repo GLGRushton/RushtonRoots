@@ -1,0 +1,311 @@
+<div class="home-page-container" *ngIf="!isLoading && homePageData">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="welcome-wrapper">
+        <h1>Welcome{{ userName ? ', ' + userName : '' }}!</h1>
+        <p class="tagline">{{ homePageData.familyTagline || 'Discover, Preserve, and Celebrate Your Family Heritage' }}</p>
+      </div>
+      
+      <div class="hero-actions">
+        <!-- Quick Search Bar -->
+        <div class="search-container">
+          <mat-form-field class="search-field" appearance="outline">
+            <mat-label>Search family members...</mat-label>
+            <input 
+              matInput 
+              [(ngModel)]="searchQuery" 
+              (keyup.enter)="onSearch()"
+              placeholder="Enter name to search">
+            <mat-icon matPrefix>search</mat-icon>
+            <button 
+              mat-icon-button 
+              matSuffix 
+              *ngIf="searchQuery" 
+              (click)="searchQuery = ''" 
+              aria-label="Clear search">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            (click)="onSearch()"
+            [disabled]="!searchQuery.trim()"
+            class="search-btn">
+            <mat-icon>search</mat-icon>
+            Search
+          </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="onViewTree()">
+            <mat-icon>account_tree</mat-icon>
+            View Tree
+          </button>
+          <button mat-raised-button color="accent" (click)="onAddPerson()" *ngIf="canCreate">
+            <mat-icon>person_add</mat-icon>
+            Add Person
+          </button>
+          <button mat-raised-button (click)="onBrowsePhotos()">
+            <mat-icon>photo_library</mat-icon>
+            Browse Photos
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Family Overview Section -->
+  <section class="family-overview-section">
+    <h2 class="section-title">
+      <mat-icon>dashboard</mat-icon>
+      Family Overview
+    </h2>
+    
+    <div class="overview-grid">
+      <!-- Total Members Card -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>people</mat-icon>
+          <mat-card-title>Family Members</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="stat-value">{{ homePageData.statistics.totalMembers }}</div>
+          <div class="stat-label">Total Members</div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Recent Additions Card -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>person_add</mat-icon>
+          <mat-card-title>Recent Additions</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="homePageData.recentAdditions.length > 0; else noRecentAdditions">
+            <div *ngFor="let addition of homePageData.recentAdditions.slice(0, 3)" 
+                 class="recent-person"
+                 (click)="onPersonClick(addition.person.id)">
+              <img [src]="addition.person.photoUrl || '/assets/default-avatar.png'" 
+                   [alt]="addition.person.fullName"
+                   class="person-avatar">
+              <div class="person-info">
+                <div class="person-name">{{ addition.person.fullName }}</div>
+                <div class="person-meta">Added {{ formatTimestamp(addition.addedDate) }}</div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noRecentAdditions>
+            <div class="no-data">No recent additions</div>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Upcoming Birthdays Card -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>cake</mat-icon>
+          <mat-card-title>Upcoming Birthdays</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="homePageData.upcomingBirthdays.length > 0; else noBirthdays">
+            <div *ngFor="let event of homePageData.upcomingBirthdays.slice(0, 3)" 
+                 class="upcoming-event"
+                 (click)="onPersonClick(event.personId)">
+              <img [src]="event.photoUrl || '/assets/default-avatar.png'" 
+                   [alt]="event.personName"
+                   class="event-avatar">
+              <div class="event-info">
+                <div class="event-name">{{ event.personName }}</div>
+                <div class="event-date">{{ formatDate(event.eventDate) }} - {{ getDaysUntilText(event.daysUntil) }}</div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noBirthdays>
+            <div class="no-data">No upcoming birthdays</div>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Upcoming Anniversaries Card -->
+      <mat-card class="stat-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>favorite</mat-icon>
+          <mat-card-title>Upcoming Anniversaries</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="homePageData.upcomingAnniversaries.length > 0; else noAnniversaries">
+            <div *ngFor="let event of homePageData.upcomingAnniversaries.slice(0, 3)" 
+                 class="upcoming-event"
+                 (click)="onPersonClick(event.personId)">
+              <mat-icon class="event-icon">{{ getEventIcon(event.eventType) }}</mat-icon>
+              <div class="event-info">
+                <div class="event-name">{{ event.personName }}</div>
+                <div class="event-date">{{ formatDate(event.eventDate) }} - {{ getDaysUntilText(event.daysUntil) }}</div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noAnniversaries>
+            <div class="no-data">No upcoming anniversaries</div>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Family Tree Preview Section -->
+  <section class="family-tree-preview-section">
+    <h2 class="section-title">
+      <mat-icon>account_tree</mat-icon>
+      Family Tree
+    </h2>
+    <mat-card>
+      <mat-card-content>
+        <div class="family-tree-placeholder">
+          <mat-icon class="tree-icon">account_tree</mat-icon>
+          <p>Family tree visualization will appear here</p>
+          <p class="note">The interactive family tree component will be loaded from the Razor view</p>
+        </div>
+        <div class="tree-actions">
+          <button mat-raised-button color="primary" (click)="onViewTree()">
+            <mat-icon>open_in_full</mat-icon>
+            Explore Full Tree
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Recent Activity Feed Section -->
+  <section class="activity-feed-section">
+    <h2 class="section-title">
+      <mat-icon>notifications_active</mat-icon>
+      Recent Activity
+    </h2>
+    <mat-card>
+      <mat-card-content>
+        <div *ngIf="homePageData.activityFeed.length > 0; else noActivity" class="activity-list">
+          <div *ngFor="let item of homePageData.activityFeed.slice(0, 10)" 
+               class="activity-item"
+               (click)="onActivityItemClick(item)">
+            <div class="activity-icon" [style.background-color]="item.color">
+              <mat-icon>{{ item.icon }}</mat-icon>
+            </div>
+            <div class="activity-content">
+              <div class="activity-title">{{ item.title }}</div>
+              <div class="activity-description">{{ item.description }}</div>
+              <div class="activity-meta">
+                <span class="activity-user">{{ item.userName }}</span>
+                <span class="activity-time">{{ formatTimestamp(item.timestamp) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noActivity>
+          <div class="no-data-large">
+            <mat-icon>notifications_none</mat-icon>
+            <p>No recent activity</p>
+          </div>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <!-- Quick Links Section -->
+  <section class="quick-links-section">
+    <h2 class="section-title">
+      <mat-icon>apps</mat-icon>
+      Quick Links
+    </h2>
+    <div class="quick-links-grid">
+      <mat-card *ngFor="let link of homePageData.quickLinks" 
+                class="quick-link-card"
+                (click)="onQuickLinkClick(link)">
+        <mat-card-content>
+          <mat-icon [color]="link.color" class="quick-link-icon">{{ link.icon }}</mat-icon>
+          <h3>{{ link.title }}</h3>
+          <p>{{ link.description }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+
+  <!-- Statistics Dashboard Section -->
+  <section class="statistics-dashboard-section">
+    <h2 class="section-title">
+      <mat-icon>bar_chart</mat-icon>
+      Statistics
+    </h2>
+    <div class="statistics-grid">
+      <mat-card class="statistic-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon">elderly</mat-icon>
+          <div class="stat-info">
+            <div class="stat-title">Oldest Ancestor</div>
+            <div class="stat-value" *ngIf="homePageData.statistics.oldestAncestor">
+              {{ homePageData.statistics.oldestAncestor.fullName }}
+            </div>
+            <div class="stat-meta" *ngIf="homePageData.statistics.oldestAncestor">
+              {{ homePageData.statistics.oldestAncestor.birthDate ? formatDate(homePageData.statistics.oldestAncestor.birthDate) : 'Unknown' }}
+            </div>
+            <div class="stat-value" *ngIf="!homePageData.statistics.oldestAncestor">N/A</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="statistic-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon">child_care</mat-icon>
+          <div class="stat-info">
+            <div class="stat-title">Newest Member</div>
+            <div class="stat-value" *ngIf="homePageData.statistics.newestMember">
+              {{ homePageData.statistics.newestMember.fullName }}
+            </div>
+            <div class="stat-meta" *ngIf="homePageData.statistics.newestMember">
+              {{ homePageData.statistics.newestMember.birthDate ? formatDate(homePageData.statistics.newestMember.birthDate) : 'Unknown' }}
+            </div>
+            <div class="stat-value" *ngIf="!homePageData.statistics.newestMember">N/A</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="statistic-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon">photo_library</mat-icon>
+          <div class="stat-info">
+            <div class="stat-title">Total Photos</div>
+            <div class="stat-value">{{ homePageData.statistics.totalPhotos }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="statistic-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon">menu_book</mat-icon>
+          <div class="stat-info">
+            <div class="stat-title">Total Stories</div>
+            <div class="stat-value">{{ homePageData.statistics.totalStories }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="statistic-card">
+        <mat-card-content>
+          <mat-icon class="stat-icon">home</mat-icon>
+          <div class="stat-info">
+            <div class="stat-title">Active Households</div>
+            <div class="stat-value">{{ homePageData.statistics.activeHouseholds }}</div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="isLoading">
+  <mat-spinner></mat-spinner>
+  <p>Loading your family dashboard...</p>
+</div>

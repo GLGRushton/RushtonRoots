@@ -22,6 +22,10 @@ import { CalendarModule } from './calendar/calendar.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { PwaModule } from './pwa/pwa.module';
 import { AccessibilityModule } from './accessibility/accessibility.module';
+import { HomeModule } from './home/home.module';
+
+// Import Phase 6.1 Home Page component for Angular Elements registration
+import { HomePageComponent } from './home/components/home-page/home-page.component';
 
 // Import core reusable components for Angular Elements registration
 import { PersonCardComponent } from './shared/components/person-card/person-card.component';
@@ -184,7 +188,8 @@ import { AccessibilityStatementComponent } from './accessibility/components/acce
     CalendarModule,
     MessagingModule,
     PwaModule,
-    AccessibilityModule
+    AccessibilityModule,
+    HomeModule
   ],
   providers: []
 })
@@ -202,6 +207,9 @@ export class AppModule {
     safeDefine('app-welcome', WelcomeComponent);
     safeDefine('app-family-tree', FamilyTreeComponent);
     safeDefine('app-style-guide', StyleGuideComponent);
+
+    // Register Phase 6.1 Home Page component as Angular Element
+    safeDefine('app-home-page', HomePageComponent);
 
     // Register Phase 1.2 core reusable components as Angular Elements
     safeDefine('app-person-card', PersonCardComponent);
