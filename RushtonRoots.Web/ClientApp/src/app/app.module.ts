@@ -229,12 +229,10 @@ export class AppModule {
     safeDefine('app-breadcrumb', BreadcrumbComponent);
 
     // Register Phase 2.1 Header & Navigation components as Angular Elements
-    safeDefine('app-header', HeaderComponent);
     safeDefine('app-navigation', NavigationComponent);
     safeDefine('app-user-menu', UserMenuComponent);
 
     // Register Phase 2.2 Footer & Page Layout components as Angular Elements
-    safeDefine('app-footer', FooterComponent);
     safeDefine('app-page-layout', PageLayoutComponent);
 
     // Register Phase 11.1 Layout Wrapper component as Angular Element
