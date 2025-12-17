@@ -58,7 +58,7 @@
 
       <!-- Login Link (when not authenticated) -->
       <a 
-        *ngIf="userInfo && !userInfo.isAuthenticated" 
+        *ngIf="userInfo && userInfo.isAuthenticated === false" 
         (click)="navigateTo('/Account/Login')"
         class="login-link"
         mat-raised-button>
