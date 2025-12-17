@@ -4,45 +4,45 @@ using RushtonRoots.Application.Services;
 using RushtonRoots.Domain.UI.Requests;
 using System.Security.Claims;
 
-namespace RushtonRoots.Web.Controllers;
+namespace RushtonRoots.Web.Controllers.Api;
 
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]
-public class EventRsvpController : ControllerBase
+public class CommentController : ControllerBase
 {
-    private readonly IEventRsvpService _eventRsvpService;
+    private readonly ICommentService _commentService;
 
-    public EventRsvpController(IEventRsvpService eventRsvpService)
+    public CommentController(ICommentService commentService)
     {
-        _eventRsvpService = eventRsvpService;
+        _commentService = commentService;
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var rsvp = await _eventRsvpService.GetByIdAsync(id);
-        if (rsvp == null) return NotFound();
+        var comment = await _commentService.GetByIdAsync(id);
+        if (comment == null) return NotFound();
         
-        return Ok(rsvp);
+        return Ok(comment);
     }
 
-    [HttpGet("event/{eventId}")]
-    public async Task<IActionResult> GetByEvent(int eventId)
+    [HttpGet("entity/{entityType}/{entityId}")]
+    public async Task<IActionResult> GetByEntity(string entityType, int entityId)
     {
-        var rsvps = await _eventRsvpService.GetByEventIdAsync(eventId);
-        return Ok(rsvps);
+        var comments = await _commentService.GetByEntityAsync(entityType, entityId);
+        return Ok(comments);
     }
 
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetByUser(string userId)
     {
-        var rsvps = await _eventRsvpService.GetByUserIdAsync(userId);
-        return Ok(rsvps);
+        var comments = await _commentService.GetByUserIdAsync(userId);
+        return Ok(comments);
     }
 
-    [HttpGet("my-rsvps")]
-    public async Task<IActionResult> GetMyRsvps()
+    [HttpGet("my-comments")]
+    public async Task<IActionResult> GetMyComments()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdClaim))
@@ -50,12 +50,12 @@ public class EventRsvpController : ControllerBase
             return Unauthorized();
         }
 
-        var rsvps = await _eventRsvpService.GetByUserIdAsync(userIdClaim);
-        return Ok(rsvps);
+        var comments = await _commentService.GetByUserIdAsync(userIdClaim);
+        return Ok(comments);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateEventRsvpRequest request)
+    public async Task<IActionResult> Create([FromBody] CreateCommentRequest request)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdClaim))
@@ -63,19 +63,12 @@ public class EventRsvpController : ControllerBase
             return Unauthorized();
         }
 
-        try
-        {
-            var rsvp = await _eventRsvpService.CreateRsvpAsync(request, userIdClaim);
-            return CreatedAtAction(nameof(GetById), new { id = rsvp.Id }, rsvp);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var comment = await _commentService.CreateCommentAsync(request, userIdClaim);
+        return CreatedAtAction(nameof(GetById), new { id = comment.Id }, comment);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateEventRsvpRequest request)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateCommentRequest request)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userIdClaim))
@@ -90,8 +83,8 @@ public class EventRsvpController : ControllerBase
 
         try
         {
-            var updatedRsvp = await _eventRsvpService.UpdateRsvpAsync(id, request, userIdClaim);
-            return Ok(updatedRsvp);
+            var updatedComment = await _commentService.UpdateCommentAsync(id, request, userIdClaim);
+            return Ok(updatedComment);
         }
         catch (UnauthorizedAccessException)
         {
@@ -114,7 +107,7 @@ public class EventRsvpController : ControllerBase
 
         try
         {
-            await _eventRsvpService.DeleteRsvpAsync(id, userIdClaim);
+            await _commentService.DeleteCommentAsync(id, userIdClaim);
             return NoContent();
         }
         catch (UnauthorizedAccessException)

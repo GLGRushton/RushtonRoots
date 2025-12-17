@@ -4,7 +4,7 @@ using RushtonRoots.Application.Services;
 using RushtonRoots.Domain.UI.Requests;
 using System.Security.Claims;
 
-namespace RushtonRoots.Web.Controllers;
+namespace RushtonRoots.Web.Controllers.Api;
 
 /// <summary>
 /// API controller for Recipe operations

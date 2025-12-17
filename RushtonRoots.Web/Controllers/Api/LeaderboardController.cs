@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RushtonRoots.Application.Services;
 using System.Security.Claims;
 
-namespace RushtonRoots.Web.Controllers;
+namespace RushtonRoots.Web.Controllers.Api;
 
 [Authorize]
 [ApiController]
