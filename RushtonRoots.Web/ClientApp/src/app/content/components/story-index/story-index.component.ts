@@ -93,6 +93,11 @@ export class StoryIndexComponent implements OnInit {
    */
   breadcrumbItems: Array<{ label: string; url: string }> = [];
 
+  /**
+   * ContentType enum reference for use in template
+   */
+  readonly ContentType = ContentType;
+
   ngOnInit(): void {
     // Determine view mode based on query parameters
     if (this.storyId || this.slug) {

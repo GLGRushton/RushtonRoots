@@ -133,16 +133,13 @@
       
       <app-content-grid
         [items]="getFilteredTraditions()"
-        [categories]="categories"
-        [contentType]="'tradition'"
-        [showSearch]="true"
+        [contentType]="ContentType.Tradition"
         [showFilters]="true"
         [showSort]="true"
         [canEdit]="canEdit"
-        (itemClicked)="onViewTradition($event)"
-        (itemEdited)="onEditTradition($event)"
-        (itemDeleted)="onDeleteTradition($event)"
-        (personClicked)="onViewPerson($event)">
+        (viewItem)="onViewTradition($event.id)"
+        (editItem)="onEditTradition($event.id)"
+        (deleteItem)="onDeleteTradition($event.id)">
       </app-content-grid>
     </div>
   </div>

@@ -350,8 +350,8 @@
       </button>
 
       <div class="lightbox-media">
-        <img [src]="story.media[selectedMediaIndex]?.url"
-             [alt]="story.media[selectedMediaIndex]?.caption || 'Story media'">
+        <img [src]="story.media[selectedMediaIndex].url"
+             [alt]="story.media[selectedMediaIndex].caption || 'Story media'">
         <p class="lightbox-caption" *ngIf="story.media[selectedMediaIndex]?.caption">
           {{ story.media[selectedMediaIndex].caption }}
         </p>
