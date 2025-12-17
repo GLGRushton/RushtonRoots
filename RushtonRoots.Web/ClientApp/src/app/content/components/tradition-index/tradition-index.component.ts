@@ -358,6 +358,22 @@ export class TraditionIndexComponent implements OnInit {
   }
 
   /**
+   * Clear frequency filter
+   */
+  clearFrequencyFilter(): void {
+    this.frequencyFilter = '';
+    this.searchFilters.searchText = '';
+  }
+
+  /**
+   * Set frequency filter
+   */
+  setFrequencyFilter(frequency: string): void {
+    this.frequencyFilter = frequency;
+    this.searchFilters.searchText = frequency;
+  }
+
+  /**
    * Handle search filter change
    */
   onSearchChange(filters: ContentSearchFilters): void {

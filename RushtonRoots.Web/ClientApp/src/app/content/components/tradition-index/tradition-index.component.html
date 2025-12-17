@@ -46,36 +46,36 @@
       <h3>Filter by Frequency</h3>
       <mat-chip-set>
         <mat-chip 
-          (click)="frequencyFilter = ''; searchFilters.searchText = ''"
+          (click)="clearFrequencyFilter()"
           [class.selected]="!frequencyFilter">
           All Frequencies
         </mat-chip>
         <mat-chip 
-          (click)="frequencyFilter = 'daily'; searchFilters.searchText = 'daily'"
+          (click)="setFrequencyFilter('daily')"
           [class.selected]="frequencyFilter === 'daily'">
           <mat-icon>today</mat-icon>
           Daily
         </mat-chip>
         <mat-chip 
-          (click)="frequencyFilter = 'weekly'; searchFilters.searchText = 'weekly'"
+          (click)="setFrequencyFilter('weekly')"
           [class.selected]="frequencyFilter === 'weekly'">
           <mat-icon>date_range</mat-icon>
           Weekly
         </mat-chip>
         <mat-chip 
-          (click)="frequencyFilter = 'monthly'; searchFilters.searchText = 'monthly'"
+          (click)="setFrequencyFilter('monthly')"
           [class.selected]="frequencyFilter === 'monthly'">
           <mat-icon>calendar_month</mat-icon>
           Monthly
         </mat-chip>
         <mat-chip 
-          (click)="frequencyFilter = 'yearly'; searchFilters.searchText = 'yearly'"
+          (click)="setFrequencyFilter('yearly')"
           [class.selected]="frequencyFilter === 'yearly'">
           <mat-icon>event</mat-icon>
           Yearly
         </mat-chip>
         <mat-chip 
-          (click)="frequencyFilter = 'occasional'; searchFilters.searchText = 'occasional'"
+          (click)="setFrequencyFilter('occasional')"
           [class.selected]="frequencyFilter === 'occasional'">
           <mat-icon>event_available</mat-icon>
           Occasional
