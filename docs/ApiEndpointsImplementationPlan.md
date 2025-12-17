@@ -255,12 +255,20 @@ Controllers/Api/HouseholdController.cs
 
 **Estimated Effort:** 2-3 days
 
-**Acceptance Criteria:**
-- [ ] All endpoints implemented and tested
-- [ ] Member management working correctly
-- [ ] Settings updates functioning properly
-- [ ] Authorization rules enforced
-- [ ] Proper validation and error handling
+**Status:** ✅ **COMPLETE** (2025-12-17)
+
+**Deliverables:**
+- HouseholdController API with 9 RESTful endpoints
+- 31 comprehensive unit tests (all passing)
+- Request models for member management (AddHouseholdMemberRequest, UpdateHouseholdSettingsRequest)
+- Extended IHouseholdService with member management methods
+- Full integration with existing HouseholdService and HouseholdRepository
+- Authorization implemented (Admin for create/delete, Admin/HouseholdAdmin for updates and member management)
+
+**Implementation Notes:**
+- Member removal endpoint (`DELETE /api/household/{id}/members/{personId}`) throws an error by design, as persons must belong to exactly one household per domain model. To move a person between households, use the Add Member endpoint to assign them to a new household.
+- Settings management includes archive/unarchive functionality
+- All endpoints include proper validation and error handling
 
 ---
 
