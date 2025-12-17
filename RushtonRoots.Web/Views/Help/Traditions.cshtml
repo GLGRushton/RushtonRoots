@@ -1,0 +1,112 @@
+@{
+    ViewData["Title"] = "Traditions Help";
+}
+
+<div class="help-page">
+    <nav class="breadcrumb">
+        <a href="/Help">Help</a>
+        <span class="separator">/</span>
+        <span class="current">Traditions</span>
+    </nav>
+
+    <div class="page-header">
+        <div class="header-content">
+            <h1>@ViewData["Title"]</h1>
+            <p class="page-subtitle">Record family traditions and customs</p>
+        </div>
+    </div>
+
+    <div class="help-container">
+        <section class="content-section">
+            <h2><i class="material-icons">celebration</i> Overview</h2>
+            <p>
+                This feature helps you record and maintain family traditions, customs, and celebrations. Use the tools and options provided to
+                effectively manage this aspect of your family history.
+            </p>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">help_outline</i> Getting Started</h2>
+            <p>To get started with this feature:</p>
+            <ol>
+                <li>Navigate to the Traditions section from the main menu</li>
+                <li>Click the appropriate button to create or manage items</li>
+                <li>Fill in the required information</li>
+                <li>Save your changes</li>
+            </ol>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">lightbulb</i> Tips &amp; Best Practices</h2>
+            <ul>
+                <li>Keep information accurate and up-to-date</li>
+                <li>Add detailed descriptions when possible</li>
+                <li>Include photos or media to enhance documentation</li>
+                <li>Collaborate with family members to gather complete information</li>
+                <li>Regularly review and update content</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">settings</i> Managing Items</h2>
+            <p>You can perform the following actions:</p>
+            <ul>
+                <li><strong>Create:</strong> Add new items to your collection</li>
+                <li><strong>Edit:</strong> Update existing information</li>
+                <li><strong>Delete:</strong> Remove items (Admin/HouseholdAdmin only)</li>
+                <li><strong>Search:</strong> Find specific items quickly</li>
+                <li><strong>Filter:</strong> Organize and view items by category</li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="material-icons">share</i> Sharing &amp; Privacy</h2>
+            <p>Control who can view and edit your content:</p>
+            <ul>
+                <li>Items are visible to all members of your household by default</li>
+                <li>Admins and Household Admins can manage all content</li>
+                <li>Regular users can view and contribute based on permissions</li>
+                <li>Adjust privacy settings as needed for sensitive content</li>
+            </ul>
+        </section>
+
+        <section class="help-navigation">
+            <a href="/Help" class="btn btn-secondary">
+                <i class="material-icons">arrow_back</i>
+                Back to Help Index
+            </a>
+            <a href="/Tradition" class="btn btn-primary">
+                <i class="material-icons">celebration</i>
+                Go to Traditions
+            </a>
+        </section>
+    </div>
+</div>
+
+<style>
+    .help-page { padding: 20px; min-height: 100vh; background-color: #f5f5f5; }
+    .breadcrumb { max-width: 900px; margin: 0 auto 20px; padding: 10px 0; color: #666; font-size: 0.95em; }
+    .breadcrumb a { color: #1976d2; text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .separator { margin: 0 8px; }
+    .breadcrumb .current { color: #333; font-weight: 500; }
+    .page-header { margin-bottom: 30px; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; max-width: 900px; margin-left: auto; margin-right: auto; }
+    .header-content h1 { color: #1976d2; margin: 0; font-size: 2.5em; font-weight: 700; }
+    .page-subtitle { color: #666; margin: 10px 0 0 0; font-size: 1.2em; }
+    .help-container { max-width: 900px; margin: 0 auto; }
+    .content-section { background: white; border-radius: 8px; padding: 30px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .content-section h2 { color: #1976d2; margin: 0 0 15px 0; font-size: 1.8em; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+    .content-section h2 .material-icons { font-size: 1.2em; }
+    .content-section p { color: #555; line-height: 1.8; font-size: 1.05em; margin: 0 0 15px 0; }
+    .content-section ul, .content-section ol { color: #555; line-height: 1.8; font-size: 1.05em; margin: 10px 0 15px 20px; }
+    .content-section li { margin: 8px 0; }
+    .help-navigation { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: 500; border: none; cursor: pointer; transition: background-color 0.2s; }
+    .btn-primary { background-color: #1976d2; color: white; }
+    .btn-primary:hover { background-color: #1565c0; }
+    .btn-secondary { background-color: #666; color: white; }
+    .btn-secondary:hover { background-color: #555; }
+    .material-icons { font-size: 20px; }
+    @@media (max-width: 768px) { .page-header { padding: 25px; } .header-content h1 { font-size: 2em; } .content-section { padding: 20px; } .help-navigation { flex-direction: column; } .btn { width: 100%; justify-content: center; } }
+    @@media print { .help-page { padding: 0; background: white; } .help-navigation { display: none; } }
+</style>

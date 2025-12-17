@@ -1,0 +1,458 @@
+@{
+    ViewData["Title"] = "Account Help";
+}
+
+<div class="help-page">
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb">
+        <a href="/Help">Help</a>
+        <span class="separator">/</span>
+        <span class="current">Account Help</span>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1>@ViewData["Title"]</h1>
+            <p class="page-subtitle">Manage your account, profile, and preferences</p>
+        </div>
+    </div>
+
+    <!-- Help Content -->
+    <div class="help-container">
+        <!-- Creating an Account -->
+        <section class="content-section">
+            <h2><i class="material-icons">person_add</i> Creating an Account</h2>
+            <p>
+                To get started with RushtonRoots, you'll need to create an account:
+            </p>
+            <ol>
+                <li>Navigate to the registration page</li>
+                <li>Provide your email address (this will be your username)</li>
+                <li>Create a strong password (minimum 6 characters recommended)</li>
+                <li>Enter your display name</li>
+                <li>Click "Register" to create your account</li>
+            </ol>
+            <div class="tip-box">
+                <i class="material-icons">security</i>
+                <div>
+                    <strong>Security Tip:</strong> Use a unique password that includes uppercase and lowercase 
+                    letters, numbers, and special characters for maximum security.
+                </div>
+            </div>
+        </section>
+
+        <!-- Managing Your Profile -->
+        <section class="content-section">
+            <h2><i class="material-icons">account_circle</i> Managing Your Profile</h2>
+            <p>
+                Your profile contains your personal information visible to other household members:
+            </p>
+            <h3>Editing Your Profile</h3>
+            <ol>
+                <li>Navigate to <strong>Account → Profile</strong></li>
+                <li>Update your information:
+                    <ul>
+                        <li>Display name</li>
+                        <li>Profile photo</li>
+                        <li>Bio or description</li>
+                        <li>Contact information</li>
+                    </ul>
+                </li>
+                <li>Click "Save Changes" to update your profile</li>
+            </ol>
+        </section>
+
+        <!-- Changing Your Password -->
+        <section class="content-section">
+            <h2><i class="material-icons">lock</i> Changing Your Password</h2>
+            <p>
+                It's important to keep your password secure and update it periodically:
+            </p>
+            <ol>
+                <li>Go to <strong>Account → Change Password</strong></li>
+                <li>Enter your current password</li>
+                <li>Enter your new password</li>
+                <li>Confirm your new password</li>
+                <li>Click "Update Password"</li>
+            </ol>
+            <div class="warning-box">
+                <i class="material-icons">warning</i>
+                <div>
+                    <strong>Important:</strong> After changing your password, you'll be logged out and will 
+                    need to log back in with your new password.
+                </div>
+            </div>
+        </section>
+
+        <!-- Notification Settings -->
+        <section class="content-section">
+            <h2><i class="material-icons">notifications</i> Notification Settings</h2>
+            <p>
+                Control how and when you receive notifications about family activities:
+            </p>
+            <h3>Notification Preferences</h3>
+            <ul>
+                <li><strong>Email Notifications:</strong> Receive updates via email</li>
+                <li><strong>In-App Notifications:</strong> See notifications when logged in</li>
+                <li><strong>Push Notifications:</strong> Get real-time alerts (if enabled on your device)</li>
+            </ul>
+            <h3>Notification Types</h3>
+            <ul>
+                <li>Birthdays and anniversaries</li>
+                <li>New family events</li>
+                <li>Updates to family tree</li>
+                <li>New stories or recipes shared</li>
+                <li>Messages and comments</li>
+            </ul>
+            <p>
+                To adjust your notification settings, go to <strong>Account → Settings → Notifications</strong>.
+            </p>
+        </section>
+
+        <!-- Privacy Settings -->
+        <section class="content-section">
+            <h2><i class="material-icons">privacy_tip</i> Privacy Settings</h2>
+            <p>
+                Control who can see your information and how your data is used:
+            </p>
+            <h3>Profile Visibility</h3>
+            <ul>
+                <li><strong>Public:</strong> Visible to all household members</li>
+                <li><strong>Private:</strong> Only visible to household administrators</li>
+            </ul>
+            <h3>Data Sharing</h3>
+            <ul>
+                <li>Control whether your activity is shown in the activity feed</li>
+                <li>Manage who can tag you in photos</li>
+                <li>Control visibility of your contact information</li>
+            </ul>
+            <p>
+                Access privacy settings at <strong>Account → Settings → Privacy</strong>.
+            </p>
+        </section>
+
+        <!-- Two-Factor Authentication -->
+        <section class="content-section">
+            <h2><i class="material-icons">verified_user</i> Two-Factor Authentication (2FA)</h2>
+            <p>
+                Add an extra layer of security to your account with two-factor authentication:
+            </p>
+            <h3>Enabling 2FA</h3>
+            <ol>
+                <li>Go to <strong>Account → Security</strong></li>
+                <li>Click "Enable Two-Factor Authentication"</li>
+                <li>Scan the QR code with your authenticator app (Google Authenticator, Authy, etc.)</li>
+                <li>Enter the verification code from your app</li>
+                <li>Save your backup codes in a safe place</li>
+            </ol>
+            <div class="tip-box">
+                <i class="material-icons">lightbulb</i>
+                <div>
+                    <strong>Tip:</strong> Keep your backup codes in a secure location. You'll need them if 
+                    you lose access to your authenticator app.
+                </div>
+            </div>
+        </section>
+
+        <!-- Logging Out -->
+        <section class="content-section">
+            <h2><i class="material-icons">logout</i> Logging Out</h2>
+            <p>
+                To log out of your account:
+            </p>
+            <ol>
+                <li>Click on your profile icon in the navigation bar</li>
+                <li>Select "Logout" from the dropdown menu</li>
+            </ol>
+            <p>
+                Always log out when using a shared or public computer to protect your account security.
+            </p>
+        </section>
+
+        <!-- Troubleshooting -->
+        <section class="content-section">
+            <h2><i class="material-icons">help_outline</i> Common Issues</h2>
+            <div class="faq-item">
+                <h3>I forgot my password</h3>
+                <p>
+                    Click "Forgot Password" on the login page. Enter your email address and we'll send you 
+                    instructions to reset your password.
+                </p>
+            </div>
+            <div class="faq-item">
+                <h3>I'm not receiving notification emails</h3>
+                <p>
+                    Check your email's spam folder. Also verify that your email address is correct in your 
+                    profile settings and that email notifications are enabled in your notification preferences.
+                </p>
+            </div>
+            <div class="faq-item">
+                <h3>How do I delete my account?</h3>
+                <p>
+                    Contact your household administrator or system support to request account deletion. 
+                    Note that this action is permanent and cannot be undone.
+                </p>
+            </div>
+        </section>
+
+        <!-- Navigation -->
+        <section class="help-navigation">
+            <a href="/Help" class="btn btn-secondary">
+                <i class="material-icons">arrow_back</i>
+                Back to Help Index
+            </a>
+            <a href="/Account/Settings" class="btn btn-primary">
+                <i class="material-icons">settings</i>
+                Account Settings
+            </a>
+        </section>
+    </div>
+</div>
+
+<style>
+    .help-page {
+        padding: 20px;
+        min-height: 100vh;
+        background-color: #f5f5f5;
+    }
+
+    .breadcrumb {
+        max-width: 900px;
+        margin: 0 auto 20px;
+        padding: 10px 0;
+        color: #666;
+        font-size: 0.95em;
+    }
+
+    .breadcrumb a {
+        color: #1976d2;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb .separator {
+        margin: 0 8px;
+    }
+
+    .breadcrumb .current {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        text-align: center;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .header-content h1 {
+        color: #1976d2;
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .page-subtitle {
+        color: #666;
+        margin: 10px 0 0 0;
+        font-size: 1.2em;
+    }
+
+    .help-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .content-section {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .content-section h2 {
+        color: #1976d2;
+        margin: 0 0 15px 0;
+        font-size: 1.8em;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .content-section h2 .material-icons {
+        font-size: 1.2em;
+    }
+
+    .content-section h3 {
+        color: #333;
+        margin: 20px 0 10px 0;
+        font-size: 1.3em;
+        font-weight: 600;
+    }
+
+    .content-section p {
+        color: #555;
+        line-height: 1.8;
+        font-size: 1.05em;
+        margin: 0 0 15px 0;
+    }
+
+    .content-section ul,
+    .content-section ol {
+        color: #555;
+        line-height: 1.8;
+        font-size: 1.05em;
+        margin: 10px 0 15px 20px;
+    }
+
+    .content-section li {
+        margin: 8px 0;
+    }
+
+    .tip-box {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+        background: #e3f2fd;
+        border-left: 4px solid #1976d2;
+        border-radius: 4px;
+        margin: 15px 0;
+    }
+
+    .tip-box .material-icons {
+        color: #1976d2;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .tip-box strong {
+        color: #1565c0;
+    }
+
+    .warning-box {
+        display: flex;
+        gap: 15px;
+        padding: 15px;
+        background: #fff3e0;
+        border-left: 4px solid #ff9800;
+        border-radius: 4px;
+        margin: 15px 0;
+    }
+
+    .warning-box .material-icons {
+        color: #ff9800;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .warning-box strong {
+        color: #f57c00;
+    }
+
+    .faq-item {
+        margin-bottom: 20px;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 8px;
+    }
+
+    .faq-item h3 {
+        margin: 0 0 10px 0;
+        color: #1976d2;
+    }
+
+    .faq-item p {
+        margin: 0;
+    }
+
+    .help-navigation {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #1976d2;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #1565c0;
+    }
+
+    .btn-secondary {
+        background-color: #666;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #555;
+    }
+
+    .material-icons {
+        font-size: 20px;
+    }
+
+    /* Responsive styles */
+    @@media (max-width: 768px) {
+        .page-header {
+            padding: 25px;
+        }
+
+        .header-content h1 {
+            font-size: 2em;
+        }
+
+        .content-section {
+            padding: 20px;
+        }
+
+        .help-navigation {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Print styles */
+    @@media print {
+        .help-page {
+            padding: 0;
+            background: white;
+        }
+
+        .help-navigation {
+            display: none;
+        }
+    }
+</style>
