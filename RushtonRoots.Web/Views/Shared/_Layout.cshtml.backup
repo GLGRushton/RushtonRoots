@@ -12,14 +12,29 @@
             padding: 0;
             background: linear-gradient(to bottom, #e8f5e9, #f1f8e9);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        main {
+            flex: 1 0 auto;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @@media (max-width: 600px) {
+            main {
+                padding: 20px 16px;
+            }
         }
     </style>
 </head>
 <body>
-    @* Angular Layout Wrapper Component - Phase 11.1 
-        Orchestrates: HeaderComponent, NavigationComponent, BreadcrumbComponent, FooterComponent
-    *@
-    <app-layout-wrapper
+    @* Angular Header Component - Phase 2.1 *@
+    <app-header
         userinfo='@Html.Raw(Json.Serialize(new {
             name = User.Identity?.Name ?? "",
             role = User.IsInRole("Admin") ? "System Admin" : User.IsInRole("HouseholdAdmin") ? "Household Admin" : "Family Member",
@@ -27,18 +42,20 @@
             isAdmin = User.IsInRole("Admin"),
             isHouseholdAdmin = User.IsInRole("HouseholdAdmin")
         }))'
-        breadcrumbitems='@Html.Raw(Json.Serialize(ViewData["Breadcrumbs"] ?? new object[] { }))'
         showsearch="true"
-        shownotifications="true"
-        showbreadcrumbs="@((ViewData["ShowBreadcrumbs"] as bool?) ?? false)">
-        
-        @RenderBody()
-        
-    </app-layout-wrapper>
+        shownotifications="true">
+    </app-header>
 
     @* Hidden logout form for server-side authentication *@
     <form asp-controller="Account" asp-action="Logout" method="post" style="display: none;" id="logoutForm">
     </form>
+    
+    <main role="main">
+        @RenderBody()
+    </main>
+    
+    @* Angular Footer Component - Phase 2.2 *@
+    <app-footer></app-footer>
     
     @* Angular Elements Scripts *@
     <script src="~/dist/runtime.js"></script>

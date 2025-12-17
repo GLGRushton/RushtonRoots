@@ -1,0 +1,42 @@
+/**
+ * LayoutWrapperComponent Styles
+ * Main layout orchestrator styles
+ */
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// Breadcrumb container spacing
+.breadcrumb-container {
+  padding: 0 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    padding: 0 16px;
+  }
+}
+
+// Main content area
+.main-content {
+  flex: 1 0 auto;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    padding: 20px 16px;
+  }
+}
+
+// Ensure footer stays at bottom
+app-footer {
+  flex-shrink: 0;
+}

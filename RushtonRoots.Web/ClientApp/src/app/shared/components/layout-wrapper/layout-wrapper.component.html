@@ -1,0 +1,25 @@
+<!-- Skip Navigation Link for Accessibility -->
+<app-skip-navigation></app-skip-navigation>
+
+<!-- Header with integrated navigation -->
+<app-header
+  [userInfo]="userInfo"
+  [showSearch]="showsearch"
+  [showNotifications]="shownotifications"
+  (searchQuery)="onSearch($event)"
+  (logout)="onLogout()"
+  (menuToggle)="onMenuToggle()">
+</app-header>
+
+<!-- Breadcrumb Navigation (optional, shown when enabled and has items) -->
+<div *ngIf="shouldShowBreadcrumbs" class="breadcrumb-container">
+  <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+</div>
+
+<!-- Main Content Area -->
+<main role="main" id="main-content" class="main-content">
+  <ng-content></ng-content>
+</main>
+
+<!-- Footer -->
+<app-footer></app-footer>
