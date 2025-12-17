@@ -1,0 +1,343 @@
+/**
+ * TraditionIndexComponent Styles
+ * Container component for tradition listing and detail views
+ */
+
+.tradition-index {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+
+  // List View
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+    border-radius: 16px;
+    border-left: 6px solid #ff9800;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+    position: relative;
+
+    h1 {
+      color: #d32f2f;
+      margin: 0 0 10px 0;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+
+    .tagline {
+      color: #f57c00;
+      font-size: 1.3rem;
+      font-style: italic;
+      margin: 0 0 24px 0;
+    }
+
+    .create-button {
+      margin-top: 16px;
+    }
+  }
+
+  &__categories {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      color: #d32f2f;
+      margin: 0 0 16px 0;
+      font-size: 1.5rem;
+    }
+
+    mat-chip-set {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    mat-chip {
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &.selected {
+        background-color: #ff9800;
+        color: white;
+      }
+
+      &.clear-filter {
+        background-color: #f44336;
+        color: white;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  // Frequency Filter Section
+  &__frequency-filter {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      color: #d32f2f;
+      margin: 0 0 16px 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    mat-chip-set {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    mat-chip {
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      &.selected {
+        background-color: #d32f2f;
+        color: white;
+
+        mat-icon {
+          color: white;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      mat-icon {
+        color: #ff9800;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  &__featured,
+  &__recent,
+  &__all {
+    background: white;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      color: #d32f2f;
+      margin: 0 0 24px 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      mat-icon {
+        color: #ff9800;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  .featured-traditions-grid,
+  .recent-traditions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
+  // Detail View
+  &__detail {
+    // Tradition details component handles its own styling
+  }
+
+  // Not Found
+  &__not-found {
+    max-width: 600px;
+    margin: 80px auto;
+
+    .not-found-content {
+      text-align: center;
+      padding: 40px;
+
+      mat-icon {
+        font-size: 80px;
+        width: 80px;
+        height: 80px;
+        color: #999;
+        margin-bottom: 24px;
+      }
+
+      h2 {
+        color: #333;
+        margin: 0 0 16px 0;
+        font-size: 2rem;
+      }
+
+      p {
+        color: #666;
+        font-size: 1.125rem;
+        margin: 0 0 24px 0;
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .tradition-index {
+    &__header {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .tagline {
+        font-size: 1.125rem;
+      }
+    }
+
+    .featured-traditions-grid,
+    .recent-traditions-grid {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .tradition-index {
+    padding: 16px;
+
+    &__header {
+      padding: 24px 16px;
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .tagline {
+        font-size: 1rem;
+      }
+    }
+
+    &__featured,
+    &__recent,
+    &__all {
+      padding: 20px;
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .featured-traditions-grid,
+    .recent-traditions-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    &__categories,
+    &__frequency-filter {
+      padding: 16px;
+
+      h2,
+      h3 {
+        font-size: 1.25rem;
+      }
+    }
+
+    &__not-found {
+      margin: 40px auto;
+
+      .not-found-content {
+        padding: 24px;
+
+        mat-icon {
+          font-size: 60px;
+          width: 60px;
+          height: 60px;
+        }
+
+        h2 {
+          font-size: 1.5rem;
+        }
+
+        p {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Print Styles
+@media print {
+  .tradition-index {
+    &__header,
+    &__categories,
+    &__frequency-filter,
+    &__featured,
+    &__recent,
+    &__all {
+      box-shadow: none;
+      border: 1px solid #e0e0e0;
+    }
+
+    &__list {
+      display: none;
+    }
+
+    &__detail {
+      // Let TraditionDetailsComponent handle print styles
+    }
+  }
+}
+
+// Accessibility
+@media (prefers-reduced-motion: reduce) {
+  .tradition-index {
+    mat-chip {
+      transition: none !important;
+    }
+  }
+}
+
+// High Contrast Mode
+@media (prefers-contrast: high) {
+  .tradition-index {
+    &__header,
+    &__categories,
+    &__frequency-filter,
+    &__featured,
+    &__recent,
+    &__all {
+      border: 2px solid currentColor;
+    }
+
+    mat-chip {
+      border: 2px solid currentColor;
+    }
+  }
+}
