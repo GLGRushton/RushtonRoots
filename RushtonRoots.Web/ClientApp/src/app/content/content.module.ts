@@ -20,9 +20,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 // Components
 import { RecipeCardComponent } from './components/recipe-card/recipe-card.component';
 import { RecipeDetailsComponent } from './components/recipe-details/recipe-details.component';
+import { RecipeIndexComponent } from './components/recipe-index/recipe-index.component';
 import { StoryCardComponent } from './components/story-card/story-card.component';
 import { TraditionCardComponent } from './components/tradition-card/tradition-card.component';
 import { ContentGridComponent } from './components/content-grid/content-grid.component';
+
+// Shared Module for BreadcrumbComponent
+import { SharedModule } from '../shared/shared.module';
 
 /**
  * ContentModule
@@ -33,6 +37,7 @@ import { ContentGridComponent } from './components/content-grid/content-grid.com
   declarations: [
     RecipeCardComponent,
     RecipeDetailsComponent,
+    RecipeIndexComponent,
     StoryCardComponent,
     TraditionCardComponent,
     ContentGridComponent
@@ -41,6 +46,7 @@ import { ContentGridComponent } from './components/content-grid/content-grid.com
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    SharedModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -58,6 +64,7 @@ import { ContentGridComponent } from './components/content-grid/content-grid.com
   exports: [
     RecipeCardComponent,
     RecipeDetailsComponent,
+    RecipeIndexComponent,
     StoryCardComponent,
     TraditionCardComponent,
     ContentGridComponent

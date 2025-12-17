@@ -1,0 +1,131 @@
+@{
+    ViewData["Title"] = "Family Recipes";
+    
+    // Determine view mode based on query parameters
+    var recipeId = Context.Request.Query["recipeId"].ToString();
+    var recipeSlug = Context.Request.Query["slug"].ToString();
+    var category = Context.Request.Query["category"].ToString();
+    
+    var viewMode = !string.IsNullOrEmpty(recipeId) || !string.IsNullOrEmpty(recipeSlug) ? "detail" : "list";
+}
+
+@section Styles {
+    <style>
+        .recipe-angular-container {
+            min-height: 600px;
+            padding: 0;
+        }
+    </style>
+}
+
+<div class="recipe-angular-container">
+    @* Angular Recipe Index Component *@
+    <app-recipe-index
+        recipes='@Html.Raw(ViewBag.RecipesJson ?? "[]")'
+        categories='@Html.Raw(ViewBag.CategoriesJson ?? "[]")'
+        favorites='@Html.Raw(ViewBag.FavoritesJson ?? "[]")'
+        recent='@Html.Raw(ViewBag.RecentJson ?? "[]")'
+        can-edit="@(User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin") ? "true" : "false")"
+        view-mode="@viewMode"
+        @if (!string.IsNullOrEmpty(recipeId))
+        {
+            <text>recipe-id="@recipeId"</text>
+        }
+        @if (!string.IsNullOrEmpty(recipeSlug))
+        {
+            <text>recipe-slug="@recipeSlug"</text>
+        }>
+    </app-recipe-index>
+
+    @* Fallback content for browsers without JavaScript *@
+    <noscript>
+        <div class="recipe-container">
+            <section class="recipe-header">
+                <h1>🍳 Family Recipes</h1>
+                <p class="tagline">Preserving our culinary heritage one recipe at a time</p>
+                <div class="description">
+                    <p>
+                        Welcome to the Rushton family recipe collection. From Grandma's secret apple pie to
+                        holiday favorites passed down through generations, find all our cherished recipes here.
+                    </p>
+                    <p class="warning">
+                        <strong>Note:</strong> This page requires JavaScript to be enabled for full functionality.
+                        Please enable JavaScript in your browser settings.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <style>
+            .recipe-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .recipe-header {
+                background: white;
+                border-radius: 16px;
+                padding: 40px;
+                margin-bottom: 40px;
+                box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+                border-left: 6px solid #4caf50;
+            }
+
+            .recipe-header h1 {
+                color: #2e7d32;
+                margin: 0 0 10px 0;
+                font-size: 2.5em;
+                font-weight: 700;
+            }
+
+            .tagline {
+                color: #66bb6a;
+                font-size: 1.3em;
+                font-style: italic;
+                margin: 0 0 20px 0;
+            }
+
+            .description {
+                color: #555;
+                line-height: 1.8;
+                font-size: 1.05em;
+            }
+
+            .warning {
+                background: #fff3cd;
+                border: 1px solid #ffc107;
+                color: #856404;
+                padding: 15px;
+                border-radius: 8px;
+                margin-top: 20px;
+            }
+        </style>
+    </noscript>
+</div>
+
+@section Scripts {
+    <script>
+        // Initialize recipe data from server
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Recipe Index page loaded');
+            
+            // The Angular component will handle all interactions
+            // This script is just for initialization logging
+            
+            // Log view mode for debugging
+            const viewMode = '@viewMode';
+            console.log('View mode:', viewMode);
+            
+            @if (!string.IsNullOrEmpty(recipeId))
+            {
+                <text>console.log('Recipe ID:', '@recipeId');</text>
+            }
+            
+            @if (!string.IsNullOrEmpty(recipeSlug))
+            {
+                <text>console.log('Recipe Slug:', '@recipeSlug');</text>
+            }
+        });
+    </script>
+}

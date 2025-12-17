@@ -133,6 +133,7 @@ import { MarkdownEditorComponent } from './wiki/components/markdown-editor/markd
 // Import Phase 7.2 Recipes, Stories, & Traditions components for Angular Elements registration
 import { RecipeCardComponent } from './content/components/recipe-card/recipe-card.component';
 import { RecipeDetailsComponent } from './content/components/recipe-details/recipe-details.component';
+import { RecipeIndexComponent } from './content/components/recipe-index/recipe-index.component';
 import { StoryCardComponent } from './content/components/story-card/story-card.component';
 import { TraditionCardComponent } from './content/components/tradition-card/tradition-card.component';
 import { ContentGridComponent } from './content/components/content-grid/content-grid.component';
@@ -321,6 +322,7 @@ export class AppModule {
     // Register Phase 7.2 Recipes, Stories, & Traditions components as Angular Elements
     safeDefine('app-recipe-card', RecipeCardComponent);
     safeDefine('app-recipe-details', RecipeDetailsComponent);
+    safeDefine('app-recipe-index', RecipeIndexComponent);
     safeDefine('app-story-card', StoryCardComponent);
     safeDefine('app-tradition-card', TraditionCardComponent);
     safeDefine('app-content-grid', ContentGridComponent);

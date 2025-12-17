@@ -1,0 +1,181 @@
+<div class="recipe-index">
+  <!-- Breadcrumb Navigation -->
+  <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+
+  <!-- List View: Recipe Listing -->
+  <div *ngIf="viewMode === 'list'" class="recipe-index__list-view">
+    <!-- Header -->
+    <div class="recipe-index__header">
+      <div class="recipe-index__title-section">
+        <h1 class="recipe-index__title">🍳 Family Recipes</h1>
+        <p class="recipe-index__tagline">Preserving our culinary heritage one recipe at a time</p>
+        <p class="recipe-index__description">
+          Welcome to the Rushton family recipe collection. From Grandma's secret apple pie to
+          holiday favorites passed down through generations, find all our cherished recipes here.
+        </p>
+      </div>
+
+      <!-- Ingredient Search Toggle -->
+      <div class="recipe-index__search-actions">
+        <button mat-raised-button 
+                color="accent"
+                (click)="toggleIngredientSearch()">
+          <mat-icon>{{ showIngredientSearch ? 'close' : 'search' }}</mat-icon>
+          {{ showIngredientSearch ? 'Hide' : 'Search by Ingredient' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Ingredient Search Panel -->
+    <mat-card *ngIf="showIngredientSearch" class="recipe-index__ingredient-search">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>search</mat-icon>
+          Search Recipes by Ingredient
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Enter ingredient name</mat-label>
+          <input matInput 
+                 [(ngModel)]="ingredientSearchText"
+                 (keyup.enter)="onIngredientSearch()"
+                 placeholder="e.g., chicken, tomato, garlic">
+          <mat-icon matPrefix>restaurant</mat-icon>
+          <button mat-icon-button 
+                  matSuffix 
+                  *ngIf="ingredientSearchText"
+                  (click)="clearIngredientSearch()"
+                  aria-label="Clear">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <div class="recipe-index__search-actions">
+          <button mat-raised-button 
+                  color="primary" 
+                  (click)="onIngredientSearch()">
+            <mat-icon>search</mat-icon>
+            Search
+          </button>
+          <button mat-button (click)="clearIngredientSearch()">
+            Clear
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Categories Section -->
+    <section class="recipe-index__section">
+      <h2 class="recipe-index__section-title">
+        <mat-icon>category</mat-icon>
+        Browse by Category
+      </h2>
+      <div class="recipe-index__categories">
+        <mat-chip-set>
+          <mat-chip 
+            *ngFor="let category of categories"
+            [class.selected]="selectedCategory === category"
+            (click)="onCategorySelected(category)"
+            class="recipe-index__category-chip">
+            <mat-icon>local_dining</mat-icon>
+            {{ category }}
+          </mat-chip>
+          <mat-chip 
+            *ngIf="selectedCategory"
+            (click)="onCategorySelected('')"
+            class="recipe-index__clear-chip">
+            <mat-icon>close</mat-icon>
+            Clear Filter
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    </section>
+
+    <!-- Favorites Section -->
+    <section class="recipe-index__section" *ngIf="favorites.length > 0">
+      <h2 class="recipe-index__section-title">
+        <mat-icon>star</mat-icon>
+        Family Favorites
+      </h2>
+      <div class="recipe-index__cards">
+        <app-recipe-card
+          *ngFor="let recipe of favorites.slice(0, 6)"
+          [recipe]="recipe"
+          [canEdit]="canEdit"
+          [elevation]="2"
+          (viewRecipe)="onRecipeCardView($event)"
+          (editRecipe)="onRecipeCardEdit($event)"
+          (deleteRecipe)="onRecipeCardDelete($event)">
+        </app-recipe-card>
+      </div>
+    </section>
+
+    <!-- Recent Recipes Section -->
+    <section class="recipe-index__section" *ngIf="recent.length > 0 && !selectedCategory && !ingredientSearchText">
+      <h2 class="recipe-index__section-title">
+        <mat-icon>schedule</mat-icon>
+        Recently Added Recipes
+      </h2>
+      <div class="recipe-index__cards">
+        <app-recipe-card
+          *ngFor="let recipe of recent.slice(0, 6)"
+          [recipe]="recipe"
+          [canEdit]="canEdit"
+          [elevation]="2"
+          (viewRecipe)="onRecipeCardView($event)"
+          (editRecipe)="onRecipeCardEdit($event)"
+          (deleteRecipe)="onRecipeCardDelete($event)">
+        </app-recipe-card>
+      </div>
+    </section>
+
+    <!-- All Recipes Grid (with filters) -->
+    <section class="recipe-index__section">
+      <h2 class="recipe-index__section-title">
+        <mat-icon>restaurant_menu</mat-icon>
+        {{ selectedCategory ? selectedCategory + ' Recipes' : ingredientSearchText ? 'Search Results' : 'All Recipes' }}
+      </h2>
+      <app-content-grid
+        [contentType]="contentType"
+        [items]="filteredRecipes"
+        [showFilters]="true"
+        [showSort]="true"
+        [canEdit]="canEdit"
+        [filters]="filters"
+        (filtersChange)="onFiltersChange($event)"
+        (viewItem)="onViewItem($event)"
+        (editItem)="onEditItem($event)"
+        (deleteItem)="onDeleteItem($event)">
+      </app-content-grid>
+    </section>
+  </div>
+
+  <!-- Detail View: Recipe Details -->
+  <div *ngIf="viewMode === 'detail' && currentRecipe" class="recipe-index__detail-view">
+    <app-recipe-details
+      [recipe]="currentRecipe"
+      [canEdit]="canEdit"
+      (editRecipe)="onDetailEdit($event)"
+      (deleteRecipe)="onDetailDelete($event)"
+      (submitRating)="onSubmitRating($event)"
+      (submitComment)="onSubmitComment($event)">
+    </app-recipe-details>
+  </div>
+
+  <!-- No Recipe Found -->
+  <div *ngIf="viewMode === 'detail' && !currentRecipe" class="recipe-index__not-found">
+    <mat-card>
+      <mat-card-header>
+        <mat-icon mat-card-avatar color="warn">error</mat-icon>
+        <mat-card-title>Recipe Not Found</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>The recipe you're looking for doesn't exist or has been removed.</p>
+        <button mat-raised-button color="primary" routerLink="/Recipe">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Recipes
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
