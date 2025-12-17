@@ -547,10 +547,32 @@ Views/Account/Settings.cshtml
 **Estimated Effort:** 2-3 days
 
 **Acceptance Criteria:**
-- [ ] Notifications page displays user notifications
-- [ ] Settings page allows preference updates
-- [ ] Changes save correctly
-- [ ] Navigation menu links work
+- [x] Notifications page displays user notifications
+- [x] Settings page allows preference updates
+- [x] Changes save correctly
+- [x] Navigation menu links work
+
+**Status:** ✅ **COMPLETE** (2025-12-17)
+
+**Deliverables:**
+- Extended AccountController with 2 new [Authorize] GET actions
+- Views/Account/Notifications.cshtml integrating Angular notification-panel component
+- Views/Account/Settings.cshtml integrating Angular notification-preferences and privacy-settings components
+- 9 comprehensive unit tests (all passing)
+- Responsive design with noscript fallback
+- Full integration with existing NotificationController API endpoints
+- Navigation menu links functional (/Account/Notifications, /Account/Settings)
+
+**Implementation Notes:**
+- Leveraged existing Angular components (notification-panel, notification-preferences, privacy-settings)
+- All components already registered as custom elements in app.module.ts
+- Following established MVC controller patterns from MediaGalleryController and FamilyTreeMvcController
+- Minimal changes approach - reusing existing Angular components and API endpoints
+- Notifications page accessible at /Account/Notifications
+- Settings page accessible at /Account/Settings with three sections:
+  1. Notification Preferences (email, push, in-app)
+  2. Privacy Settings (profile visibility, data sharing)
+  3. Account Information (links to Profile and Password change)
 
 ---
 
@@ -1006,7 +1028,7 @@ For each PR:
 | 2.1 | MediaGallery MVC | 3-4 days | None | ✅ Yes | ✅ Complete |
 | 2.2 | FamilyTree MVC | 4-5 days | None | No | ✅ Complete |
 | 2.3 | Calendar MVC | 4-5 days | None | No | ✅ Complete |
-| 3.1 | Account Actions | 2-3 days | None | No | 🔲 Pending |
+| 3.1 | Account Actions | 2-3 days | None | No | ✅ Complete |
 | 3.2 | Admin Controller | 3-4 days | None | No | 🔲 Pending |
 | 3.3 | Help Controller | 4-5 days | None | No | 🔲 Pending |
 | 4.1 | Reorganize APIs | 1 day | Phases 1-3 | No | 🔲 Pending |
@@ -1015,7 +1037,7 @@ For each PR:
 
 **Total Estimated Duration:** 6-8 weeks  
 **Critical Path Duration:** 4-5 weeks  
-**Phases Complete:** 6 of 12 (50%)  
+**Phases Complete:** 7 of 12 (58%)  
 **Time to Date:** ~3 weeks
 
 ---
@@ -1034,48 +1056,45 @@ For each PR:
 - Phase 2.2: FamilyTree MVC Controller ✅
 - Phase 2.3: Calendar MVC Controller ✅
 
-### Immediate Next Steps (Start Phase 3.1)
+**Phase 3: User Experience Enhancements** 🔄 In Progress (1/3)
+- Phase 3.1: Account Additional Actions ✅
 
-**Phase 3.1: Account Additional Actions**
+### Immediate Next Steps (Start Phase 3.2)
+
+**Phase 3.2: Admin Controller**
 
 1. **Create Feature Branch**
    ```bash
-   git checkout -b feature/phase-3.1-account-actions
+   git checkout -b feature/phase-3.2-admin-controller
    ```
 
-2. **Analyze Existing AccountController**
-   - Review existing AccountController actions
-   - Review NotificationController API endpoints
-   - Determine user settings storage approach
+2. **Analyze Requirements**
+   - Review admin-specific needs
+   - Determine system settings storage
+   - Plan admin dashboard layout
 
-3. **Add Notifications Action to AccountController**
-   - Action: `Notifications` (GET /Account/Notifications)
-   - Integrate with NotificationController API
-   - Display user notifications
+3. **Create AdminController**
+   - Action: `Settings` (GET /Admin/Settings)
+   - Action: `Dashboard` (GET /Admin/Dashboard) - optional
+   - Add [Authorize(Roles = "Admin")] attribute
 
-4. **Add Settings Action to AccountController**
-   - Action: `Settings` (GET /Account/Settings)
-   - User settings management
-   - Privacy preferences
+4. **Create Views**
+   - File: `Views/Admin/Settings.cshtml`
+   - File: `Views/Admin/Dashboard.cshtml` (optional)
+   - System configuration interface
 
-5. **Create Views**
-   - File: `Views/Account/Notifications.cshtml`
-   - File: `Views/Account/Settings.cshtml`
-   - Integrate with Angular components if available
+5. **Create Unit Tests**
+   - Create `AdminControllerTests.cs`
+   - Test authorization (Admin role only)
+   - Test actions and ViewData
 
-6. **Create Unit Tests**
-   - Extend `AccountControllerTests.cs`
-   - Test new actions
-   - Test authorization
-   - Test ViewData setup
-
-7. **Manual Testing**
-   - Test notifications page
+6. **Manual Testing**
+   - Test with admin account
+   - Test with non-admin account (should be blocked)
    - Test settings updates
-   - Test navigation menu links
 
-8. **Create PR**
-   - Title: "Phase 3.1: Account Additional Actions"
+7. **Create PR**
+   - Title: "Phase 3.2: Admin Controller"
    - Link to this plan
 
 ---
