@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { createCustomElement } from '@angular/elements';
 
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { FamilyTreeComponent } from './family-tree/family-tree.component';
 import { StyleGuideComponent } from './style-guide/style-guide.component';
@@ -182,6 +183,7 @@ import { AccessibilityStatementComponent } from './accessibility/components/acce
     BrowserAnimationsModule,
     HttpClientModule,
     FormsModule,
+    AppRoutingModule,
     SharedModule,
     PersonModule,
     HouseholdModule,

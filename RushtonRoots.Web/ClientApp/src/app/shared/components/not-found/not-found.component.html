@@ -1,0 +1,51 @@
+<div class="not-found-container">
+  <mat-card class="not-found-card">
+    <mat-card-header>
+      <mat-icon class="not-found-icon" color="warn">error_outline</mat-icon>
+      <mat-card-title>Page Not Found</mat-card-title>
+      <mat-card-subtitle>Error 404</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p class="not-found-message">
+        Oops! The page you're looking for doesn't exist or has been moved.
+      </p>
+
+      <div class="not-found-suggestions">
+        <h3>What can you do?</h3>
+        <ul>
+          <li>Check the URL for typos</li>
+          <li>Go back to the previous page</li>
+          <li>Return to the home page</li>
+          <li>Browse people in the family tree</li>
+          <li>Use the search to find what you're looking for</li>
+        </ul>
+      </div>
+
+      <div class="not-found-actions">
+        <button mat-raised-button color="primary" (click)="goHome()">
+          <mat-icon>home</mat-icon>
+          Go to Home
+        </button>
+        <button mat-raised-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Go Back
+        </button>
+        <button mat-raised-button (click)="goToPeople()">
+          <mat-icon>people</mat-icon>
+          Browse People
+        </button>
+        <button mat-raised-button (click)="goToSearch()">
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+      </div>
+    </mat-card-content>
+
+    <mat-card-footer>
+      <p class="not-found-help">
+        If you believe this is an error, please <a href="/Account/Contact">contact support</a>.
+      </p>
+    </mat-card-footer>
+  </mat-card>
+</div>
