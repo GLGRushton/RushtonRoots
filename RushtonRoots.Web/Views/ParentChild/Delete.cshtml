@@ -106,10 +106,7 @@
                 // Use Fetch API to submit
                 fetch('@Url.Action("Delete", "ParentChild")', {
                     method: 'POST',
-                    body: formData,
-                    headers: {
-                        'RequestVerificationToken': antiForgeryToken || ''
-                    }
+                    body: formData
                 })
                 .then(response => {
                     if (response.ok) {

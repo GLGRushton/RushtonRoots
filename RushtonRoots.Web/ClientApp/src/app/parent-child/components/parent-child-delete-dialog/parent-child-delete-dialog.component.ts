@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ParentChildDeleteDialogData, ParentChildDeleteOptions, RelationshipImpactSummary } from '../../models/parent-child-delete.model';
+import { RelationshipImpactSummary, ParentChildDeleteOptions } from '../../models/parent-child-delete.model';
 
 /**
  * ParentChildDeleteDialogComponent - Confirmation dialog for parent-child relationship deletion
@@ -93,6 +93,19 @@ export class ParentChildDeleteDialogComponent implements OnInit {
         this.relatedData = JSON.parse(this.relatedDataJson);
       } catch (e) {
         console.error('Error parsing related data:', e);
+        // Use default structure on parse error
+        this.relatedData = {
+          lineageImpact: {
+            ancestorsLost: 0,
+            descendantsLost: 0,
+            generationsAffected: 0
+          },
+          siblings: 0,
+          treeNodes: 0,
+          evidence: 0,
+          photos: 0,
+          stories: 0
+        };
       }
     }
 
@@ -216,13 +229,30 @@ export class ParentChildDeleteDialogComponent implements OnInit {
   }
 
   /**
+   * Get the warning class based on selected delete type (safe for ngClass)
+   */
+  getWarningClass(): string {
+    switch (this.selectedDeleteType) {
+      case 'soft':
+        return 'warning-soft';
+      case 'disputed':
+        return 'warning-disputed';
+      case 'hard':
+        return 'warning-hard';
+      default:
+        return 'warning-soft';
+    }
+  }
+
+  /**
    * Get parent initials for avatar
    */
   getParentInitials(): string {
     if (!this.parentName) return '?';
-    const names = this.parentName.split(' ');
+    const names = this.parentName.split(' ').filter(n => n.length > 0);
+    if (names.length === 0) return '?';
     if (names.length >= 2) {
-      return names[0][0] + names[names.length - 1][0];
+      return (names[0][0] || '') + (names[names.length - 1][0] || '');
     }
     return this.parentName.substring(0, 2).toUpperCase();
   }
@@ -232,9 +262,10 @@ export class ParentChildDeleteDialogComponent implements OnInit {
    */
   getChildInitials(): string {
     if (!this.childName) return '?';
-    const names = this.childName.split(' ');
+    const names = this.childName.split(' ').filter(n => n.length > 0);
+    if (names.length === 0) return '?';
     if (names.length >= 2) {
-      return names[0][0] + names[names.length - 1][0];
+      return (names[0][0] || '') + (names[names.length - 1][0] || '');
     }
     return this.childName.substring(0, 2).toUpperCase();
   }

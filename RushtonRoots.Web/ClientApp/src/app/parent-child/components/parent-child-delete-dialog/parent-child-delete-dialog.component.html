@@ -157,7 +157,7 @@
       </mat-form-field>
 
       <!-- Warning Message Based on Selection -->
-      <mat-card class="action-warning" [ngClass]="'warning-' + selectedDeleteType">
+      <mat-card [ngClass]="getWarningClass()" class="action-warning">
         <mat-icon>info</mat-icon>
         <p>{{ getWarningMessage() }}</p>
       </mat-card>
