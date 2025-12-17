@@ -1,5 +1,6 @@
 @{
     ViewData["Title"] = "Upload Media";
+    var canTagPeople = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
 }
 
 <div class="upload-media-page">
@@ -22,7 +23,7 @@
         api-endpoint="/api/media/upload"
         max-file-size="104857600"
         accepted-types="image/*,video/*"
-        can-tag-people="@(User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))"
+        can-tag-people="@canTagPeople"
         user-id="@User.Identity?.Name"
         redirect-url="/MediaGallery">
     </app-photo-upload>
@@ -225,7 +226,9 @@
         font-size: 20px;
     }
 
+    /* Responsive styles for mobile devices */
     @@media (max-width: 768px) {
+        /* Main page styles */
         .page-header {
             flex-direction: column;
             align-items: flex-start;

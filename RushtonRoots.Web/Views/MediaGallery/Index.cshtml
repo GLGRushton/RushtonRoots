@@ -3,6 +3,7 @@
     var mediaType = ViewData["MediaType"]?.ToString();
     var page = (int)(ViewData["Page"] ?? 1);
     var pageSize = (int)(ViewData["PageSize"] ?? 24);
+    var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
 }
 
 <div class="media-gallery-page">
@@ -24,8 +25,8 @@
         media-type="@(mediaType ?? "")"
         data-page="@(page)"
         data-page-size="@(pageSize)"
-        can-edit="@(User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))"
-        can-delete="@(User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))"
+        can-edit="@canEdit"
+        can-delete="@canEdit"
         user-id="@User.Identity?.Name">
     </app-media-gallery>
 </div>
@@ -235,7 +236,9 @@
         font-size: 20px;
     }
 
+    /* Responsive styles for mobile devices */
     @@media (max-width: 768px) {
+        /* Main page styles */
         .page-header {
             flex-direction: column;
             align-items: flex-start;
