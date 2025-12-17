@@ -2,193 +2,182 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="home-container">
-    <!-- Welcome Section -->
-    <section class="welcome-section">
-        <h1>Welcome to Rushton Roots</h1>
-        <p class="tagline">Discover, Preserve, and Celebrate Your Family Heritage</p>
-        <div class="description">
-            <p>
-                Rushton Roots is your digital family tree, connecting generations and preserving memories. 
-                Explore your family's rich history, discover connections across generations, and build 
-                a lasting legacy for future family members.
-            </p>
-            <p>
-                From the founding couple to grandchildren, each branch tells a unique story. Navigate 
-                through the generations, learn about your ancestors, and see how your family has grown 
-                and flourished over time.
-            </p>
+<!-- Angular Home Page Component -->
+<app-home-page 
+    user-name="@(User?.Identity?.Name ?? "Guest")"
+    can-edit="@(User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))"
+    can-create="@(User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))"
+    data='@Html.Raw(Json.Serialize(new {
+        statistics = new {
+            totalMembers = ViewBag.TotalMembers ?? 0,
+            oldestAncestor = ViewBag.OldestAncestor,
+            newestMember = ViewBag.NewestMember,
+            totalPhotos = ViewBag.TotalPhotos ?? 0,
+            totalStories = ViewBag.TotalStories ?? 0,
+            activeHouseholds = ViewBag.ActiveHouseholds ?? 0
+        },
+        recentAdditions = ViewBag.RecentAdditions ?? new object[] { },
+        upcomingBirthdays = ViewBag.UpcomingBirthdays ?? new object[] { },
+        upcomingAnniversaries = ViewBag.UpcomingAnniversaries ?? new object[] { },
+        recentEvents = ViewBag.RecentEvents ?? new object[] { },
+        activityFeed = ViewBag.ActivityFeed ?? new object[] { },
+        quickLinks = ViewBag.QuickLinks,
+        familyTagline = ViewBag.FamilyTagline ?? "Discover, Preserve, and Celebrate Your Family Heritage"
+    }))'>
+</app-home-page>
+
+<!-- Fallback content for browsers without JavaScript -->
+<noscript>
+    <div class="noscript-fallback">
+        <div class="home-container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h1>Welcome to Rushton Roots</h1>
+                <p class="tagline">Discover, Preserve, and Celebrate Your Family Heritage</p>
+                <div class="description">
+                    <p>
+                        Rushton Roots is your digital family tree, connecting generations and preserving memories. 
+                        Explore your family's rich history, discover connections across generations, and build 
+                        a lasting legacy for future family members.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features-section">
+                <h2>Explore Your Heritage</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>Connect Generations</h3>
+                        <p>See relationships between family members across multiple generations</p>
+                        <a href="/Person" class="btn btn-primary">Browse People</a>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Preserve Stories</h3>
+                        <p>Share and document family stories, memories, and milestones</p>
+                        <a href="/StoryView" class="btn btn-primary">View Stories</a>
+                    </div>
+                    <div class="feature-card">
+                        <h3>View Households</h3>
+                        <p>Explore family households and their members</p>
+                        <a href="/Household" class="btn btn-primary">View Households</a>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Share Memories</h3>
+                        <p>Upload photos and documents to create a rich family archive</p>
+                        <a href="/MediaGallery" class="btn btn-primary">Photo Gallery</a>
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
+    </div>
 
-    <!-- Family Tree Section -->
-    <section class="family-tree-section">
-        <h2>Our Family Tree</h2>
-        <p class="section-description">
-            Explore the Rushton family lineage, from the founding couple through multiple generations.
-        </p>
-        <app-family-tree></app-family-tree>
-    </section>
+    <style>
+        .noscript-fallback {
+            padding: 20px;
+        }
 
-    <!-- Features Section -->
-    <section class="features-section">
-        <h2>Explore Your Heritage</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">👥</div>
-                <h3>Connect Generations</h3>
-                <p>See relationships between family members across multiple generations</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📖</div>
-                <h3>Preserve Stories</h3>
-                <p>Share and document family stories, memories, and milestones</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🌍</div>
-                <h3>Map Your Roots</h3>
-                <p>Discover where your family came from and how they spread across the world</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📸</div>
-                <h3>Share Memories</h3>
-                <p>Upload photos and documents to create a rich family archive</p>
-            </div>
-        </div>
-    </section>
-</div>
+        .home-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-<style>
-    .home-container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .welcome-section {
-        background: white;
-        border-radius: 16px;
-        padding: 40px;
-        margin-bottom: 40px;
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
-        border-left: 6px solid #4caf50;
-    }
-
-    .welcome-section h1 {
-        color: #2e7d32;
-        margin: 0 0 10px 0;
-        font-size: 2.5em;
-        font-weight: 700;
-    }
-
-    .tagline {
-        color: #66bb6a;
-        font-size: 1.3em;
-        font-style: italic;
-        margin: 0 0 20px 0;
-    }
-
-    .description {
-        color: #555;
-        line-height: 1.8;
-        font-size: 1.05em;
-    }
-
-    .description p {
-        margin: 15px 0;
-    }
-
-    .family-tree-section {
-        background: white;
-        border-radius: 16px;
-        padding: 40px;
-        margin-bottom: 40px;
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
-    }
-
-    .family-tree-section h2 {
-        color: #2e7d32;
-        margin: 0 0 10px 0;
-        font-size: 2em;
-        text-align: center;
-        font-weight: 700;
-    }
-
-    .section-description {
-        text-align: center;
-        color: #666;
-        font-size: 1.1em;
-        margin-bottom: 30px;
-    }
-
-    .features-section {
-        margin-bottom: 40px;
-    }
-
-    .features-section h2 {
-        color: #2e7d32;
-        text-align: center;
-        font-size: 2em;
-        margin-bottom: 30px;
-        font-weight: 700;
-    }
-
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 25px;
-    }
-
-    .feature-card {
-        background: white;
-        border-radius: 12px;
-        padding: 30px;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
-    }
-
-    .feature-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
-        border-color: #4caf50;
-    }
-
-    .feature-icon {
-        font-size: 3em;
-        margin-bottom: 15px;
-    }
-
-    .feature-card h3 {
-        color: #2e7d32;
-        margin: 15px 0;
-        font-size: 1.3em;
-    }
-
-    .feature-card p {
-        color: #666;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    @@media (max-width: 768px) {
-        .welcome-section, .family-tree-section {
-            padding: 25px;
+        .welcome-section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+            border-left: 6px solid #4caf50;
         }
 
         .welcome-section h1 {
-            font-size: 2em;
+            color: #2e7d32;
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: 700;
         }
 
         .tagline {
-            font-size: 1.1em;
+            color: #66bb6a;
+            font-size: 1.3em;
+            font-style: italic;
+            margin: 0 0 20px 0;
+        }
+
+        .description {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .features-section h2 {
+            color: #2e7d32;
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 30px;
+            font-weight: 700;
         }
 
         .features-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
         }
-    }
-</style>
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+            border: 2px solid transparent;
+        }
+
+        .feature-card h3 {
+            color: #2e7d32;
+            margin: 15px 0;
+            font-size: 1.3em;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+            margin: 0 0 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+
+        @@media (max-width: 768px) {
+            .welcome-section {
+                padding: 25px;
+            }
+
+            .welcome-section h1 {
+                font-size: 2em;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</noscript>
 
 @section Scripts {
     <script src="/dist/runtime.js"></script>
