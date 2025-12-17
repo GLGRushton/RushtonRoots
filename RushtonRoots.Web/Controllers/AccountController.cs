@@ -226,4 +226,20 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Notifications()
+    {
+        ViewData["Title"] = "Notifications";
+        return View();
+    }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Settings()
+    {
+        ViewData["Title"] = "Settings";
+        return View();
+    }
 }

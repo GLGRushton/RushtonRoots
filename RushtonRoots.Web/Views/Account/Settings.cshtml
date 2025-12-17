@@ -1,0 +1,318 @@
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<div class="settings-page">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1>@ViewData["Title"]</h1>
+            <p class="page-subtitle">Manage your account settings and preferences</p>
+        </div>
+    </div>
+
+    <div class="settings-container">
+        <!-- Settings Sections -->
+        <div class="settings-section">
+            <h2>Notification Preferences</h2>
+            <p class="section-description">Control how you receive notifications</p>
+            
+            <!-- Angular Notification Preferences Component -->
+            <app-notification-preferences
+                api-endpoint="/api/notification/preferences">
+            </app-notification-preferences>
+        </div>
+
+        <div class="settings-section">
+            <h2>Privacy Settings</h2>
+            <p class="section-description">Manage your privacy and visibility settings</p>
+            
+            <!-- Angular Privacy Settings Component -->
+            <app-privacy-settings
+                api-endpoint="/api/user/privacy">
+            </app-privacy-settings>
+        </div>
+
+        <div class="settings-section">
+            <h2>Account Information</h2>
+            <p class="section-description">View and update your account information</p>
+            
+            <div class="account-actions">
+                <a href="/Account/Profile" class="btn btn-primary">
+                    <i class="material-icons">person</i>
+                    Edit Profile
+                </a>
+                <a href="/Account/ForgotPassword" class="btn btn-outline">
+                    <i class="material-icons">lock</i>
+                    Change Password
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fallback content for browsers without JavaScript -->
+<noscript>
+    <div class="noscript-fallback">
+        <div class="settings-container-fallback">
+            <section class="info-section">
+                <h2>Settings</h2>
+                <p>
+                    The settings page requires JavaScript to be enabled. 
+                    Please enable JavaScript in your browser to manage your account settings.
+                </p>
+                <div class="feature-list">
+                    <h3>Available Settings:</h3>
+                    <ul>
+                        <li>Notification preferences (email, push, in-app)</li>
+                        <li>Privacy settings and profile visibility</li>
+                        <li>Account information and profile</li>
+                        <li>Password and security settings</li>
+                    </ul>
+                </div>
+                <div class="actions">
+                    <a href="/Account/Profile" class="btn btn-primary">Go to Profile</a>
+                    <a href="/" class="btn btn-secondary">Go to Home</a>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <style>
+        .noscript-fallback {
+            padding: 20px;
+        }
+
+        .settings-container-fallback {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(103, 58, 183, 0.15);
+            border-left: 6px solid #673ab7;
+        }
+
+        .info-section h2 {
+            color: #5e35b1;
+            margin: 0 0 20px 0;
+            font-size: 2em;
+            font-weight: 700;
+        }
+
+        .info-section p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            margin: 30px 0;
+        }
+
+        .feature-list h3 {
+            color: #5e35b1;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .feature-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0 8px 30px;
+            position: relative;
+            color: #666;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #673ab7;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #673ab7;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5e35b1;
+        }
+
+        .btn-secondary {
+            background-color: #666;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+
+        @@media (max-width: 768px) {
+            .info-section {
+                padding: 25px;
+            }
+
+            .info-section h2 {
+                font-size: 1.5em;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</noscript>
+
+<style>
+    .settings-page {
+        padding: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .header-content {
+        margin: 0 auto;
+    }
+
+    .page-header h1 {
+        color: #5e35b1;
+        margin: 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .page-subtitle {
+        color: #666;
+        margin: 5px 0 0 0;
+        font-size: 1.1em;
+    }
+
+    .settings-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .settings-section {
+        background: white;
+        border-radius: 8px;
+        padding: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .settings-section h2 {
+        color: #333;
+        margin: 0 0 10px 0;
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+
+    .section-description {
+        color: #666;
+        margin: 0 0 20px 0;
+        font-size: 0.95em;
+    }
+
+    .account-actions {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background-color: #673ab7;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #5e35b1;
+    }
+
+    .btn-outline {
+        background-color: white;
+        color: #673ab7;
+        border: 2px solid #673ab7;
+    }
+
+    .btn-outline:hover {
+        background-color: #f3e5f5;
+    }
+
+    .material-icons {
+        font-size: 20px;
+    }
+
+    /* Responsive styles for mobile devices */
+    @@media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2em;
+        }
+
+        .settings-page {
+            padding: 15px;
+        }
+
+        .settings-section {
+            padding: 20px;
+        }
+
+        .account-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
