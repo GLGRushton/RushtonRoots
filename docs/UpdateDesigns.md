@@ -3817,17 +3817,28 @@ Backend integration, database migrations, comprehensive testing, and full end-to
 - Markdown editor with toolbar complete
 
 **Additional Tasks**:
-- [ ] Review integration between index and article views
-- [ ] Ensure proper routing between list and article detail
-- [ ] Add breadcrumb navigation (Home > Wiki > Category > Article)
-- [ ] Update Index.cshtml to handle both listing and article display
+- [x] Review integration between index and article views
+- [x] Ensure proper routing between list and article detail
+- [x] Add breadcrumb navigation (Home > Wiki > Category > Article)
+- [x] Update Index.cshtml to handle both listing and article display
 - [ ] Test wiki workflows end-to-end
 
+**Integration Summary** (December 17, 2025):
+- ✅ Breadcrumb navigation added to both WikiIndexComponent and WikiArticleComponent
+- ✅ WikiIndexComponent displays: Home > Wiki
+- ✅ WikiArticleComponent displays: Home > Wiki > Category > Article
+- ✅ Index.cshtml updated to route based on query parameters (articleId or slug)
+- ✅ Query parameter routing: /Wiki shows index, /Wiki?articleId=1 shows article, /Wiki?slug=article-name shows article
+- ✅ SharedModule imported into WikiModule for BreadcrumbComponent access
+- ✅ Noscript fallback content provided for JavaScript-disabled browsers
+- ⏳ End-to-end testing requires manual testing with backend
+
 **Deliverables**:
-- Integration of existing wiki components
-- Routing configuration
-- Breadcrumb navigation
-- End-to-end tests
+- ✅ Integration of existing wiki components
+- ✅ Routing configuration via query parameters
+- ✅ Breadcrumb navigation with proper hierarchy
+- ✅ Index.cshtml handles both listing and article display modes
+- ⏳ End-to-end tests (requires manual testing with backend integration)
 
 ### Phase 7 Acceptance Criteria
 
