@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { WikiArticle, WikiCategory, WikiSearchFilters, WikiSortOption, WIKI_SORT_OPTIONS, WikiArticleStatus } from '../../models/wiki.model';
+import { BreadcrumbItem } from '../../../shared/components/breadcrumb/breadcrumb.component';
 
 /**
  * WikiIndexComponent - Main wiki navigation and article listing
@@ -35,6 +36,12 @@ export class WikiIndexComponent implements OnInit, OnDestroy {
   selectedSort = 'updated-desc';
   
   viewMode: 'grid' | 'list' = 'grid';
+  
+  // Breadcrumb navigation
+  breadcrumbs: BreadcrumbItem[] = [
+    { label: 'Home', url: '/', icon: 'home' },
+    { label: 'Wiki', icon: 'library_books' }
+  ];
   
   private destroy$ = new Subject<void>();
   private searchSubject = new Subject<string>();

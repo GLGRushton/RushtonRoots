@@ -18,6 +18,9 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatListModule } from '@angular/material/list';
 
+// Shared Module
+import { SharedModule } from '../shared/shared.module';
+
 // Components
 import { WikiIndexComponent } from './components/wiki-index/wiki-index.component';
 import { WikiArticleComponent } from './components/wiki-article/wiki-article.component';
@@ -43,6 +46,7 @@ import { MarkdownEditorComponent } from './components/markdown-editor/markdown-e
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    SharedModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,

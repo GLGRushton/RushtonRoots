@@ -24,16 +24,11 @@
 
     <!-- Main Content -->
     <main class="wiki-article__main">
+      <!-- Breadcrumb Navigation -->
+      <app-breadcrumb [items]="breadcrumbs"></app-breadcrumb>
+      
       <!-- Article Header -->
       <header class="wiki-article__header">
-        <div class="wiki-article__breadcrumb">
-          <a class="wiki-article__breadcrumb-link">Knowledge Base</a>
-          <mat-icon>chevron_right</mat-icon>
-          <a class="wiki-article__breadcrumb-link">{{ article.categoryName }}</a>
-          <mat-icon>chevron_right</mat-icon>
-          <span>{{ article.title }}</span>
-        </div>
-
         <h1 class="wiki-article__title">{{ article.title }}</h1>
 
         <div class="wiki-article__meta">

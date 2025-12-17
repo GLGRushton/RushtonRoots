@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { marked } from 'marked';
 import { WikiArticle, TocEntry } from '../../models/wiki.model';
+import { BreadcrumbItem } from '../../../shared/components/breadcrumb/breadcrumb.component';
 
 /**
  * WikiArticleComponent - Displays a wiki article with table of contents
@@ -29,6 +30,7 @@ export class WikiArticleComponent implements OnInit {
   tableOfContents: TocEntry[] = [];
   loading = false;
   showToc = true;
+  breadcrumbs: BreadcrumbItem[] = [];
   
   // Sample article for demonstration
   private sampleArticle: WikiArticle = {
@@ -159,9 +161,21 @@ Genealogy research is a rewarding journey that connects you to your past. Take y
       if (this.article) {
         this.renderContent();
         this.generateTableOfContents();
+        this.updateBreadcrumbs();
       }
       this.loading = false;
     }, 500);
+  }
+  
+  private updateBreadcrumbs(): void {
+    if (!this.article) return;
+    
+    this.breadcrumbs = [
+      { label: 'Home', url: '/', icon: 'home' },
+      { label: 'Wiki', url: '/Wiki', icon: 'library_books' },
+      { label: this.article.categoryName || 'Uncategorized', url: `/Wiki?category=${this.article.categoryId}` },
+      { label: this.article.title }
+    ];
   }
   
   private renderContent(): void {
