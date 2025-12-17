@@ -458,11 +458,11 @@ Views/Calendar/Create.cshtml
 **Dependencies:**
 - FamilyEventController API (✅ Already exists)
 - EventRsvpController API (✅ Already exists)
-- Calendar UI component (needs selection)
+- Calendar UI component (✅ Angular calendar component already exists)
 
 **Technology Decisions:**
-- Choose calendar library (FullCalendar, custom Angular calendar component)
-- Decide if Angular calendar component already exists to reuse
+- ✅ Calendar library: FullCalendar (already integrated in Angular calendar component)
+- ✅ Angular calendar component exists and registered as custom element
 
 **Testing:**
 - Manual testing of calendar display
@@ -473,11 +473,34 @@ Views/Calendar/Create.cshtml
 **Estimated Effort:** 4-5 days
 
 **Acceptance Criteria:**
-- [ ] Calendar displays events correctly
-- [ ] Event creation works
-- [ ] Different view modes functional
-- [ ] RSVP integration working
-- [ ] Navigation menu link works
+- [x] Calendar displays events correctly
+- [x] Event creation works
+- [x] Different view modes functional
+- [x] RSVP integration working
+- [x] Navigation menu link works
+
+**Status:** ✅ **COMPLETE** (2025-12-17)
+
+**Deliverables:**
+- CalendarController with Index and Create actions
+- Views/Calendar/Index.cshtml integrating Angular calendar component
+- Views/Calendar/Create.cshtml integrating Angular event-form-dialog component
+- 24 comprehensive unit tests (all passing)
+- Support for multiple calendar views (dayGridMonth, timeGridWeek, timeGridDay, listWeek)
+- Event date/time parameters for pre-filling event creation form
+- Authorization via [Authorize] attribute (authenticated users only)
+- Responsive design with noscript fallback
+- Full integration with existing FamilyEventController and EventRsvpController APIs
+
+**Implementation Notes:**
+- Leveraged existing Angular calendar component registered as custom element
+- Used data attributes and ViewData to pass parameters to Angular component
+- Following established MVC controller patterns from MediaGalleryController and FamilyTreeMvcController
+- Minimal changes approach - reusing existing Angular components and API endpoints
+- Calendar accessible at /Calendar, Create at /Calendar/Create
+- View mode selection via query parameter: ?view=timeGridWeek or ?view=timeGridDay
+- Date focus via query parameter: ?date=2024-12-25
+- Event creation supports pre-filling date, startTime, and endTime via query parameters
 
 ---
 
@@ -982,7 +1005,7 @@ For each PR:
 | 1.3 | Household API | 2-3 days | None | No | ✅ Complete |
 | 2.1 | MediaGallery MVC | 3-4 days | None | ✅ Yes | ✅ Complete |
 | 2.2 | FamilyTree MVC | 4-5 days | None | No | ✅ Complete |
-| 2.3 | Calendar MVC | 4-5 days | None | No | 🔲 Pending |
+| 2.3 | Calendar MVC | 4-5 days | None | No | ✅ Complete |
 | 3.1 | Account Actions | 2-3 days | None | No | 🔲 Pending |
 | 3.2 | Admin Controller | 3-4 days | None | No | 🔲 Pending |
 | 3.3 | Help Controller | 4-5 days | None | No | 🔲 Pending |
@@ -992,58 +1015,12 @@ For each PR:
 
 **Total Estimated Duration:** 6-8 weeks  
 **Critical Path Duration:** 4-5 weeks  
-**Phases Complete:** 5 of 12 (42%)  
+**Phases Complete:** 6 of 12 (50%)  
 **Time to Date:** ~3 weeks
 
 ---
 
 ## Next Actions
-
-### Immediate Next Steps (Start Phase 2.3)
-
-**Phase 2.3: Calendar MVC Controller**
-
-1. **Create Feature Branch**
-   ```bash
-   git checkout -b feature/phase-2.3-calendar-mvc
-   ```
-
-2. **Analyze Existing Components**
-   - Check for existing Angular calendar component
-   - Review FamilyEventController API endpoints
-   - Review EventRsvpController API endpoints
-
-3. **Create CalendarController MVC**
-   - File: `Controllers/CalendarController.cs`
-   - Namespace: `RushtonRoots.Web.Controllers`
-   - Attributes: `[Authorize]`
-   - Actions: `Index` (GET /Calendar), `Create` (GET /Calendar/Create)
-
-4. **Create Views**
-   - File: `Views/Calendar/Index.cshtml`
-   - File: `Views/Calendar/Create.cshtml`
-   - Integrate with Angular calendar component (if exists)
-   - Support multiple calendar views (month, week, day)
-
-5. **Implement Features**
-   - Display birthdays, anniversaries, events
-   - Event RSVP integration
-   - Event creation page
-
-6. **Create Unit Tests**
-   - File: `RushtonRoots.UnitTests/Controllers/CalendarControllerTests.cs`
-   - Test all actions
-   - Test authorization
-   - Test ViewData setup
-
-7. **Manual Testing**
-   - Test calendar display
-   - Test event creation
-   - Test RSVP functionality
-
-8. **Create PR**
-   - Title: "Phase 2.3: Calendar MVC Controller"
-   - Link to this plan
 
 ### Previously Completed Phases
 
@@ -1052,10 +1029,54 @@ For each PR:
 - Phase 1.2: Partnership & ParentChild API Controllers ✅  
 - Phase 1.3: Household API Controller ✅
 
-**Phase 2: Media & Visualization Controllers** (3/3 complete)
+**Phase 2: Media & Visualization Controllers** ✅ Complete (3/3)
 - Phase 2.1: MediaGallery MVC Controller ✅
 - Phase 2.2: FamilyTree MVC Controller ✅
-   - Add test results
+- Phase 2.3: Calendar MVC Controller ✅
+
+### Immediate Next Steps (Start Phase 3.1)
+
+**Phase 3.1: Account Additional Actions**
+
+1. **Create Feature Branch**
+   ```bash
+   git checkout -b feature/phase-3.1-account-actions
+   ```
+
+2. **Analyze Existing AccountController**
+   - Review existing AccountController actions
+   - Review NotificationController API endpoints
+   - Determine user settings storage approach
+
+3. **Add Notifications Action to AccountController**
+   - Action: `Notifications` (GET /Account/Notifications)
+   - Integrate with NotificationController API
+   - Display user notifications
+
+4. **Add Settings Action to AccountController**
+   - Action: `Settings` (GET /Account/Settings)
+   - User settings management
+   - Privacy preferences
+
+5. **Create Views**
+   - File: `Views/Account/Notifications.cshtml`
+   - File: `Views/Account/Settings.cshtml`
+   - Integrate with Angular components if available
+
+6. **Create Unit Tests**
+   - Extend `AccountControllerTests.cs`
+   - Test new actions
+   - Test authorization
+   - Test ViewData setup
+
+7. **Manual Testing**
+   - Test notifications page
+   - Test settings updates
+   - Test navigation menu links
+
+8. **Create PR**
+   - Title: "Phase 3.1: Account Additional Actions"
+   - Link to this plan
 
 ---
 
