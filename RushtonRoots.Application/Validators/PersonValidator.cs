@@ -31,15 +31,13 @@ public class PersonValidator : IPersonValidator
             result.Errors.Add("Last name is required.");
         }
 
-        if (request.HouseholdId <= 0)
+        if (request.HouseholdId.HasValue && request.HouseholdId.Value > 0)
         {
-            result.IsValid = false;
-            result.Errors.Add("Valid household ID is required.");
-        }
-        else if (!await _householdRepository.ExistsAsync(request.HouseholdId))
-        {
-            result.IsValid = false;
-            result.Errors.Add("Household does not exist.");
+            if (!await _householdRepository.ExistsAsync(request.HouseholdId.Value))
+            {
+                result.IsValid = false;
+                result.Errors.Add("Household does not exist.");
+            }
         }
 
         if (request.DateOfBirth.HasValue && request.DateOfDeath.HasValue)
@@ -82,15 +80,13 @@ public class PersonValidator : IPersonValidator
             result.Errors.Add("Last name is required.");
         }
 
-        if (request.HouseholdId <= 0)
+        if (request.HouseholdId.HasValue && request.HouseholdId.Value > 0)
         {
-            result.IsValid = false;
-            result.Errors.Add("Valid household ID is required.");
-        }
-        else if (!await _householdRepository.ExistsAsync(request.HouseholdId))
-        {
-            result.IsValid = false;
-            result.Errors.Add("Household does not exist.");
+            if (!await _householdRepository.ExistsAsync(request.HouseholdId.Value))
+            {
+                result.IsValid = false;
+                result.Errors.Add("Household does not exist.");
+            }
         }
 
         if (request.DateOfBirth.HasValue && request.DateOfDeath.HasValue)
