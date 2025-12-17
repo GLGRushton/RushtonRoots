@@ -21,7 +21,7 @@
     <!-- Navigation Links (Desktop) -->
     <app-navigation 
       *ngIf="userInfo.isAuthenticated"
-      [isAuthenticated]="userInfo.isAuthenticated"
+      [userInfo]="userInfo"
       [isMobile]="false"
       class="desktop-nav">
     </app-navigation>
@@ -70,7 +70,7 @@
   <!-- Mobile Navigation (Collapsible) -->
   <div class="mobile-nav" *ngIf="isMobileMenuOpen && userInfo.isAuthenticated">
     <app-navigation 
-      [isAuthenticated]="userInfo.isAuthenticated"
+      [userInfo]="userInfo"
       [isMobile]="true">
     </app-navigation>
   </div>
