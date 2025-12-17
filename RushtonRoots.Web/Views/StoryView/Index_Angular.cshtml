@@ -1,0 +1,106 @@
+@{
+    ViewData["Title"] = "Family Stories";
+    
+    // Sample data - in production this would come from the controller
+    var stories = ViewBag.Stories ?? new List<object>();
+    var categories = ViewBag.Categories ?? new List<object>();
+    var featuredStories = ViewBag.FeaturedStories ?? new List<object>();
+    var recentStories = ViewBag.RecentStories ?? new List<object>();
+    var canEdit = ViewBag.CanEdit ?? false;
+    
+    // Query parameters for routing
+    var storyId = Context.Request.Query["storyId"].ToString();
+    var slug = Context.Request.Query["slug"].ToString();
+    var category = Context.Request.Query["category"].ToString();
+}
+
+<!-- Angular Component -->
+<app-story-index
+    stories="@Html.Raw(System.Text.Json.JsonSerializer.Serialize(stories))"
+    categories="@Html.Raw(System.Text.Json.JsonSerializer.Serialize(categories))"
+    featured-stories="@Html.Raw(System.Text.Json.JsonSerializer.Serialize(featuredStories))"
+    recent-stories="@Html.Raw(System.Text.Json.JsonSerializer.Serialize(recentStories))"
+    can-edit="@canEdit.ToString().ToLower()"
+    story-id="@storyId"
+    slug="@slug"
+    category-filter="@category">
+</app-story-index>
+
+<!-- Noscript Fallback -->
+<noscript>
+    <div class="noscript-fallback">
+        <h1>Family Stories & Memories</h1>
+        <p class="alert alert-warning">
+            <strong>JavaScript Required:</strong> This page requires JavaScript to display the story interface.
+            Please enable JavaScript in your browser settings.
+        </p>
+        
+        @if (stories != null && ((IEnumerable<object>)stories).Any())
+        {
+            <div class="story-list">
+                <h2>Available Stories</h2>
+                <ul>
+                    @foreach (dynamic story in stories)
+                    {
+                        <li>
+                            <strong>@story.Title</strong>
+                            @if (!string.IsNullOrEmpty(story.Summary))
+                            {
+                                <p>@story.Summary</p>
+                            }
+                            <p>
+                                <small>
+                                    By @story.AuthorName
+                                    @if (story.PublishedDate != null)
+                                    {
+                                        @: on @story.PublishedDate.ToString("MMMM d, yyyy")
+                                    }
+                                </small>
+                            </p>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        else
+        {
+            <p>No stories available at this time.</p>
+        }
+    </div>
+</noscript>
+
+@section Scripts {
+    <!-- Angular runtime scripts (loaded from wwwroot after build) -->
+    <script src="~/runtime.js" asp-append-version="true"></script>
+    <script src="~/polyfills.js" asp-append-version="true"></script>
+    <script src="~/main.js" asp-append-version="true"></script>
+}
+
+<style>
+    .noscript-fallback {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+    
+    .noscript-fallback .story-list {
+        background: white;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .noscript-fallback ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .noscript-fallback li {
+        padding: 16px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .noscript-fallback li:last-child {
+        border-bottom: none;
+    }
+</style>
