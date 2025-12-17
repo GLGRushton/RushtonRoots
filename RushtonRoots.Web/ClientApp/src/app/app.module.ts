@@ -138,6 +138,8 @@ import { StoryCardComponent } from './content/components/story-card/story-card.c
 import { StoryDetailsComponent } from './content/components/story-details/story-details.component';
 import { StoryIndexComponent } from './content/components/story-index/story-index.component';
 import { TraditionCardComponent } from './content/components/tradition-card/tradition-card.component';
+import { TraditionDetailsComponent } from './content/components/tradition-details/tradition-details.component';
+import { TraditionIndexComponent } from './content/components/tradition-index/tradition-index.component';
 import { ContentGridComponent } from './content/components/content-grid/content-grid.component';
 
 // Import Phase 8.1 Media Gallery Enhancements components for Angular Elements registration
@@ -329,6 +331,8 @@ export class AppModule {
     safeDefine('app-story-details', StoryDetailsComponent);
     safeDefine('app-story-index', StoryIndexComponent);
     safeDefine('app-tradition-card', TraditionCardComponent);
+    safeDefine('app-tradition-details', TraditionDetailsComponent);
+    safeDefine('app-tradition-index', TraditionIndexComponent);
     safeDefine('app-content-grid', ContentGridComponent);
 
     // Register Phase 8.1 Media Gallery Enhancements components as Angular Elements

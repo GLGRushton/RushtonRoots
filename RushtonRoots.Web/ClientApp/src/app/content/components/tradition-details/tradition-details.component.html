@@ -1,0 +1,402 @@
+<div class="tradition-details" [class.print-view]="isPrintView">
+  <!-- Tradition Header -->
+  <div class="tradition-details__header">
+    <!-- Featured Badge -->
+    <div *ngIf="tradition.featured" class="tradition-details__featured-badge">
+      <mat-icon>stars</mat-icon>
+      <span>Featured Tradition</span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="tradition-details__title">{{ tradition.title }}</h1>
+
+    <!-- Description -->
+    <p class="tradition-details__description">{{ tradition.description }}</p>
+
+    <!-- Tradition Metadata -->
+    <div class="tradition-details__metadata">
+      <div class="metadata-item">
+        <mat-icon>{{ getFrequencyIcon() }}</mat-icon>
+        <div class="metadata-content">
+          <span class="metadata-label">Frequency</span>
+          <span class="metadata-value">{{ getFrequencyLabel() }}</span>
+        </div>
+      </div>
+
+      <div class="metadata-item" *ngIf="tradition.season">
+        <mat-icon>wb_sunny</mat-icon>
+        <div class="metadata-content">
+          <span class="metadata-label">Season</span>
+          <span class="metadata-value">{{ tradition.season }}</span>
+        </div>
+      </div>
+
+      <div class="metadata-item" *ngIf="tradition.monthsActive && tradition.monthsActive.length > 0">
+        <mat-icon>calendar_today</mat-icon>
+        <div class="metadata-content">
+          <span class="metadata-label">Months Celebrated</span>
+          <span class="metadata-value">{{ getMonthsDisplay() }}</span>
+        </div>
+      </div>
+
+      <div class="metadata-item" *ngIf="tradition.startedYear">
+        <mat-icon>history</mat-icon>
+        <div class="metadata-content">
+          <span class="metadata-label">Years Active</span>
+          <span class="metadata-value">{{ getYearsActiveDisplay() }}</span>
+        </div>
+      </div>
+
+      <div class="metadata-item" *ngIf="tradition.location">
+        <mat-icon>place</mat-icon>
+        <div class="metadata-content">
+          <span class="metadata-label">Location</span>
+          <span class="metadata-value">{{ tradition.location }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Author and Publication Info -->
+    <div class="tradition-details__meta">
+      <div class="tradition-details__author">
+        <img [src]="tradition.authorAvatar || 'assets/images/default-avatar.png'"
+             [alt]="tradition.authorName"
+             class="author-avatar">
+        <div class="author-info">
+          <span class="author-name">Created by {{ tradition.authorName }}</span>
+          <span class="publish-date">Published {{ tradition.publishedDate | date:'mediumDate' }}</span>
+        </div>
+      </div>
+      <div class="tradition-details__stats">
+        <div class="stat">
+          <mat-icon>visibility</mat-icon>
+          <span>{{ tradition.viewCount }} views</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="tradition-details__actions" *ngIf="!isPrintView">
+      <button mat-raised-button (click)="onFavorite()" [class.active]="hasFavorited">
+        <mat-icon>{{ hasFavorited ? 'bookmark' : 'bookmark_border' }}</mat-icon>
+        Favorite
+      </button>
+      <button mat-raised-button (click)="onShare()">
+        <mat-icon>share</mat-icon>
+        Share
+      </button>
+      <button mat-raised-button (click)="onPrint()">
+        <mat-icon>print</mat-icon>
+        Print
+      </button>
+      <button mat-raised-button color="accent" *ngIf="canEdit" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs for Tradition Content, Participants, Related Content, Calendar -->
+  <mat-tab-group [(selectedIndex)]="selectedTab" class="tradition-details__tabs" *ngIf="!isPrintView">
+    <!-- Tradition Details Tab -->
+    <mat-tab label="Tradition">
+      <div class="tradition-details__content">
+        <!-- Full Tradition Content -->
+        <div class="tradition-content">
+          <div class="content-section">
+            <h2>
+              <mat-icon>description</mat-icon>
+              Full Description & History
+            </h2>
+            <div [innerHTML]="tradition.content"></div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Participants Tab -->
+    <mat-tab label="Participants">
+      <div class="tradition-details__participants">
+        <div class="participants-section" *ngIf="getParticipantsByRole('host').length > 0">
+          <h3>
+            <mat-icon>star</mat-icon>
+            Hosts
+          </h3>
+          <div class="participants-list">
+            <button mat-button
+                    *ngFor="let participant of getParticipantsByRole('host')"
+                    (click)="onParticipantClick(participant.personId)"
+                    class="participant-button">
+              <img [src]="participant.personAvatar || 'assets/images/default-avatar.png'"
+                   [alt]="participant.personName"
+                   class="participant-avatar">
+              <div class="participant-info">
+                <span class="participant-name">{{ participant.personName }}</span>
+                <span class="participant-role" *ngIf="participant.role">{{ participant.role }}</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="participants-section" *ngIf="getParticipantsByRole('organizer').length > 0">
+          <h3>
+            <mat-icon>manage_accounts</mat-icon>
+            Organizers
+          </h3>
+          <div class="participants-list">
+            <button mat-button
+                    *ngFor="let participant of getParticipantsByRole('organizer')"
+                    (click)="onParticipantClick(participant.personId)"
+                    class="participant-button">
+              <img [src]="participant.personAvatar || 'assets/images/default-avatar.png'"
+                   [alt]="participant.personName"
+                   class="participant-avatar">
+              <div class="participant-info">
+                <span class="participant-name">{{ participant.personName }}</span>
+                <span class="participant-role" *ngIf="participant.role">{{ participant.role }}</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="participants-section" *ngIf="getGeneralParticipants().length > 0">
+          <h3>
+            <mat-icon>people</mat-icon>
+            Participants
+          </h3>
+          <div class="participants-list">
+            <button mat-button
+                    *ngFor="let participant of getGeneralParticipants()"
+                    (click)="onParticipantClick(participant.personId)"
+                    class="participant-button">
+              <img [src]="participant.personAvatar || 'assets/images/default-avatar.png'"
+                   [alt]="participant.personName"
+                   class="participant-avatar">
+              <div class="participant-info">
+                <span class="participant-name">{{ participant.personName }}</span>
+                <span class="participant-role" *ngIf="participant.role">{{ participant.role }}</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="no-participants" *ngIf="participants.length === 0">
+          <mat-icon>people_outline</mat-icon>
+          <p>No participants recorded for this tradition yet.</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Related Content Tab -->
+    <mat-tab label="Related Content" *ngIf="hasRelatedContent()">
+      <div class="tradition-details__related">
+        <!-- Related Recipes -->
+        <div class="related-section" *ngIf="relatedRecipes.length > 0">
+          <h3>
+            <mat-icon>restaurant</mat-icon>
+            Related Recipes
+          </h3>
+          <div class="related-recipes">
+            <mat-card *ngFor="let recipe of relatedRecipes" 
+                      class="related-recipe-card"
+                      (click)="onRecipeClick(recipe.id)">
+              <img mat-card-image 
+                   [src]="recipe.imageUrl || 'assets/images/default-recipe.png'" 
+                   [alt]="recipe.title">
+              <mat-card-content>
+                <h4>{{ recipe.title }}</h4>
+                <p>{{ recipe.description }}</p>
+                <div class="recipe-meta" *ngIf="recipe.prepTime || recipe.difficulty">
+                  <span *ngIf="recipe.prepTime">
+                    <mat-icon>schedule</mat-icon>
+                    {{ recipe.prepTime }} min
+                  </span>
+                  <span *ngIf="recipe.difficulty" class="difficulty">{{ recipe.difficulty }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Related Stories -->
+        <div class="related-section" *ngIf="relatedStories.length > 0">
+          <h3>
+            <mat-icon>auto_stories</mat-icon>
+            Related Stories
+          </h3>
+          <div class="related-stories">
+            <mat-card *ngFor="let story of relatedStories"
+                      class="related-story-card"
+                      (click)="onStoryClick(story.id)">
+              <img mat-card-image
+                   [src]="story.imageUrl || 'assets/images/default-story.png'"
+                   [alt]="story.title">
+              <mat-card-content>
+                <h4>{{ story.title }}</h4>
+                <p>{{ story.summary }}</p>
+                <div class="story-meta" *ngIf="story.dateOfEvent">
+                  <mat-icon>event</mat-icon>
+                  <span>{{ story.dateOfEvent | date:'mediumDate' }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <!-- Photos and Videos from Celebrations -->
+        <div class="related-section" *ngIf="hasMedia()">
+          <h3>
+            <mat-icon>photo_library</mat-icon>
+            Photos & Videos from Celebrations
+          </h3>
+          <div class="media-gallery">
+            <div *ngFor="let media of getPhotos(); let i = index"
+                 class="media-item"
+                 (click)="openMediaLightbox(i)">
+              <img [src]="media.url" [alt]="media.caption || 'Tradition photo'">
+              <div class="media-overlay" *ngIf="media.caption">
+                <span>{{ media.caption }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="video-gallery" *ngIf="getVideos().length > 0">
+            <div *ngFor="let video of getVideos()" class="video-item">
+              <video controls [src]="video.url">
+                Your browser does not support the video tag.
+              </video>
+              <p *ngIf="video.caption">{{ video.caption }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Calendar Tab -->
+    <mat-tab label="Calendar" *ngIf="hasCalendarInfo()">
+      <div class="tradition-details__calendar">
+        <!-- Next Occurrence -->
+        <div class="calendar-section">
+          <h3>
+            <mat-icon>event_available</mat-icon>
+            Next Occurrence
+          </h3>
+          <mat-card class="next-occurrence-card">
+            <mat-card-content>
+              <div class="occurrence-date">
+                <mat-icon>calendar_today</mat-icon>
+                <span class="date">{{ getNextOccurrenceDisplay() }}</span>
+              </div>
+              <div class="occurrence-location" *ngIf="nextOccurrence?.location">
+                <mat-icon>place</mat-icon>
+                <span>{{ nextOccurrence.location }}</span>
+              </div>
+              <div class="occurrence-notes" *ngIf="nextOccurrence?.notes">
+                <p>{{ nextOccurrence.notes }}</p>
+              </div>
+              <button mat-raised-button color="primary" (click)="onCreateCalendarEvent()">
+                <mat-icon>add</mat-icon>
+                Add to Calendar
+              </button>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Past Occurrences -->
+        <div class="calendar-section" *ngIf="pastOccurrences.length > 0">
+          <h3>
+            <mat-icon>history</mat-icon>
+            Past Occurrences
+          </h3>
+          <div class="past-occurrences">
+            <mat-card *ngFor="let occurrence of pastOccurrences" class="occurrence-card">
+              <mat-card-content>
+                <div class="occurrence-header">
+                  <div class="occurrence-date">
+                    <mat-icon>event</mat-icon>
+                    <span>{{ formatDate(occurrence.occurrenceDate) }}</span>
+                  </div>
+                  <div class="occurrence-attendance" *ngIf="occurrence.attendees && occurrence.attendees.length > 0">
+                    <mat-icon>people</mat-icon>
+                    <span>{{ occurrence.attendees.length }} attendees</span>
+                  </div>
+                </div>
+                <div class="occurrence-location" *ngIf="occurrence.location">
+                  <mat-icon>place</mat-icon>
+                  <span>{{ occurrence.location }}</span>
+                </div>
+                <div class="occurrence-attendees" *ngIf="occurrence.attendeeNames && occurrence.attendeeNames.length > 0">
+                  <strong>Attendees:</strong>
+                  <span>{{ occurrence.attendeeNames.join(', ') }}</span>
+                </div>
+                <div class="occurrence-notes" *ngIf="occurrence.notes">
+                  <p>{{ occurrence.notes }}</p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Print View (All Content Without Tabs) -->
+  <div class="print-content" *ngIf="isPrintView">
+    <div class="tradition-details__content">
+      <h2>Full Description & History</h2>
+      <div [innerHTML]="tradition.content"></div>
+    </div>
+
+    <div class="tradition-details__participants" *ngIf="participants.length > 0">
+      <h2>Participants</h2>
+      <ul>
+        <li *ngFor="let participant of participants">
+          {{ participant.personName }}
+          <span *ngIf="participant.participantRole"> - {{ participant.participantRole }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tradition-details__related" *ngIf="hasRelatedContent()">
+      <h2>Related Content</h2>
+      <div *ngIf="relatedRecipes.length > 0">
+        <h3>Related Recipes</h3>
+        <ul>
+          <li *ngFor="let recipe of relatedRecipes">{{ recipe.title }}</li>
+        </ul>
+      </div>
+      <div *ngIf="relatedStories.length > 0">
+        <h3>Related Stories</h3>
+        <ul>
+          <li *ngFor="let story of relatedStories">{{ story.title }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Media Lightbox -->
+  <div class="media-lightbox" *ngIf="selectedMediaIndex >= 0" (click)="closeMediaLightbox()">
+    <div class="lightbox-content" (click)="$event.stopPropagation()">
+      <button mat-icon-button class="lightbox-close" (click)="closeMediaLightbox()">
+        <mat-icon>close</mat-icon>
+      </button>
+      <button mat-icon-button
+              class="lightbox-prev"
+              (click)="previousMedia(); $event.stopPropagation()"
+              [disabled]="selectedMediaIndex === 0">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <img [src]="tradition.media[selectedMediaIndex].url"
+           [alt]="tradition.media[selectedMediaIndex].caption || 'Tradition media'">
+      <button mat-icon-button
+              class="lightbox-next"
+              (click)="nextMedia(); $event.stopPropagation()"
+              [disabled]="selectedMediaIndex === tradition.media.length - 1">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+      <div class="lightbox-caption" *ngIf="tradition.media[selectedMediaIndex].caption">
+        {{ tradition.media[selectedMediaIndex].caption }}
+      </div>
+    </div>
+  </div>
+</div>

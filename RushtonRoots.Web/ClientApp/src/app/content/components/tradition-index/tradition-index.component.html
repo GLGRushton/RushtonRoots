@@ -1,0 +1,189 @@
+<div class="tradition-index">
+  <!-- Breadcrumb Navigation -->
+  <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb>
+
+  <!-- List View -->
+  <div *ngIf="viewMode === 'list'" class="tradition-index__list">
+    <!-- Page Header -->
+    <div class="tradition-index__header">
+      <h1>Family Traditions</h1>
+      <p class="tagline">Celebrating the customs and celebrations that make our family unique</p>
+      
+      <!-- Create Button -->
+      <button *ngIf="canEdit" 
+              mat-raised-button 
+              color="primary" 
+              (click)="onEditTradition(0)"
+              class="create-button">
+        <mat-icon>add</mat-icon>
+        Create New Tradition
+      </button>
+    </div>
+
+    <!-- Category Navigation -->
+    <div class="tradition-index__categories" *ngIf="categories.length > 0">
+      <h2>Browse by Category</h2>
+      <mat-chip-set>
+        <mat-chip 
+          *ngFor="let category of categories"
+          [class.selected]="searchFilters.categoryId === category.id"
+          (click)="onCategorySelected(category.id)">
+          <mat-icon *ngIf="category.icon">{{ category.icon }}</mat-icon>
+          {{ category.name }}
+        </mat-chip>
+        <mat-chip 
+          *ngIf="searchFilters.categoryId"
+          (click)="onCategorySelected(0)"
+          class="clear-filter">
+          <mat-icon>close</mat-icon>
+          Clear Filter
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Frequency Filter Section -->
+    <div class="tradition-index__frequency-filter">
+      <h3>Filter by Frequency</h3>
+      <mat-chip-set>
+        <mat-chip 
+          (click)="clearFrequencyFilter()"
+          [class.selected]="!frequencyFilter">
+          All Frequencies
+        </mat-chip>
+        <mat-chip 
+          (click)="setFrequencyFilter('daily')"
+          [class.selected]="frequencyFilter === 'daily'">
+          <mat-icon>today</mat-icon>
+          Daily
+        </mat-chip>
+        <mat-chip 
+          (click)="setFrequencyFilter('weekly')"
+          [class.selected]="frequencyFilter === 'weekly'">
+          <mat-icon>date_range</mat-icon>
+          Weekly
+        </mat-chip>
+        <mat-chip 
+          (click)="setFrequencyFilter('monthly')"
+          [class.selected]="frequencyFilter === 'monthly'">
+          <mat-icon>calendar_month</mat-icon>
+          Monthly
+        </mat-chip>
+        <mat-chip 
+          (click)="setFrequencyFilter('yearly')"
+          [class.selected]="frequencyFilter === 'yearly'">
+          <mat-icon>event</mat-icon>
+          Yearly
+        </mat-chip>
+        <mat-chip 
+          (click)="setFrequencyFilter('occasional')"
+          [class.selected]="frequencyFilter === 'occasional'">
+          <mat-icon>event_available</mat-icon>
+          Occasional
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+
+    <!-- Featured Traditions -->
+    <div class="tradition-index__featured" *ngIf="featuredTraditions.length > 0 && !searchFilters.searchText && !searchFilters.categoryId">
+      <h2>
+        <mat-icon>stars</mat-icon>
+        Featured Traditions
+      </h2>
+      <div class="featured-traditions-grid">
+        <app-tradition-card
+          *ngFor="let tradition of featuredTraditions"
+          [tradition]="tradition"
+          [canEdit]="canEdit"
+          [elevation]="4"
+          (viewTradition)="onViewTradition($event)"
+          (editTradition)="onEditTradition($event)"
+          (deleteTradition)="onDeleteTradition($event)"
+          (viewPerson)="onViewPerson($event)"
+          (viewRecipe)="onViewRecipe($event)">
+        </app-tradition-card>
+      </div>
+    </div>
+
+    <!-- Recent Traditions (when no filter applied) -->
+    <div class="tradition-index__recent" *ngIf="recentTraditions.length > 0 && !searchFilters.searchText && !searchFilters.categoryId">
+      <h2>
+        <mat-icon>schedule</mat-icon>
+        Recently Added
+      </h2>
+      <div class="recent-traditions-grid">
+        <app-tradition-card
+          *ngFor="let tradition of recentTraditions.slice(0, 6)"
+          [tradition]="tradition"
+          [canEdit]="canEdit"
+          (viewTradition)="onViewTradition($event)"
+          (editTradition)="onEditTradition($event)"
+          (deleteTradition)="onDeleteTradition($event)"
+          (viewPerson)="onViewPerson($event)"
+          (viewRecipe)="onViewRecipe($event)">
+        </app-tradition-card>
+      </div>
+    </div>
+
+    <!-- All Traditions Grid with Search and Filtering -->
+    <div class="tradition-index__all">
+      <h2 *ngIf="!searchFilters.searchText && !searchFilters.categoryId">All Traditions</h2>
+      <h2 *ngIf="searchFilters.searchText || searchFilters.categoryId">
+        {{ getFilteredTraditions().length }} {{ getFilteredTraditions().length === 1 ? 'Tradition' : 'Traditions' }} Found
+      </h2>
+      
+      <app-content-grid
+        [items]="getFilteredTraditions()"
+        [categories]="categories"
+        [contentType]="'tradition'"
+        [showSearch]="true"
+        [showFilters]="true"
+        [showSort]="true"
+        [canEdit]="canEdit"
+        (itemClicked)="onViewTradition($event)"
+        (itemEdited)="onEditTradition($event)"
+        (itemDeleted)="onDeleteTradition($event)"
+        (personClicked)="onViewPerson($event)">
+      </app-content-grid>
+    </div>
+  </div>
+
+  <!-- Detail View -->
+  <div *ngIf="viewMode === 'detail' && selectedTradition" class="tradition-index__detail">
+    <app-tradition-details
+      [tradition]="selectedTradition"
+      [participants]="traditionParticipants"
+      [relatedRecipes]="relatedRecipes"
+      [relatedStories]="relatedStories"
+      [pastOccurrences]="pastOccurrences"
+      [nextOccurrence]="nextOccurrence"
+      [canEdit]="canEdit"
+      [hasFavorited]="hasFavorited"
+      (editTradition)="onEditTradition($event)"
+      (deleteTradition)="onDeleteTradition($event)"
+      (shareTradition)="onShareTradition($event)"
+      (printTradition)="onPrintTradition($event)"
+      (favoriteTradition)="onFavoriteTradition($event)"
+      (viewPerson)="onViewPerson($event)"
+      (viewRecipe)="onViewRecipe($event)"
+      (viewStory)="onViewStory($event)"
+      (createCalendarEvent)="onCreateCalendarEvent($event)">
+    </app-tradition-details>
+  </div>
+
+  <!-- No Tradition Found -->
+  <div *ngIf="viewMode === 'detail' && !selectedTradition" class="tradition-index__not-found">
+    <mat-card>
+      <mat-card-content>
+        <div class="not-found-content">
+          <mat-icon>search_off</mat-icon>
+          <h2>Tradition Not Found</h2>
+          <p>The tradition you're looking for could not be found.</p>
+          <button mat-raised-button color="primary" (click)="viewMode = 'list'; buildListBreadcrumbs()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Traditions
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
