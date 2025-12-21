@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RushtonRoots.Application.Services;
 using RushtonRoots.Domain.UI.Models;
@@ -7,6 +8,7 @@ namespace RushtonRoots.Web.Controllers.Api;
 /// <summary>
 /// API Controller for Family Tree data and visualizations.
 /// </summary>
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class FamilyTreeController : ControllerBase
