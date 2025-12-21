@@ -11,6 +11,14 @@ namespace RushtonRoots.Infrastructure.Services;
 
 public class BlobStorageService : IBlobStorageService
 {
+    // Default thumbnail configuration constants
+    private static readonly List<ThumbnailSize> DefaultThumbnailSizes = new()
+    {
+        new ThumbnailSize { Name = "small", Width = 200, Height = 200 },
+        new ThumbnailSize { Name = "medium", Width = 400, Height = 400 }
+    };
+    private const int DefaultThumbnailQuality = 85;
+
     private readonly BlobContainerClient _containerClient;
     private readonly string _containerName;
     private readonly IConfiguration _configuration;
@@ -23,15 +31,11 @@ public class BlobStorageService : IBlobStorageService
         var connectionString = configuration["AzureBlobStorage:ConnectionString"];
         _containerName = configuration["AzureBlobStorage:ContainerName"] ?? "rushtonroots-files";
         
-        // Load thumbnail configuration
+        // Load thumbnail configuration with defaults
         _thumbnailSizes = configuration.GetSection("AzureBlobStorage:ThumbnailSizes").Get<List<ThumbnailSize>>() 
-            ?? new List<ThumbnailSize>
-            {
-                new ThumbnailSize { Name = "small", Width = 200, Height = 200 },
-                new ThumbnailSize { Name = "medium", Width = 400, Height = 400 }
-            };
+            ?? DefaultThumbnailSizes;
         
-        _thumbnailQuality = configuration.GetValue<int>("AzureBlobStorage:ThumbnailQuality", 85);
+        _thumbnailQuality = configuration.GetValue<int>("AzureBlobStorage:ThumbnailQuality", DefaultThumbnailQuality);
         
         if (string.IsNullOrEmpty(connectionString))
         {
@@ -94,8 +98,11 @@ public class BlobStorageService : IBlobStorageService
         }
         catch (Exception ex)
         {
-            // If image processing fails, log and throw
-            throw new InvalidOperationException($"Failed to generate thumbnails for {originalBlobName}", ex);
+            // If image processing fails, provide detailed error information
+            throw new InvalidOperationException(
+                $"Failed to generate thumbnails for '{originalBlobName}'. " +
+                $"Error: {ex.GetType().Name} - {ex.Message}", 
+                ex);
         }
         
         return thumbnailUrls;
