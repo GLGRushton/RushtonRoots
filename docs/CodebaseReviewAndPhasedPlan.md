@@ -1,0 +1,1125 @@
+# RushtonRoots - Comprehensive Codebase Review and Phased Implementation Plan
+
+**Date:** December 2025  
+**Version:** 1.0  
+**Status:** Active Implementation Plan
+
+---
+
+## Executive Summary
+
+This document provides an extensive review of the RushtonRoots codebase and outlines a phased plan to complete existing functionality. The analysis reveals a well-architected solution with strong foundations, but several areas require attention to achieve production readiness.
+
+### Key Findings
+
+**✅ Strengths:**
+- Clean Architecture properly implemented with 5 projects
+- Strong test coverage (336 tests, all passing)
+- Convention-based DI with Autofac working well
+- Entity Framework Core properly configured with migrations
+- API endpoints largely implemented (31 API controllers)
+- Angular 19 integration functioning
+
+**⚠️ Areas Requiring Attention:**
+- Image thumbnail generation not implemented (BlobStorageService)
+- Several TODO markers in views indicating incomplete features
+- Nullable reference warnings in Razor views
+- Azure Blob Storage requires configuration
+- Security vulnerability in test dependency (System.Security.Cryptography.Xml)
+- Migration naming convention issue (lowercase migration name)
+- Some view features not connected to backend endpoints
+
+**📊 Overall Health:**
+- **Build Status:** ✅ Successful (12 warnings, 0 errors)
+- **Test Coverage:** ✅ 336/336 tests passing
+- **Architecture:** ✅ Clean Architecture properly implemented
+- **Dependencies:** ⚠️ 1 security vulnerability in test package
+- **Documentation:** ✅ Comprehensive (README, ROADMAP, PATTERNS docs)
+
+---
+
+## Table of Contents
+
+1. [Architecture Review](#1-architecture-review)
+2. [Functionality Analysis](#2-functionality-analysis)
+3. [Code Quality Assessment](#3-code-quality-assessment)
+4. [Infrastructure & Configuration](#4-infrastructure--configuration)
+5. [Security & Compliance](#5-security--compliance)
+6. [Phased Implementation Plan](#6-phased-implementation-plan)
+7. [Success Metrics](#7-success-metrics)
+8. [Risk Assessment](#8-risk-assessment)
+
+---
+
+## 1. Architecture Review
+
+### 1.1 Project Structure - ✅ EXCELLENT
+
+The solution follows Clean Architecture with proper dependency flow:
+
+```
+RushtonRoots.Domain (50 entities, 89 view models)
+   ↑
+RushtonRoots.Infrastructure (125 services/repos, 15 migrations)
+   ↑
+RushtonRoots.Application (60+ services, 20+ mappers, 5+ validators)
+   ↑
+RushtonRoots.Web (31 API controllers, 11+ MVC controllers)
+   ↑
+RushtonRoots.UnitTests (336 tests - all passing)
+```
+
+**Status:** ✅ Complete and properly implemented
+
+**Evidence:**
+- All dependencies flow in one direction (no circular references)
+- Each layer has clear responsibilities
+- Domain layer has zero external dependencies
+- Infrastructure properly separated from Application
+
+### 1.2 Dependency Injection - ✅ EXCELLENT
+
+**Implementation:** Autofac with convention-based registration
+
+**Status:** ✅ Complete and working
+
+**Convention Patterns:**
+- Services: `*Service` → Auto-registered as `I*Service`
+- Repositories: `*Repository` → Auto-registered as `I*Repository`
+- Validators: `*Validator` → Auto-registered as `I*Validator`
+- Mappers: `*Mapper` → Auto-registered as `I*Mapper`
+
+**Evidence from Analysis:**
+- 60+ services properly registered
+- 50+ repositories properly registered
+- 20+ mappers properly registered
+- All tests passing with DI working correctly
+
+### 1.3 Database Layer - ✅ GOOD (Minor Issues)
+
+**Entity Framework Core 10 with SQL Server**
+
+**Status:** ✅ Mostly Complete
+
+**Strengths:**
+- 50 domain entities properly defined
+- 15 migrations successfully applied
+- Entity configurations using `IEntityTypeConfiguration<T>`
+- BaseEntity pattern for CreatedDateTime/UpdatedDateTime
+- Automatic timestamp updates in SaveChanges
+
+**Issues Found:**
+1. ⚠️ Migration naming: `updatemigrations` (lowercase) causes warning
+2. ⚠️ Connection string targets `.` (localhost) - may need environment-specific configs
+
+**Recommendation:** Phase 1.1 - Clean up migration naming
+
+### 1.4 API Layer - ✅ EXCELLENT
+
+**Status:** 31/31 API Controllers Implemented
+
+**Controllers Present:**
+- Core Entities: Person, Partnership, ParentChild, Household
+- Media: Photo, PhotoAlbum, PhotoTag, Media, Document
+- Collaboration: Message, ChatRoom, Comment, Notification
+- Genealogy: LifeEvent, Location, FamilyTree, Search
+- Wiki: WikiPage, WikiControllers
+- Activities: FamilyEvent, EventRsvp, FamilyTask
+- Gamification: Contribution, ConflictResolution, ActivityFeed, Leaderboard
+- Content: Recipe, Story, StoryCollection, Tradition
+
+**Evidence:** All controllers have working implementations (not just stubs)
+
+### 1.5 MVC Layer - ✅ GOOD
+
+**Status:** 11+ MVC Controllers, 18+ View directories
+
+**Controllers Present:**
+- Account, Admin, Home
+- Person, Household, Partnership, ParentChild
+- MediaGallery, FamilyTree, Calendar
+- Wiki, StoryView, TraditionView, RecipeView
+
+**Views Present:** Comprehensive coverage across all controllers
+
+---
+
+## 2. Functionality Analysis
+
+### 2.1 Completed Features ✅
+
+Based on ROADMAP.md, the following phases are marked complete:
+
+#### Phase 1: Foundation & Core Genealogy ✅ COMPLETE
+- ✅ Phase 1.1: Authentication & Authorization
+- ✅ Phase 1.2: Person & Household Management
+- ✅ Phase 1.3: Basic Relationships
+
+#### Phase 2: Enhanced Genealogy & Visualization ✅ COMPLETE
+- ✅ Phase 2.1: Family Tree Visualization
+- ✅ Phase 2.2: Advanced Person Details
+- ✅ Phase 2.3: Search & Discovery
+
+#### Phase 3: Media & Document Management ✅ COMPLETE
+- ✅ Phase 3.1: Photo Gallery
+- ✅ Phase 3.2: Document Management
+- ✅ Phase 3.3: Video & Audio
+
+#### Phase 4: Collaboration & Communication ✅ COMPLETE
+- ✅ Phase 4.1: Messaging & Notifications
+- ✅ Phase 4.2: Collaboration Tools
+- ✅ Phase 4.3: Contribution & Validation
+
+#### Phase 6: Family Knowledge Base ✅ COMPLETE
+- ✅ Phase 6.1: Family Wiki
+- ✅ Phase 6.2: Stories & Memories
+- ✅ Phase 6.3: Recipes & Traditions
+
+### 2.2 Incomplete/Broken Features ⚠️
+
+Despite marking phases as "complete" in ROADMAP.md, several features have incomplete implementations:
+
+#### 2.2.1 Image Processing - ⚠️ INCOMPLETE
+
+**Location:** `RushtonRoots.Infrastructure/Services/BlobStorageService.cs`
+
+**Issue:** 
+```csharp
+// Line 49-65: TODO comment
+// TODO: Implement actual thumbnail generation using ImageSharp or similar library
+// Current implementation: uploads original image as placeholder
+```
+
+**Impact:** 
+- Photo thumbnails not optimized (full-size images used)
+- Performance impact on photo galleries
+- Higher storage costs
+- Slower page loads
+
+**Status:** ⚠️ Functional but not optimal
+
+#### 2.2.2 Household Management Features - ⚠️ INCOMPLETE
+
+**Location:** `RushtonRoots.Web/Views/Household/Details.cshtml`
+
+**TODOs Found:**
+```javascript
+// TODO: Implement member removal endpoint
+// TODO: Implement role change endpoint
+// TODO: Implement resend invite endpoint
+// TODO: Implement member invitation modal/page
+// TODO: Implement settings update endpoint
+```
+
+**Impact:** Household administration features not fully connected to backend
+
+#### 2.2.3 Tradition View Features - ⚠️ INCOMPLETE
+
+**Location:** `RushtonRoots.Web/Views/Tradition/Index.cshtml`
+
+**TODOs Found:**
+```javascript
+// TODO: Implement category filtering or navigation
+// TODO: Implement tradition view navigation
+```
+
+**Impact:** Navigation and filtering features not implemented
+
+#### 2.2.4 ParentChild Relationship Features - ⚠️ INCOMPLETE
+
+**Location:** `RushtonRoots.Web/Views/ParentChild/Details.cshtml`
+
+**TODOs Found (11 instances):**
+```javascript
+// TODO: Add to ViewModel (birth dates, death dates)
+// TODO: Add AI confidence score if applicable
+// TODO: Add notes field to ParentChild entity
+// TODO: Fetch actual evidence, events, grandparents, and siblings from backend
+// TODO: Fetch parent's parents
+// TODO: Fetch parent's other children
+// TODO: Implement verification endpoint
+// TODO: Implement update notes endpoint
+```
+
+**Impact:** 
+- ViewModel incomplete
+- Verification features not implemented
+- Evidence tracking not connected
+- Family context features not working
+
+#### 2.2.5 Household Delete Features - ⚠️ INCOMPLETE
+
+**Location:** `RushtonRoots.Web/Views/Household/Delete.cshtml`
+
+**TODO Found:**
+```javascript
+// TODO: Implement backend service methods to calculate actual counts:
+// - Total members in household
+// - Total photos/documents
+// - Total relationships
+// - Total events
+```
+
+**Impact:** Impact analysis on delete not accurate (uses placeholder data)
+
+### 2.3 Nullable Reference Warnings - ⚠️ CODE QUALITY
+
+**Build Output:** 12 warnings, all related to nullable references in Razor views
+
+**Files Affected:**
+- `Views/Tradition/Index_Angular.cshtml` (3 warnings)
+- `Views/StoryView/Index_Angular.cshtml` (3 warnings)
+- `Views/Partnership/Delete.cshtml` (1 warning)
+- `Views/Home/Index.cshtml` (1 warning)
+
+**Example:**
+```
+warning CS8600: Converting null literal or possible null value to non-nullable type
+warning CS8604: Possible null reference argument for parameter 'source'
+warning CS8602: Dereference of a possibly null reference
+```
+
+**Impact:** 
+- Potential runtime null reference exceptions
+- Code quality issues
+- Should be addressed for production deployment
+
+---
+
+## 3. Code Quality Assessment
+
+### 3.1 Testing - ✅ EXCELLENT
+
+**Status:** 336/336 tests passing
+
+**Framework:** XUnit + FakeItEasy
+
+**Coverage:** Comprehensive coverage across:
+- Services (60+ service tests)
+- Repositories (50+ repository tests)
+- Mappers (20+ mapper tests)
+- Controllers (API and MVC)
+- Validators
+- Deprecation tests
+
+**Test Quality:** 
+- Proper mocking with FakeItEasy
+- Comprehensive test scenarios
+- Good test organization
+
+**Test Execution Time:** ~2 seconds (excellent performance)
+
+### 3.2 Code Organization - ✅ GOOD
+
+**Strengths:**
+- Clear folder structure
+- Consistent naming conventions
+- SOLID principles followed
+- Clean separation of concerns
+- Convention-based patterns
+
+**Minor Issues:**
+- Some TODO markers left in code (see section 2.2)
+- Nullable reference warnings in views
+
+### 3.3 Documentation - ✅ EXCELLENT
+
+**Available Documentation:**
+- ✅ README.md - Comprehensive project overview
+- ✅ ROADMAP.md - Detailed development roadmap (770+ lines)
+- ✅ PATTERNS.md - Architecture patterns (referenced in README)
+- ✅ docs/README.md - API Endpoints quick reference
+- ✅ docs/ApiEndpointsImplementationPlan.md - Implementation plan
+- ✅ docs/InternalLinks.md - Link analysis
+- ✅ docs/Phase4.3-DeprecationSummary.md - Deprecation summary
+
+**Quality:** Documentation is comprehensive and well-maintained
+
+---
+
+## 4. Infrastructure & Configuration
+
+### 4.1 Azure Blob Storage - ⚠️ NEEDS CONFIGURATION
+
+**Status:** ⚠️ Service implemented but not configured
+
+**Current Configuration:**
+```json
+"AzureBlobStorage": {
+  "ConnectionString": "",  // ⚠️ Empty - needs configuration
+  "ContainerName": "rushtonroots-files"
+}
+```
+
+**Implementation Status:**
+- ✅ BlobStorageService implemented
+- ✅ Dependency injection configured
+- ⚠️ Thumbnail generation incomplete
+- ❌ Connection string not configured
+
+**Impact:** 
+- Photo upload will fail without Azure configuration
+- Local development needs emulator or alternative storage
+
+### 4.2 Database Configuration - ✅ GOOD
+
+**Current Connection String:**
+```json
+"DefaultConnection": "Data Source=.;Initial Catalog=RushtonRoots;persist security info=True;Integrated Security=SSPI;MultipleActiveResultSets=True;Encrypt=False"
+```
+
+**Status:** ✅ Working for local development
+
+**Recommendations:**
+- Add environment-specific connection strings
+- Consider appsettings.Development.json override
+- Configure production connection string securely
+
+### 4.3 Build System - ✅ EXCELLENT
+
+**MSBuild Integration:**
+- ✅ NpmInstall target working
+- ✅ StartNpmWatch target working (Windows only)
+- ✅ PublishRunWebpack target configured
+- ✅ Angular build integration successful
+
+**Angular Build:**
+- ✅ 877 npm packages installed
+- ✅ Zero vulnerabilities
+- ✅ Build completes successfully
+
+**Note:** PowerShell warning on Linux build server (expected - Windows-only feature)
+
+### 4.4 CI/CD - ℹ️ NOT ANALYZED
+
+**Status:** Not in scope for this review
+
+**Recommendation:** Verify GitHub Actions workflows if present
+
+---
+
+## 5. Security & Compliance
+
+### 5.1 Security Vulnerabilities - ⚠️ REQUIRES ATTENTION
+
+#### Vulnerability #1: Test Dependency
+
+**Package:** System.Security.Cryptography.Xml 4.5.0  
+**Severity:** Moderate  
+**Location:** RushtonRoots.UnitTests.csproj  
+**Advisory:** https://github.com/advisories/GHSA-vh55-786g-wjwj
+
+**Impact:** Test project only (not production code)
+
+**Recommendation:** Phase 1.2 - Update to latest secure version
+
+### 5.2 Authentication & Authorization - ✅ IMPLEMENTED
+
+**Status:** ✅ ASP.NET Core Identity implemented
+
+**Evidence:**
+- AccountController with registration, login, password reset
+- Role-based access control configured
+- `[Authorize]` attributes on API controllers
+- Household-based permissions system
+
+### 5.3 Data Protection - ✅ GOOD
+
+**Implemented Features:**
+- ✅ SQL injection protection (EF Core parameterized queries)
+- ✅ HTTPS configured (launchSettings.json)
+- ✅ Azure Blob Storage with private access
+- ✅ SAS tokens for temporary file access
+
+**Recommendations:**
+- Ensure production uses HTTPS only
+- Configure Azure Blob Storage connection securely (Key Vault)
+
+---
+
+## 6. Phased Implementation Plan
+
+This section provides a detailed, actionable plan to complete all identified incomplete functionality. Each phase is broken into sub-phases suitable for individual PRs.
+
+### Phase 1: Code Quality & Infrastructure (Week 1)
+
+#### Phase 1.1: Database & Migration Cleanup
+**Duration:** 1-2 days  
+**Complexity:** Low
+
+**Tasks:**
+- [ ] Rename `updatemigrations` migration to proper PascalCase
+- [ ] Verify all entity configurations are applied
+- [ ] Test migrations on clean database
+- [ ] Document database setup process
+
+**Success Criteria:**
+- Zero migration warnings in build output
+- Clean migration names following convention
+- Database can be created from scratch successfully
+
+**Files to Modify:**
+- `RushtonRoots.Infrastructure/Migrations/20251217085621_update-migrations.cs`
+- `RushtonRoots.Infrastructure/Migrations/20251217085621_update-migrations.Designer.cs`
+
+---
+
+#### Phase 1.2: Security Vulnerability Remediation
+**Duration:** 1 day  
+**Complexity:** Low  
+**Priority:** High
+
+**Tasks:**
+- [ ] Update System.Security.Cryptography.Xml in UnitTests project
+- [ ] Run security scan with updated dependencies
+- [ ] Verify all tests still pass
+- [ ] Document dependency versions
+
+**Success Criteria:**
+- Zero security warnings in build
+- All 336 tests still passing
+- No breaking changes introduced
+
+**Files to Modify:**
+- `RushtonRoots.UnitTests/RushtonRoots.UnitTests.csproj`
+
+---
+
+#### Phase 1.3: Nullable Reference Warning Fixes
+**Duration:** 2-3 days  
+**Complexity:** Medium
+
+**Tasks:**
+- [ ] Fix nullable warnings in Tradition/Index_Angular.cshtml
+- [ ] Fix nullable warnings in StoryView/Index_Angular.cshtml
+- [ ] Fix nullable warnings in Partnership/Delete.cshtml
+- [ ] Fix nullable warnings in Home/Index.cshtml
+- [ ] Add null checks where appropriate
+- [ ] Test all affected views
+
+**Success Criteria:**
+- Zero nullable reference warnings in build
+- All views render correctly
+- No runtime null reference exceptions
+
+**Files to Modify:**
+- `RushtonRoots.Web/Views/Tradition/Index_Angular.cshtml`
+- `RushtonRoots.Web/Views/StoryView/Index_Angular.cshtml`
+- `RushtonRoots.Web/Views/Partnership/Delete.cshtml`
+- `RushtonRoots.Web/Views/Home/Index.cshtml`
+
+---
+
+### Phase 2: Image Processing & Media (Week 2)
+
+#### Phase 2.1: Thumbnail Generation Implementation
+**Duration:** 3-4 days  
+**Complexity:** Medium  
+**Priority:** High
+
+**Tasks:**
+- [ ] Add ImageSharp NuGet package to Infrastructure project
+- [ ] Implement thumbnail generation in BlobStorageService
+- [ ] Add configuration for thumbnail sizes (200x200, 400x400)
+- [ ] Update MediaService to use thumbnail generation
+- [ ] Add tests for thumbnail generation
+- [ ] Test with actual images (JPEG, PNG, GIF)
+- [ ] Update photo gallery to use thumbnails
+
+**Technical Details:**
+```csharp
+// Recommended approach:
+// 1. Add ImageSharp package
+// 2. Resize image to configured dimensions
+// 3. Save as JPEG with 85% quality
+// 4. Upload to thumbnails/ folder in blob storage
+```
+
+**Success Criteria:**
+- Thumbnails generated automatically on upload
+- Photo gallery loads significantly faster
+- Multiple thumbnail sizes supported
+- Original images preserved
+
+**Files to Modify:**
+- `RushtonRoots.Infrastructure/Services/BlobStorageService.cs`
+- `RushtonRoots.Infrastructure/RushtonRoots.Infrastructure.csproj` (add package)
+- `RushtonRoots.Application/Services/MediaService.cs`
+- Add new tests in `RushtonRoots.UnitTests/`
+
+**Dependencies to Add:**
+```xml
+<PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
+```
+
+---
+
+#### Phase 2.2: Azure Blob Storage Configuration
+**Duration:** 1-2 days  
+**Complexity:** Low
+
+**Tasks:**
+- [ ] Document Azure Blob Storage setup process
+- [ ] Add appsettings.Development.json with local emulator config
+- [ ] Add environment variable documentation
+- [ ] Test with Azure Storage Emulator (Azurite)
+- [ ] Create setup guide for developers
+
+**Configuration Examples:**
+```json
+// appsettings.Development.json
+{
+  "AzureBlobStorage": {
+    "ConnectionString": "UseDevelopmentStorage=true",
+    "ContainerName": "rushtonroots-files-dev"
+  }
+}
+
+// Production (via environment variables or Key Vault)
+{
+  "AzureBlobStorage": {
+    "ConnectionString": "<from-azure-key-vault>",
+    "ContainerName": "rushtonroots-files"
+  }
+}
+```
+
+**Success Criteria:**
+- Local development works with Azurite
+- Documentation clear for new developers
+- Production configuration secure
+
+**Files to Create/Modify:**
+- Create: `RushtonRoots.Web/appsettings.Development.json`
+- Update: `README.md` (add Azure setup section)
+- Create: `docs/AzureStorageSetup.md`
+
+---
+
+### Phase 3: Household Management Features (Week 3)
+
+#### Phase 3.1: Household Member Management Backend
+**Duration:** 3-4 days  
+**Complexity:** Medium
+
+**Tasks:**
+- [ ] Implement member removal endpoint (DELETE /api/household/{id}/member/{userId})
+- [ ] Implement role change endpoint (PUT /api/household/{id}/member/{userId}/role)
+- [ ] Implement resend invite endpoint (POST /api/household/{id}/member/{userId}/resend-invite)
+- [ ] Add validation for household admin permissions
+- [ ] Add tests for all new endpoints
+- [ ] Update HouseholdService with new methods
+
+**API Endpoints to Add:**
+```csharp
+// HouseholdController (API)
+[HttpDelete("{id}/member/{userId}")]
+public async Task<IActionResult> RemoveMember(int id, string userId)
+
+[HttpPut("{id}/member/{userId}/role")]
+public async Task<IActionResult> UpdateMemberRole(int id, string userId, [FromBody] UpdateRoleRequest request)
+
+[HttpPost("{id}/member/{userId}/resend-invite")]
+public async Task<IActionResult> ResendInvite(int id, string userId)
+
+[HttpPut("{id}/settings")]
+public async Task<IActionResult> UpdateSettings(int id, [FromBody] UpdateHouseholdSettingsRequest request)
+```
+
+**Success Criteria:**
+- All endpoints working and tested
+- Authorization enforced (only household admins)
+- Tests cover all scenarios
+- Error handling comprehensive
+
+**Files to Modify:**
+- `RushtonRoots.Web/Controllers/Api/HouseholdController.cs`
+- `RushtonRoots.Application/Services/HouseholdService.cs`
+- `RushtonRoots.Application/Services/IHouseholdService.cs`
+- Add new tests
+
+---
+
+#### Phase 3.2: Household Member Management Frontend
+**Duration:** 2-3 days  
+**Complexity:** Medium
+
+**Tasks:**
+- [ ] Connect "Remove Member" button to DELETE endpoint
+- [ ] Connect "Change Role" dropdown to PUT endpoint
+- [ ] Connect "Resend Invite" button to POST endpoint
+- [ ] Implement settings update form
+- [ ] Add confirmation dialogs for destructive actions
+- [ ] Add success/error messages
+- [ ] Test all interactions
+
+**Success Criteria:**
+- All buttons/forms functional
+- Proper error handling and user feedback
+- Confirmation dialogs prevent accidents
+- UI updates reflect changes immediately
+
+**Files to Modify:**
+- `RushtonRoots.Web/Views/Household/Details.cshtml`
+
+---
+
+#### Phase 3.3: Household Delete Impact Calculation
+**Duration:** 2 days  
+**Complexity:** Low-Medium
+
+**Tasks:**
+- [ ] Add GetHouseholdImpactAsync method to HouseholdService
+- [ ] Calculate actual member count
+- [ ] Calculate photo/document count
+- [ ] Calculate relationship count
+- [ ] Calculate event count
+- [ ] Update Delete view to use real data
+- [ ] Add tests
+
+**Implementation:**
+```csharp
+public async Task<HouseholdDeleteImpact> GetDeleteImpactAsync(int householdId)
+{
+    return new HouseholdDeleteImpact
+    {
+        MemberCount = await CalculateMemberCount(householdId),
+        PhotoCount = await CalculatePhotoCount(householdId),
+        DocumentCount = await CalculateDocumentCount(householdId),
+        RelationshipCount = await CalculateRelationshipCount(householdId),
+        EventCount = await CalculateEventCount(householdId)
+    };
+}
+```
+
+**Success Criteria:**
+- Accurate impact calculations
+- Delete confirmation shows real numbers
+- Tests verify calculation logic
+
+**Files to Modify:**
+- `RushtonRoots.Application/Services/HouseholdService.cs`
+- `RushtonRoots.Domain/UI/Models/` (add HouseholdDeleteImpact.cs)
+- `RushtonRoots.Web/Controllers/HouseholdController.cs`
+- `RushtonRoots.Web/Views/Household/Delete.cshtml`
+
+---
+
+### Phase 4: ParentChild Relationship Enhancements (Week 4)
+
+#### Phase 4.1: ParentChild ViewModel Enhancement
+**Duration:** 2-3 days  
+**Complexity:** Medium
+
+**Tasks:**
+- [ ] Add birth/death date properties to ParentChildViewModel
+- [ ] Add notes field to ParentChild entity
+- [ ] Add confidence score field (for AI features)
+- [ ] Update mapper to include new fields
+- [ ] Create migration for new fields
+- [ ] Update all views using ParentChildViewModel
+- [ ] Add tests
+
+**New Properties:**
+```csharp
+// ParentChild entity
+public string? Notes { get; set; }
+public int? ConfidenceScore { get; set; } // 0-100
+
+// ParentChildViewModel
+public DateTime? ParentBirthDate { get; set; }
+public DateTime? ParentDeathDate { get; set; }
+public DateTime? ChildDeathDate { get; set; }
+public string? Notes { get; set; }
+public int? ConfidenceScore { get; set; }
+```
+
+**Success Criteria:**
+- Migration successful
+- All properties mapped correctly
+- Views display new data
+- Tests cover new fields
+
+**Files to Modify:**
+- `RushtonRoots.Domain/Database/ParentChild.cs`
+- `RushtonRoots.Domain/UI/Models/ParentChildViewModel.cs`
+- `RushtonRoots.Application/Mappers/` (create ParentChildMapper.cs)
+- `RushtonRoots.Infrastructure/Database/EntityConfigs/ParentChildConfiguration.cs`
+- Create new migration
+
+---
+
+#### Phase 4.2: ParentChild Evidence & Family Context
+**Duration:** 3-4 days  
+**Complexity:** Medium-High
+
+**Tasks:**
+- [ ] Implement GetEvidenceAsync method (fetch sources/citations)
+- [ ] Implement GetLifeEventsAsync method
+- [ ] Implement GetGrandparentsAsync method
+- [ ] Implement GetSiblingsAsync method
+- [ ] Update ParentChildService with new methods
+- [ ] Create necessary view models
+- [ ] Update Details view to display data
+- [ ] Add tests for all methods
+
+**New Service Methods:**
+```csharp
+public interface IParentChildService
+{
+    Task<IEnumerable<SourceViewModel>> GetEvidenceAsync(int relationshipId);
+    Task<IEnumerable<LifeEventViewModel>> GetRelatedEventsAsync(int relationshipId);
+    Task<IEnumerable<PersonViewModel>> GetGrandparentsAsync(int relationshipId);
+    Task<IEnumerable<PersonViewModel>> GetSiblingsAsync(int relationshipId);
+}
+```
+
+**Success Criteria:**
+- All family context displayed correctly
+- Evidence properly linked
+- Performance acceptable (use eager loading)
+- Tests comprehensive
+
+**Files to Modify:**
+- `RushtonRoots.Application/Services/ParentChildService.cs`
+- `RushtonRoots.Application/Services/IParentChildService.cs`
+- `RushtonRoots.Web/Controllers/Api/` (create ParentChildController.cs if not exists)
+- `RushtonRoots.Web/Views/ParentChild/Details.cshtml`
+
+---
+
+#### Phase 4.3: ParentChild Verification System
+**Duration:** 2-3 days  
+**Complexity:** Medium
+
+**Tasks:**
+- [ ] Implement verification endpoint (POST /api/parentchild/{id}/verify)
+- [ ] Implement update notes endpoint (PUT /api/parentchild/{id}/notes)
+- [ ] Add verification status to ParentChild entity
+- [ ] Add verification history tracking
+- [ ] Update UI to show verification status
+- [ ] Add tests
+
+**New Features:**
+```csharp
+// ParentChild entity additions
+public bool IsVerified { get; set; }
+public DateTime? VerifiedDate { get; set; }
+public string? VerifiedBy { get; set; }
+
+// API endpoints
+[HttpPost("{id}/verify")]
+public async Task<IActionResult> VerifyRelationship(int id)
+
+[HttpPut("{id}/notes")]
+public async Task<IActionResult> UpdateNotes(int id, [FromBody] UpdateNotesRequest request)
+```
+
+**Success Criteria:**
+- Verification tracking functional
+- Notes can be updated
+- Audit trail maintained
+- Tests cover all scenarios
+
+**Files to Modify:**
+- `RushtonRoots.Domain/Database/ParentChild.cs`
+- `RushtonRoots.Web/Controllers/Api/` (ParentChildController.cs)
+- `RushtonRoots.Application/Services/ParentChildService.cs`
+- Create migration for new fields
+
+---
+
+### Phase 5: Tradition & Story View Features (Week 5)
+
+#### Phase 5.1: Tradition Category Filtering
+**Duration:** 2 days  
+**Complexity:** Low-Medium
+
+**Tasks:**
+- [ ] Implement category filtering in TraditionService
+- [ ] Add GET /api/tradition?category={category} endpoint
+- [ ] Update Index view with category filter UI
+- [ ] Add category navigation
+- [ ] Test filtering functionality
+
+**Success Criteria:**
+- Category filter working
+- UI updated when filter applied
+- Tests verify filtering logic
+
+**Files to Modify:**
+- `RushtonRoots.Application/Services/TraditionService.cs`
+- `RushtonRoots.Web/Controllers/Api/TraditionController.cs`
+- `RushtonRoots.Web/Views/Tradition/Index.cshtml`
+
+---
+
+#### Phase 5.2: Tradition View Navigation
+**Duration:** 1-2 days  
+**Complexity:** Low
+
+**Tasks:**
+- [ ] Implement navigation to tradition details
+- [ ] Connect buttons to TraditionView/Details route
+- [ ] Test navigation flow
+
+**Success Criteria:**
+- Navigation working
+- Details view displays correctly
+
+**Files to Modify:**
+- `RushtonRoots.Web/Views/Tradition/Index.cshtml`
+
+---
+
+### Phase 6: Testing & Documentation (Week 6)
+
+#### Phase 6.1: Comprehensive Integration Testing
+**Duration:** 3-4 days  
+**Complexity:** Medium
+
+**Tasks:**
+- [ ] Add integration tests for new endpoints
+- [ ] Test all Household management features
+- [ ] Test all ParentChild features
+- [ ] Test image thumbnail generation
+- [ ] Test Azure Blob Storage integration
+- [ ] Verify all TODO items resolved
+
+**Success Criteria:**
+- Integration tests passing
+- Code coverage maintained above 80%
+- All features tested end-to-end
+
+---
+
+#### Phase 6.2: Documentation Updates
+**Duration:** 2-3 days  
+**Complexity:** Low
+
+**Tasks:**
+- [ ] Update README.md with new features
+- [ ] Document Azure setup process
+- [ ] Update ROADMAP.md with completed phases
+- [ ] Create developer onboarding guide
+- [ ] Document API endpoints (Swagger/OpenAPI)
+- [ ] Update architecture diagrams if needed
+
+**Success Criteria:**
+- All documentation current
+- New developers can onboard easily
+- API documentation complete
+
+---
+
+#### Phase 6.3: Performance Optimization
+**Duration:** 2 days  
+**Complexity:** Low-Medium
+
+**Tasks:**
+- [ ] Profile database queries (use EF Core logging)
+- [ ] Add indexes where needed
+- [ ] Optimize N+1 query issues (use Include())
+- [ ] Test page load times
+- [ ] Optimize image loading in galleries
+
+**Success Criteria:**
+- Page load times under 2 seconds
+- No N+1 query warnings
+- Database performance acceptable
+
+---
+
+### Phase 7: Production Readiness (Week 7)
+
+#### Phase 7.1: Configuration Management
+**Duration:** 2 days  
+**Complexity:** Low
+
+**Tasks:**
+- [ ] Create production appsettings
+- [ ] Document environment variables
+- [ ] Set up Azure Key Vault integration (optional)
+- [ ] Configure logging levels for production
+- [ ] Set up health checks
+
+**Success Criteria:**
+- Production configuration documented
+- Secrets not in source control
+- Health checks working
+
+---
+
+#### Phase 7.2: Security Hardening
+**Duration:** 2-3 days  
+**Complexity:** Medium
+
+**Tasks:**
+- [ ] Enable HTTPS redirect in production
+- [ ] Configure HSTS headers
+- [ ] Add CORS policy if needed
+- [ ] Review authorization attributes on all endpoints
+- [ ] Run security scan (if available)
+- [ ] Fix any security warnings
+
+**Success Criteria:**
+- Security scan passes
+- HTTPS enforced
+- Authorization properly configured
+
+---
+
+#### Phase 7.3: Deployment Preparation
+**Duration:** 2 days  
+**Complexity:** Low-Medium
+
+**Tasks:**
+- [ ] Create deployment guide
+- [ ] Test publish process
+- [ ] Verify database migrations on deployment
+- [ ] Set up monitoring/logging
+- [ ] Create rollback plan
+
+**Success Criteria:**
+- Deployment process documented
+- Can deploy to test environment
+- Rollback plan tested
+
+---
+
+## 7. Success Metrics
+
+### 7.1 Code Quality Metrics
+
+**Targets:**
+- ✅ Build: Zero errors, zero warnings
+- ✅ Tests: 100% passing (maintain 336+ tests)
+- ✅ Code Coverage: 80%+ maintained
+- ✅ Security: Zero high/critical vulnerabilities
+- ✅ Performance: Page loads under 2 seconds
+
+### 7.2 Feature Completeness Metrics
+
+**Targets:**
+- ✅ TODO Markers: Zero remaining in code
+- ✅ Nullable Warnings: Zero remaining
+- ✅ API Coverage: All endpoints implemented and tested
+- ✅ Documentation: All features documented
+
+### 7.3 Production Readiness Metrics
+
+**Targets:**
+- ✅ Configuration: All environments configured
+- ✅ Security: HTTPS enforced, authentication working
+- ✅ Monitoring: Logging and health checks in place
+- ✅ Deployment: Automated process documented
+
+---
+
+## 8. Risk Assessment
+
+### 8.1 Technical Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Azure Blob Storage costs exceed budget | Medium | Medium | Implement storage quotas, monitor usage |
+| Performance issues with large families | Medium | High | Add pagination, implement caching |
+| Image processing library issues | Low | Medium | Test with various image formats, add error handling |
+| Database migration conflicts | Low | High | Test migrations thoroughly, maintain rollback scripts |
+
+### 8.2 Schedule Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Phase takes longer than estimated | Medium | Medium | Break into smaller sub-phases, prioritize features |
+| Dependencies on external services | Low | Medium | Have fallback plans, test early |
+| Testing takes longer than expected | Medium | Low | Start testing early, automate where possible |
+
+### 8.3 Resource Risks
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Limited development resources | High | High | Prioritize critical phases first, phase work |
+| Azure costs higher than expected | Medium | Medium | Use development storage emulator, monitor costs |
+| Knowledge gaps in new technologies | Low | Low | Good documentation already exists |
+
+---
+
+## 9. Appendices
+
+### 9.1 File Inventory
+
+**Total Files Analyzed:**
+- Controllers: 42 (31 API, 11+ MVC)
+- Services: 60+
+- Repositories: 50+
+- Entities: 50
+- View Models: 89
+- Migrations: 15
+- Tests: 23 test files (336 tests)
+
+### 9.2 Technology Stack
+
+**Backend:**
+- .NET 10
+- ASP.NET Core 10 (MVC + API)
+- Entity Framework Core 10
+- Autofac 9.0.0
+- Azure Blob Storage SDK 12.26.0
+
+**Frontend:**
+- Angular 19
+- Angular Elements
+- TypeScript
+
+**Testing:**
+- XUnit 2.9.3
+- FakeItEasy 8.3.0
+- coverlet.collector
+
+**Database:**
+- SQL Server
+- EF Core Migrations
+
+### 9.3 Build Warnings Summary
+
+**Current Build Warnings:** 12
+
+1. Security vulnerability in test package (1 warning)
+2. Migration naming convention (2 warnings)
+3. Nullable reference warnings in views (9 warnings)
+
+All warnings are addressed in the phased plan.
+
+---
+
+## 10. Conclusion
+
+The RushtonRoots codebase is fundamentally sound with excellent architecture, comprehensive testing, and good documentation. The identified issues are primarily related to incomplete feature implementations rather than architectural problems.
+
+### Recommended Immediate Actions:
+
+1. **Week 1:** Address security vulnerability and code quality warnings (Phase 1)
+2. **Week 2:** Implement image thumbnail generation (Phase 2.1) - high user impact
+3. **Week 3:** Complete Household management features (Phase 3) - blocks admin functionality
+4. **Week 4-5:** Complete ParentChild and content features (Phase 4-5)
+5. **Week 6-7:** Testing, documentation, and production prep (Phase 6-7)
+
+### Long-Term Success Factors:
+
+- Continue maintaining high test coverage
+- Keep documentation updated with each change
+- Monitor Azure costs closely
+- Gather user feedback early and often
+- Plan for scalability from the start
+
+**Overall Assessment:** ✅ **Production-Ready After Phase Completion**
+
+With the completion of the 7-phase plan (approximately 7 weeks), RushtonRoots will be fully production-ready with all features complete, properly tested, and documented.
+
+---
+
+**Document Version:** 1.0  
+**Last Updated:** December 2025  
+**Next Review:** After Phase 1 completion  
+**Document Owner:** Development Team
