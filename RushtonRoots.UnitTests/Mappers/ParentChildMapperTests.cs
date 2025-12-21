@@ -52,6 +52,9 @@ public class ParentChildMapperTests
             RelationshipType = "Biological",
             Notes = "Test notes",
             ConfidenceScore = 95,
+            IsVerified = true,
+            VerifiedDate = new DateTime(2023, 5, 1),
+            VerifiedBy = "admin@test.com",
             CreatedDateTime = new DateTime(2023, 1, 1),
             UpdatedDateTime = new DateTime(2023, 6, 1)
         };
@@ -76,6 +79,8 @@ public class ParentChildMapperTests
         Assert.Equal("Test notes", result.Notes);
         Assert.Equal(95, result.ConfidenceScore);
         Assert.True(result.IsVerified);
+        Assert.Equal(new DateTime(2023, 5, 1), result.VerifiedDate);
+        Assert.Equal("admin@test.com", result.VerifiedBy);
         Assert.Equal(new DateTime(2023, 1, 1), result.CreatedDateTime);
         Assert.Equal(new DateTime(2023, 6, 1), result.UpdatedDateTime);
     }

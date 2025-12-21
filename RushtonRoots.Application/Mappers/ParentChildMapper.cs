@@ -50,9 +50,9 @@ public class ParentChildMapper : IParentChildMapper
             RelationshipType = parentChild.RelationshipType,
             Notes = parentChild.Notes,
             ConfidenceScore = parentChild.ConfidenceScore,
-            // TODO: Implement verification logic when verification feature is added
-            // For now, all relationships are marked as verified by default
-            IsVerified = true,
+            IsVerified = parentChild.IsVerified,
+            VerifiedDate = parentChild.VerifiedDate,
+            VerifiedBy = parentChild.VerifiedBy,
             CreatedDateTime = parentChild.CreatedDateTime,
             UpdatedDateTime = parentChild.UpdatedDateTime
         };

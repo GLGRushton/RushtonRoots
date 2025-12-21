@@ -21,6 +21,8 @@ public class ParentChildViewModel
     public string? Notes { get; set; }
     public int? ConfidenceScore { get; set; }
     public bool IsVerified { get; set; }
+    public DateTime? VerifiedDate { get; set; }
+    public string? VerifiedBy { get; set; }
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
 }
