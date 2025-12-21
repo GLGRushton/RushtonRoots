@@ -208,4 +208,111 @@ public class HouseholdService : IHouseholdService
         var memberCount = await _householdRepository.GetMemberCountAsync(updatedHousehold.Id);
         return _householdMapper.MapToViewModel(reloadedHousehold!, memberCount);
     }
+
+    // New methods for Phase 3.1
+    public async Task RemoveMemberByUserIdAsync(int householdId, string userId)
+    {
+        if (householdId <= 0)
+        {
+            throw new ValidationException("Invalid household ID.");
+        }
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            throw new ValidationException("Invalid user ID.");
+        }
+
+        // Convert userId to personId
+        var personId = await _householdRepository.GetPersonIdFromUserIdAsync(userId);
+        if (personId == null)
+        {
+            throw new NotFoundException($"User with ID {userId} not found or not linked to a person.");
+        }
+
+        // Use existing RemoveMemberAsync method
+        await RemoveMemberAsync(householdId, personId.Value);
+    }
+
+    public async Task UpdateMemberRoleAsync(int householdId, string userId, string role)
+    {
+        if (householdId <= 0)
+        {
+            throw new ValidationException("Invalid household ID.");
+        }
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            throw new ValidationException("Invalid user ID.");
+        }
+
+        if (string.IsNullOrWhiteSpace(role) || (role != "ADMIN" && role != "EDITOR"))
+        {
+            throw new ValidationException("Role must be either 'ADMIN' or 'EDITOR'.");
+        }
+
+        // Verify household exists
+        var householdExists = await _householdRepository.ExistsAsync(householdId);
+        if (!householdExists)
+        {
+            throw new NotFoundException($"Household with ID {householdId} not found.");
+        }
+
+        // Convert userId to personId
+        var personId = await _householdRepository.GetPersonIdFromUserIdAsync(userId);
+        if (personId == null)
+        {
+            throw new NotFoundException($"User with ID {userId} not found or not linked to a person.");
+        }
+
+        // Verify person is a member of the household
+        var members = await _householdRepository.GetMembersAsync(householdId);
+        if (!members.Any(m => m.Id == personId.Value))
+        {
+            throw new ValidationException($"User is not a member of household {householdId}.");
+        }
+
+        // Update the role
+        await _householdRepository.UpdateMemberRoleAsync(householdId, personId.Value, role);
+    }
+
+    public async Task ResendInviteAsync(int householdId, string userId)
+    {
+        if (householdId <= 0)
+        {
+            throw new ValidationException("Invalid household ID.");
+        }
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            throw new ValidationException("Invalid user ID.");
+        }
+
+        // Verify household exists
+        var householdExists = await _householdRepository.ExistsAsync(householdId);
+        if (!householdExists)
+        {
+            throw new NotFoundException($"Household with ID {householdId} not found.");
+        }
+
+        // Convert userId to personId
+        var personId = await _householdRepository.GetPersonIdFromUserIdAsync(userId);
+        if (personId == null)
+        {
+            throw new NotFoundException($"User with ID {userId} not found or not linked to a person.");
+        }
+
+        // Verify person is a member of the household
+        var members = await _householdRepository.GetMembersAsync(householdId);
+        if (!members.Any(m => m.Id == personId.Value))
+        {
+            throw new ValidationException($"User is not a member of household {householdId}.");
+        }
+
+        // TODO: Implement actual invite sending logic (e.g., send email, create notification)
+        // For now, this is a placeholder that validates inputs and membership
+        // In a real implementation, this would:
+        // 1. Generate a new invite token/link
+        // 2. Send an email or notification to the user
+        // 3. Update any invite tracking in the database
+    }
 }

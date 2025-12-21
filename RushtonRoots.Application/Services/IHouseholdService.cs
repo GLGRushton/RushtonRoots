@@ -17,4 +17,9 @@ public interface IHouseholdService
     Task AddMemberAsync(AddHouseholdMemberRequest request);
     Task RemoveMemberAsync(int householdId, int personId);
     Task<HouseholdViewModel> UpdateSettingsAsync(UpdateHouseholdSettingsRequest request);
+    
+    // New methods for Phase 3.1
+    Task RemoveMemberByUserIdAsync(int householdId, string userId);
+    Task UpdateMemberRoleAsync(int householdId, string userId, string role);
+    Task ResendInviteAsync(int householdId, string userId);
 }

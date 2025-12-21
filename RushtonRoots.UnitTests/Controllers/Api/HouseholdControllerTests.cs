@@ -634,4 +634,253 @@ public class HouseholdControllerTests
     }
 
     #endregion
+
+    #region RemoveMemberByUserId Tests
+
+    [Fact]
+    public async Task RemoveMemberByUserId_WithValidIds_ReturnsNoContent()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+
+        A.CallTo(() => _mockHouseholdService.RemoveMemberByUserIdAsync(householdId, userId)).DoesNothing();
+
+        // Act
+        var result = await _controller.RemoveMemberByUserId(householdId, userId);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+    }
+
+    [Fact]
+    public async Task RemoveMemberByUserId_WithNotFoundUser_ReturnsNotFound()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-999";
+
+        A.CallTo(() => _mockHouseholdService.RemoveMemberByUserIdAsync(householdId, userId))
+            .Throws(new NotFoundException($"User with ID {userId} not found or not linked to a person."));
+
+        // Act
+        var result = await _controller.RemoveMemberByUserId(householdId, userId);
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task RemoveMemberByUserId_WithValidationError_ReturnsBadRequest()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+
+        A.CallTo(() => _mockHouseholdService.RemoveMemberByUserIdAsync(householdId, userId))
+            .Throws(new ValidationException("Cannot remove a person from a household"));
+
+        // Act
+        var result = await _controller.RemoveMemberByUserId(householdId, userId);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task RemoveMemberByUserId_WhenServiceThrows_Returns500()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+        A.CallTo(() => _mockHouseholdService.RemoveMemberByUserIdAsync(householdId, userId)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.RemoveMemberByUserId(householdId, userId);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    #endregion
+
+    #region UpdateMemberRole Tests
+
+    [Fact]
+    public async Task UpdateMemberRole_WithValidRequest_ReturnsNoContent()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+        var request = new UpdateMemberRoleRequest { Role = "ADMIN" };
+
+        A.CallTo(() => _mockHouseholdService.UpdateMemberRoleAsync(householdId, userId, request.Role)).DoesNothing();
+
+        // Act
+        var result = await _controller.UpdateMemberRole(householdId, userId, request);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+    }
+
+    [Fact]
+    public async Task UpdateMemberRole_WithInvalidRole_ReturnsBadRequest()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+        var request = new UpdateMemberRoleRequest { Role = "INVALID" };
+
+        A.CallTo(() => _mockHouseholdService.UpdateMemberRoleAsync(householdId, userId, request.Role))
+            .Throws(new ValidationException("Role must be either 'ADMIN' or 'EDITOR'."));
+
+        // Act
+        var result = await _controller.UpdateMemberRole(householdId, userId, request);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task UpdateMemberRole_WithNotFoundUser_ReturnsNotFound()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-999";
+        var request = new UpdateMemberRoleRequest { Role = "ADMIN" };
+
+        A.CallTo(() => _mockHouseholdService.UpdateMemberRoleAsync(householdId, userId, request.Role))
+            .Throws(new NotFoundException($"User with ID {userId} not found or not linked to a person."));
+
+        // Act
+        var result = await _controller.UpdateMemberRole(householdId, userId, request);
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task UpdateMemberRole_WithNonMember_ReturnsBadRequest()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+        var request = new UpdateMemberRoleRequest { Role = "ADMIN" };
+
+        A.CallTo(() => _mockHouseholdService.UpdateMemberRoleAsync(householdId, userId, request.Role))
+            .Throws(new ValidationException($"User is not a member of household {householdId}."));
+
+        // Act
+        var result = await _controller.UpdateMemberRole(householdId, userId, request);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task UpdateMemberRole_WhenServiceThrows_Returns500()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+        var request = new UpdateMemberRoleRequest { Role = "ADMIN" };
+        A.CallTo(() => _mockHouseholdService.UpdateMemberRoleAsync(householdId, userId, request.Role)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.UpdateMemberRole(householdId, userId, request);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    #endregion
+
+    #region ResendInvite Tests
+
+    [Fact]
+    public async Task ResendInvite_WithValidIds_ReturnsNoContent()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+
+        A.CallTo(() => _mockHouseholdService.ResendInviteAsync(householdId, userId)).DoesNothing();
+
+        // Act
+        var result = await _controller.ResendInvite(householdId, userId);
+
+        // Assert
+        Assert.IsType<NoContentResult>(result);
+    }
+
+    [Fact]
+    public async Task ResendInvite_WithNotFoundHousehold_ReturnsNotFound()
+    {
+        // Arrange
+        var householdId = 999;
+        var userId = "user-123";
+
+        A.CallTo(() => _mockHouseholdService.ResendInviteAsync(householdId, userId))
+            .Throws(new NotFoundException($"Household with ID {householdId} not found."));
+
+        // Act
+        var result = await _controller.ResendInvite(householdId, userId);
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task ResendInvite_WithNotFoundUser_ReturnsNotFound()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-999";
+
+        A.CallTo(() => _mockHouseholdService.ResendInviteAsync(householdId, userId))
+            .Throws(new NotFoundException($"User with ID {userId} not found or not linked to a person."));
+
+        // Act
+        var result = await _controller.ResendInvite(householdId, userId);
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task ResendInvite_WithNonMember_ReturnsBadRequest()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+
+        A.CallTo(() => _mockHouseholdService.ResendInviteAsync(householdId, userId))
+            .Throws(new ValidationException($"User is not a member of household {householdId}."));
+
+        // Act
+        var result = await _controller.ResendInvite(householdId, userId);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+    }
+
+    [Fact]
+    public async Task ResendInvite_WhenServiceThrows_Returns500()
+    {
+        // Arrange
+        var householdId = 1;
+        var userId = "user-123";
+        A.CallTo(() => _mockHouseholdService.ResendInviteAsync(householdId, userId)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.ResendInvite(householdId, userId);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    #endregion
 }
