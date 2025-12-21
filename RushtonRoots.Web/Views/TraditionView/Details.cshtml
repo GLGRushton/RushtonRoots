@@ -1,0 +1,382 @@
+@model RushtonRoots.Domain.UI.Models.TraditionViewModel
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="tradition-details-container">
+    <div class="tradition-header">
+        <div class="tradition-header-content">
+            <h1>🎊 @Model.Name</h1>
+            <div class="tradition-badges">
+                <span class="badge badge-category">@Model.Category</span>
+                <span class="badge badge-status badge-status-@Model.Status.ToLower()">@Model.Status</span>
+                @if (!string.IsNullOrEmpty(Model.Frequency))
+                {
+                    <span class="badge badge-frequency">🔄 @Model.Frequency</span>
+                }
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+        {
+            <div class="tradition-photo">
+                <img src="@Model.PhotoUrl" alt="@Model.Name" />
+            </div>
+        }
+    </div>
+
+    <div class="tradition-content">
+        <section class="tradition-section">
+            <h2>📖 Description</h2>
+            <p class="tradition-description">@Model.Description</p>
+        </section>
+
+        @if (!string.IsNullOrEmpty(Model.HowToCelebrate))
+        {
+            <section class="tradition-section">
+                <h2>🎉 How to Celebrate</h2>
+                <div class="tradition-how-to">@Html.Raw(Model.HowToCelebrate.Replace("\n", "<br />"))</div>
+            </section>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.AssociatedItems))
+        {
+            <section class="tradition-section">
+                <h2>🎁 Associated Items</h2>
+                <div class="tradition-items">@Html.Raw(Model.AssociatedItems.Replace("\n", "<br />"))</div>
+            </section>
+        }
+
+        <section class="tradition-section tradition-meta-section">
+            <h2>ℹ️ Tradition Information</h2>
+            <div class="tradition-meta-grid">
+                @if (Model.StartedDate.HasValue)
+                {
+                    <div class="meta-item">
+                        <strong>Started:</strong> @Model.StartedDate.Value.ToString("MMMM yyyy")
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.StartedByPersonName))
+                {
+                    <div class="meta-item">
+                        <strong>Started By:</strong> @Model.StartedByPersonName
+                    </div>
+                }
+                <div class="meta-item">
+                    <strong>Frequency:</strong> @Model.Frequency
+                </div>
+                <div class="meta-item">
+                    <strong>Status:</strong> @Model.Status
+                </div>
+                <div class="meta-item">
+                    <strong>Views:</strong> @Model.ViewCount
+                </div>
+                <div class="meta-item">
+                    <strong>Last Updated:</strong> @Model.UpdatedDateTime.ToString("MMMM dd, yyyy")
+                </div>
+            </div>
+        </section>
+
+        @if (Model.Timeline != null && Model.Timeline.Any())
+        {
+            <section class="tradition-section">
+                <h2>📅 Timeline</h2>
+                <div class="tradition-timeline">
+                    @foreach (var entry in Model.Timeline)
+                    {
+                        <div class="timeline-entry">
+                            <div class="timeline-date">
+                                @entry.EventDate.ToString("MMM dd, yyyy")
+                            </div>
+                            <div class="timeline-content">
+                                <h3>@entry.Title</h3>
+                                @if (!string.IsNullOrEmpty(entry.Description))
+                                {
+                                    <p>@entry.Description</p>
+                                }
+                                @if (!string.IsNullOrEmpty(entry.PhotoUrl))
+                                {
+                                    <img src="@entry.PhotoUrl" alt="@entry.Title" class="timeline-photo" />
+                                }
+                                <div class="timeline-meta">
+                                    <span class="timeline-type">@entry.EventType</span>
+                                    @if (!string.IsNullOrEmpty(entry.RecordedByUserName))
+                                    {
+                                        <span class="timeline-recorded-by">Recorded by @entry.RecordedByUserName</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+
+    <div class="tradition-actions">
+        <a href="/Tradition/Index" class="btn btn-secondary">← Back to Traditions</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
+        {
+            <a href="/api/Tradition/@Model.Id" class="btn btn-primary">Edit</a>
+        }
+    </div>
+</div>
+
+<style>
+    .tradition-details-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .tradition-header {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+        border-left: 6px solid #4caf50;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 30px;
+    }
+
+    .tradition-header-content {
+        flex: 1;
+    }
+
+    .tradition-header h1 {
+        color: #2e7d32;
+        margin: 0 0 15px 0;
+        font-size: 2.5em;
+        font-weight: 700;
+    }
+
+    .tradition-badges {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9em;
+    }
+
+    .badge-category {
+        background: #4caf50;
+        color: white;
+    }
+
+    .badge-status {
+        color: white;
+    }
+
+    .badge-status-active {
+        background: #66bb6a;
+    }
+
+    .badge-status-discontinued {
+        background: #ef5350;
+    }
+
+    .badge-status-evolving {
+        background: #ff9800;
+    }
+
+    .badge-frequency {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #c8e6c9;
+    }
+
+    .tradition-photo {
+        flex-shrink: 0;
+        width: 300px;
+    }
+
+    .tradition-photo img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .tradition-content {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+    }
+
+    .tradition-section {
+        margin-bottom: 30px;
+    }
+
+    .tradition-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .tradition-section h2 {
+        color: #2e7d32;
+        margin: 0 0 15px 0;
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+
+    .tradition-description,
+    .tradition-how-to,
+    .tradition-items {
+        color: #555;
+        line-height: 1.8;
+        font-size: 1.05em;
+    }
+
+    .tradition-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .meta-item {
+        background: #f9fdf9;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #e8f5e9;
+    }
+
+    .meta-item strong {
+        color: #2e7d32;
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+    }
+
+    .tradition-timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .tradition-timeline::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #4caf50, #81c784);
+    }
+
+    .timeline-entry {
+        position: relative;
+        margin-bottom: 30px;
+        padding-left: 30px;
+    }
+
+    .timeline-entry::before {
+        content: '●';
+        position: absolute;
+        left: -8px;
+        top: 0;
+        color: #4caf50;
+        font-size: 1.5em;
+        background: white;
+    }
+
+    .timeline-date {
+        color: #4caf50;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.95em;
+    }
+
+    .timeline-content h3 {
+        color: #2e7d32;
+        margin: 0 0 10px 0;
+        font-size: 1.2em;
+    }
+
+    .timeline-content p {
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    .timeline-photo {
+        max-width: 400px;
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 10px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .timeline-meta {
+        display: flex;
+        gap: 15px;
+        font-size: 0.85em;
+        color: #777;
+        margin-top: 10px;
+    }
+
+    .timeline-type {
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .tradition-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .btn {
+        padding: 12px 30px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #d0d0d0;
+    }
+
+    .btn-primary {
+        background: #4caf50;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #45a049;
+    }
+
+    @@media (max-width: 768px) {
+        .tradition-header {
+            flex-direction: column;
+        }
+
+        .tradition-photo {
+            width: 100%;
+        }
+
+        .tradition-meta-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
