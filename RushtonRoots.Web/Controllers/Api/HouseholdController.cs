@@ -343,4 +343,115 @@ public class HouseholdController : ControllerBase
             return StatusCode(500, "An error occurred while updating household settings");
         }
     }
+
+    /// <summary>
+    /// Remove a member from a household by user ID.
+    /// </summary>
+    /// <param name="id">Household ID</param>
+    /// <param name="userId">User ID to remove</param>
+    /// <returns>No content on success</returns>
+    [HttpDelete("{id}/member/{userId}")]
+    [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RemoveMemberByUserId(int id, string userId)
+    {
+        try
+        {
+            await _householdService.RemoveMemberByUserIdAsync(id, userId);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Error removing member from household {HouseholdId}", id);
+            return NotFound(new { error = ex.Message });
+        }
+        catch (ValidationException ex)
+        {
+            _logger.LogWarning(ex, "Validation error removing member from household");
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error removing member {UserId} from household {HouseholdId}", userId, id);
+            return StatusCode(500, "An error occurred while removing member from household");
+        }
+    }
+
+    /// <summary>
+    /// Update a household member's role.
+    /// </summary>
+    /// <param name="id">Household ID</param>
+    /// <param name="userId">User ID whose role to update</param>
+    /// <param name="request">Role update request</param>
+    /// <returns>No content on success</returns>
+    [HttpPut("{id}/member/{userId}/role")]
+    [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateMemberRole(int id, string userId, [FromBody] UpdateMemberRoleRequest request)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            await _householdService.UpdateMemberRoleAsync(id, userId, request.Role);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Error updating member role in household {HouseholdId}", id);
+            return NotFound(new { error = ex.Message });
+        }
+        catch (ValidationException ex)
+        {
+            _logger.LogWarning(ex, "Validation error updating member role");
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating role for member {UserId} in household {HouseholdId}", userId, id);
+            return StatusCode(500, "An error occurred while updating member role");
+        }
+    }
+
+    /// <summary>
+    /// Resend invitation to a household member.
+    /// </summary>
+    /// <param name="id">Household ID</param>
+    /// <param name="userId">User ID to resend invite to</param>
+    /// <returns>No content on success</returns>
+    [HttpPost("{id}/member/{userId}/resend-invite")]
+    [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ResendInvite(int id, string userId)
+    {
+        try
+        {
+            await _householdService.ResendInviteAsync(id, userId);
+            return NoContent();
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Error resending invite in household {HouseholdId}", id);
+            return NotFound(new { error = ex.Message });
+        }
+        catch (ValidationException ex)
+        {
+            _logger.LogWarning(ex, "Validation error resending invite");
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error resending invite for member {UserId} in household {HouseholdId}", userId, id);
+            return StatusCode(500, "An error occurred while resending invite");
+        }
+    }
 }

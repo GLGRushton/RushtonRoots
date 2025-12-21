@@ -113,4 +113,48 @@ public class HouseholdRepository : IHouseholdRepository
         // Use the AddMemberAsync method to move them to a different household, or delete the person entirely.
         throw new InvalidOperationException("Cannot remove a person from a household without assigning them to another household. Use the Person API to update their household assignment or delete the person.");
     }
+
+    public async Task<int?> GetPersonIdFromUserIdAsync(string userId)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        
+        return user?.PersonId;
+    }
+
+    public async Task<HouseholdPermission?> GetMemberRoleAsync(int householdId, int personId)
+    {
+        return await _context.HouseholdPermissions
+            .FirstOrDefaultAsync(hp => hp.HouseholdId == householdId && hp.PersonId == personId);
+    }
+
+    public async Task UpdateMemberRoleAsync(int householdId, int personId, string role)
+    {
+        var permission = await GetMemberRoleAsync(householdId, personId);
+        
+        if (permission == null)
+        {
+            // Create new permission if it doesn't exist
+            permission = new HouseholdPermission
+            {
+                HouseholdId = householdId,
+                PersonId = personId,
+                Role = role
+            };
+            _context.HouseholdPermissions.Add(permission);
+        }
+        else
+        {
+            permission.Role = role;
+            _context.HouseholdPermissions.Update(permission);
+        }
+        
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> IsHouseholdAdminAsync(int householdId, int personId)
+    {
+        var permission = await GetMemberRoleAsync(householdId, personId);
+        return permission?.Role == "ADMIN";
+    }
 }
