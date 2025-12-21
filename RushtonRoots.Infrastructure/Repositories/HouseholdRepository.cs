@@ -157,4 +157,63 @@ public class HouseholdRepository : IHouseholdRepository
         var permission = await GetMemberRoleAsync(householdId, personId);
         return permission?.Role == "ADMIN";
     }
+
+    public async Task<int> GetPhotoCountAsync(int householdId)
+    {
+        // Get all person IDs in the household
+        var memberIds = await _context.People
+            .Where(p => p.HouseholdId == householdId)
+            .Select(p => p.Id)
+            .ToListAsync();
+
+        // Count photos for all members
+        return await _context.PersonPhotos
+            .Where(pp => memberIds.Contains(pp.PersonId))
+            .CountAsync();
+    }
+
+    public async Task<int> GetDocumentCountAsync(int householdId)
+    {
+        // Get all person IDs in the household
+        var memberIds = await _context.People
+            .Where(p => p.HouseholdId == householdId)
+            .Select(p => p.Id)
+            .ToListAsync();
+
+        // Count documents associated with household members
+        return await _context.DocumentPeople
+            .Where(dp => memberIds.Contains(dp.PersonId))
+            .Select(dp => dp.DocumentId)
+            .Distinct()
+            .CountAsync();
+    }
+
+    public async Task<int> GetRelationshipCountAsync(int householdId)
+    {
+        // Get all person IDs in the household
+        var memberIds = await _context.People
+            .Where(p => p.HouseholdId == householdId)
+            .Select(p => p.Id)
+            .ToListAsync();
+
+        // Count partnerships involving household members
+        var partnershipCount = await _context.Partnerships
+            .Where(p => memberIds.Contains(p.PersonAId) || memberIds.Contains(p.PersonBId))
+            .CountAsync();
+
+        // Count parent-child relationships involving household members
+        var parentChildCount = await _context.ParentChildren
+            .Where(pc => memberIds.Contains(pc.ParentPersonId) || memberIds.Contains(pc.ChildPersonId))
+            .CountAsync();
+
+        return partnershipCount + parentChildCount;
+    }
+
+    public async Task<int> GetEventCountAsync(int householdId)
+    {
+        // Count family events directly associated with the household
+        return await _context.FamilyEvents
+            .Where(e => e.HouseholdId == householdId)
+            .CountAsync();
+    }
 }

@@ -22,4 +22,7 @@ public interface IHouseholdService
     Task RemoveMemberByUserIdAsync(int householdId, string userId);
     Task UpdateMemberRoleAsync(int householdId, string userId, string role);
     Task ResendInviteAsync(int householdId, string userId);
+    
+    // New method for Phase 3.3
+    Task<HouseholdDeleteImpact> GetDeleteImpactAsync(int householdId);
 }

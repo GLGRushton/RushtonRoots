@@ -21,4 +21,10 @@ public interface IHouseholdRepository
     Task<HouseholdPermission?> GetMemberRoleAsync(int householdId, int personId);
     Task UpdateMemberRoleAsync(int householdId, int personId, string role);
     Task<bool> IsHouseholdAdminAsync(int householdId, int personId);
+    
+    // Delete impact calculation methods
+    Task<int> GetPhotoCountAsync(int householdId);
+    Task<int> GetDocumentCountAsync(int householdId);
+    Task<int> GetRelationshipCountAsync(int householdId);
+    Task<int> GetEventCountAsync(int householdId);
 }
