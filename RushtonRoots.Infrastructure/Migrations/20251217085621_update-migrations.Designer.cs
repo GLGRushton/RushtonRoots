@@ -13,7 +13,7 @@ namespace RushtonRoots.Infrastructure.Migrations
 {
     [DbContext(typeof(RushtonRootsDbContext))]
     [Migration("20251217085621_update-migrations")]
-    partial class updatemigrations
+    partial class UpdateMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
