@@ -1385,21 +1385,6 @@ public async Task<IActionResult> UpdateNotes(int id, [FromBody] UpdateParentChil
 **Completion Date:** December 21, 2025
 
 ---
-**Complexity:** Low
-
-**Tasks:**
-- [ ] Implement navigation to tradition details
-- [ ] Connect buttons to TraditionView/Details route
-- [ ] Test navigation flow
-
-**Success Criteria:**
-- Navigation working
-- Details view displays correctly
-
-**Files to Modify:**
-- `RushtonRoots.Web/Views/Tradition/Index.cshtml`
-
----
 
 ### Phase 6: Testing & Documentation (Week 6)
 
