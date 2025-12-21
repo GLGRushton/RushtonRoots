@@ -216,4 +216,65 @@ public class ParentChildService : IParentChildService
         var siblings = await _repository.GetSiblingsAsync(relationshipId);
         return siblings.Select(p => _personMapper.MapToViewModel(p));
     }
+
+    // Phase 4.3: Verification System methods
+
+    public async Task<ParentChildViewModel> VerifyRelationshipAsync(int relationshipId, string verifiedBy)
+    {
+        // Validate relationship exists
+        var relationship = await _repository.GetByIdAsync(relationshipId);
+        if (relationship == null)
+        {
+            throw new NotFoundException($"Parent-child relationship with ID {relationshipId} not found");
+        }
+
+        // Validate verifiedBy parameter
+        if (string.IsNullOrWhiteSpace(verifiedBy))
+        {
+            throw new ValidationException("VerifiedBy is required");
+        }
+
+        // Update verification fields
+        relationship.IsVerified = true;
+        relationship.VerifiedDate = DateTime.UtcNow;
+        relationship.VerifiedBy = verifiedBy;
+
+        // Save changes
+        await _repository.UpdateAsync(relationship);
+
+        // Return updated view model
+        var result = await _repository.GetByIdAsync(relationshipId);
+        return _mapper.MapToViewModel(result!);
+    }
+
+    public async Task<ParentChildViewModel> UpdateNotesAsync(int relationshipId, string notes)
+    {
+        // Validate relationship exists
+        var relationship = await _repository.GetByIdAsync(relationshipId);
+        if (relationship == null)
+        {
+            throw new NotFoundException($"Parent-child relationship with ID {relationshipId} not found");
+        }
+
+        // Validate notes parameter
+        if (notes == null)
+        {
+            throw new ValidationException("Notes cannot be null");
+        }
+
+        if (notes.Length > 2000)
+        {
+            throw new ValidationException("Notes cannot exceed 2000 characters");
+        }
+
+        // Update notes
+        relationship.Notes = notes;
+
+        // Save changes
+        await _repository.UpdateAsync(relationship);
+
+        // Return updated view model
+        var result = await _repository.GetByIdAsync(relationshipId);
+        return _mapper.MapToViewModel(result!);
+    }
 }

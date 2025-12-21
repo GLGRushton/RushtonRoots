@@ -21,4 +21,8 @@ public interface IParentChildService
     Task<IEnumerable<LifeEventViewModel>> GetRelatedEventsAsync(int relationshipId);
     Task<IEnumerable<PersonViewModel>> GetGrandparentsAsync(int relationshipId);
     Task<IEnumerable<PersonViewModel>> GetSiblingsAsync(int relationshipId);
+    
+    // Phase 4.3: Verification System
+    Task<ParentChildViewModel> VerifyRelationshipAsync(int relationshipId, string verifiedBy);
+    Task<ParentChildViewModel> UpdateNotesAsync(int relationshipId, string notes);
 }

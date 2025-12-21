@@ -13,6 +13,11 @@ public class ParentChild : BaseEntity
     public string? Notes { get; set; }
     public int? ConfidenceScore { get; set; } // 0-100, for AI features
     
+    // Verification tracking
+    public bool IsVerified { get; set; } = false;
+    public DateTime? VerifiedDate { get; set; }
+    public string? VerifiedBy { get; set; }
+    
     // Soft delete support
     public bool IsDeleted { get; set; } = false;
     public DateTime? DeletedDateTime { get; set; }

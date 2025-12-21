@@ -32,6 +32,17 @@ public class ParentChildConfiguration : IEntityTypeConfiguration<ParentChild>
         builder.Property(pc => pc.ConfidenceScore)
             .IsRequired(false);
             
+        builder.Property(pc => pc.IsVerified)
+            .IsRequired()
+            .HasDefaultValue(false);
+            
+        builder.Property(pc => pc.VerifiedDate)
+            .IsRequired(false);
+            
+        builder.Property(pc => pc.VerifiedBy)
+            .HasMaxLength(100)
+            .IsRequired(false);
+            
         builder.Property(pc => pc.CreatedDateTime)
             .IsRequired();
             
