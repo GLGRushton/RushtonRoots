@@ -66,6 +66,25 @@ public class MediaService : IMediaService
             // Create media entity
             var media = _mapper.MapToEntity(request, userId, mediaUrl, blobName, file.Length, file.ContentType);
             
+            // Generate thumbnails for images (videos can be handled differently in the future)
+            if (IsImageFile(file.ContentType))
+            {
+                stream.Position = 0;
+                try
+                {
+                    var thumbnails = await _blobStorageService.GenerateThumbnailsAsync(blobName, stream);
+                    // Use the small thumbnail as the default thumbnail URL
+                    if (thumbnails.ContainsKey("small"))
+                    {
+                        media.ThumbnailUrl = thumbnails["small"];
+                    }
+                }
+                catch
+                {
+                    // If thumbnail generation fails, continue without it
+                }
+            }
+            
             // Save media
             var savedMedia = await _mediaRepository.AddAsync(media);
 
@@ -224,5 +243,15 @@ public class MediaService : IMediaService
             // If URL is malformed, return the original string
             return url;
         }
+    }
+
+    private bool IsImageFile(string? contentType)
+    {
+        if (string.IsNullOrEmpty(contentType))
+        {
+            return false;
+        }
+
+        return contentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase);
     }
 }
