@@ -77,15 +77,23 @@ public class PersonPhotoService : IPersonPhotoService
             // Extract blob name from URL
             blobName = ExtractBlobNameFromUrl(photoUrl);
 
-            // Generate thumbnail
-            stream.Position = 0;
-            try
+            // Generate thumbnails for images
+            if (IsImageFile(file.ContentType))
             {
-                thumbnailUrl = await _blobStorageService.GenerateThumbnailAsync(blobName, stream);
-            }
-            catch
-            {
-                // If thumbnail generation fails, continue without it
+                stream.Position = 0;
+                try
+                {
+                    var thumbnails = await _blobStorageService.GenerateThumbnailsAsync(blobName, stream);
+                    // Use the small thumbnail as the default thumbnail URL
+                    if (thumbnails.ContainsKey("small"))
+                    {
+                        thumbnailUrl = thumbnails["small"];
+                    }
+                }
+                catch
+                {
+                    // If thumbnail generation fails, continue without it
+                }
             }
         }
 
@@ -130,19 +138,12 @@ public class PersonPhotoService : IPersonPhotoService
         var photo = await _photoRepository.GetByIdAsync(id);
         if (photo == null) return;
 
-        // Delete from blob storage
+        // Delete from blob storage (also deletes thumbnails automatically)
         if (!string.IsNullOrEmpty(photo.BlobName))
         {
             try
             {
                 await _blobStorageService.DeleteFileAsync(photo.BlobName);
-                
-                // Delete thumbnail if exists
-                if (!string.IsNullOrEmpty(photo.ThumbnailUrl))
-                {
-                    var thumbnailBlobName = ExtractBlobNameFromUrl(photo.ThumbnailUrl);
-                    await _blobStorageService.DeleteFileAsync(thumbnailBlobName);
-                }
             }
             catch
             {
@@ -201,5 +202,15 @@ public class PersonPhotoService : IPersonPhotoService
     {
         var uri = new Uri(url);
         return uri.Segments.Last();
+    }
+
+    private bool IsImageFile(string? contentType)
+    {
+        if (string.IsNullOrEmpty(contentType))
+        {
+            return false;
+        }
+
+        return contentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase);
     }
 }

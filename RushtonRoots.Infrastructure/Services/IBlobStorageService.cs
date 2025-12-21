@@ -18,12 +18,12 @@ public interface IBlobStorageService
     Task DeleteFileAsync(string blobName);
     
     /// <summary>
-    /// Generates a thumbnail for an image
+    /// Generates thumbnails for an image at multiple sizes
     /// </summary>
     /// <param name="originalBlobName">Name of the original image blob</param>
     /// <param name="originalStream">Stream of the original image</param>
-    /// <returns>The URL of the thumbnail</returns>
-    Task<string> GenerateThumbnailAsync(string originalBlobName, Stream originalStream);
+    /// <returns>Dictionary of thumbnail size names to URLs</returns>
+    Task<Dictionary<string, string>> GenerateThumbnailsAsync(string originalBlobName, Stream originalStream);
     
     /// <summary>
     /// Gets a SAS URL for temporary access to a blob
