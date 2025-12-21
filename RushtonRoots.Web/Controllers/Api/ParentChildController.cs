@@ -273,4 +273,114 @@ public class ParentChildController : ControllerBase
             return StatusCode(500, "An error occurred while deleting the relationship");
         }
     }
+
+    // Phase 4.2: Evidence & Family Context endpoints
+
+    /// <summary>
+    /// Get evidence (sources/citations) for a specific parent-child relationship.
+    /// </summary>
+    /// <param name="id">Relationship ID</param>
+    /// <returns>List of sources that support this relationship</returns>
+    [HttpGet("{id}/evidence")]
+    [ProducesResponseType(typeof(IEnumerable<SourceViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<SourceViewModel>>> GetEvidence(int id)
+    {
+        try
+        {
+            var sources = await _parentChildService.GetEvidenceAsync(id);
+            return Ok(sources);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Parent-child relationship with ID {RelationshipId} not found", id);
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving evidence for parent-child relationship with ID {RelationshipId}", id);
+            return StatusCode(500, "An error occurred while retrieving evidence");
+        }
+    }
+
+    /// <summary>
+    /// Get related life events for both the parent and child in the relationship.
+    /// </summary>
+    /// <param name="id">Relationship ID</param>
+    /// <returns>List of life events for parent and child</returns>
+    [HttpGet("{id}/events")]
+    [ProducesResponseType(typeof(IEnumerable<LifeEventViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<LifeEventViewModel>>> GetRelatedEvents(int id)
+    {
+        try
+        {
+            var events = await _parentChildService.GetRelatedEventsAsync(id);
+            return Ok(events);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Parent-child relationship with ID {RelationshipId} not found", id);
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving related events for parent-child relationship with ID {RelationshipId}", id);
+            return StatusCode(500, "An error occurred while retrieving related events");
+        }
+    }
+
+    /// <summary>
+    /// Get grandparents (parents of the parent) in this relationship.
+    /// </summary>
+    /// <param name="id">Relationship ID</param>
+    /// <returns>List of grandparents</returns>
+    [HttpGet("{id}/grandparents")]
+    [ProducesResponseType(typeof(IEnumerable<PersonViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<PersonViewModel>>> GetGrandparents(int id)
+    {
+        try
+        {
+            var grandparents = await _parentChildService.GetGrandparentsAsync(id);
+            return Ok(grandparents);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Parent-child relationship with ID {RelationshipId} not found", id);
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving grandparents for parent-child relationship with ID {RelationshipId}", id);
+            return StatusCode(500, "An error occurred while retrieving grandparents");
+        }
+    }
+
+    /// <summary>
+    /// Get siblings (other children of the same parent) in this relationship.
+    /// </summary>
+    /// <param name="id">Relationship ID</param>
+    /// <returns>List of siblings</returns>
+    [HttpGet("{id}/siblings")]
+    [ProducesResponseType(typeof(IEnumerable<PersonViewModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<PersonViewModel>>> GetSiblings(int id)
+    {
+        try
+        {
+            var siblings = await _parentChildService.GetSiblingsAsync(id);
+            return Ok(siblings);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Parent-child relationship with ID {RelationshipId} not found", id);
+            return NotFound(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving siblings for parent-child relationship with ID {RelationshipId}", id);
+            return StatusCode(500, "An error occurred while retrieving siblings");
+        }
+    }
 }

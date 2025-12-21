@@ -13,16 +13,28 @@ public class ParentChildService : IParentChildService
 {
     private readonly IParentChildRepository _repository;
     private readonly IPersonRepository _personRepository;
+    private readonly ILifeEventRepository _lifeEventRepository;
     private readonly IParentChildMapper _mapper;
+    private readonly ISourceMapper _sourceMapper;
+    private readonly ILifeEventMapper _lifeEventMapper;
+    private readonly IPersonMapper _personMapper;
 
     public ParentChildService(
         IParentChildRepository repository, 
         IPersonRepository personRepository,
-        IParentChildMapper mapper)
+        ILifeEventRepository lifeEventRepository,
+        IParentChildMapper mapper,
+        ISourceMapper sourceMapper,
+        ILifeEventMapper lifeEventMapper,
+        IPersonMapper personMapper)
     {
         _repository = repository;
         _personRepository = personRepository;
+        _lifeEventRepository = lifeEventRepository;
         _mapper = mapper;
+        _sourceMapper = sourceMapper;
+        _lifeEventMapper = lifeEventMapper;
+        _personMapper = personMapper;
     }
 
     public async Task<ParentChildViewModel?> GetByIdAsync(int id)
@@ -141,5 +153,67 @@ public class ParentChildService : IParentChildService
         }
 
         await _repository.DeleteAsync(id);
+    }
+
+    // Phase 4.2: Evidence & Family Context methods
+
+    public async Task<IEnumerable<SourceViewModel>> GetEvidenceAsync(int relationshipId)
+    {
+        // Validate relationship exists
+        var relationship = await _repository.GetByIdAsync(relationshipId);
+        if (relationship == null)
+        {
+            throw new NotFoundException($"Parent-child relationship with ID {relationshipId} not found");
+        }
+
+        // Get sources linked to this relationship
+        var sources = await _repository.GetSourcesAsync(relationshipId);
+        return _sourceMapper.MapToViewModels(sources);
+    }
+
+    public async Task<IEnumerable<LifeEventViewModel>> GetRelatedEventsAsync(int relationshipId)
+    {
+        // Validate relationship exists
+        var relationship = await _repository.GetByIdAsync(relationshipId);
+        if (relationship == null)
+        {
+            throw new NotFoundException($"Parent-child relationship with ID {relationshipId} not found");
+        }
+
+        // Get life events for both parent and child
+        var parentEvents = await _lifeEventRepository.GetByPersonIdAsync(relationship.ParentPersonId);
+        var childEvents = await _lifeEventRepository.GetByPersonIdAsync(relationship.ChildPersonId);
+
+        // Combine and map to view models
+        var allEvents = parentEvents.Concat(childEvents).ToList();
+        return _lifeEventMapper.MapToViewModels(allEvents);
+    }
+
+    public async Task<IEnumerable<PersonViewModel>> GetGrandparentsAsync(int relationshipId)
+    {
+        // Validate relationship exists
+        var relationship = await _repository.GetByIdAsync(relationshipId);
+        if (relationship == null)
+        {
+            throw new NotFoundException($"Parent-child relationship with ID {relationshipId} not found");
+        }
+
+        // Get grandparents
+        var grandparents = await _repository.GetGrandparentsAsync(relationshipId);
+        return grandparents.Select(p => _personMapper.MapToViewModel(p));
+    }
+
+    public async Task<IEnumerable<PersonViewModel>> GetSiblingsAsync(int relationshipId)
+    {
+        // Validate relationship exists
+        var relationship = await _repository.GetByIdAsync(relationshipId);
+        if (relationship == null)
+        {
+            throw new NotFoundException($"Parent-child relationship with ID {relationshipId} not found");
+        }
+
+        // Get siblings
+        var siblings = await _repository.GetSiblingsAsync(relationshipId);
+        return siblings.Select(p => _personMapper.MapToViewModel(p));
     }
 }

@@ -15,4 +15,10 @@ public interface IParentChildService
     Task<ParentChildViewModel> CreateAsync(CreateParentChildRequest request);
     Task<ParentChildViewModel> UpdateAsync(UpdateParentChildRequest request);
     Task DeleteAsync(int id);
+    
+    // Phase 4.2: Evidence & Family Context
+    Task<IEnumerable<SourceViewModel>> GetEvidenceAsync(int relationshipId);
+    Task<IEnumerable<LifeEventViewModel>> GetRelatedEventsAsync(int relationshipId);
+    Task<IEnumerable<PersonViewModel>> GetGrandparentsAsync(int relationshipId);
+    Task<IEnumerable<PersonViewModel>> GetSiblingsAsync(int relationshipId);
 }
