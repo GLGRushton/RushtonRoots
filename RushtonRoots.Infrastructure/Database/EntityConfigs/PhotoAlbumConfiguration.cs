@@ -29,5 +29,10 @@ public class PhotoAlbumConfiguration : IEntityTypeConfiguration<PhotoAlbum>
             .WithOne(p => p.PhotoAlbum)
             .HasForeignKey(p => p.PhotoAlbumId)
             .OnDelete(DeleteBehavior.SetNull);
+        
+        // Performance indexes
+        builder.HasIndex(e => e.CreatedByUserId); // For user album queries
+        builder.HasIndex(e => e.IsPublic); // For public album filtering
+        builder.HasIndex(e => new { e.DisplayOrder, e.CreatedDateTime }); // For ordered listing
     }
 }

@@ -73,5 +73,12 @@ public class TraditionConfiguration : IEntityTypeConfiguration<Tradition>
             .WithOne(tt => tt.Tradition)
             .HasForeignKey(tt => tt.TraditionId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        // Performance indexes
+        builder.HasIndex(t => t.Category); // For category filtering
+        builder.HasIndex(t => t.Status); // For status filtering
+        builder.HasIndex(t => t.IsPublished); // For published filtering
+        builder.HasIndex(t => t.SubmittedByUserId); // For user tradition queries
+        builder.HasIndex(t => new { t.IsPublished, t.Status }); // For active tradition listings
     }
 }

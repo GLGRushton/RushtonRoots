@@ -80,5 +80,12 @@ public class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
             .WithOne(rr => rr.Recipe)
             .HasForeignKey(rr => rr.RecipeId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        // Performance indexes
+        builder.HasIndex(r => r.Category); // For category filtering
+        builder.HasIndex(r => r.IsPublished); // For published filtering
+        builder.HasIndex(r => r.IsFavorite); // For favorite filtering
+        builder.HasIndex(r => r.SubmittedByUserId); // For user recipe queries
+        builder.HasIndex(r => new { r.IsPublished, r.AverageRating }); // For top-rated listings
     }
 }
