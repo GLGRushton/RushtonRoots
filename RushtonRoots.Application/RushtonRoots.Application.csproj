@@ -9,12 +9,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="10.0.1" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.1" />
   </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-	  <NoWarn>$(NoWarn);NU1902</NoWarn>
 	  <Nullable>enable</Nullable>
   </PropertyGroup>
 </Project>
