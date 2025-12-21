@@ -717,7 +717,7 @@ Passed!  - Failed:     0, Passed:   336, Skipped:     0, Total:   336
 **Files Created/Modified:**
 - ✅ Created: `RushtonRoots.Web/appsettings.Development.json` - Development configuration with Azurite settings
 - ✅ Updated: `README.md` - Added Azure Storage Configuration section with quick start guide
-- ✅ Created: `docs/AzureStorageSetup.md` - Comprehensive 400+ line setup guide covering:
+- ✅ Created: `docs/AzureStorageSetup.md` - Comprehensive setup guide (517 lines, 17KB) covering:
   - Development setup with Azurite (Docker, npm, Visual Studio options)
   - Production setup with Azure Storage Account
   - Configuration reference and environment variables
