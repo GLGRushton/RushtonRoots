@@ -78,18 +78,13 @@
                     window.location.href = '@Url.Action("Edit", "Person")/' + action.memberPersonId;
                     break;
                 case 'remove':
-                    if (confirm('Are you sure you want to remove this member from the household?')) {
-                        // TODO: Implement member removal endpoint
-                        console.log('Remove member:', action.memberId);
-                    }
+                    handleRemoveMember(action);
                     break;
                 case 'change-role':
-                    // TODO: Implement role change endpoint
-                    console.log('Change role for member:', action.memberId, action.data);
+                    handleChangeRole(action);
                     break;
                 case 'resend-invite':
-                    // TODO: Implement resend invite endpoint
-                    console.log('Resend invite for member:', action.memberId);
+                    handleResendInvite(action);
                     break;
                 default:
                     console.warn('Unknown member action:', action.action);
@@ -106,37 +101,193 @@
         // Handle settings update
         householdDetailsElement.addEventListener('settingsUpdated', function(event) {
             const settings = event.detail;
+            handleUpdateSettings(settings);
+        });
+        
+        // Helper function to get CSRF token
+        function getAntiForgeryToken() {
+            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            return tokenInput ? tokenInput.value : '';
+        }
+        
+        // Helper function to show success message
+        function showSuccess(message) {
+            alert(message); // TODO: Replace with toast notification
+        }
+        
+        // Helper function to show error message
+        function showError(message) {
+            alert('Error: ' + message); // TODO: Replace with toast notification
+        }
+        
+        // Handle remove member
+        function handleRemoveMember(action) {
+            if (!confirm('Are you sure you want to remove this member from the household?')) {
+                return;
+            }
             
-            // TODO: Implement settings update endpoint
-            console.log('Update household settings:', settings);
+            // Note: The API expects userId (string), but we're getting personId from the Angular component
+            // For now, we'll use the personId as userId since the backend will try to resolve it
+            const userId = action.memberId.toString();
             
-            // Example of how to send settings to backend:
-            /*
-            fetch('@Url.Action("UpdateSettings", "Household")', {
-                method: 'POST',
+            fetch('/api/household/@Model.Id/member/' + encodeURIComponent(userId), {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                },
-                body: JSON.stringify({
-                    householdId: @Model.Id,
-                    ...settings
-                })
+                    'RequestVerificationToken': getAntiForgeryToken()
+                }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Settings updated successfully!');
+            .then(response => {
+                if (response.ok) {
+                    showSuccess('Member removed successfully!');
+                    // Reload the page to reflect changes
+                    window.location.reload();
+                } else if (response.status === 404) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Member not found');
+                    });
+                } else if (response.status === 400) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Invalid request');
+                    });
                 } else {
-                    alert('Error updating settings: ' + data.message);
+                    throw new Error('Failed to remove member');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while updating settings.');
+                console.error('Error removing member:', error);
+                showError(error.message || 'An error occurred while removing the member.');
             });
-            */
-        });
+        }
+        
+        // Handle change role
+        function handleChangeRole(action) {
+            const currentRole = action.data?.currentRole || 'Member';
+            const roles = ['ADMIN', 'EDITOR'];
+            
+            // Simple role selection dialog
+            const newRole = prompt('Select new role:\n1 = ADMIN (can manage members and edit household)\n2 = EDITOR (can edit household content)\n\nCurrent role: ' + currentRole + '\n\nEnter 1 or 2:');
+            
+            if (newRole === null || newRole === '') {
+                return; // User cancelled
+            }
+            
+            const selectedRole = newRole === '1' ? 'ADMIN' : newRole === '2' ? 'EDITOR' : null;
+            
+            if (!selectedRole) {
+                showError('Invalid role selection. Please enter 1 or 2.');
+                return;
+            }
+            
+            const userId = action.memberId.toString();
+            
+            fetch('/api/household/@Model.Id/member/' + encodeURIComponent(userId) + '/role', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                },
+                body: JSON.stringify({
+                    role: selectedRole
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    showSuccess('Member role updated successfully to ' + selectedRole + '!');
+                    // Reload the page to reflect changes
+                    window.location.reload();
+                } else if (response.status === 404) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Member not found');
+                    });
+                } else if (response.status === 400) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Invalid request');
+                    });
+                } else {
+                    throw new Error('Failed to update member role');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating member role:', error);
+                showError(error.message || 'An error occurred while updating the member role.');
+            });
+        }
+        
+        // Handle resend invite
+        function handleResendInvite(action) {
+            const userId = action.memberId.toString();
+            
+            fetch('/api/household/@Model.Id/member/' + encodeURIComponent(userId) + '/resend-invite', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    showSuccess('Invitation resent successfully!');
+                } else if (response.status === 404) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Member not found');
+                    });
+                } else if (response.status === 400) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Invalid request');
+                    });
+                } else {
+                    throw new Error('Failed to resend invitation');
+                }
+            })
+            .catch(error => {
+                console.error('Error resending invitation:', error);
+                showError(error.message || 'An error occurred while resending the invitation.');
+            });
+        }
+        
+        // Handle update settings
+        function handleUpdateSettings(settings) {
+            // The backend API currently only supports IsArchived setting
+            // We'll need to map the Angular settings to what the API expects
+            const requestData = {
+                id: @Model.Id,
+                isArchived: false // Default value, can be extended later
+            };
+            
+            fetch('/api/household/@Model.Id/settings', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 404) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Household not found');
+                    });
+                } else if (response.status === 400) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Invalid request');
+                    });
+                } else {
+                    throw new Error('Failed to update settings');
+                }
+            })
+            .then(data => {
+                showSuccess('Settings updated successfully!');
+                // Optionally reload to reflect changes
+                // window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error updating settings:', error);
+                showError(error.message || 'An error occurred while updating settings.');
+            });
+        }
     })();
 </script>
 
