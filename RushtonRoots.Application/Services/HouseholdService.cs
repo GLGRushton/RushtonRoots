@@ -315,4 +315,29 @@ public class HouseholdService : IHouseholdService
         // 2. Send an email or notification to the user
         // 3. Update any invite tracking in the database
     }
+
+    // Phase 3.3: Delete Impact Calculation
+    public async Task<HouseholdDeleteImpact> GetDeleteImpactAsync(int householdId)
+    {
+        if (householdId <= 0)
+        {
+            throw new ValidationException("Invalid household ID.");
+        }
+
+        // Verify household exists
+        var householdExists = await _householdRepository.ExistsAsync(householdId);
+        if (!householdExists)
+        {
+            throw new NotFoundException($"Household with ID {householdId} not found.");
+        }
+
+        return new HouseholdDeleteImpact
+        {
+            MemberCount = await _householdRepository.GetMemberCountAsync(householdId),
+            PhotoCount = await _householdRepository.GetPhotoCountAsync(householdId),
+            DocumentCount = await _householdRepository.GetDocumentCountAsync(householdId),
+            RelationshipCount = await _householdRepository.GetRelationshipCountAsync(householdId),
+            EventCount = await _householdRepository.GetEventCountAsync(householdId)
+        };
+    }
 }

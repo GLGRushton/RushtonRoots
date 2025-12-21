@@ -149,6 +149,11 @@ public class HouseholdController : Controller
         {
             return NotFound();
         }
+        
+        // Get delete impact data
+        var deleteImpact = await _householdService.GetDeleteImpactAsync(id);
+        ViewBag.DeleteImpact = deleteImpact;
+        
         return View(household);
     }
 

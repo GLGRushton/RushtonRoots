@@ -1,20 +1,18 @@
 @model RushtonRoots.Domain.UI.Models.HouseholdViewModel
+@using RushtonRoots.Domain.UI.Models
 @{
     ViewData["Title"] = "Delete Household";
     
-    // Build related data JSON for Angular component
-    // TODO: Implement backend service methods to calculate actual counts:
-    // - HouseholdService.GetMemberCountAsync(householdId)
-    // - HouseholdService.GetEventsCountAsync(householdId)
-    // - HouseholdService.GetMediaCountAsync(householdId)
-    // - HouseholdService.GetDocumentsCountAsync(householdId)
-    // - HouseholdService.GetPermissionsCountAsync(householdId)
+    // Get delete impact from ViewBag
+    var deleteImpact = ViewBag.DeleteImpact as HouseholdDeleteImpact;
+    
+    // Build related data JSON for Angular component with real data
     var relatedData = new {
-        members = Model.MemberCount, // Actual count available
-        events = 0,      // Backend implementation pending
-        sharedMedia = 0, // Backend implementation pending
-        documents = 0,   // Backend implementation pending
-        permissions = 0  // Backend implementation pending
+        members = deleteImpact?.MemberCount ?? Model.MemberCount,
+        events = deleteImpact?.EventCount ?? 0,
+        sharedMedia = deleteImpact?.PhotoCount ?? 0,
+        documents = deleteImpact?.DocumentCount ?? 0,
+        permissions = deleteImpact?.RelationshipCount ?? 0
     };
 }
 
