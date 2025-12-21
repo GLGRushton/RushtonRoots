@@ -95,10 +95,10 @@ For local development, use **Azurite** - Microsoft's open-source Azure Storage e
 
 2. **Start Azurite:**
    ```bash
-   azurite --silent --location c:\azurite --debug c:\azurite\debug.log
-   ```
-   Or on Linux/Mac:
-   ```bash
+   # Windows (use forward slashes or double backslashes)
+   azurite --silent --location c:/azurite --debug c:/azurite/debug.log
+   
+   # Or on Linux/Mac
    azurite --silent --location ~/azurite --debug ~/azurite/debug.log
    ```
 
@@ -459,15 +459,15 @@ Upload a test image and verify that:
 ## Additional Resources
 
 ### Microsoft Documentation
-- [Azure Blob Storage overview](https://docs.microsoft.com/azure/storage/blobs/storage-blobs-overview)
-- [Azurite emulator](https://docs.microsoft.com/azure/storage/common/storage-use-azurite)
-- [Azure Storage security guide](https://docs.microsoft.com/azure/storage/common/storage-security-guide)
-- [Azure Key Vault integration](https://docs.microsoft.com/aspnet/core/security/key-vault-configuration)
+- [Azure Blob Storage overview](https://learn.microsoft.com/azure/storage/blobs/storage-blobs-overview)
+- [Azurite emulator](https://learn.microsoft.com/azure/storage/common/storage-use-azurite)
+- [Azure Storage security guide](https://learn.microsoft.com/azure/storage/common/storage-security-guide)
+- [Azure Key Vault integration](https://learn.microsoft.com/aspnet/core/security/key-vault-configuration)
 
 ### Tools
 - [Azure Storage Explorer](https://azure.microsoft.com/features/storage-explorer/) - Free desktop app for managing storage
-- [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli) - Command-line tool for Azure management
-- [Azure Storage Blobs client library for .NET](https://docs.microsoft.com/dotnet/api/overview/azure/storage.blobs-readme)
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) - Command-line tool for Azure management
+- [Azure Storage Blobs client library for .NET](https://learn.microsoft.com/dotnet/api/overview/azure/storage.blobs-readme)
 
 ### RushtonRoots Documentation
 - [README.md](../README.md) - Project overview and setup
