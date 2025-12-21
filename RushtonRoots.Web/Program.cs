@@ -74,6 +74,25 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+// Add Health Checks
+var healthChecksBuilder = builder.Services.AddHealthChecks();
+
+// Add database health check
+healthChecksBuilder.AddDbContextCheck<RushtonRootsDbContext>(
+    name: "database",
+    tags: new[] { "db", "sql", "ready" });
+
+// Add Azure Blob Storage health check
+var azureStorageConnectionString = builder.Configuration["AzureBlobStorage:ConnectionString"];
+if (!string.IsNullOrEmpty(azureStorageConnectionString) && 
+    azureStorageConnectionString != "UseDevelopmentStorage=true")
+{
+    healthChecksBuilder.AddAzureBlobStorage(
+        azureStorageConnectionString,
+        name: "azurestorage",
+        tags: new[] { "storage", "azure", "ready" });
+}
+
 var app = builder.Build();
 
 // Run migrations and seed database
@@ -126,5 +145,43 @@ app.MapControllerRoute(
 
 // Map API controllers
 app.MapControllers();
+
+// Map Health Check endpoints
+app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        
+        var result = System.Text.Json.JsonSerializer.Serialize(new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString(),
+                description = e.Value.Description,
+                duration = e.Value.Duration.TotalMilliseconds,
+                exception = e.Value.Exception?.Message,
+                data = e.Value.Data
+            }),
+            totalDuration = report.TotalDuration.TotalMilliseconds
+        });
+        
+        await context.Response.WriteAsync(result);
+    }
+});
+
+// Readiness probe - only checks critical services
+app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready")
+});
+
+// Liveness probe - simple check to verify app is running
+app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = _ => false // No checks, just responds 200 if app is running
+});
 
 app.Run();
