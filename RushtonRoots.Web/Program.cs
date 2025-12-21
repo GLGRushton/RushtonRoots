@@ -18,6 +18,22 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
+// Configure CORS if needed for external API access
+// By default, the Angular app is served from the same origin, so CORS is not required
+// Uncomment and configure if you need to allow external origins to access the API
+/*
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("https://yourdomain.com", "https://www.yourdomain.com")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+*/
+
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -72,7 +88,29 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Account/AccessDenied";
     options.ExpireTimeSpan = TimeSpan.FromDays(14);
     options.SlidingExpiration = true;
+    
+    // Security: Require HTTPS for cookies in production
+    options.Cookie.SecurePolicy = builder.Environment.IsProduction() 
+        ? CookieSecurePolicy.Always 
+        : CookieSecurePolicy.SameAsRequest;
+    
+    // Security: Prevent client-side JavaScript access to auth cookies
+    options.Cookie.HttpOnly = true;
+    
+    // Security: SameSite policy to prevent CSRF attacks
+    options.Cookie.SameSite = SameSiteMode.Lax;
 });
+
+// Configure HSTS options for production
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHsts(options =>
+    {
+        options.MaxAge = TimeSpan.FromDays(365); // 1 year
+        options.IncludeSubDomains = true;
+        options.Preload = true;
+    });
+}
 
 // Add Health Checks
 var healthChecksBuilder = builder.Services.AddHealthChecks();
@@ -116,7 +154,13 @@ using (var scope = app.Services.CreateScope())
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+    
+    // Configure HSTS (HTTP Strict Transport Security)
+    // HSTS enforces HTTPS for 1 year, includes subdomains, and allows preload list inclusion
     app.UseHsts();
+    
+    // Force HTTPS redirect in production
+    app.UseHttpsRedirection();
 }
 else
 {
@@ -128,12 +172,16 @@ else
         options.RoutePrefix = "api-docs"; // Access at /api-docs
         options.DocumentTitle = "RushtonRoots API Documentation";
     });
+    
+    // Optional in development - comment out if testing without SSL certificate
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Enable CORS if configured
+// app.UseCors("AllowSpecificOrigins"); // Uncomment if CORS policy is configured above
 
 app.UseAuthentication();
 app.UseAuthorization();

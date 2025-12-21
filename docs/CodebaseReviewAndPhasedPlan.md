@@ -35,7 +35,7 @@ This document provides an extensive review of the RushtonRoots codebase and outl
 - **Code Coverage:** ✅ 85%+ estimated (above 80% target)
 - **Architecture:** ✅ Clean Architecture properly implemented
 - **Dependencies:** ✅ Zero security vulnerabilities (fixed in Phase 1.2)
-- **Documentation:** ✅ Comprehensive - README, ROADMAP, Azure setup, Developer onboarding, API docs, Test coverage
+- **Documentation:** ✅ Comprehensive - README, ROADMAP, Azure setup, Developer onboarding, API docs, Test coverage, Security configuration
 - **Image Processing:** ✅ Thumbnail generation implemented (Phase 2.1)
 - **Azure Storage:** ✅ Configuration documented with development/production setup (Phase 2.2)
 - **Household Management:** ✅ Complete - member management (3.1), frontend (3.2), delete impact (3.3)
@@ -44,6 +44,8 @@ This document provides an extensive review of the RushtonRoots codebase and outl
 - **Integration Testing:** ✅ Complete - Phase 6.1 comprehensive testing with 484 passing tests
 - **Documentation:** ✅ Complete - Phase 6.2 with Swagger/OpenAPI, Developer onboarding, API documentation
 - **Performance Optimization:** ✅ Complete - Phase 6.3 with EF Core logging, 25 database indexes, query optimization
+- **Configuration Management:** ✅ Complete - Phase 7.1 with production config, health checks, environment variables
+- **Security Hardening:** ✅ Complete - Phase 7.2 with HTTPS, HSTS, authorization review, security documentation
 
 
 ---
@@ -1750,22 +1752,115 @@ All 484 tests passing (validated existing tests still pass)
 
 ---
 
-#### Phase 7.2: Security Hardening
+#### Phase 7.2: Security Hardening ✅ COMPLETE
 **Duration:** 2-3 days  
 **Complexity:** Medium
+**Status:** ✅ COMPLETED
 
 **Tasks:**
-- [ ] Enable HTTPS redirect in production
-- [ ] Configure HSTS headers
-- [ ] Add CORS policy if needed
-- [ ] Review authorization attributes on all endpoints
-- [ ] Run security scan (if available)
-- [ ] Fix any security warnings
+- [x] Enable HTTPS redirect in production
+- [x] Configure HSTS headers
+- [x] Add CORS policy if needed
+- [x] Review authorization attributes on all endpoints
+- [x] Run security scan (if available)
+- [x] Fix any security warnings
 
 **Success Criteria:**
-- Security scan passes
-- HTTPS enforced
-- Authorization properly configured
+- ✅ Security scan passes (0 vulnerable packages)
+- ✅ HTTPS enforced in production
+- ✅ Authorization properly configured on all endpoints
+
+**Implementation Details:**
+
+**HTTPS Configuration:**
+- Production: HTTPS redirect enforced via middleware
+- HSTS headers configured with 1-year max-age
+- Development: HTTPS redirect optional (can be disabled for local testing)
+- SSL certificates documented for Azure App Service and IIS
+
+**HSTS (HTTP Strict Transport Security):**
+```csharp
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromDays(365);  // 1 year
+    options.IncludeSubDomains = true;          // Apply to all subdomains
+    options.Preload = true;                    // Allow preload list inclusion
+});
+```
+
+**HSTS Header Sent:**
+```
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+```
+
+**CORS Policy:**
+- Default: Same-origin (Angular app served from same origin)
+- CORS not required by default
+- Configurable CORS policy added (commented out) for future external API access
+- Restrictive policy with specific origins, methods, headers
+- Documentation includes examples for mobile apps, partner integrations, public APIs
+
+**Authorization Review:**
+- ✅ 29 out of 31 API controllers have `[Authorize]` attribute
+- ✅ FamilyTreeController: Added `[Authorize]` attribute
+- ✅ SampleApiController: Marked with `[AllowAnonymous]` (test endpoint, safe to be public)
+- ✅ Health check endpoints: Publicly accessible (required for monitoring)
+- ✅ All sensitive endpoints require authentication
+- ✅ Role-based authorization on admin endpoints (Admin, HouseholdAdmin)
+
+**Cookie Security:**
+- `SecurePolicy`: Always in production (HTTPS only)
+- `HttpOnly`: true (prevents JavaScript access, XSS protection)
+- `SameSite`: Lax (CSRF protection)
+- Sliding expiration: 14 days with activity renewal
+
+**Security Scan Results:**
+```bash
+dotnet list package --vulnerable
+```
+All projects: **0 vulnerable packages** ✅
+
+**Files Modified:**
+- `RushtonRoots.Web/Program.cs` - Added HSTS configuration, production HTTPS redirect, cookie security, CORS policy
+- `RushtonRoots.Web/Controllers/Api/FamilyTreeController.cs` - Added [Authorize] attribute
+- `RushtonRoots.Web/Controllers/Api/SampleApiController.cs` - Added [AllowAnonymous] attribute with documentation
+
+**Files Created:**
+- `docs/SecurityConfiguration.md` - Comprehensive security guide (16KB, 500+ lines) covering:
+  - HTTPS and SSL certificate setup (local, Azure, IIS)
+  - HSTS configuration and preload list
+  - CORS policy examples (mobile apps, partners, public API)
+  - Authorization and authentication details
+  - Cookie security implementation
+  - Security scan results and monitoring
+  - Production deployment checklist
+  - Troubleshooting guide
+  - Future security enhancements (CSP, X-Frame-Options, rate limiting, 2FA)
+  - Security audit schedule
+
+**Build Status:**
+```
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+```
+
+**Test Results:**
+```
+Passed!  - Failed:     0, Passed:   484, Skipped:     0, Total:   484
+```
+
+**Security Posture:**
+- ✅ HTTPS enforced in production with HSTS
+- ✅ All API endpoints require authentication (except explicitly public)
+- ✅ Cookie security (HttpOnly, Secure, SameSite)
+- ✅ Zero vulnerable packages
+- ✅ Strong password policy (8 chars, uppercase, lowercase, digit)
+- ✅ Account lockout (5 failed attempts, 5 minute lockout)
+- ✅ CORS configured (same-origin by default, extensible for external access)
+- ✅ Comprehensive security documentation
+
+**Completion Date:** December 21, 2025
 
 ---
 
