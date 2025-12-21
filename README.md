@@ -188,8 +188,39 @@ RushtonRoots/
 
 ```
 
+## API Documentation
+
+### Swagger/OpenAPI (Development Only)
+
+When running in Development mode, interactive API documentation is available:
+
+- **Swagger UI**: `https://localhost:5001/api-docs`
+- **OpenAPI Spec**: `https://localhost:5001/swagger/v1/swagger.json`
+
+**Features:**
+- Browse all 31 API controllers and 180+ endpoints
+- Test API endpoints directly from your browser
+- View request/response schemas
+- See authentication requirements
+- Export OpenAPI spec for Postman/Insomnia
+
+**Note:** Swagger is disabled in production for security reasons.
+
+### API Documentation Guide
+
+For comprehensive API documentation, including:
+- Authentication and authorization
+- Request/response examples for all core APIs
+- Error handling patterns
+- Best practices (pagination, filtering, sorting)
+- Postman integration guide
+
+See **[docs/ApiDocumentation.md](docs/ApiDocumentation.md)**
+
 ## Documentation
 
+- **[docs/DeveloperOnboarding.md](docs/DeveloperOnboarding.md)** - Complete developer onboarding guide
+- **[docs/ApiDocumentation.md](docs/ApiDocumentation.md)** - Comprehensive API documentation
 - **[PATTERNS.md](PATTERNS.md)** - Detailed architecture, patterns, and development guidelines
 - **[ROADMAP.md](ROADMAP.md)** - Comprehensive development roadmap with phased feature plans
 - **[IMPLEMENTATION.md](IMPLEMENTATION.md)** - Solution implementation summary
