@@ -35,23 +35,26 @@
             Please enable JavaScript in your browser settings.
         </p>
         
-        @if (stories != null && ((IEnumerable<object>)stories).Any())
+        @if (stories is IEnumerable<object> storiesList && storiesList.Any())
         {
             <div class="story-list">
                 <h2>Available Stories</h2>
                 <ul>
-                    @foreach (dynamic story in stories)
+                    @foreach (dynamic story in storiesList)
                     {
                         <li>
-                            <strong>@story.Title</strong>
-                            @if (!string.IsNullOrEmpty(story.Summary))
-                            {
-                                <p>@story.Summary</p>
+                            <strong>@(story?.Title ?? "Untitled")</strong>
+                            @{
+                                var summary = story?.Summary;
+                                if (summary != null && !string.IsNullOrEmpty(summary))
+                                {
+                                    <p>@summary</p>
+                                }
                             }
                             <p>
                                 <small>
-                                    By @story.AuthorName
-                                    @if (story.PublishedDate != null)
+                                    By @(story?.AuthorName ?? "Unknown")
+                                    @if (story?.PublishedDate != null)
                                     {
                                         @: on @story.PublishedDate.ToString("MMMM d, yyyy")
                                     }

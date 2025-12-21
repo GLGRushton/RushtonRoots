@@ -3,6 +3,11 @@
     ViewData["Title"] = "Delete Partnership";
 }
 
+<!-- Hidden antiforgery token for JavaScript usage -->
+<form id="antiforgery-form" style="display:none;">
+    @Html.AntiForgeryToken()
+</form>
+
 <div class="container mt-4">
     <app-partnership-delete-dialog
         partnership-id="@Model.Id"
@@ -133,7 +138,9 @@
                 const tokenInput = document.createElement('input');
                 tokenInput.type = 'hidden';
                 tokenInput.name = '__RequestVerificationToken';
-                tokenInput.value = '@Html.AntiForgeryToken().ToString().Replace("<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"", "").Replace("\" />", "")';
+                // Get token from existing antiforgery token in the page
+                const existingToken = document.querySelector('input[name="__RequestVerificationToken"]');
+                tokenInput.value = existingToken ? existingToken.value : '';
                 form.appendChild(tokenInput);
                 
                 // Submit form
