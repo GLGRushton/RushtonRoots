@@ -356,16 +356,37 @@
         `;
     }
 
-    function filterByCategory(category) {
-        // TODO: Implement category filtering or navigation
+    async function filterByCategory(category) {
         console.log('Filter by category:', category);
-        alert('Category filtering coming soon! Category: ' + category);
+        
+        // Update active traditions section to show filtered results
+        const activeContainer = document.getElementById('active-traditions-container');
+        activeContainer.innerHTML = '<p class="loading-message">Loading traditions in category: ' + escapeHtml(category) + '...</p>';
+        
+        try {
+            const response = await fetch(`/api/Tradition/category/${encodeURIComponent(category)}?publishedOnly=true`);
+            if (!response.ok) throw new Error('Failed to load category traditions');
+            
+            const traditions = await response.json();
+            
+            if (traditions.length === 0) {
+                activeContainer.innerHTML = '<p class="loading-message">No traditions found in this category.</p>';
+                return;
+            }
+            
+            // Update section title
+            document.querySelector('.tradition-active h2').textContent = `📂 ${category} Traditions`;
+            
+            activeContainer.innerHTML = '<div class="tradition-list">' + traditions.map(renderTraditionCard).join('') + '</div>';
+        } catch (error) {
+            console.error('Error filtering by category:', error);
+            activeContainer.innerHTML = '<div class="error-message">Failed to load category traditions</div>';
+        }
     }
 
     function viewTradition(traditionId) {
-        // TODO: Implement tradition view navigation
         console.log('View tradition:', traditionId);
-        alert('Tradition view coming soon! Tradition ID: ' + traditionId);
+        window.location.href = `/TraditionView/Details/${traditionId}`;
     }
 
     function escapeHtml(text) {
