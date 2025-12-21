@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RushtonRoots.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class updatemigrations : Migration
+    public partial class UpdateMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

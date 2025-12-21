@@ -26,13 +26,27 @@ This is a .NET 10 ASP.NET Core + Angular application hosted on a single port. Th
 - .NET 10 SDK
 - Node.js 20+ and npm
 - PowerShell (for Windows development)
+- SQL Server (LocalDB, Express, or full SQL Server instance)
 
 ## Getting Started
 
 ### First Time Setup
 1. Clone the repository
 2. Navigate to the solution directory
-3. Build the solution:
+3. Install EF Core tools (if not already installed):
+   ```bash
+   dotnet tool install --global dotnet-ef
+   ```
+4. Configure database connection string in `RushtonRoots.Web/appsettings.json`:
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Data Source=.;Initial Catalog=RushtonRoots;persist security info=True;Integrated Security=SSPI;MultipleActiveResultSets=True;Encrypt=False"
+   }
+   ```
+   - For LocalDB, use `Data Source=(localdb)\\mssqllocaldb;...`
+   - For SQL Server Express, use `Data Source=.\\SQLEXPRESS;...`
+   - For full SQL Server, use `Data Source=.;...` or `Data Source=localhost;...`
+5. Build the solution:
    ```bash
    dotnet build
    ```
@@ -40,6 +54,11 @@ This is a .NET 10 ASP.NET Core + Angular application hosted on a single port. Th
    - Restore NuGet packages
    - Install npm dependencies (if not already installed)
    - Start npm watch in a separate window (Debug builds only, Windows only)
+6. Database migrations will run automatically on first application start (see Program.cs)
+   - Alternatively, run migrations manually:
+     ```bash
+     dotnet ef database update --project RushtonRoots.Infrastructure --startup-project RushtonRoots.Web
+     ```
 
 ### Running the Application
 ```bash
@@ -163,6 +182,70 @@ Angular components can be embedded in Razor views using Angular Elements:
 
 ## Configuration
 
+### Database Configuration
+
+The application uses Entity Framework Core with SQL Server. The database is created and updated automatically on application startup.
+
+#### Connection String
+Edit `appsettings.json` to configure your database connection:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=.;Initial Catalog=RushtonRoots;persist security info=True;Integrated Security=SSPI;MultipleActiveResultSets=True;Encrypt=False"
+  }
+}
+```
+
+**Connection String Options:**
+- **LocalDB**: `Data Source=(localdb)\\mssqllocaldb;Initial Catalog=RushtonRoots;Integrated Security=True;MultipleActiveResultSets=True;Encrypt=False`
+- **SQL Server Express**: `Data Source=.\\SQLEXPRESS;Initial Catalog=RushtonRoots;Integrated Security=True;MultipleActiveResultSets=True;Encrypt=False`
+- **Full SQL Server**: `Data Source=.;Initial Catalog=RushtonRoots;Integrated Security=True;MultipleActiveResultSets=True;Encrypt=False`
+- **Remote Server**: `Data Source=server_name;Initial Catalog=RushtonRoots;User Id=username;Password=password;MultipleActiveResultSets=True;Encrypt=True`
+
+#### Migration Commands
+
+**Automatic Migrations** (Recommended):  
+Migrations run automatically when the application starts (configured in `Program.cs`).
+
+**Manual Migration Commands**:
+```bash
+# Apply all pending migrations to the database
+dotnet ef database update --project RushtonRoots.Infrastructure --startup-project RushtonRoots.Web
+
+# Create a new migration
+dotnet ef migrations add MigrationName --project RushtonRoots.Infrastructure --startup-project RushtonRoots.Web
+
+# Remove the last migration (only if not applied to database)
+dotnet ef migrations remove --project RushtonRoots.Infrastructure --startup-project RushtonRoots.Web
+
+# Drop the database (WARNING: deletes all data)
+dotnet ef database drop --force --project RushtonRoots.Infrastructure --startup-project RushtonRoots.Web
+
+# Create database from scratch (applies all migrations)
+dotnet ef database update --project RushtonRoots.Infrastructure --startup-project RushtonRoots.Web
+```
+
+#### Entity Configurations
+All entity configurations are located in `RushtonRoots.Infrastructure/Database/EntityConfigs/` and are automatically applied using:
+```csharp
+modelBuilder.ApplyConfigurationsFromAssembly(typeof(RushtonRootsDbContext).Assembly);
+```
+
+The database includes 50+ entities with proper relationships, indexes, and constraints:
+- **Core**: Person, Household, Partnership, ParentChild
+- **Media**: Photo, PhotoAlbum, Document, Media
+- **Collaboration**: Message, ChatRoom, Comment, Notification
+- **Genealogy**: LifeEvent, Location, Source, Citation
+- **Content**: Story, Recipe, Tradition, WikiPage
+- And many more...
+
+#### Automatic Timestamp Management
+All entities inherit from `BaseEntity` which provides:
+- `CreatedDateTime`: Set automatically on entity creation
+- `UpdatedDateTime`: Updated automatically on entity modification
+
+Timestamps are managed in `DbContext.SaveChanges()` and `DbContext.SaveChangesAsync()`.
+
 ### MSBuild Targets
 The project includes custom MSBuild targets:
 - **NpmInstall**: Runs `npm install` if `node_modules` doesn't exist
@@ -176,6 +259,28 @@ Edit `Properties/launchSettings.json` to customize:
 - Environment variables
 
 ## Troubleshooting
+
+### Database Issues
+
+#### Cannot connect to SQL Server
+- Verify SQL Server is running
+- Check connection string in `appsettings.json`
+- For LocalDB: Ensure it's installed with Visual Studio or SQL Server Express
+- For remote connections: Verify SQL Server is configured to allow remote connections
+- Check firewall settings
+
+#### Migration fails
+- Ensure you have proper permissions on the database
+- Drop and recreate the database: `dotnet ef database drop --force` then run the application
+- Check for syntax errors in migration files
+- Verify entity configurations are correct
+
+#### Database already exists error
+- If migrations fail, you may need to drop the database and recreate:
+  ```bash
+  dotnet ef database drop --force --project RushtonRoots.Infrastructure --startup-project RushtonRoots.Web
+  dotnet ef database update --project RushtonRoots.Infrastructure --startup-project RushtonRoots.Web
+  ```
 
 ### npm watch not starting
 - Ensure you're on Windows (PowerShell scripts don't run on Linux/Mac)
