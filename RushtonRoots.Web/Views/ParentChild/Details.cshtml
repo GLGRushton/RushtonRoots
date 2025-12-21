@@ -25,39 +25,29 @@
         childName = Model.ChildName,
         parentPhotoUrl = Model.ParentPhotoUrl,
         childPhotoUrl = Model.ChildPhotoUrl,
-        parentBirthDate = (object?)null, // TODO: Add to ViewModel
-        parentDeathDate = (object?)null, // TODO: Add to ViewModel
+        parentBirthDate = Model.ParentBirthDate,
+        parentDeathDate = Model.ParentDeathDate,
         childBirthDate = Model.ChildBirthDate,
-        childDeathDate = (object?)null, // TODO: Add to ViewModel
+        childDeathDate = Model.ChildDeathDate,
         relationshipType = Model.RelationshipType,
         relationshipTypeDisplay = relationshipTypeConfig.Display,
         relationshipTypeIcon = relationshipTypeConfig.Icon,
         relationshipTypeColor = relationshipTypeConfig.Color,
         relationshipTypeDescription = relationshipTypeConfig.Description,
         isVerified = Model.IsVerified,
-        confidence = (int?)null, // TODO: Add AI confidence score if applicable
-        notes = (string?)null, // TODO: Add notes field to ParentChild entity
+        confidence = Model.ConfidenceScore,
+        notes = Model.Notes,
         createdDateTime = Model.CreatedDateTime,
         updatedDateTime = Model.UpdatedDateTime
     };
     
     var relationshipJson = JsonSerializer.Serialize(relationshipDetails);
     
-    // TODO: Fetch actual evidence, events, grandparents, and siblings from backend
-    var evidenceJson = "[]"; // Empty array for now
-    var eventsJson = JsonSerializer.Serialize(new[] {
-        new {
-            id = 1,
-            title = $"{Model.ChildName} was born",
-            date = Model.ChildBirthDate ?? DateTime.Now,
-            description = "Birth event",
-            type = "birth",
-            icon = "cake",
-            color = "primary"
-        }
-    });
-    var grandparentsJson = "[]"; // TODO: Fetch parent's parents
-    var siblingsJson = "[]"; // TODO: Fetch parent's other children
+    // Evidence, events, grandparents, and siblings will be fetched via JavaScript from the API
+    var evidenceJson = "[]"; // Will be populated via API call
+    var eventsJson = "[]"; // Will be populated via API call
+    var grandparentsJson = "[]"; // Will be populated via API call
+    var siblingsJson = "[]"; // Will be populated via API call
     
     var canEdit = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
     var canDelete = User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin");
@@ -120,11 +110,56 @@
 
 @section Scripts {
     <script>
-        // Event handlers for Angular component outputs
+        // Fetch additional data from APIs when page loads
         document.addEventListener('DOMContentLoaded', function() {
             const detailsComponent = document.querySelector('app-parent-child-details');
+            const relationshipId = @Model.Id;
             
             if (detailsComponent) {
+                // Fetch evidence (sources/citations)
+                fetch('/api/parentchild/' + relationshipId + '/evidence')
+                    .then(response => response.ok ? response.json() : [])
+                    .then(data => {
+                        console.log('Evidence loaded:', data);
+                        detailsComponent.setAttribute('evidence', JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error('Error loading evidence:', error);
+                    });
+                
+                // Fetch related events
+                fetch('/api/parentchild/' + relationshipId + '/events')
+                    .then(response => response.ok ? response.json() : [])
+                    .then(data => {
+                        console.log('Events loaded:', data);
+                        detailsComponent.setAttribute('events', JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error('Error loading events:', error);
+                    });
+                
+                // Fetch grandparents
+                fetch('/api/parentchild/' + relationshipId + '/grandparents')
+                    .then(response => response.ok ? response.json() : [])
+                    .then(data => {
+                        console.log('Grandparents loaded:', data);
+                        detailsComponent.setAttribute('grandparents', JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error('Error loading grandparents:', error);
+                    });
+                
+                // Fetch siblings
+                fetch('/api/parentchild/' + relationshipId + '/siblings')
+                    .then(response => response.ok ? response.json() : [])
+                    .then(data => {
+                        console.log('Siblings loaded:', data);
+                        detailsComponent.setAttribute('siblings', JSON.stringify(data));
+                    })
+                    .catch(error => {
+                        console.error('Error loading siblings:', error);
+                    });
+                
                 // Handle edit click
                 detailsComponent.addEventListener('editClicked', function(event) {
                     const relationshipId = event.detail;
@@ -140,9 +175,9 @@
                 // Handle verify click
                 detailsComponent.addEventListener('verifyClicked', function(event) {
                     const relationshipId = event.detail;
-                    // TODO: Implement verification endpoint
+                    // TODO: Implement verification endpoint (Phase 4.3)
                     console.log('Verify relationship:', relationshipId);
-                    alert('Verification feature coming soon!');
+                    alert('Verification feature coming soon in Phase 4.3!');
                 });
                 
                 // Handle person click - navigate to person details
@@ -154,12 +189,12 @@
                 // Handle note update
                 detailsComponent.addEventListener('noteUpdated', function(event) {
                     const notes = event.detail;
-                    // TODO: Implement update notes endpoint
+                    // TODO: Implement update notes endpoint (Phase 4.3)
                     console.log('Update notes:', notes);
                     
-                    // For now, make a simple AJAX call
-                    fetch('@Url.Action("UpdateNotes", "ParentChild")/' + @Model.Id, {
-                        method: 'POST',
+                    // For now, make a simple AJAX call to update endpoint (to be implemented in Phase 4.3)
+                    fetch('/api/parentchild/' + relationshipId + '/notes', {
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
                             'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
@@ -170,12 +205,12 @@
                         if (response.ok) {
                             alert('Notes updated successfully!');
                         } else {
-                            alert('Failed to update notes. Please try again.');
+                            alert('Failed to update notes. This endpoint will be implemented in Phase 4.3.');
                         }
                     })
                     .catch(error => {
                         console.error('Error updating notes:', error);
-                        alert('An error occurred while updating notes.');
+                        alert('Notes update endpoint will be implemented in Phase 4.3.');
                     });
                 });
             }

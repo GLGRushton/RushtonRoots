@@ -88,6 +88,69 @@ public class ParentChildRepository : IParentChildRepository
             .AnyAsync(pc => pc.ParentPersonId == parentId && pc.ChildPersonId == childId);
     }
 
+    // Phase 4.2: Evidence & Family Context methods
+    
+    public async Task<List<Source>> GetSourcesAsync(int relationshipId)
+    {
+        // Get sources linked to this ParentChild relationship through FactCitation -> Citation -> Source
+        var sources = await _context.FactCitations
+            .Where(fc => fc.EntityType == "ParentChild" && fc.EntityId == relationshipId)
+            .Include(fc => fc.Citation)
+                .ThenInclude(c => c!.Source)
+            .Select(fc => fc.Citation!.Source!)
+            .Where(s => s != null)
+            .Distinct()
+            .ToListAsync();
+        
+        return sources;
+    }
+
+    public async Task<List<Person>> GetGrandparentsAsync(int relationshipId)
+    {
+        // Get the parent-child relationship
+        var relationship = await _context.ParentChildren
+            .FirstOrDefaultAsync(pc => pc.Id == relationshipId);
+        
+        if (relationship == null)
+        {
+            return new List<Person>();
+        }
+        
+        // Get the parents of the parent (grandparents)
+        var grandparents = await _context.ParentChildren
+            .Where(pc => pc.ChildPersonId == relationship.ParentPersonId)
+            .Include(pc => pc.ParentPerson)
+            .Select(pc => pc.ParentPerson!)
+            .Where(p => p != null)
+            .ToListAsync();
+        
+        return grandparents;
+    }
+
+    public async Task<List<Person>> GetSiblingsAsync(int relationshipId)
+    {
+        // Get the parent-child relationship
+        var relationship = await _context.ParentChildren
+            .FirstOrDefaultAsync(pc => pc.Id == relationshipId);
+        
+        if (relationship == null)
+        {
+            return new List<Person>();
+        }
+        
+        // Get all other children of the same parent (siblings)
+        var siblings = await _context.ParentChildren
+            .Where(pc => pc.ParentPersonId == relationship.ParentPersonId 
+                      && pc.ChildPersonId != relationship.ChildPersonId)
+            .Include(pc => pc.ChildPerson)
+            .Select(pc => pc.ChildPerson!)
+            .Where(p => p != null)
+            .Distinct()
+            .ToListAsync();
+        
+        return siblings;
+    }
+
     private async Task<bool> IsAncestorAsync(int potentialAncestorId, int descendantId, HashSet<int> visited)
     {
         // Prevent infinite loops

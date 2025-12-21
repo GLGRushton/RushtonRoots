@@ -530,4 +530,200 @@ public class ParentChildControllerTests
     }
 
     #endregion
+
+    #region Phase 4.2: Evidence & Family Context Tests
+
+    [Fact]
+    public async Task GetEvidence_WithValidId_ReturnsOkWithSources()
+    {
+        // Arrange
+        var sources = new List<SourceViewModel>
+        {
+            new SourceViewModel { Id = 1, Title = "Birth Certificate", SourceType = "Document" },
+            new SourceViewModel { Id = 2, Title = "Census Record", SourceType = "Document" }
+        };
+
+        A.CallTo(() => _mockParentChildService.GetEvidenceAsync(1)).Returns(sources);
+
+        // Act
+        var result = await _controller.GetEvidence(1);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnedSources = Assert.IsAssignableFrom<IEnumerable<SourceViewModel>>(okResult.Value);
+        Assert.Equal(2, returnedSources.Count());
+    }
+
+    [Fact]
+    public async Task GetEvidence_WhenNotFound_ReturnsNotFound()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.GetEvidenceAsync(999)).Throws(new KeyNotFoundException("Relationship not found"));
+
+        // Act
+        var result = await _controller.GetEvidence(999);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetEvidence_WhenServiceThrowsException_Returns500()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.GetEvidenceAsync(1)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.GetEvidence(1);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetRelatedEvents_WithValidId_ReturnsOkWithEvents()
+    {
+        // Arrange
+        var events = new List<LifeEventViewModel>
+        {
+            new LifeEventViewModel { Id = 1, PersonId = 1, EventType = "Birth", Title = "Parent Birth" },
+            new LifeEventViewModel { Id = 2, PersonId = 2, EventType = "Birth", Title = "Child Birth" }
+        };
+
+        A.CallTo(() => _mockParentChildService.GetRelatedEventsAsync(1)).Returns(events);
+
+        // Act
+        var result = await _controller.GetRelatedEvents(1);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnedEvents = Assert.IsAssignableFrom<IEnumerable<LifeEventViewModel>>(okResult.Value);
+        Assert.Equal(2, returnedEvents.Count());
+    }
+
+    [Fact]
+    public async Task GetRelatedEvents_WhenNotFound_ReturnsNotFound()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.GetRelatedEventsAsync(999)).Throws(new KeyNotFoundException("Relationship not found"));
+
+        // Act
+        var result = await _controller.GetRelatedEvents(999);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetRelatedEvents_WhenServiceThrowsException_Returns500()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.GetRelatedEventsAsync(1)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.GetRelatedEvents(1);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetGrandparents_WithValidId_ReturnsOkWithPersons()
+    {
+        // Arrange
+        var grandparents = new List<PersonViewModel>
+        {
+            new PersonViewModel { Id = 10, FirstName = "GrandPa", LastName = "Smith" },
+            new PersonViewModel { Id = 11, FirstName = "GrandMa", LastName = "Smith" }
+        };
+
+        A.CallTo(() => _mockParentChildService.GetGrandparentsAsync(1)).Returns(grandparents);
+
+        // Act
+        var result = await _controller.GetGrandparents(1);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnedPersons = Assert.IsAssignableFrom<IEnumerable<PersonViewModel>>(okResult.Value);
+        Assert.Equal(2, returnedPersons.Count());
+    }
+
+    [Fact]
+    public async Task GetGrandparents_WhenNotFound_ReturnsNotFound()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.GetGrandparentsAsync(999)).Throws(new KeyNotFoundException("Relationship not found"));
+
+        // Act
+        var result = await _controller.GetGrandparents(999);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetGrandparents_WhenServiceThrowsException_Returns500()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.GetGrandparentsAsync(1)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.GetGrandparents(1);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetSiblings_WithValidId_ReturnsOkWithPersons()
+    {
+        // Arrange
+        var siblings = new List<PersonViewModel>
+        {
+            new PersonViewModel { Id = 3, FirstName = "Jack", LastName = "Doe" },
+            new PersonViewModel { Id = 4, FirstName = "Jill", LastName = "Doe" }
+        };
+
+        A.CallTo(() => _mockParentChildService.GetSiblingsAsync(1)).Returns(siblings);
+
+        // Act
+        var result = await _controller.GetSiblings(1);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnedPersons = Assert.IsAssignableFrom<IEnumerable<PersonViewModel>>(okResult.Value);
+        Assert.Equal(2, returnedPersons.Count());
+    }
+
+    [Fact]
+    public async Task GetSiblings_WhenNotFound_ReturnsNotFound()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.GetSiblingsAsync(999)).Throws(new KeyNotFoundException("Relationship not found"));
+
+        // Act
+        var result = await _controller.GetSiblings(999);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task GetSiblings_WhenServiceThrowsException_Returns500()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.GetSiblingsAsync(1)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.GetSiblings(1);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    #endregion
 }

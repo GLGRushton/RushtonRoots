@@ -16,4 +16,9 @@ public interface IParentChildRepository
     Task DeleteAsync(int id);
     Task<bool> HasCircularRelationshipAsync(int parentId, int childId);
     Task<bool> RelationshipExistsAsync(int parentId, int childId);
+    
+    // Phase 4.2: Evidence & Family Context
+    Task<List<Source>> GetSourcesAsync(int relationshipId);
+    Task<List<Person>> GetGrandparentsAsync(int relationshipId);
+    Task<List<Person>> GetSiblingsAsync(int relationshipId);
 }
