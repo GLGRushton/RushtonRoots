@@ -5,8 +5,8 @@
 <!-- Angular Home Page Component -->
 <app-home-page 
     user-name="@(User?.Identity?.Name ?? "Guest")"
-    can-edit="@(User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))"
-    can-create="@(User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))"
+    can-edit="@((User?.Identity?.IsAuthenticated == true && (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))).ToString().ToLower())"
+    can-create="@((User?.Identity?.IsAuthenticated == true && (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))).ToString().ToLower())"
     data='@Html.Raw(Json.Serialize(new {
         statistics = new {
             totalMembers = ViewBag.TotalMembers ?? 0,

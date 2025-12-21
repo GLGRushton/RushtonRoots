@@ -37,29 +37,35 @@
             Please enable JavaScript in your browser settings.
         </p>
         
-        @if (traditions != null && ((IEnumerable<object>)traditions).Any())
+        @if (traditions is IEnumerable<object> traditionsList && traditionsList.Any())
         {
             <div class="tradition-list">
                 <h2>Available Traditions</h2>
                 <ul>
-                    @foreach (dynamic tradition in traditions)
+                    @foreach (dynamic tradition in traditionsList)
                     {
                         <li>
-                            <strong>@tradition.Title</strong>
-                            @if (!string.IsNullOrEmpty(tradition.Description))
-                            {
-                                <p>@tradition.Description</p>
+                            <strong>@(tradition?.Title ?? "Untitled")</strong>
+                            @{
+                                var description = tradition?.Description;
+                                if (description != null && !string.IsNullOrEmpty(description))
+                                {
+                                    <p>@description</p>
+                                }
                             }
                             <p>
                                 <small>
-                                    Frequency: @tradition.Frequency
-                                    @if (tradition.StartedYear != null)
+                                    Frequency: @(tradition?.Frequency ?? "Unknown")
+                                    @if (tradition?.StartedYear != null)
                                     {
                                         @: | Started: @tradition.StartedYear
                                     }
-                                    @if (!string.IsNullOrEmpty(tradition.CategoryName))
-                                    {
-                                        @: | Category: @tradition.CategoryName
+                                    @{
+                                        var categoryName = tradition?.CategoryName;
+                                        if (categoryName != null && !string.IsNullOrEmpty(categoryName))
+                                        {
+                                            @: | Category: @categoryName
+                                        }
                                     }
                                 </small>
                             </p>
