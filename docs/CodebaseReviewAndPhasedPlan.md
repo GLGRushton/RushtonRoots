@@ -31,13 +31,13 @@ This document provides an extensive review of the RushtonRoots codebase and outl
 
 **📊 Overall Health:**
 - **Build Status:** ✅ Successful (0 warnings, 0 errors) - All nullable reference warnings fixed!
-- **Test Coverage:** ✅ 386/386 tests passing (increased from 336, then 344)
+- **Test Coverage:** ✅ 411/411 tests passing (increased from 336 → 344 → 386 → 411)
 - **Architecture:** ✅ Clean Architecture properly implemented
 - **Dependencies:** ✅ Zero security vulnerabilities (fixed in Phase 1.2)
 - **Documentation:** ✅ Comprehensive (README, ROADMAP, PATTERNS docs)
 - **Image Processing:** ✅ Thumbnail generation implemented (Phase 2.1)
 - **Azure Storage:** ✅ Configuration documented with development/production setup (Phase 2.2)
-- **Household Management:** ✅ Member management complete - backend (Phase 3.1) + frontend (Phase 3.2)
+- **Household Management:** ✅ Complete - member management (3.1), frontend (3.2), delete impact (3.3)
 
 ---
 
@@ -911,18 +911,19 @@ public async Task<IActionResult> UpdateSettings(int id, [FromBody] UpdateHouseho
 
 ---
 
-#### Phase 3.3: Household Delete Impact Calculation
+#### Phase 3.3: Household Delete Impact Calculation ✅ COMPLETE
 **Duration:** 2 days  
-**Complexity:** Low-Medium
+**Complexity:** Low-Medium  
+**Status:** ✅ COMPLETED
 
 **Tasks:**
-- [ ] Add GetHouseholdImpactAsync method to HouseholdService
-- [ ] Calculate actual member count
-- [ ] Calculate photo/document count
-- [ ] Calculate relationship count
-- [ ] Calculate event count
-- [ ] Update Delete view to use real data
-- [ ] Add tests
+- [x] Add GetHouseholdImpactAsync method to HouseholdService
+- [x] Calculate actual member count
+- [x] Calculate photo/document count
+- [x] Calculate relationship count
+- [x] Calculate event count
+- [x] Update Delete view to use real data
+- [x] Add tests
 
 **Implementation:**
 ```csharp
@@ -930,25 +931,111 @@ public async Task<HouseholdDeleteImpact> GetDeleteImpactAsync(int householdId)
 {
     return new HouseholdDeleteImpact
     {
-        MemberCount = await CalculateMemberCount(householdId),
-        PhotoCount = await CalculatePhotoCount(householdId),
-        DocumentCount = await CalculateDocumentCount(householdId),
-        RelationshipCount = await CalculateRelationshipCount(householdId),
-        EventCount = await CalculateEventCount(householdId)
+        MemberCount = await _householdRepository.GetMemberCountAsync(householdId),
+        PhotoCount = await _householdRepository.GetPhotoCountAsync(householdId),
+        DocumentCount = await _householdRepository.GetDocumentCountAsync(householdId),
+        RelationshipCount = await _householdRepository.GetRelationshipCountAsync(householdId),
+        EventCount = await _householdRepository.GetEventCountAsync(householdId)
     };
 }
 ```
 
-**Success Criteria:**
-- Accurate impact calculations
-- Delete confirmation shows real numbers
-- Tests verify calculation logic
+**Repository Methods Implemented:**
+```csharp
+// HouseholdRepository - Impact Calculation Methods
+public async Task<int> GetPhotoCountAsync(int householdId)
+{
+    // Gets all member IDs, then counts PersonPhotos for those members
+    var memberIds = await _context.People
+        .Where(p => p.HouseholdId == householdId)
+        .Select(p => p.Id)
+        .ToListAsync();
+    return await _context.PersonPhotos
+        .Where(pp => memberIds.Contains(pp.PersonId))
+        .CountAsync();
+}
 
-**Files to Modify:**
-- `RushtonRoots.Application/Services/HouseholdService.cs`
-- `RushtonRoots.Domain/UI/Models/` (add HouseholdDeleteImpact.cs)
-- `RushtonRoots.Web/Controllers/HouseholdController.cs`
-- `RushtonRoots.Web/Views/Household/Delete.cshtml`
+public async Task<int> GetDocumentCountAsync(int householdId)
+{
+    // Counts distinct documents via DocumentPerson junction table
+    var memberIds = await _context.People
+        .Where(p => p.HouseholdId == householdId)
+        .Select(p => p.Id)
+        .ToListAsync();
+    return await _context.DocumentPeople
+        .Where(dp => memberIds.Contains(dp.PersonId))
+        .Select(dp => dp.DocumentId)
+        .Distinct()
+        .CountAsync();
+}
+
+public async Task<int> GetRelationshipCountAsync(int householdId)
+{
+    // Counts both Partnerships and ParentChild relationships
+    var memberIds = await _context.People
+        .Where(p => p.HouseholdId == householdId)
+        .Select(p => p.Id)
+        .ToListAsync();
+    var partnershipCount = await _context.Partnerships
+        .Where(p => memberIds.Contains(p.PersonAId) || memberIds.Contains(p.PersonBId))
+        .CountAsync();
+    var parentChildCount = await _context.ParentChildren
+        .Where(pc => memberIds.Contains(pc.ParentPersonId) || memberIds.Contains(pc.ChildPersonId))
+        .CountAsync();
+    return partnershipCount + parentChildCount;
+}
+
+public async Task<int> GetEventCountAsync(int householdId)
+{
+    // Counts FamilyEvents directly linked to household
+    return await _context.FamilyEvents
+        .Where(e => e.HouseholdId == householdId)
+        .CountAsync();
+}
+```
+
+**Success Criteria:**
+- ✅ Accurate impact calculations
+- ✅ Delete confirmation shows real numbers from backend
+- ✅ Tests verify calculation logic (25 new tests, all passing)
+
+**Files Created:**
+- `RushtonRoots.Domain/UI/Models/HouseholdDeleteImpact.cs` - View model for impact data with 5 properties
+- `RushtonRoots.UnitTests/Services/HouseholdServiceDeleteImpactTests.cs` - 7 service-level tests
+- `RushtonRoots.UnitTests/Repositories/HouseholdRepositoryDeleteImpactTests.cs` - 18 repository integration tests
+
+**Files Modified:**
+- `RushtonRoots.Infrastructure/Repositories/IHouseholdRepository.cs` - Added 4 new methods
+- `RushtonRoots.Infrastructure/Repositories/HouseholdRepository.cs` - Implemented 4 calculation methods
+- `RushtonRoots.Application/Services/IHouseholdService.cs` - Added GetDeleteImpactAsync method
+- `RushtonRoots.Application/Services/HouseholdService.cs` - Implemented GetDeleteImpactAsync
+- `RushtonRoots.Web/Controllers/HouseholdController.cs` - Updated Delete action to fetch and pass impact data
+- `RushtonRoots.Web/Views/Household/Delete.cshtml` - Replaced hardcoded zeros with real backend data
+
+**Implementation Details:**
+- **HouseholdDeleteImpact Model**: Clean view model with 5 integer properties (MemberCount, PhotoCount, DocumentCount, RelationshipCount, EventCount)
+- **Service Layer**: Added validation (household exists, valid ID) before calling repository methods
+- **Repository Layer**: Each count method efficiently queries relevant tables:
+  - Photos: Counts PersonPhotos for all household members
+  - Documents: Counts distinct Documents via DocumentPerson junction (handles shared documents correctly)
+  - Relationships: Combines Partnership and ParentChild counts, includes cross-household relationships
+  - Events: Counts FamilyEvents directly linked to household
+- **Controller Integration**: Delete GET action now calls GetDeleteImpactAsync and passes data via ViewBag
+- **View Updates**: Delete.cshtml now uses real data from ViewBag.DeleteImpact instead of hardcoded zeros
+- **Error Handling**: Comprehensive validation with appropriate exceptions (ValidationException, NotFoundException)
+
+**Test Coverage:**
+- Total tests: 411 (increased from 386)
+- New tests: 25 (7 service + 18 repository)
+- Service tests: Mock-based unit tests covering all scenarios (valid, invalid, zero counts, large numbers)
+- Repository tests: In-memory database integration tests covering:
+  - Empty households
+  - Single/multiple members
+  - Cross-household relationships
+  - Shared documents (counted once)
+  - Edge cases (null household IDs, multiple households)
+
+**Completion Date:** December 21, 2025
 
 ---
 
