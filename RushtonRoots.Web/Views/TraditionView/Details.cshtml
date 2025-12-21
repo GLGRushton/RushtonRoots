@@ -114,10 +114,6 @@
 
     <div class="tradition-actions">
         <a href="/Tradition/Index" class="btn btn-secondary">← Back to Traditions</a>
-        @if (User.IsInRole("Admin") || User.IsInRole("HouseholdAdmin"))
-        {
-            <a href="/api/Tradition/@Model.Id" class="btn btn-primary">Edit</a>
-        }
     </div>
 </div>
 
