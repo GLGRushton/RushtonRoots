@@ -64,5 +64,9 @@ public class ParentChildConfiguration : IEntityTypeConfiguration<ParentChild>
             .WithMany(p => p.ChildRelationships)
             .HasForeignKey(pc => pc.ChildPersonId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        // Performance indexes
+        builder.HasIndex(pc => pc.ChildPersonId); // For child relationship queries
+        builder.HasIndex(pc => pc.IsVerified); // For verification filtering
     }
 }

@@ -81,5 +81,12 @@ public class PersonConfiguration : IEntityTypeConfiguration<Person>
             .WithOne(hp => hp.Person)
             .HasForeignKey(hp => hp.PersonId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        // Performance indexes
+        builder.HasIndex(p => p.HouseholdId); // For household member queries
+        builder.HasIndex(p => p.LastName); // For name search queries
+        builder.HasIndex(p => new { p.LastName, p.FirstName }); // For ordered name queries
+        builder.HasIndex(p => p.DateOfBirth); // For birth date filtering
+        builder.HasIndex(p => p.IsDeceased); // For deceased filtering
     }
 }

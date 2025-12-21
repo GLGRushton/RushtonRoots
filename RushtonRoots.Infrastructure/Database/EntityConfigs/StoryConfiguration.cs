@@ -64,5 +64,12 @@ public class StoryConfiguration : IEntityTypeConfiguration<Story>
             .WithOne(sp => sp.Story)
             .HasForeignKey(sp => sp.StoryId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        // Performance indexes
+        builder.HasIndex(s => s.Category); // For category filtering
+        builder.HasIndex(s => s.IsPublished); // For published filtering
+        builder.HasIndex(s => s.SubmittedByUserId); // For user story queries
+        builder.HasIndex(s => s.CollectionId); // For collection queries
+        builder.HasIndex(s => new { s.IsPublished, s.CreatedDateTime }); // For published listings
     }
 }

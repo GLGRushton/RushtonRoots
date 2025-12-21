@@ -1,5 +1,7 @@
 using Autofac;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using RushtonRoots.Infrastructure.Database;
 
 namespace RushtonRoots.Web;
@@ -27,6 +29,16 @@ public class AutofacModule : Module
             
             // Use SQL Server
             optionsBuilder.UseSqlServer(connectionString);
+            
+            // Enable query logging in development for performance profiling
+            var isDevelopment = _configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT") == "Development";
+            if (isDevelopment)
+            {
+                optionsBuilder
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+                    .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
+            }
             
             return new RushtonRootsDbContext(optionsBuilder.Options);
         })
