@@ -34,7 +34,7 @@
         {
             <section class="tradition-section">
                 <h2>🎉 How to Celebrate</h2>
-                <div class="tradition-how-to">@Html.Raw(Model.HowToCelebrate.Replace("\n", "<br />"))</div>
+                <div class="tradition-how-to">@Model.HowToCelebrate</div>
             </section>
         }
 
@@ -42,7 +42,7 @@
         {
             <section class="tradition-section">
                 <h2>🎁 Associated Items</h2>
-                <div class="tradition-items">@Html.Raw(Model.AssociatedItems.Replace("\n", "<br />"))</div>
+                <div class="tradition-items">@Model.AssociatedItems</div>
             </section>
         }
 
@@ -229,6 +229,7 @@
         color: #555;
         line-height: 1.8;
         font-size: 1.05em;
+        white-space: pre-wrap;
     }
 
     .tradition-meta-grid {
