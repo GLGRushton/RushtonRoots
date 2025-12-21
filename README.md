@@ -27,6 +27,7 @@ This is a .NET 10 ASP.NET Core + Angular application hosted on a single port. Th
 - Node.js 20+ and npm
 - PowerShell (for Windows development)
 - SQL Server (LocalDB, Express, or full SQL Server instance)
+- Docker Desktop (optional - for running Azurite storage emulator locally)
 
 ## Getting Started
 
@@ -245,6 +246,73 @@ All entities inherit from `BaseEntity` which provides:
 - `UpdatedDateTime`: Updated automatically on entity modification
 
 Timestamps are managed in `DbContext.SaveChanges()` and `DbContext.SaveChangesAsync()`.
+
+### Azure Blob Storage Configuration
+
+The application uses Azure Blob Storage for storing family photos, documents, and media files with automatic thumbnail generation.
+
+#### Development Setup (Azurite - Local Emulator)
+
+**Quick Start with Docker:**
+```bash
+# Start Azurite (Azure Storage Emulator)
+docker run -d -p 10000:10000 -p 10001:10001 -p 10002:10002 \
+  --name azurite \
+  mcr.microsoft.com/azure-storage/azurite
+
+# The application is already configured to use Azurite in development
+# See appsettings.Development.json
+```
+
+**Alternative: Install Azurite via npm:**
+```bash
+npm install -g azurite
+azurite --silent --location ~/azurite
+```
+
+**Configuration:**
+The development configuration in `appsettings.Development.json` is pre-configured for Azurite:
+```json
+{
+  "AzureBlobStorage": {
+    "ConnectionString": "UseDevelopmentStorage=true",
+    "ContainerName": "rushtonroots-files-dev"
+  }
+}
+```
+
+#### Production Setup (Azure Storage Account)
+
+1. **Create Azure Storage Account** in Azure Portal
+2. **Create container** named `rushtonroots-files`
+3. **Get connection string** from Azure Portal > Storage Account > Access Keys
+4. **Configure via environment variables** (recommended):
+   ```bash
+   # Set environment variable
+   export AzureBlobStorage__ConnectionString="<your-connection-string>"
+   ```
+   Or update `appsettings.json` (not recommended for production):
+   ```json
+   {
+     "AzureBlobStorage": {
+       "ConnectionString": "<your-connection-string>",
+       "ContainerName": "rushtonroots-files"
+     }
+   }
+   ```
+
+**⚠️ Security Warning:** Never commit connection strings to source control! Use environment variables or Azure Key Vault.
+
+#### Features
+- ✅ Automatic thumbnail generation (multiple sizes: 200x200, 400x400)
+- ✅ Supports JPEG, PNG, and GIF formats
+- ✅ Automatic thumbnail cleanup on deletion
+- ✅ Configurable thumbnail quality and sizes
+- ✅ Organized blob storage structure (photos/, thumbnails/, documents/, media/)
+
+#### Learn More
+For detailed setup instructions, troubleshooting, and production best practices, see:
+- **[docs/AzureStorageSetup.md](docs/AzureStorageSetup.md)** - Comprehensive Azure Storage setup guide
 
 ### MSBuild Targets
 The project includes custom MSBuild targets:
