@@ -1,9 +1,16 @@
 # API Endpoints Analysis - Quick Reference
 
 **Generated:** 2025-12-17  
+**Updated:** 2025-12-21 (Phase 6.2 Documentation Complete)
+
 **Related Documents:**
+- [DeveloperOnboarding.md](./DeveloperOnboarding.md) - Complete developer onboarding guide (NEW)
+- [ApiDocumentation.md](./ApiDocumentation.md) - Comprehensive API documentation with Swagger (NEW)
 - [InternalLinks.md](./InternalLinks.md) - Complete link analysis
 - [ApiEndpointsImplementationPlan.md](./ApiEndpointsImplementationPlan.md) - Phased implementation plan
+- [AzureStorageSetup.md](./AzureStorageSetup.md) - Azure Blob Storage setup guide
+- [Phase6.1-TestCoverageReport.md](./Phase6.1-TestCoverageReport.md) - Comprehensive test coverage report
+- [CodebaseReviewAndPhasedPlan.md](./CodebaseReviewAndPhasedPlan.md) - Codebase review and implementation phases
 
 ---
 

@@ -18,6 +18,30 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
+// Add Swagger/OpenAPI services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "RushtonRoots API",
+        Version = "v1",
+        Description = "API documentation for RushtonRoots - A comprehensive family platform",
+        Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        {
+            Name = "RushtonRoots Development Team"
+        }
+    });
+    
+    // Enable XML comments for better API documentation
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        options.IncludeXmlComments(xmlPath);
+    }
+});
+
 // Add Identity services
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -74,6 +98,17 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+}
+else
+{
+    // Enable Swagger in development
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "RushtonRoots API v1");
+        options.RoutePrefix = "api-docs"; // Access at /api-docs
+        options.DocumentTitle = "RushtonRoots API Documentation";
+    });
 }
 
 app.UseHttpsRedirection();
