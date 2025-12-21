@@ -26,6 +26,12 @@ public class ParentChildConfiguration : IEntityTypeConfiguration<ParentChild>
             .IsRequired()
             .HasMaxLength(50);
             
+        builder.Property(pc => pc.Notes)
+            .HasMaxLength(2000);
+            
+        builder.Property(pc => pc.ConfidenceScore)
+            .IsRequired(false);
+            
         builder.Property(pc => pc.CreatedDateTime)
             .IsRequired();
             
