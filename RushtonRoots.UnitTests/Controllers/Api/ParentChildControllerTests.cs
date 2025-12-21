@@ -726,4 +726,138 @@ public class ParentChildControllerTests
     }
 
     #endregion
+
+    #region VerifyRelationship Tests (Phase 4.3)
+
+    [Fact]
+    public async Task VerifyRelationship_ReturnsOkWithVerifiedRelationship()
+    {
+        // Arrange
+        var relationship = new ParentChildViewModel
+        {
+            Id = 1,
+            ParentPersonId = 1,
+            ChildPersonId = 2,
+            RelationshipType = "Biological"
+        };
+
+        A.CallTo(() => _mockParentChildService.VerifyRelationshipAsync(1, A<string>._)).Returns(relationship);
+
+        // Act
+        var result = await _controller.VerifyRelationship(1);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnedRelationship = Assert.IsType<ParentChildViewModel>(okResult.Value);
+        Assert.Equal(1, returnedRelationship.Id);
+    }
+
+    [Fact]
+    public async Task VerifyRelationship_WhenNotFound_ReturnsNotFound()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.VerifyRelationshipAsync(999, A<string>._))
+            .Throws(new NotFoundException("Relationship not found"));
+
+        // Act
+        var result = await _controller.VerifyRelationship(999);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task VerifyRelationship_WhenServiceThrowsException_Returns500()
+    {
+        // Arrange
+        A.CallTo(() => _mockParentChildService.VerifyRelationshipAsync(1, A<string>._)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.VerifyRelationship(1);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    #endregion
+
+    #region UpdateNotes Tests (Phase 4.3)
+
+    [Fact]
+    public async Task UpdateNotes_WithValidRequest_ReturnsOkWithUpdatedRelationship()
+    {
+        // Arrange
+        var request = new UpdateParentChildNotesRequest
+        {
+            Notes = "Verified via birth certificate"
+        };
+
+        var relationship = new ParentChildViewModel
+        {
+            Id = 1,
+            ParentPersonId = 1,
+            ChildPersonId = 2,
+            RelationshipType = "Biological",
+            Notes = request.Notes
+        };
+
+        A.CallTo(() => _mockParentChildService.UpdateNotesAsync(1, request.Notes)).Returns(relationship);
+
+        // Act
+        var result = await _controller.UpdateNotes(1, request);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnedRelationship = Assert.IsType<ParentChildViewModel>(okResult.Value);
+        Assert.Equal(1, returnedRelationship.Id);
+        Assert.Equal(request.Notes, returnedRelationship.Notes);
+    }
+
+    [Fact]
+    public async Task UpdateNotes_WhenNotFound_ReturnsNotFound()
+    {
+        // Arrange
+        var request = new UpdateParentChildNotesRequest { Notes = "Test notes" };
+        A.CallTo(() => _mockParentChildService.UpdateNotesAsync(999, request.Notes))
+            .Throws(new NotFoundException("Relationship not found"));
+
+        // Act
+        var result = await _controller.UpdateNotes(999, request);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task UpdateNotes_WithInvalidRequest_ReturnsBadRequest()
+    {
+        // Arrange
+        var request = new UpdateParentChildNotesRequest { Notes = "Test notes" };
+        A.CallTo(() => _mockParentChildService.UpdateNotesAsync(1, request.Notes))
+            .Throws(new ValidationException("Invalid notes"));
+
+        // Act
+        var result = await _controller.UpdateNotes(1, request);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result.Result);
+    }
+
+    [Fact]
+    public async Task UpdateNotes_WhenServiceThrowsException_Returns500()
+    {
+        // Arrange
+        var request = new UpdateParentChildNotesRequest { Notes = "Test notes" };
+        A.CallTo(() => _mockParentChildService.UpdateNotesAsync(1, request.Notes)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.UpdateNotes(1, request);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    #endregion
 }

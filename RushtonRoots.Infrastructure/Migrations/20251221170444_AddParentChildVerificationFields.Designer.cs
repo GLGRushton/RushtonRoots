@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RushtonRoots.Infrastructure.Database;
 
@@ -11,9 +12,11 @@ using RushtonRoots.Infrastructure.Database;
 namespace RushtonRoots.Infrastructure.Migrations
 {
     [DbContext(typeof(RushtonRootsDbContext))]
-    partial class RushtonRootsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251221170444_AddParentChildVerificationFields")]
+    partial class AddParentChildVerificationFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

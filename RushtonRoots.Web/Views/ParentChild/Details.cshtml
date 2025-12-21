@@ -35,6 +35,8 @@
         relationshipTypeColor = relationshipTypeConfig.Color,
         relationshipTypeDescription = relationshipTypeConfig.Description,
         isVerified = Model.IsVerified,
+        verifiedDate = Model.VerifiedDate,
+        verifiedBy = Model.VerifiedBy,
         confidence = Model.ConfidenceScore,
         notes = Model.Notes,
         createdDateTime = Model.CreatedDateTime,
@@ -175,9 +177,38 @@
                 // Handle verify click
                 detailsComponent.addEventListener('verifyClicked', function(event) {
                     const relationshipId = event.detail;
-                    // TODO: Implement verification endpoint (Phase 4.3)
-                    console.log('Verify relationship:', relationshipId);
-                    alert('Verification feature coming soon in Phase 4.3!');
+                    
+                    if (!confirm('Are you sure you want to verify this parent-child relationship? This action indicates you have reviewed and confirmed its accuracy.')) {
+                        return;
+                    }
+                    
+                    // Get anti-forgery token
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                    
+                    // Call verification endpoint
+                    fetch('/api/parentchild/' + relationshipId + '/verify', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': token
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error('Failed to verify relationship');
+                        }
+                    })
+                    .then(data => {
+                        alert('Relationship verified successfully!');
+                        // Reload page to show updated verification status
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Error verifying relationship:', error);
+                        alert('Failed to verify relationship. Please try again.');
+                    });
                 });
                 
                 // Handle person click - navigate to person details
@@ -189,28 +220,37 @@
                 // Handle note update
                 detailsComponent.addEventListener('noteUpdated', function(event) {
                     const notes = event.detail;
-                    // TODO: Implement update notes endpoint (Phase 4.3)
-                    console.log('Update notes:', notes);
                     
-                    // For now, make a simple AJAX call to update endpoint (to be implemented in Phase 4.3)
+                    // Get anti-forgery token
+                    const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value || '';
+                    
+                    // Call notes update endpoint
                     fetch('/api/parentchild/' + relationshipId + '/notes', {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
-                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                            'RequestVerificationToken': token
                         },
                         body: JSON.stringify({ notes: notes })
                     })
                     .then(response => {
                         if (response.ok) {
-                            alert('Notes updated successfully!');
+                            return response.json();
+                        } else if (response.status === 400) {
+                            return response.json().then(data => {
+                                throw new Error(data.message || 'Invalid notes input');
+                            });
                         } else {
-                            alert('Failed to update notes. This endpoint will be implemented in Phase 4.3.');
+                            throw new Error('Failed to update notes');
                         }
+                    })
+                    .then(data => {
+                        alert('Notes updated successfully!');
+                        console.log('Updated relationship:', data);
                     })
                     .catch(error => {
                         console.error('Error updating notes:', error);
-                        alert('Notes update endpoint will be implemented in Phase 4.3.');
+                        alert('Failed to update notes: ' + error.message);
                     });
                 });
             }

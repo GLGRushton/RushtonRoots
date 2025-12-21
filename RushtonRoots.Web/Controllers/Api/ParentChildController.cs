@@ -383,4 +383,82 @@ public class ParentChildController : ControllerBase
             return StatusCode(500, "An error occurred while retrieving siblings");
         }
     }
+
+    // Phase 4.3: Verification System endpoints
+
+    /// <summary>
+    /// Verify a parent-child relationship.
+    /// </summary>
+    /// <param name="id">Relationship ID</param>
+    /// <returns>Updated relationship with verification status</returns>
+    [HttpPost("{id}/verify")]
+    [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [ProducesResponseType(typeof(ParentChildViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ParentChildViewModel>> VerifyRelationship(int id)
+    {
+        try
+        {
+            // Get current user's username for audit trail
+            var verifiedBy = User?.Identity?.Name ?? "Unknown";
+
+            var relationship = await _parentChildService.VerifyRelationshipAsync(id, verifiedBy);
+            return Ok(relationship);
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Parent-child relationship with ID {RelationshipId} not found", id);
+            return NotFound(ex.Message);
+        }
+        catch (ValidationException ex)
+        {
+            _logger.LogWarning(ex, "Invalid verification request");
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error verifying parent-child relationship with ID {RelationshipId}", id);
+            return StatusCode(500, "An error occurred while verifying the relationship");
+        }
+    }
+
+    /// <summary>
+    /// Update notes for a parent-child relationship.
+    /// </summary>
+    /// <param name="id">Relationship ID</param>
+    /// <param name="request">Notes update request</param>
+    /// <returns>Updated relationship</returns>
+    [HttpPut("{id}/notes")]
+    [Authorize(Roles = "Admin,HouseholdAdmin")]
+    [ProducesResponseType(typeof(ParentChildViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<ParentChildViewModel>> UpdateNotes(int id, [FromBody] UpdateParentChildNotesRequest request)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var relationship = await _parentChildService.UpdateNotesAsync(id, request.Notes);
+            return Ok(relationship);
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogWarning(ex, "Parent-child relationship with ID {RelationshipId} not found", id);
+            return NotFound(ex.Message);
+        }
+        catch (ValidationException ex)
+        {
+            _logger.LogWarning(ex, "Invalid notes update request");
+            return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating notes for parent-child relationship with ID {RelationshipId}", id);
+            return StatusCode(500, "An error occurred while updating notes");
+        }
+    }
 }
