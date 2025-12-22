@@ -201,7 +201,7 @@ export class TraditionIndexComponent implements OnInit {
             description: r.description || '',
             imageUrl: r.photoUrl,
             prepTime: r.prepTimeMinutes,
-            difficulty: undefined // Backend doesn't include difficulty in RecipeViewModel
+            difficulty: undefined
           }));
         },
         error: (err) => {
@@ -225,7 +225,7 @@ export class TraditionIndexComponent implements OnInit {
             id: s.id,
             title: s.title,
             summary: s.summary || '',
-            imageUrl: undefined, // Backend doesn't include imageUrl in StoryViewModel
+            imageUrl: undefined,
             dateOfEvent: s.storyDate ? new Date(s.storyDate) : undefined
           }));
         },
@@ -251,8 +251,8 @@ export class TraditionIndexComponent implements OnInit {
             id: o.id,
             traditionId: o.traditionId,
             occurrenceDate: new Date(o.eventDate),
-            location: undefined, // Backend TraditionOccurrence doesn't include location
-            attendees: undefined, // Backend TraditionOccurrence doesn't include attendees
+            location: undefined,
+            attendees: undefined,
             attendeeNames: undefined,
             notes: o.description
           }));
@@ -267,7 +267,7 @@ export class TraditionIndexComponent implements OnInit {
     this.http.get<any>(`/api/tradition/${this.selectedTradition.id}/occurrences/next`)
       .subscribe({
         next: (occurrence) => {
-          if (occurrence && occurrence.id) {
+          if (occurrence?.id != null) {
             // Map backend TraditionOccurrence to frontend TraditionOccurrence interface
             this.nextOccurrence = {
               id: occurrence.id,
