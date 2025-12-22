@@ -6,6 +6,7 @@
 **Related Documents:**
 - [DeveloperOnboarding.md](./DeveloperOnboarding.md) - Complete developer onboarding guide (NEW)
 - [ApiDocumentation.md](./ApiDocumentation.md) - Comprehensive API documentation with Swagger (NEW)
+- [HardcodedDataReplacementPlan.md](./HardcodedDataReplacementPlan.md) - Plan to replace hardcoded/sample data with dynamic data (NEW)
 - [InternalLinks.md](./InternalLinks.md) - Complete link analysis
 - [ApiEndpointsImplementationPlan.md](./ApiEndpointsImplementationPlan.md) - Phased implementation plan
 - [AzureStorageSetup.md](./AzureStorageSetup.md) - Azure Blob Storage setup guide
