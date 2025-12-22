@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RushtonRoots.Application.Services;
 
 namespace RushtonRoots.Web.Controllers;
 
@@ -10,24 +11,30 @@ namespace RushtonRoots.Web.Controllers;
 public class AdminController : Controller
 {
     private readonly ILogger<AdminController> _logger;
+    private readonly IAdminDashboardService _adminDashboardService;
 
-    public AdminController(ILogger<AdminController> logger)
+    public AdminController(
+        ILogger<AdminController> logger,
+        IAdminDashboardService adminDashboardService)
     {
         _logger = logger;
+        _adminDashboardService = adminDashboardService;
     }
 
     /// <summary>
     /// Display the admin dashboard with system overview and statistics
     /// </summary>
     /// <returns>Admin dashboard view</returns>
-    public IActionResult Dashboard()
+    public async Task<IActionResult> Dashboard()
     {
         ViewData["Title"] = "Admin Dashboard";
         
-        // Optional: Add system statistics to ViewData
-        // ViewData["TotalUsers"] = await _userService.GetUserCountAsync();
-        // ViewData["TotalHouseholds"] = await _householdService.GetHouseholdCountAsync();
-        // ViewData["TotalPersons"] = await _personService.GetPersonCountAsync();
+        var stats = await _adminDashboardService.GetSystemStatisticsAsync();
+        ViewData["TotalUsers"] = stats.TotalUsers;
+        ViewData["TotalHouseholds"] = stats.TotalHouseholds;
+        ViewData["TotalPersons"] = stats.TotalPersons;
+        ViewData["MediaItems"] = stats.MediaItems;
+        ViewData["RecentActivity"] = await _adminDashboardService.GetRecentActivityAsync();
         
         return View();
     }

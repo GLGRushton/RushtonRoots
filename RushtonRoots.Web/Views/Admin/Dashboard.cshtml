@@ -29,7 +29,7 @@
                     </div>
                     <div class="stat-content">
                         <div class="stat-label">Total Users</div>
-                        <div class="stat-value">-</div>
+                        <div class="stat-value">@(ViewData["TotalUsers"] ?? 0)</div>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="stat-content">
                         <div class="stat-label">Total Households</div>
-                        <div class="stat-value">-</div>
+                        <div class="stat-value">@(ViewData["TotalHouseholds"] ?? 0)</div>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -47,7 +47,7 @@
                     </div>
                     <div class="stat-content">
                         <div class="stat-label">Total Persons</div>
-                        <div class="stat-value">-</div>
+                        <div class="stat-value">@(ViewData["TotalPersons"] ?? 0)</div>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -56,7 +56,7 @@
                     </div>
                     <div class="stat-content">
                         <div class="stat-label">Media Items</div>
-                        <div class="stat-value">-</div>
+                        <div class="stat-value">@(ViewData["MediaItems"] ?? 0)</div>
                     </div>
                 </div>
             </div>
@@ -104,10 +104,60 @@
         <section class="dashboard-section">
             <h2>Recent Activity</h2>
             <div class="activity-list">
-                <p class="info-message">
-                    <i class="material-icons">info</i>
-                    Activity logs will be displayed here. This feature requires integration with activity logging services.
-                </p>
+                @{
+                    var recentActivity = ViewData["RecentActivity"] as List<RushtonRoots.Domain.UI.Models.RecentActivity>;
+                    if (recentActivity != null && recentActivity.Any())
+                    {
+                        <div class="activity-items">
+                            @foreach (var activity in recentActivity)
+                            {
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="material-icons">
+                                            @switch (activity.ActivityType)
+                                            {
+                                                case "PersonAdded":
+                                                    @:person_add
+                                                    break;
+                                                case "StoryPublished":
+                                                    @:article
+                                                    break;
+                                                case "PhotoAdded":
+                                                    @:photo
+                                                    break;
+                                                default:
+                                                    @:notifications
+                                                    break;
+                                            }
+                                        </i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-description">@activity.Description</div>
+                                        <div class="activity-meta">
+                                            <span class="activity-user">@activity.UserName</span>
+                                            <span class="activity-time">@activity.CreatedDateTime.ToString("MMM dd, yyyy hh:mm tt")</span>
+                                        </div>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(activity.ActionUrl))
+                                    {
+                                        <div class="activity-action">
+                                            <a href="@activity.ActionUrl" class="activity-link">
+                                                <i class="material-icons">arrow_forward</i>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="info-message">
+                            <i class="material-icons">info</i>
+                            No recent activity to display.
+                        </p>
+                    }
+                }
             </div>
         </section>
     </div>
@@ -445,6 +495,86 @@
 
     .info-message .material-icons {
         color: #9c27b0;
+    }
+
+    .activity-items {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        border-left: 3px solid #9c27b0;
+    }
+
+    .activity-icon {
+        background: #9c27b0;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .activity-icon .material-icons {
+        font-size: 20px;
+    }
+
+    .activity-details {
+        flex: 1;
+    }
+
+    .activity-description {
+        color: #333;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    .activity-meta {
+        display: flex;
+        gap: 15px;
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .activity-user {
+        font-weight: 500;
+    }
+
+    .activity-action {
+        flex-shrink: 0;
+    }
+
+    .activity-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #9c27b0;
+        color: #9c27b0;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .activity-link:hover {
+        background: #9c27b0;
+        color: white;
+    }
+
+    .activity-link .material-icons {
+        font-size: 20px;
     }
 
     /* Responsive styles for mobile devices */
