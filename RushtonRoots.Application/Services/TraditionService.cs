@@ -24,6 +24,10 @@ public interface ITraditionService
     Task<TraditionViewModel> UpdateAsync(int id, UpdateTraditionRequest request, string userId);
     Task DeleteAsync(int id);
     Task<IEnumerable<string>> GetCategoriesAsync();
+    Task<List<RecipeViewModel>> GetRelatedRecipesAsync(int traditionId);
+    Task<List<StoryViewModel>> GetRelatedStoriesAsync(int traditionId);
+    Task<List<TraditionOccurrence>> GetPastOccurrencesAsync(int traditionId, int count = 5);
+    Task<TraditionOccurrence?> GetNextOccurrenceAsync(int traditionId);
 }
 
 /// <summary>
@@ -249,6 +253,254 @@ public class TraditionService : ITraditionService
             .Distinct()
             .OrderBy(c => c)
             .ToListAsync();
+    }
+
+    public async Task<List<RecipeViewModel>> GetRelatedRecipesAsync(int traditionId)
+    {
+        // Get the tradition to check its associated items and category
+        var tradition = await _context.Traditions
+            .FirstOrDefaultAsync(t => t.Id == traditionId);
+
+        if (tradition == null)
+        {
+            return new List<RecipeViewModel>();
+        }
+
+        // Get recipes that mention the tradition name or are in related categories
+        var recipes = await _context.Recipes
+            .Include(r => r.OriginatorPerson)
+            .Include(r => r.SubmittedByUser)
+            .Where(r => r.IsPublished &&
+                (r.Name.Contains(tradition.Name) ||
+                 (r.Notes != null && r.Notes.Contains(tradition.Name)) ||
+                 (tradition.AssociatedItems != null && r.Name.Contains(tradition.AssociatedItems))))
+            .OrderByDescending(r => r.AverageRating)
+            .ThenByDescending(r => r.ViewCount)
+            .ToListAsync();
+
+        return recipes.Select(MapRecipeToViewModel).ToList();
+    }
+
+    public async Task<List<StoryViewModel>> GetRelatedStoriesAsync(int traditionId)
+    {
+        // Get the tradition to check its details
+        var tradition = await _context.Traditions
+            .Include(t => t.StartedByPerson)
+            .FirstOrDefaultAsync(t => t.Id == traditionId);
+
+        if (tradition == null)
+        {
+            return new List<StoryViewModel>();
+        }
+
+        // Get stories that mention the tradition or are related to the person who started it
+        var stories = await _context.Stories
+            .Include(s => s.SubmittedByUser)
+            .Include(s => s.Collection)
+            .Include(s => s.StoryPeople)
+                .ThenInclude(sp => sp.Person)
+            .Where(s => s.IsPublished &&
+                (s.Title.Contains(tradition.Name) ||
+                 s.Content.Contains(tradition.Name) ||
+                 (tradition.StartedByPersonId.HasValue &&
+                  s.StoryPeople.Any(sp => sp.PersonId == tradition.StartedByPersonId.Value))))
+            .OrderByDescending(s => s.ViewCount)
+            .ThenByDescending(s => s.CreatedDateTime)
+            .ToListAsync();
+
+        return stories.Select(MapStoryToViewModel).ToList();
+    }
+
+    public async Task<List<TraditionOccurrence>> GetPastOccurrencesAsync(int traditionId, int count = 5)
+    {
+        var now = DateTime.UtcNow;
+
+        var pastOccurrences = await _context.TraditionTimelines
+            .Include(t => t.RecordedByUser)
+            .Where(t => t.TraditionId == traditionId && t.EventDate <= now)
+            .OrderByDescending(t => t.EventDate)
+            .Take(count)
+            .ToListAsync();
+
+        return pastOccurrences.Select(MapTimelineToOccurrence).ToList();
+    }
+
+    public async Task<TraditionOccurrence?> GetNextOccurrenceAsync(int traditionId)
+    {
+        var now = DateTime.UtcNow;
+
+        // Get the next scheduled occurrence from timeline
+        var nextOccurrence = await _context.TraditionTimelines
+            .Include(t => t.RecordedByUser)
+            .Where(t => t.TraditionId == traditionId && t.EventDate > now)
+            .OrderBy(t => t.EventDate)
+            .FirstOrDefaultAsync();
+
+        if (nextOccurrence != null)
+        {
+            return MapTimelineToOccurrence(nextOccurrence);
+        }
+
+        // If no future timeline entry exists, try to calculate based on frequency
+        var tradition = await _context.Traditions.FindAsync(traditionId);
+        if (tradition == null || tradition.Frequency == null)
+        {
+            return null;
+        }
+
+        // Get the most recent past occurrence to calculate next
+        var lastOccurrence = await _context.TraditionTimelines
+            .Where(t => t.TraditionId == traditionId && t.EventDate <= now)
+            .OrderByDescending(t => t.EventDate)
+            .FirstOrDefaultAsync();
+
+        if (lastOccurrence == null && tradition.StartedDate.HasValue)
+        {
+            // No timeline entries, use started date as base
+            var calculatedDate = CalculateNextOccurrence(tradition.StartedDate.Value, tradition.Frequency, now);
+            if (calculatedDate.HasValue)
+            {
+                return new TraditionOccurrence
+                {
+                    Id = 0, // Calculated, not from database
+                    TraditionId = traditionId,
+                    EventDate = calculatedDate.Value,
+                    Title = $"Next {tradition.Name}",
+                    Description = $"Calculated next occurrence based on {tradition.Frequency} frequency",
+                    EventType = "Calculated",
+                    RecordedByUserId = string.Empty,
+                    RecordedByUserName = null,
+                    PhotoUrl = tradition.PhotoUrl,
+                    CreatedDateTime = DateTime.UtcNow,
+                    UpdatedDateTime = DateTime.UtcNow
+                };
+            }
+        }
+        else if (lastOccurrence != null)
+        {
+            var calculatedDate = CalculateNextOccurrence(lastOccurrence.EventDate, tradition.Frequency, now);
+            if (calculatedDate.HasValue)
+            {
+                return new TraditionOccurrence
+                {
+                    Id = 0, // Calculated, not from database
+                    TraditionId = traditionId,
+                    EventDate = calculatedDate.Value,
+                    Title = $"Next {tradition.Name}",
+                    Description = $"Calculated next occurrence based on {tradition.Frequency} frequency",
+                    EventType = "Calculated",
+                    RecordedByUserId = string.Empty,
+                    RecordedByUserName = null,
+                    PhotoUrl = tradition.PhotoUrl,
+                    CreatedDateTime = DateTime.UtcNow,
+                    UpdatedDateTime = DateTime.UtcNow
+                };
+            }
+        }
+
+        return null;
+    }
+
+    private DateTime? CalculateNextOccurrence(DateTime baseDate, string frequency, DateTime now)
+    {
+        var date = baseDate;
+        
+        // Keep advancing until we find a future date
+        while (date <= now)
+        {
+            date = frequency.ToLower() switch
+            {
+                "yearly" or "annual" or "annually" => date.AddYears(1),
+                "monthly" => date.AddMonths(1),
+                "weekly" => date.AddDays(7),
+                "daily" => date.AddDays(1),
+                _ => date.AddYears(1) // Default to yearly
+            };
+        }
+
+        return date > now ? date : null;
+    }
+
+    private TraditionOccurrence MapTimelineToOccurrence(TraditionTimeline timeline)
+    {
+        return new TraditionOccurrence
+        {
+            Id = timeline.Id,
+            TraditionId = timeline.TraditionId,
+            EventDate = timeline.EventDate,
+            Title = timeline.Title,
+            Description = timeline.Description,
+            EventType = timeline.EventType,
+            RecordedByUserId = timeline.RecordedByUserId,
+            RecordedByUserName = timeline.RecordedByUser?.UserName,
+            PhotoUrl = timeline.PhotoUrl,
+            CreatedDateTime = timeline.CreatedDateTime,
+            UpdatedDateTime = timeline.UpdatedDateTime
+        };
+    }
+
+    private RecipeViewModel MapRecipeToViewModel(Recipe recipe)
+    {
+        return new RecipeViewModel
+        {
+            Id = recipe.Id,
+            Name = recipe.Name,
+            Slug = recipe.Slug,
+            Description = recipe.Description,
+            Ingredients = recipe.Ingredients,
+            Instructions = recipe.Instructions,
+            PrepTimeMinutes = recipe.PrepTimeMinutes,
+            CookTimeMinutes = recipe.CookTimeMinutes,
+            Servings = recipe.Servings,
+            Category = recipe.Category,
+            Cuisine = recipe.Cuisine,
+            PhotoUrl = recipe.PhotoUrl,
+            Notes = recipe.Notes,
+            OriginatorPersonId = recipe.OriginatorPersonId,
+            OriginatorPersonName = recipe.OriginatorPerson != null
+                ? $"{recipe.OriginatorPerson.FirstName} {recipe.OriginatorPerson.LastName}"
+                : null,
+            SubmittedByUserId = recipe.SubmittedByUserId,
+            SubmittedByUserName = recipe.SubmittedByUser?.UserName,
+            IsPublished = recipe.IsPublished,
+            IsFavorite = recipe.IsFavorite,
+            AverageRating = recipe.AverageRating,
+            RatingCount = recipe.RatingCount,
+            ViewCount = recipe.ViewCount,
+            CreatedDateTime = recipe.CreatedDateTime,
+            UpdatedDateTime = recipe.UpdatedDateTime
+        };
+    }
+
+    private StoryViewModel MapStoryToViewModel(Story story)
+    {
+        return new StoryViewModel
+        {
+            Id = story.Id,
+            Title = story.Title,
+            Slug = story.Slug,
+            Content = story.Content,
+            Summary = story.Summary,
+            Category = story.Category,
+            StoryDate = story.StoryDate,
+            Location = story.Location,
+            SubmittedByUserId = story.SubmittedByUserId,
+            SubmittedByUserName = story.SubmittedByUser?.UserName,
+            IsPublished = story.IsPublished,
+            ViewCount = story.ViewCount,
+            AllowCollaboration = story.AllowCollaboration,
+            CollectionId = story.CollectionId,
+            CollectionName = story.Collection?.Name,
+            CreatedDateTime = story.CreatedDateTime,
+            UpdatedDateTime = story.UpdatedDateTime,
+            AssociatedPeople = story.StoryPeople.Select(sp => new PersonBasicViewModel
+            {
+                Id = sp.PersonId,
+                FirstName = sp.Person?.FirstName ?? "",
+                LastName = sp.Person?.LastName ?? "",
+                RoleInStory = sp.RoleInStory
+            }).ToList()
+        };
     }
 
     private async Task<string> GenerateUniqueSlugAsync(string name, int? excludeId = null)

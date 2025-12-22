@@ -2,12 +2,12 @@
 
 **Date:** December 2025  
 **Version:** 1.1  
-**Status:** 🚧 In Progress - Phase 1.1 Complete
+**Status:** 🚧 In Progress - Phase 1.3 Complete
 
 **Progress:**
 - **Phase 1.1:** ✅ Complete (Home Page Statistics Service)
 - **Phase 1.2:** ✅ Complete (Admin Dashboard Statistics Service)
-- **Phase 1.3:** ⏸️ Pending (Story & Tradition Related Content Services)
+- **Phase 1.3:** ✅ Complete (Story & Tradition Related Content Services)
 
 ---
 
@@ -339,38 +339,54 @@ The implementation is divided into **3 main phases**, with each phase broken int
 
 ### Phase 1.3: Story & Tradition Related Content Services
 
+**Status:** ✅ Complete  
 **Scope:** Create services for comments, related stories, and related content
 
 **Backend Changes:**
 
-1. **Enhance Story Service**
-   - File: `RushtonRoots.Application/Services/IStoryService.cs` (update existing)
-   - Add methods:
-     - `Task<List<StoryComment>> GetStoryCommentsAsync(int storyId)`
-     - `Task<List<StoryViewModel>> GetRelatedStoriesAsync(int storyId, int count = 5)`
+1. **Enhance Story Service** ✅
+   - File: `RushtonRoots.Application/Services/StoryService.cs` (updated) ✅
+   - File: `RushtonRoots.Application/Services/IStoryService.cs` (interface updated) ✅
+   - Added methods:
+     - `Task<List<StoryComment>> GetStoryCommentsAsync(int storyId)` ✅
+     - `Task<List<StoryViewModel>> GetRelatedStoriesAsync(int storyId, int count = 5)` ✅
 
-2. **Enhance Tradition Service**
-   - File: `RushtonRoots.Application/Services/ITraditionService.cs` (update existing)
-   - Add methods:
-     - `Task<List<RecipeViewModel>> GetRelatedRecipesAsync(int traditionId)`
-     - `Task<List<StoryViewModel>> GetRelatedStoriesAsync(int traditionId)`
-     - `Task<List<TraditionOccurrence>> GetPastOccurrencesAsync(int traditionId, int count = 5)`
-     - `Task<TraditionOccurrence?> GetNextOccurrenceAsync(int traditionId)`
+2. **Enhance Tradition Service** ✅
+   - File: `RushtonRoots.Application/Services/TraditionService.cs` (updated) ✅
+   - File: `RushtonRoots.Application/Services/ITraditionService.cs` (interface updated) ✅
+   - Added methods:
+     - `Task<List<RecipeViewModel>> GetRelatedRecipesAsync(int traditionId)` ✅
+     - `Task<List<StoryViewModel>> GetRelatedStoriesAsync(int traditionId)` ✅
+     - `Task<List<TraditionOccurrence>> GetPastOccurrencesAsync(int traditionId, int count = 5)` ✅
+     - `Task<TraditionOccurrence?> GetNextOccurrenceAsync(int traditionId)` ✅
 
-3. **Create Domain Models**
-   - File: `RushtonRoots.Domain/UI/Models/StoryComment.cs`
-   - File: `RushtonRoots.Domain/UI/Models/TraditionOccurrence.cs`
+3. **Create Domain Models** ✅
+   - File: `RushtonRoots.Domain/UI/Models/StoryComment.cs` ✅
+   - File: `RushtonRoots.Domain/UI/Models/TraditionOccurrence.cs` ✅
 
-4. **Add Unit Tests**
-   - File: `RushtonRoots.UnitTests/Services/StoryServiceTests.cs` (update)
-   - File: `RushtonRoots.UnitTests/Services/TraditionServiceTests.cs` (update)
-   - Test relationship queries
-   - Test occurrence calculations
+4. **Add Unit Tests** ✅
+   - File: `RushtonRoots.UnitTests/Services/StoryServiceTests.cs` (created) ✅
+   - File: `RushtonRoots.UnitTests/Services/TraditionServiceTests.cs` (created) ✅
+   - Test relationship queries ✅
+   - Test occurrence calculations ✅
+   - **Coverage:** 23 comprehensive tests (9 for StoryService, 14 for TraditionService)
 
 **Success Criteria:**
 - ✅ Services enhanced with new methods
-- ✅ Unit tests passing for new functionality
+- ✅ Unit tests passing for new functionality (530 total tests passing, +23 new tests)
 - ✅ Domain models created
+- ✅ Service automatically registered via Autofac convention
+
+**Implementation Notes:**
+- StoryService.GetStoryCommentsAsync retrieves comments from the generic Comment entity filtered by EntityType="Story"
+- StoryService.GetRelatedStoriesAsync uses a scoring algorithm to prioritize stories:
+  - Same collection (score: 100) > Shared people (score: 10 each) > Same category (score: 1)
+- TraditionService.GetRelatedRecipesAsync searches recipe names and notes for tradition name mentions
+- TraditionService.GetRelatedStoriesAsync searches story titles and content for tradition mentions and includes stories about the person who started the tradition
+- TraditionService.GetPastOccurrencesAsync returns timeline entries in descending order by date
+- TraditionService.GetNextOccurrenceAsync returns either a future timeline entry or calculates the next occurrence based on frequency (Yearly, Monthly, Weekly, Daily)
+- All queries properly handle null values and edge cases
+- All methods use async/await pattern for optimal performance
 
 **Dependencies:** None
 
