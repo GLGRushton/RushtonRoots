@@ -67,8 +67,8 @@ export class FamilyTreeComponent implements OnInit {
       await this.loadTreeView();
     } catch (err: unknown) {
       console.error('Error loading family data:', err);
-      this.error = 'Failed to load family data';
-      this.loadSampleData(); // Fallback to sample data
+      this.error = 'Failed to load family data. Please try again later.';
+      this.allPeople = []; // Empty instead of sample data
     } finally {
       this.loading = false;
     }
@@ -88,8 +88,8 @@ export class FamilyTreeComponent implements OnInit {
       this.treeData = data || null;
     } catch (err: unknown) {
       console.error('Error loading tree view:', err);
-      this.error = 'Failed to load tree view';
-      this.loadSampleData(); // Fallback to sample data
+      this.error = 'Failed to load tree view. Please try again later.';
+      this.treeData = null; // Empty instead of sample data
     } finally {
       this.loading = false;
     }
@@ -121,21 +121,6 @@ export class FamilyTreeComponent implements OnInit {
 
   print() {
     window.print();
-  }
-
-  // Fallback sample data for when API is not available
-  loadSampleData() {
-    this.allPeople = [
-      { id: 1, firstName: 'John', lastName: 'Rushton', fullName: 'John Rushton', isDeceased: false },
-      { id: 2, firstName: 'Mary', lastName: 'Rushton', fullName: 'Mary Rushton', isDeceased: false }
-    ];
-    this.selectedPersonId = 1;
-    this.treeData = {
-      person: this.allPeople[0],
-      partner: this.allPeople[1],
-      generation: 0,
-      children: []
-    };
   }
 
   getPersonDisplayName(person: Person): string {

@@ -103,6 +103,11 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
   gridColumns = 3;
 
   /**
+   * Show empty state flag
+   */
+  showEmptyState = false;
+
+  /**
    * Subject for component destruction
    */
   private destroy$ = new Subject<void>();
@@ -133,12 +138,12 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Load parent-child relationships from input or use sample data
+   * Load parent-child relationships from input
    */
   private loadRelationships(): void {
     this.isLoading = true;
 
-    // Use input data if available, otherwise use sample data
+    // Use input data if available
     if (this.relationships && this.relationships.length > 0) {
       // Transform input data to ensure dates are proper Date objects
       this.allRelationships = this.relationships.map(r => {
@@ -163,9 +168,11 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
           };
         }
       });
+      this.showEmptyState = false;
     } else {
-      // Use sample data for demonstration/testing
-      this.allRelationships = this.getSampleData();
+      // Show empty state message instead of sample data
+      this.allRelationships = [];
+      this.showEmptyState = true;
     }
     
     this.filteredRelationships = [...this.allRelationships];
@@ -173,68 +180,6 @@ export class ParentChildIndexComponent implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
-  /**
-   * Get sample data for demonstration
-   */
-  private getSampleData(): ParentChildCard[] {
-    return [
-      {
-        id: 1,
-        parentPersonId: 101,
-        childPersonId: 201,
-        parentName: 'John Smith',
-        childName: 'Emily Smith',
-        parentPhotoUrl: undefined,
-        childPhotoUrl: undefined,
-        relationshipType: 'biological',
-        relationshipTypeDisplay: 'Biological',
-        relationshipTypeIcon: 'bloodtype',
-        relationshipTypeColor: 'primary',
-        childBirthDate: new Date('2005-06-15'),
-        childAge: 18,
-        isVerified: true,
-        createdDateTime: new Date('2024-01-15'),
-        updatedDateTime: new Date('2024-01-15')
-      },
-      {
-        id: 2,
-        parentPersonId: 102,
-        childPersonId: 202,
-        parentName: 'Sarah Johnson',
-        childName: 'Michael Johnson',
-        parentPhotoUrl: undefined,
-        childPhotoUrl: undefined,
-        relationshipType: 'adopted',
-        relationshipTypeDisplay: 'Adopted',
-        relationshipTypeIcon: 'volunteer_activism',
-        relationshipTypeColor: 'accent',
-        childBirthDate: new Date('2010-03-20'),
-        childAge: 13,
-        isVerified: true,
-        createdDateTime: new Date('2024-02-10'),
-        updatedDateTime: new Date('2024-02-10')
-      },
-      {
-        id: 3,
-        parentPersonId: 103,
-        childPersonId: 203,
-        parentName: 'David Brown',
-        childName: 'Sophie Brown',
-        parentPhotoUrl: undefined,
-        childPhotoUrl: undefined,
-        relationshipType: 'biological',
-        relationshipTypeDisplay: 'Biological',
-        relationshipTypeIcon: 'bloodtype',
-        relationshipTypeColor: 'primary',
-        childBirthDate: new Date('2015-09-10'),
-        childAge: 8,
-        isVerified: false,
-        confidence: 85,
-        createdDateTime: new Date('2024-03-05'),
-        updatedDateTime: new Date('2024-03-05')
-      }
-    ];
-  }
 
   /**
    * Apply filters to relationships

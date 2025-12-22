@@ -52,7 +52,9 @@
   <!-- Error State -->
   <div class="error" *ngIf="error && !loading">
     <p>⚠️ {{ error }}</p>
-    <p class="error-hint">Showing sample data instead.</p>
+    <button class="control-btn retry-btn" (click)="loadFamilyData()" title="Retry">
+      🔄 Retry
+    </button>
   </div>
 
   <!-- Tree Visualization -->
