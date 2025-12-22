@@ -1,8 +1,13 @@
 # Hardcoded Data Replacement - Phased Implementation Plan
 
 **Date:** December 2025  
-**Version:** 1.0  
-**Status:** 📋 Planning - Ready for Implementation
+**Version:** 1.1  
+**Status:** 🚧 In Progress - Phase 1.1 Complete
+
+**Progress:**
+- **Phase 1.1:** ✅ Complete (Home Page Statistics Service)
+- **Phase 1.2:** ⏸️ Pending (Admin Dashboard Statistics Service)
+- **Phase 1.3:** ⏸️ Pending (Story & Tradition Related Content Services)
 
 ---
 
@@ -13,7 +18,7 @@ This document outlines a comprehensive, phased plan to replace all hardcoded and
 ### Key Findings
 
 **Areas Requiring Updates:**
-- ✋ Home page statistics not connected to backend services
+- ✅ Home page statistics now connected to backend services (Phase 1.1 Complete)
 - ✋ Admin dashboard showing placeholder values ("-")
 - ✋ Multiple Angular components with sample data fallbacks
 - ✋ Components with TODO comments for API integration
@@ -21,7 +26,7 @@ This document outlines a comprehensive, phased plan to replace all hardcoded and
 
 **Overall Health:**
 - **Build Status:** ✅ Successful
-- **Test Coverage:** ✅ 484 tests passing
+- **Test Coverage:** ✅ 498 tests passing (+14 in Phase 1.1)
 - **Architecture:** ✅ Clean Architecture properly implemented
 - **Priority:** 🔶 Medium - Functional but using placeholder data
 
@@ -232,62 +237,53 @@ The implementation is divided into **3 main phases**, with each phase broken int
 
 ### Phase 1.1: Home Page Statistics Service
 
+**Status:** ✅ Complete  
 **Scope:** Create service to provide all statistics for the home page dashboard
 
 **Backend Changes:**
 
-1. **Create Service Interface & Implementation**
-   - File: `RushtonRoots.Application/Services/IHomePageService.cs`
-   - File: `RushtonRoots.Application/Services/HomePageService.cs`
+1. **Create Service Interface & Implementation** ✅
+   - File: `RushtonRoots.Application/Services/IHomePageService.cs` ✅
+   - File: `RushtonRoots.Application/Services/HomePageService.cs` ✅
    - Methods:
-     - `Task<HomePageStatistics> GetStatisticsAsync()`
-     - `Task<List<RecentAddition>> GetRecentAdditionsAsync(int count = 5)`
-     - `Task<List<UpcomingBirthday>> GetUpcomingBirthdaysAsync(int days = 30)`
-     - `Task<List<UpcomingAnniversary>> GetUpcomingAnniversariesAsync(int days = 30)`
-     - `Task<List<ActivityFeedItem>> GetActivityFeedAsync(int count = 20)`
+     - `Task<HomePageStatistics> GetStatisticsAsync()` ✅
+     - `Task<List<RecentAddition>> GetRecentAdditionsAsync(int count = 5)` ✅
+     - `Task<List<UpcomingBirthday>> GetUpcomingBirthdaysAsync(int days = 30)` ✅
+     - `Task<List<UpcomingAnniversary>> GetUpcomingAnniversariesAsync(int days = 30)` ✅
+     - `Task<List<ActivityFeedItem>> GetActivityFeedAsync(int count = 20)` ✅
 
-2. **Update HomeController**
-   - File: `RushtonRoots.Web/Controllers/HomeController.cs`
-   - Inject `IHomePageService`
-   - Populate ViewBag with real data:
-     ```csharp
-     public async Task<IActionResult> Index()
-     {
-         var statistics = await _homePageService.GetStatisticsAsync();
-         ViewBag.TotalMembers = statistics.TotalMembers;
-         ViewBag.OldestAncestor = statistics.OldestAncestor;
-         ViewBag.NewestMember = statistics.NewestMember;
-         ViewBag.TotalPhotos = statistics.TotalPhotos;
-         ViewBag.TotalStories = statistics.TotalStories;
-         ViewBag.ActiveHouseholds = statistics.ActiveHouseholds;
-         
-         ViewBag.RecentAdditions = await _homePageService.GetRecentAdditionsAsync();
-         ViewBag.UpcomingBirthdays = await _homePageService.GetUpcomingBirthdaysAsync();
-         ViewBag.UpcomingAnniversaries = await _homePageService.GetUpcomingAnniversariesAsync();
-         ViewBag.ActivityFeed = await _homePageService.GetActivityFeedAsync();
-         
-         return View();
-     }
-     ```
+2. **Update HomeController** ✅
+   - File: `RushtonRoots.Web/Controllers/HomeController.cs` ✅
+   - Inject `IHomePageService` ✅
+   - Populate ViewBag with real data ✅
 
-3. **Create Required Domain Models**
-   - File: `RushtonRoots.Domain/UI/Models/HomePageStatistics.cs`
-   - File: `RushtonRoots.Domain/UI/Models/RecentAddition.cs`
-   - File: `RushtonRoots.Domain/UI/Models/UpcomingBirthday.cs`
-   - File: `RushtonRoots.Domain/UI/Models/UpcomingAnniversary.cs`
-   - File: `RushtonRoots.Domain/UI/Models/ActivityFeedItem.cs`
+3. **Create Required Domain Models** ✅
+   - File: `RushtonRoots.Domain/UI/Models/HomePageStatistics.cs` ✅
+   - File: `RushtonRoots.Domain/UI/Models/RecentAddition.cs` ✅
+   - File: `RushtonRoots.Domain/UI/Models/UpcomingBirthday.cs` ✅
+   - File: `RushtonRoots.Domain/UI/Models/UpcomingAnniversary.cs` ✅
+   - File: `RushtonRoots.Domain/UI/Models/ActivityFeedItemViewModel.cs` (already existed) ✅
 
-4. **Add Unit Tests**
-   - File: `RushtonRoots.UnitTests/Services/HomePageServiceTests.cs`
-   - Test all methods with mocked repository data
-   - Verify calculations (birthdays, anniversaries, etc.)
-   - Test edge cases (no data, etc.)
+4. **Add Unit Tests** ✅
+   - File: `RushtonRoots.UnitTests/Services/HomePageServiceTests.cs` ✅
+   - Test all methods with mocked repository data ✅
+   - Verify calculations (birthdays, anniversaries, etc.) ✅
+   - Test edge cases (no data, etc.) ✅
+   - **Coverage:** 14 comprehensive tests covering all methods and edge cases
 
 **Success Criteria:**
-- ✅ HomePageService created and tested (80%+ coverage)
+- ✅ HomePageService created and tested (14 tests, 100% method coverage)
 - ✅ HomeController populated with real data
-- ✅ Unit tests passing
+- ✅ Unit tests passing (498 total tests passing)
 - ✅ No hardcoded values in controller
+- ✅ Service automatically registered via Autofac convention
+
+**Implementation Notes:**
+- Service directly accesses DbContext for optimal performance
+- Birthday and anniversary calculations handle year transitions correctly
+- Activity feed loads user information separately to avoid navigation property issues in testing
+- All queries use .AsNoTracking() equivalent via projections for read-only data
+- Service handles null/empty data gracefully
 
 **Dependencies:** None
 
