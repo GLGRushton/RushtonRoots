@@ -2,12 +2,13 @@
 
 **Date:** December 2025  
 **Version:** 1.1  
-**Status:** 🚧 In Progress - Phase 1.3 Complete
+**Status:** 🚧 In Progress - Phase 2.1 Complete
 
 **Progress:**
 - **Phase 1.1:** ✅ Complete (Home Page Statistics Service)
 - **Phase 1.2:** ✅ Complete (Admin Dashboard Statistics Service)
 - **Phase 1.3:** ✅ Complete (Story & Tradition Related Content Services)
+- **Phase 2.1:** ✅ Complete (Story & Tradition API Endpoints)
 
 ---
 
@@ -403,52 +404,64 @@ The implementation is divided into **3 main phases**, with each phase broken int
 
 ### Phase 2.1: Story & Tradition API Endpoints
 
+**Status:** ✅ Complete  
 **Scope:** Add missing API endpoints for related content
 
 **Backend Changes:**
 
-1. **Update StoryController API**
-   - File: `RushtonRoots.Web/Controllers/Api/StoryController.cs`
+1. **Update StoryController API** ✅
+   - File: `RushtonRoots.Web/Controllers/Api/StoryController.cs` ✅
    - Add endpoints:
      ```csharp
      [HttpGet("{id}/comments")]
-     public async Task<IActionResult> GetComments(int id)
+     public async Task<IActionResult> GetComments(int id) ✅
      
      [HttpGet("{id}/related")]
-     public async Task<IActionResult> GetRelatedStories(int id, [FromQuery] int count = 5)
+     public async Task<IActionResult> GetRelatedStories(int id, [FromQuery] int count = 5) ✅
      ```
 
-2. **Update TraditionController API**
-   - File: `RushtonRoots.Web/Controllers/Api/TraditionController.cs`
+2. **Update TraditionController API** ✅
+   - File: `RushtonRoots.Web/Controllers/Api/TraditionController.cs` ✅
    - Add endpoints:
      ```csharp
      [HttpGet("{id}/recipes")]
-     public async Task<IActionResult> GetRelatedRecipes(int id)
+     public async Task<IActionResult> GetRelatedRecipes(int id) ✅
      
      [HttpGet("{id}/stories")]
-     public async Task<IActionResult> GetRelatedStories(int id)
+     public async Task<IActionResult> GetRelatedStories(int id) ✅
      
      [HttpGet("{id}/occurrences/past")]
-     public async Task<IActionResult> GetPastOccurrences(int id, [FromQuery] int count = 5)
+     public async Task<IActionResult> GetPastOccurrences(int id, [FromQuery] int count = 5) ✅
      
      [HttpGet("{id}/occurrences/next")]
-     public async Task<IActionResult> GetNextOccurrence(int id)
+     public async Task<IActionResult> GetNextOccurrence(int id) ✅
      ```
 
-3. **Add API Documentation**
-   - Update Swagger/OpenAPI documentation
-   - Add XML comments to all new endpoints
+3. **Add API Documentation** ✅
+   - Updated Swagger/OpenAPI documentation ✅
+   - Added XML comments to all new endpoints ✅
 
-4. **Add Integration Tests**
-   - Test API endpoints return correct data structure
-   - Test error handling (404, 500, etc.)
-   - Test authorization if required
+4. **Add Integration Tests** ✅
+   - Test API endpoints return correct data structure ✅
+   - Test error handling (404, 500, etc.) ✅
+   - Test authorization if required ✅
+   - **Coverage:** 20 comprehensive tests (8 for StoryController, 12 for TraditionController)
 
 **Success Criteria:**
 - ✅ All API endpoints implemented
 - ✅ Swagger documentation updated
-- ✅ Integration tests passing
+- ✅ Integration tests passing (550 total tests passing, +20 new tests)
 - ✅ Proper error handling
+
+**Implementation Notes:**
+- All endpoints delegate to existing service methods from Phase 1.3
+- Error handling returns proper HTTP status codes (404 for not found, 200 for success)
+- XML documentation comments added for Swagger integration
+- Tests follow existing patterns using FakeItEasy for mocking
+- All endpoints require authentication via [Authorize] attribute at controller level
+- Created StoryControllerTests.cs with 8 comprehensive tests
+- Created TraditionControllerTests.cs with 12 comprehensive tests
+- All tests validate both success and error scenarios
 
 **Dependencies:** Phase 1.3
 

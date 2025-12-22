@@ -170,4 +170,43 @@ public class StoryController : ControllerBase
         await _storyService.DeleteAsync(id);
         return NoContent();
     }
+
+    /// <summary>
+    /// Get comments for a specific story
+    /// </summary>
+    /// <param name="id">The ID of the story</param>
+    /// <returns>List of comments for the story</returns>
+    [HttpGet("{id}/comments")]
+    public async Task<IActionResult> GetComments(int id)
+    {
+        try
+        {
+            var comments = await _storyService.GetStoryCommentsAsync(id);
+            return Ok(comments);
+        }
+        catch (Exception)
+        {
+            return NotFound(new { message = $"Story with ID {id} not found" });
+        }
+    }
+
+    /// <summary>
+    /// Get related stories for a specific story
+    /// </summary>
+    /// <param name="id">The ID of the story</param>
+    /// <param name="count">Number of related stories to return (default: 5)</param>
+    /// <returns>List of related stories</returns>
+    [HttpGet("{id}/related")]
+    public async Task<IActionResult> GetRelatedStories(int id, [FromQuery] int count = 5)
+    {
+        try
+        {
+            var relatedStories = await _storyService.GetRelatedStoriesAsync(id, count);
+            return Ok(relatedStories);
+        }
+        catch (Exception)
+        {
+            return NotFound(new { message = $"Story with ID {id} not found" });
+        }
+    }
 }

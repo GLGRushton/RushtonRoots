@@ -170,6 +170,87 @@ public class TraditionController : ControllerBase
         await _traditionService.DeleteAsync(id);
         return NoContent();
     }
+
+    /// <summary>
+    /// Get recipes related to a specific tradition
+    /// </summary>
+    /// <param name="id">The ID of the tradition</param>
+    /// <returns>List of related recipes</returns>
+    [HttpGet("{id}/recipes")]
+    public async Task<IActionResult> GetRelatedRecipes(int id)
+    {
+        try
+        {
+            var recipes = await _traditionService.GetRelatedRecipesAsync(id);
+            return Ok(recipes);
+        }
+        catch (Exception)
+        {
+            return NotFound(new { message = $"Tradition with ID {id} not found" });
+        }
+    }
+
+    /// <summary>
+    /// Get stories related to a specific tradition
+    /// </summary>
+    /// <param name="id">The ID of the tradition</param>
+    /// <returns>List of related stories</returns>
+    [HttpGet("{id}/stories")]
+    public async Task<IActionResult> GetRelatedStories(int id)
+    {
+        try
+        {
+            var stories = await _traditionService.GetRelatedStoriesAsync(id);
+            return Ok(stories);
+        }
+        catch (Exception)
+        {
+            return NotFound(new { message = $"Tradition with ID {id} not found" });
+        }
+    }
+
+    /// <summary>
+    /// Get past occurrences of a tradition
+    /// </summary>
+    /// <param name="id">The ID of the tradition</param>
+    /// <param name="count">Number of past occurrences to return (default: 5)</param>
+    /// <returns>List of past tradition occurrences</returns>
+    [HttpGet("{id}/occurrences/past")]
+    public async Task<IActionResult> GetPastOccurrences(int id, [FromQuery] int count = 5)
+    {
+        try
+        {
+            var occurrences = await _traditionService.GetPastOccurrencesAsync(id, count);
+            return Ok(occurrences);
+        }
+        catch (Exception)
+        {
+            return NotFound(new { message = $"Tradition with ID {id} not found" });
+        }
+    }
+
+    /// <summary>
+    /// Get the next occurrence of a tradition
+    /// </summary>
+    /// <param name="id">The ID of the tradition</param>
+    /// <returns>Next tradition occurrence or null if no future occurrence is scheduled</returns>
+    [HttpGet("{id}/occurrences/next")]
+    public async Task<IActionResult> GetNextOccurrence(int id)
+    {
+        try
+        {
+            var occurrence = await _traditionService.GetNextOccurrenceAsync(id);
+            if (occurrence == null)
+            {
+                return Ok(new { message = "No future occurrence scheduled for this tradition" });
+            }
+            return Ok(occurrence);
+        }
+        catch (Exception)
+        {
+            return NotFound(new { message = $"Tradition with ID {id} not found" });
+        }
+    }
 }
 
 /// <summary>
