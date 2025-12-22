@@ -5,6 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RushtonRoots.Web.Controllers;
 
+/// <summary>
+/// MVC controller for home page
+/// </summary>
+/// <remarks>
+/// ViewBag Contract for Index view:
+/// - TotalMembers: Total count of non-deleted people
+/// - TotalPhotos: Total count of media items (placeholder)
+/// - TotalStories: Total count of published stories
+/// - ActiveHouseholds: Total count of households
+/// - OldestAncestor: PersonSummary object with id, fullName, photoUrl, birthDate, deathDate, age
+/// - NewestMember: PersonSummary object with id, fullName, photoUrl, birthDate, deathDate, age
+/// - RecentAdditions: List of recently added people with person object and metadata
+/// - UpcomingBirthdays: List of upcoming birthdays transformed to UpcomingEvent interface
+/// - UpcomingAnniversaries: List of upcoming anniversaries transformed to UpcomingEvent interface
+/// - ActivityFeed: List of recent activities with user information, icon, color, and title
+/// </remarks>
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
