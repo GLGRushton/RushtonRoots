@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Story, ContentCategory, ContentSearchFilters, ContentType } from '../../models/content.model';
 import { StoryComment, RelatedStory } from '../story-details/story-details.component';
 
@@ -98,6 +99,8 @@ export class StoryIndexComponent implements OnInit {
    */
   readonly ContentType = ContentType;
 
+  constructor(private http: HttpClient) {}
+
   ngOnInit(): void {
     // Determine view mode based on query parameters
     if (this.storyId || this.slug) {
@@ -142,9 +145,36 @@ export class StoryIndexComponent implements OnInit {
   loadComments(): void {
     if (!this.selectedStory) return;
 
-    // TODO: Fetch from API
-    // For now, using mock data
-    this.storyComments = [];
+    this.http.get<any[]>(`/api/story/${this.selectedStory.id}/comments`)
+      .subscribe({
+        next: (comments) => {
+          // Map backend StoryComment model to frontend StoryComment interface
+          this.storyComments = comments.map(c => ({
+            id: c.id,
+            storyId: this.selectedStory!.id,
+            userId: c.userId,
+            userName: c.userName || 'Unknown User',
+            comment: c.content,
+            createdDate: new Date(c.createdDateTime),
+            updatedDate: c.updatedDateTime ? new Date(c.updatedDateTime) : undefined,
+            parentCommentId: c.parentCommentId,
+            replies: c.replies?.map((r: any) => ({
+              id: r.id,
+              storyId: this.selectedStory!.id,
+              userId: r.userId,
+              userName: r.userName || 'Unknown User',
+              comment: r.content,
+              createdDate: new Date(r.createdDateTime),
+              updatedDate: r.updatedDateTime ? new Date(r.updatedDateTime) : undefined,
+              parentCommentId: r.parentCommentId
+            })) || []
+          }));
+        },
+        error: (err) => {
+          console.error('Failed to load comments:', err);
+          this.storyComments = [];
+        }
+      });
   }
 
   /**
@@ -153,70 +183,24 @@ export class StoryIndexComponent implements OnInit {
   loadRelatedStories(): void {
     if (!this.selectedStory) return;
 
-    this.relatedStories = [];
-
-    // Find stories from same time period (within 5 years)
-    if (this.selectedStory.dateOfEvent) {
-      const eventYear = new Date(this.selectedStory.dateOfEvent).getFullYear();
-      this.stories
-        .filter(s => 
-          s.id !== this.selectedStory!.id &&
-          s.dateOfEvent &&
-          Math.abs(new Date(s.dateOfEvent).getFullYear() - eventYear) <= 5
-        )
-        .slice(0, 3)
-        .forEach(s => {
-          this.relatedStories.push({
+    this.http.get<any[]>(`/api/story/${this.selectedStory.id}/related`)
+      .subscribe({
+        next: (stories) => {
+          // Map backend StoryViewModel to frontend RelatedStory interface
+          this.relatedStories = stories.map(s => ({
             id: s.id,
             title: s.title,
-            summary: s.summary,
-            imageUrl: s.imageUrl,
-            dateOfEvent: s.dateOfEvent,
-            relationType: 'same-time-period'
-          });
-        });
-    }
-
-    // Find stories about same people
-    if (this.selectedStory.relatedPeople.length > 0) {
-      const personIds = this.selectedStory.relatedPeople.map(p => p.personId);
-      this.stories
-        .filter(s => 
-          s.id !== this.selectedStory!.id &&
-          s.relatedPeople.some(p => personIds.includes(p.personId))
-        )
-        .slice(0, 3)
-        .forEach(s => {
-          this.relatedStories.push({
-            id: s.id,
-            title: s.title,
-            summary: s.summary,
-            imageUrl: s.imageUrl,
-            dateOfEvent: s.dateOfEvent,
-            relationType: 'same-people'
-          });
-        });
-    }
-
-    // Find stories from same location
-    if (this.selectedStory.location) {
-      this.stories
-        .filter(s => 
-          s.id !== this.selectedStory!.id &&
-          s.location === this.selectedStory!.location
-        )
-        .slice(0, 3)
-        .forEach(s => {
-          this.relatedStories.push({
-            id: s.id,
-            title: s.title,
-            summary: s.summary,
-            imageUrl: s.imageUrl,
-            dateOfEvent: s.dateOfEvent,
-            relationType: 'same-location'
-          });
-        });
-    }
+            summary: s.summary || '',
+            imageUrl: undefined, // Backend doesn't include imageUrl in StoryViewModel
+            dateOfEvent: s.storyDate ? new Date(s.storyDate) : undefined,
+            relationType: 'same-people' as const // Backend uses scoring but doesn't return type
+          }));
+        },
+        error: (err) => {
+          console.error('Failed to load related stories:', err);
+          this.relatedStories = [];
+        }
+      });
   }
 
   /**
