@@ -1,7 +1,8 @@
 @{
     ViewData["Title"] = "Family Traditions";
     
-    // Sample data - in production this would come from the controller
+    // ViewBag data populated by TraditionViewController for noscript fallback
+    // Angular component fetches data from API endpoints directly
     var traditions = ViewBag.Traditions ?? new List<object>();
     var categories = ViewBag.Categories ?? new List<object>();
     var featuredTraditions = ViewBag.FeaturedTraditions ?? new List<object>();

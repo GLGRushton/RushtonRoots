@@ -7,6 +7,14 @@ namespace RushtonRoots.Web.Controllers;
 /// <summary>
 /// MVC controller for Admin functionality - provides system administration views
 /// </summary>
+/// <remarks>
+/// ViewData Contract for Dashboard view:
+/// - TotalUsers: Total count of application users
+/// - TotalHouseholds: Total count of households
+/// - TotalPersons: Total count of people
+/// - MediaItems: Total count of media items (placeholder)
+/// - RecentActivity: List of RecentActivity objects with ActivityType, Description, UserName, CreatedDateTime, ActionUrl
+/// </remarks>
 [Authorize(Roles = "Admin")]
 public class AdminController : Controller
 {
