@@ -24,6 +24,8 @@ public interface IStoryService
     Task<StoryViewModel> UpdateAsync(int id, UpdateStoryRequest request, string userId);
     Task DeleteAsync(int id);
     Task<IEnumerable<string>> GetCategoriesAsync();
+    Task<List<StoryComment>> GetStoryCommentsAsync(int storyId);
+    Task<List<StoryViewModel>> GetRelatedStoriesAsync(int storyId, int count = 5);
 }
 
 /// <summary>
@@ -264,6 +266,99 @@ public class StoryService : IStoryService
             .Distinct()
             .OrderBy(c => c)
             .ToListAsync();
+    }
+
+    public async Task<List<StoryComment>> GetStoryCommentsAsync(int storyId)
+    {
+        // Get all comments for this story
+        var comments = await _context.Comments
+            .Include(c => c.User)
+            .Where(c => c.EntityType == "Story" && c.EntityId == storyId && c.ParentCommentId == null)
+            .OrderBy(c => c.CreatedDateTime)
+            .ToListAsync();
+
+        // Map to view models with replies
+        var result = new List<StoryComment>();
+        foreach (var comment in comments)
+        {
+            result.Add(await MapCommentToViewModel(comment));
+        }
+
+        return result;
+    }
+
+    public async Task<List<StoryViewModel>> GetRelatedStoriesAsync(int storyId, int count = 5)
+    {
+        // Get the current story with its associated people and category
+        var story = await _context.Stories
+            .Include(s => s.StoryPeople)
+            .FirstOrDefaultAsync(s => s.Id == storyId);
+
+        if (story == null)
+        {
+            return new List<StoryViewModel>();
+        }
+
+        // Get related stories based on:
+        // 1. Same category
+        // 2. Shared people
+        // 3. Same collection
+        // Priority: Stories with shared people > same collection > same category
+        var relatedStories = await _context.Stories
+            .Include(s => s.SubmittedByUser)
+            .Include(s => s.Collection)
+            .Include(s => s.StoryPeople)
+                .ThenInclude(sp => sp.Person)
+            .Where(s => s.Id != storyId && s.IsPublished)
+            .Where(s =>
+                // Same collection (highest priority if collection exists)
+                (story.CollectionId.HasValue && s.CollectionId == story.CollectionId) ||
+                // Shared people
+                s.StoryPeople.Any(sp => story.StoryPeople.Select(sp2 => sp2.PersonId).Contains(sp.PersonId)) ||
+                // Same category
+                s.Category == story.Category)
+            .OrderByDescending(s =>
+                // Scoring: collection match = 100, each shared person = 10, category match = 1
+                (story.CollectionId.HasValue && s.CollectionId == story.CollectionId ? 100 : 0) +
+                (s.StoryPeople.Count(sp => story.StoryPeople.Select(sp2 => sp2.PersonId).Contains(sp.PersonId)) * 10) +
+                (s.Category == story.Category ? 1 : 0))
+            .ThenByDescending(s => s.ViewCount)
+            .Take(count)
+            .ToListAsync();
+
+        return relatedStories.Select(MapToViewModel).ToList();
+    }
+
+    private async Task<StoryComment> MapCommentToViewModel(Comment comment)
+    {
+        // Get replies for this comment
+        var replies = await _context.Comments
+            .Include(c => c.User)
+            .Where(c => c.ParentCommentId == comment.Id)
+            .OrderBy(c => c.CreatedDateTime)
+            .ToListAsync();
+
+        var viewModel = new StoryComment
+        {
+            Id = comment.Id,
+            Content = comment.Content,
+            UserId = comment.UserId,
+            UserName = comment.User?.UserName,
+            ParentCommentId = comment.ParentCommentId,
+            IsEdited = comment.IsEdited,
+            EditedAt = comment.EditedAt,
+            CreatedDateTime = comment.CreatedDateTime,
+            UpdatedDateTime = comment.UpdatedDateTime,
+            Replies = new List<StoryComment>()
+        };
+
+        // Recursively map replies
+        foreach (var reply in replies)
+        {
+            viewModel.Replies.Add(await MapCommentToViewModel(reply));
+        }
+
+        return viewModel;
     }
 
     private StoryViewModel MapToViewModel(Story story)
