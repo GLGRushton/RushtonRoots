@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Tradition, ContentCategory, ContentSearchFilters, ContentType } from '../../models/content.model';
 import { 
   TraditionParticipant, 
@@ -122,6 +123,8 @@ export class TraditionIndexComponent implements OnInit {
    */
   readonly ContentType = ContentType;
 
+  constructor(private http: HttpClient) {}
+
   ngOnInit(): void {
     // Determine view mode based on query parameters
     if (this.traditionId || this.slug) {
@@ -188,9 +191,24 @@ export class TraditionIndexComponent implements OnInit {
   loadRelatedRecipes(): void {
     if (!this.selectedTradition || !this.selectedTradition.relatedRecipes) return;
 
-    // TODO: Fetch from API
-    // For now, using mock data
-    this.relatedRecipes = [];
+    this.http.get<any[]>(`/api/tradition/${this.selectedTradition.id}/recipes`)
+      .subscribe({
+        next: (recipes) => {
+          // Map backend RecipeViewModel to frontend RelatedTraditionRecipe interface
+          this.relatedRecipes = recipes.map(r => ({
+            id: r.id,
+            title: r.name,
+            description: r.description || '',
+            imageUrl: r.photoUrl,
+            prepTime: r.prepTimeMinutes,
+            difficulty: undefined // Not provided by RecipeViewModel
+          }));
+        },
+        error: (err) => {
+          console.error('Failed to load related recipes:', err);
+          this.relatedRecipes = [];
+        }
+      });
   }
 
   /**
@@ -199,9 +217,23 @@ export class TraditionIndexComponent implements OnInit {
   loadRelatedStories(): void {
     if (!this.selectedTradition) return;
 
-    // TODO: Fetch from API
-    // For now, using mock data
-    this.relatedStories = [];
+    this.http.get<any[]>(`/api/tradition/${this.selectedTradition.id}/stories`)
+      .subscribe({
+        next: (stories) => {
+          // Map backend StoryViewModel to frontend RelatedTraditionStory interface
+          this.relatedStories = stories.map(s => ({
+            id: s.id,
+            title: s.title,
+            summary: s.summary || '',
+            imageUrl: undefined, // Not provided by StoryViewModel
+            dateOfEvent: s.storyDate ? new Date(s.storyDate) : undefined
+          }));
+        },
+        error: (err) => {
+          console.error('Failed to load related stories:', err);
+          this.relatedStories = [];
+        }
+      });
   }
 
   /**
@@ -210,10 +242,51 @@ export class TraditionIndexComponent implements OnInit {
   loadOccurrences(): void {
     if (!this.selectedTradition) return;
 
-    // TODO: Fetch from API
-    // For now, using mock data
-    this.pastOccurrences = [];
-    this.nextOccurrence = undefined;
+    // Load past occurrences
+    this.http.get<any[]>(`/api/tradition/${this.selectedTradition.id}/occurrences/past`)
+      .subscribe({
+        next: (occurrences) => {
+          // Map backend TraditionOccurrence to frontend TraditionOccurrence interface
+          this.pastOccurrences = occurrences.map(o => ({
+            id: o.id,
+            traditionId: o.traditionId,
+            occurrenceDate: new Date(o.eventDate),
+            location: undefined,
+            attendees: undefined,
+            attendeeNames: undefined,
+            notes: o.description
+          }));
+        },
+        error: (err) => {
+          console.error('Failed to load past occurrences:', err);
+          this.pastOccurrences = [];
+        }
+      });
+
+    // Load next occurrence
+    this.http.get<any>(`/api/tradition/${this.selectedTradition.id}/occurrences/next`)
+      .subscribe({
+        next: (occurrence) => {
+          if (occurrence?.id != null) {
+            // Map backend TraditionOccurrence to frontend TraditionOccurrence interface
+            this.nextOccurrence = {
+              id: occurrence.id,
+              traditionId: occurrence.traditionId,
+              occurrenceDate: new Date(occurrence.eventDate),
+              location: undefined,
+              attendees: undefined,
+              attendeeNames: undefined,
+              notes: occurrence.description
+            };
+          } else {
+            this.nextOccurrence = undefined;
+          }
+        },
+        error: (err) => {
+          console.error('Failed to load next occurrence:', err);
+          this.nextOccurrence = undefined;
+        }
+      });
   }
 
   /**

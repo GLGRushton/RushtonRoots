@@ -2,7 +2,7 @@
 
 **Date:** December 2025  
 **Version:** 1.2  
-**Status:** 🚧 In Progress - Phase 3.1 Complete
+**Status:** 🚧 In Progress - Phase 3.2 Complete
 
 **Progress:**
 - **Phase 1.1:** ✅ Complete (Home Page Statistics Service)
@@ -11,6 +11,7 @@
 - **Phase 2.1:** ✅ Complete (Story & Tradition API Endpoints)
 - **Phase 2.2:** ✅ Complete (Parent-Child & Family Tree Data Endpoints)
 - **Phase 3.1:** ✅ Complete (Remove Sample Data Fallbacks)
+- **Phase 3.2:** ✅ Complete (Connect Story & Tradition Components to APIs)
 
 ---
 
@@ -580,48 +581,60 @@ The implementation is divided into **3 main phases**, with each phase broken int
 
 ### Phase 3.2: Connect Story & Tradition Components to APIs
 
+**Status:** ✅ Complete  
 **Scope:** Replace mock data with API calls
 
 **Frontend Changes:**
 
-1. **Update Story Index Component**
-   - File: `RushtonRoots.Web/ClientApp/src/app/content/components/story-index/story-index.component.ts`
-   - Replace `loadComments()`:
-     ```typescript
-     loadComments(): void {
-       if (!this.selectedStory) return;
-       
-       this.http.get<StoryComment[]>(`/api/story/${this.selectedStory.id}/comments`)
-         .subscribe({
-           next: (comments) => { this.storyComments = comments; },
-           error: (err) => { console.error('Failed to load comments:', err); }
-         });
-     }
-     ```
-   - Replace `loadRelatedStories()` with API call
+1. **Update Story Index Component** ✅
+   - File: `RushtonRoots.Web/ClientApp/src/app/content/components/story-index/story-index.component.ts` ✅
+   - Added HttpClient dependency injection ✅
+   - Replaced `loadComments()` with API call to `/api/story/{id}/comments` ✅
+   - Replaced `loadRelatedStories()` with API call to `/api/story/{id}/related` ✅
+   - Removed all TODO comments ✅
+   - Added error handling for API failures ✅
 
-2. **Update Tradition Index Component**
-   - File: `RushtonRoots.Web/ClientApp/src/app/content/components/tradition-index/tradition-index.component.ts`
-   - Replace `loadRelatedRecipes()` with API call
-   - Replace `loadRelatedStories()` with API call
-   - Replace `loadOccurrences()` with API call
+2. **Update Tradition Index Component** ✅
+   - File: `RushtonRoots.Web/ClientApp/src/app/content/components/tradition-index/tradition-index.component.ts` ✅
+   - Added HttpClient dependency injection ✅
+   - Replaced `loadRelatedRecipes()` with API call to `/api/tradition/{id}/recipes` ✅
+   - Replaced `loadRelatedStories()` with API call to `/api/tradition/{id}/stories` ✅
+   - Replaced `loadOccurrences()` with API calls:
+     - `/api/tradition/{id}/occurrences/past` for past occurrences ✅
+     - `/api/tradition/{id}/occurrences/next` for next occurrence ✅
+   - Removed all TODO comments ✅
+   - Added error handling for API failures ✅
 
-3. **Remove TODO Comments**
-   - Remove all "TODO: Fetch from API" comments
-   - Remove "For now, using mock data" comments
+3. **Data Mapping** ✅
+   - Added mapping from backend StoryComment model to frontend StoryComment interface ✅
+   - Added mapping from backend StoryViewModel to frontend RelatedStory interface ✅
+   - Added mapping from backend RecipeViewModel to frontend RelatedTraditionRecipe interface ✅
+   - Added mapping from backend TraditionOccurrence to frontend TraditionOccurrence interface ✅
 
-4. **Add Component Tests**
-   - Test API calls with mocked HttpClient
-   - Test data binding after API response
-   - Test error handling
+4. **Build and Test** ✅
+   - Angular build successful with no compilation errors ✅
+   - All TypeScript errors resolved ✅
 
 **Success Criteria:**
 - ✅ All API calls implemented
 - ✅ No TODO comments for data fetching
 - ✅ No mock data in components
-- ✅ Component tests passing
+- ✅ Angular build passing
+- ✅ Proper error handling for all API calls
+- ✅ Data mapping between backend and frontend models
 
-**Dependencies:** Phase 2.1
+**Implementation Notes:**
+- Story comments API returns StoryComment with `content` property, mapped to frontend `comment` property
+- Story comments include nested replies in the response
+- Related stories use backend scoring algorithm (same collection > shared people > same category)
+- Related recipes search is based on recipe name/notes containing tradition name
+- Related stories for traditions search story content for tradition mentions
+- Past occurrences are returned in descending order by date (most recent first)
+- Next occurrence can be either a future timeline entry or calculated based on tradition frequency
+- All API calls include error handling that logs to console and sets empty arrays/undefined on failure
+- Frontend interfaces may have optional fields not provided by backend (imageUrl, location, attendees)
+
+**Dependencies:** Phase 2.1 (API Endpoints)
 
 ---
 
