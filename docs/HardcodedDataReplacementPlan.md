@@ -1,8 +1,8 @@
 # Hardcoded Data Replacement - Phased Implementation Plan
 
 **Date:** December 2025  
-**Version:** 1.3  
-**Status:** 🚧 In Progress - Phase 3.3 Complete
+**Version:** 1.4  
+**Status:** 🚧 In Progress - Phase 4.1 Complete
 
 **Progress:**
 - **Phase 1.1:** ✅ Complete (Home Page Statistics Service)
@@ -13,6 +13,7 @@
 - **Phase 3.1:** ✅ Complete (Remove Sample Data Fallbacks)
 - **Phase 3.2:** ✅ Complete (Connect Story & Tradition Components to APIs)
 - **Phase 3.3:** ✅ Complete (Home Page Data Binding)
+- **Phase 4.1:** ✅ Complete (Admin Dashboard View Updates)
 
 ---
 
@@ -698,35 +699,46 @@ The implementation is divided into **3 main phases**, with each phase broken int
 
 ### Phase 4.1: Admin Dashboard View Updates
 
+**Status:** ✅ Complete  
 **Scope:** Replace placeholder values with dynamic data
 
 **View Changes:**
 
-1. **Update Dashboard View**
-   - File: `RushtonRoots.Web/Views/Admin/Dashboard.cshtml`
-   - Replace hardcoded placeholders:
+1. **Update Dashboard View** ✅
+   - File: `RushtonRoots.Web/Views/Admin/Dashboard.cshtml` ✅
+   - Replaced hardcoded placeholders with ViewData bindings ✅
      ```html
      <!-- Before -->
      <div class="stat-value">-</div>
      
      <!-- After -->
-     <div class="stat-value">@ViewData["TotalUsers"]</div>
+     <div class="stat-value">@(ViewData["TotalUsers"] ?? 0)</div>
      ```
-   - Apply to all statistics
-   - Add fallback for null values
+   - Applied to all statistics (TotalUsers, TotalHouseholds, TotalPersons, MediaItems) ✅
+   - Added fallback for null values using null-coalescing operator ✅
 
-2. **Add Recent Activity Display**
-   - Implement activity feed display
-   - Show real activity data
-   - Add pagination if needed
+2. **Add Recent Activity Display** ✅
+   - Implemented activity feed display in Dashboard.cshtml (lines 104-162) ✅
+   - Shows real activity data from ViewData["RecentActivity"] ✅
+   - Activity items display: icon, description, username, timestamp, and action link ✅
+   - Empty state message when no activity exists ✅
 
 **Success Criteria:**
-- ✅ No "-" placeholder values
-- ✅ All statistics show real data
-- ✅ Recent activity displays correctly
-- ✅ Null values handled gracefully
+- ✅ No "-" placeholder values (verified - all removed)
+- ✅ All statistics show real data from AdminDashboardService
+- ✅ Recent activity displays correctly with proper formatting
+- ✅ Null values handled gracefully with `?? 0` operator and conditional rendering
 
-**Dependencies:** Phase 1.2
+**Implementation Notes:**
+- AdminController already injects IAdminDashboardService (from Phase 1.2)
+- Controller Dashboard action populates ViewData on lines 32-37
+- View uses `@(ViewData["TotalUsers"] ?? 0)` pattern for safe null handling
+- Recent Activity section loops through RecentActivity list from ViewData
+- Activity types determine icon display (PersonAdded, StoryPublished, PhotoAdded)
+- Activity formatting includes user name and formatted timestamp
+- All 566 tests passing, including 9 AdminDashboardService tests
+
+**Dependencies:** Phase 1.2 ✅
 
 ---
 
