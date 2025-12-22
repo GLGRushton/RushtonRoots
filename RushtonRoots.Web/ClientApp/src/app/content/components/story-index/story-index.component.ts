@@ -191,9 +191,9 @@ export class StoryIndexComponent implements OnInit {
             id: s.id,
             title: s.title,
             summary: s.summary || '',
-            imageUrl: undefined,
+            imageUrl: undefined, // Not provided by StoryViewModel
             dateOfEvent: s.storyDate ? new Date(s.storyDate) : undefined,
-            relationType: 'same-people' as const // Generic type - backend uses scoring algorithm
+            relationType: 'same-people' as const // Default type (backend uses scoring algorithm)
           }));
         },
         error: (err) => {

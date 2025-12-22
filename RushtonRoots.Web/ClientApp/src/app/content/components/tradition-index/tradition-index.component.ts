@@ -201,7 +201,7 @@ export class TraditionIndexComponent implements OnInit {
             description: r.description || '',
             imageUrl: r.photoUrl,
             prepTime: r.prepTimeMinutes,
-            difficulty: undefined
+            difficulty: undefined // Not provided by RecipeViewModel
           }));
         },
         error: (err) => {
@@ -225,7 +225,7 @@ export class TraditionIndexComponent implements OnInit {
             id: s.id,
             title: s.title,
             summary: s.summary || '',
-            imageUrl: undefined,
+            imageUrl: undefined, // Not provided by StoryViewModel
             dateOfEvent: s.storyDate ? new Date(s.storyDate) : undefined
           }));
         },
