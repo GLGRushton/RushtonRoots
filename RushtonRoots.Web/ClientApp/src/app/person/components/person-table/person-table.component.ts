@@ -10,6 +10,7 @@ export interface PersonTableRow {
   lastName: string;
   fullName: string;
   householdName: string;
+  householdId?: number;
   dateOfBirth?: Date | string;
   dateOfDeath?: Date | string;
   isDeceased: boolean;
@@ -41,6 +42,10 @@ export interface PersonAction {
 export class PersonTableComponent implements OnInit {
   @Input() set people(value: PersonTableRow[]) {
     this.dataSource.data = value;
+    // Reset to first page when data changes
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
   @Input() showPagination = true;
   @Input() pageSize = 10;

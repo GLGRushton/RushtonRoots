@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, OnChanges, SimpleChanges, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -36,7 +36,7 @@ export interface HouseholdOption {
   templateUrl: './person-search.component.html',
   styleUrls: ['./person-search.component.scss']
 })
-export class PersonSearchComponent implements OnInit {
+export class PersonSearchComponent implements OnInit, OnChanges {
   @Input() households: HouseholdOption[] = [];
   @Input() initialFilters?: PersonSearchFilters;
   @Output() search = new EventEmitter<PersonSearchFilters>();
@@ -48,10 +48,31 @@ export class PersonSearchComponent implements OnInit {
 
   constructor(private fb: FormBuilder) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    // Handle changes to initialFilters after component initialization
+    const initialFiltersChange = changes.initialFilters;
+    if (initialFiltersChange && !initialFiltersChange.firstChange && this.searchForm) {
+      const filters = initialFiltersChange.currentValue;
+      if (filters) {
+        this.searchForm.patchValue({
+          searchTerm: filters.searchTerm || '',
+          householdId: filters.householdId ?? null,
+          isDeceased: filters.isDeceased ?? null,
+          birthDateFrom: filters.birthDateFrom || null,
+          birthDateTo: filters.birthDateTo || null,
+          deathDateFrom: filters.deathDateFrom || null,
+          deathDateTo: filters.deathDateTo || null,
+          surname: filters.surname || ''
+        }, { emitEvent: false });
+        this.updateActiveFilterCount();
+      }
+    }
+  }
+
   ngOnInit(): void {
     this.searchForm = this.fb.group({
       searchTerm: [this.initialFilters?.searchTerm || ''],
-      householdId: [this.initialFilters?.householdId || null],
+      householdId: [this.initialFilters?.householdId ?? null],
       isDeceased: [this.initialFilters?.isDeceased ?? null],
       birthDateFrom: [this.initialFilters?.birthDateFrom || null],
       birthDateTo: [this.initialFilters?.birthDateTo || null],
@@ -85,7 +106,9 @@ export class PersonSearchComponent implements OnInit {
     const filters: PersonSearchFilters = {};
 
     if (formValue.searchTerm) filters.searchTerm = formValue.searchTerm;
-    if (formValue.householdId) filters.householdId = formValue.householdId;
+    if (formValue.householdId !== null && formValue.householdId !== undefined) {
+      filters.householdId = formValue.householdId;
+    }
     if (formValue.isDeceased !== null && formValue.isDeceased !== '') {
       filters.isDeceased = formValue.isDeceased === 'true' || formValue.isDeceased === true;
     }
