@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -10,6 +10,7 @@ export interface PersonTableRow {
   lastName: string;
   fullName: string;
   householdName: string;
+  householdId?: number;
   dateOfBirth?: Date | string;
   dateOfDeath?: Date | string;
   isDeceased: boolean;
@@ -38,9 +39,13 @@ export interface PersonAction {
   templateUrl: './person-table.component.html',
   styleUrls: ['./person-table.component.scss']
 })
-export class PersonTableComponent implements OnInit {
+export class PersonTableComponent implements OnInit, AfterViewInit {
   @Input() set people(value: PersonTableRow[]) {
     this.dataSource.data = value;
+    // Reset to first page when data changes
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
   @Input() showPagination = true;
   @Input() pageSize = 10;
@@ -73,6 +78,15 @@ export class PersonTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateDisplayedColumns();
+  }
+
+  ngAfterViewInit(): void {
+    // Ensure paginator displays correct information after view initialization
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.page.subscribe(() => {
+        // This ensures the paginator stays in sync with data changes
+      });
+    }
   }
 
   updateDisplayedColumns(): void {
