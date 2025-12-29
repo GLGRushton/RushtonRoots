@@ -146,4 +146,12 @@ public class PersonRepository : IPersonRepository
     {
         return await _context.People.AnyAsync(p => p.Id == id);
     }
+
+    public async Task<Person?> GetYoungestPersonAsync()
+    {
+        return await _context.People
+            .Where(p => !p.IsDeleted)
+            .OrderByDescending(p => p.DateOfBirth)
+            .FirstOrDefaultAsync();
+    }
 }

@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { FamilyTreeNode } from '../../models/parent-child.model';
 
 /**
@@ -47,6 +48,8 @@ export class FamilyTreeMiniComponent implements OnInit {
    */
   isLoading = false;
 
+  constructor(private http: HttpClient) {}
+
   ngOnInit(): void {
     this.loadTree();
   }
@@ -57,103 +60,40 @@ export class FamilyTreeMiniComponent implements OnInit {
   private loadTree(): void {
     this.isLoading = true;
 
-    // Sample data - replace with API call
-    setTimeout(() => {
-      this.rootNode = this.getSampleTreeData();
-      this.isLoading = false;
-    }, 500);
+    // Determine which endpoint to call
+    const apiUrl = this.focusPersonId 
+      ? `/api/familytree/mini/${this.focusPersonId}?generations=${this.generations}`
+      : `/api/familytree/mini/current?generations=${this.generations}`;
+
+    this.http.get<FamilyTreeNode>(apiUrl).subscribe({
+      next: (data) => {
+        this.rootNode = this.mapApiResponseToTreeNode(data);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading family tree:', error);
+        this.isLoading = false;
+        // Set rootNode to undefined to show empty state
+        this.rootNode = undefined;
+      }
+    });
   }
 
   /**
-   * Get sample tree data for demonstration
+   * Map API response to FamilyTreeNode (handles date strings)
    */
-  private getSampleTreeData(): FamilyTreeNode {
-    const grandparent1: FamilyTreeNode = {
-      id: 1,
-      name: 'Robert Smith Sr.',
-      photoUrl: undefined,
-      birthDate: new Date('1930-05-10'),
-      deathDate: new Date('2010-03-15'),
-      generation: -2,
-      children: []
+  private mapApiResponseToTreeNode(node: FamilyTreeNode): FamilyTreeNode {
+    return {
+      id: node.id,
+      name: node.name,
+      photoUrl: node.photoUrl,
+      birthDate: node.birthDate ? new Date(node.birthDate) : undefined,
+      deathDate: node.deathDate ? new Date(node.deathDate) : undefined,
+      generation: node.generation,
+      parents: node.parents?.map((p: FamilyTreeNode) => this.mapApiResponseToTreeNode(p)),
+      children: node.children?.map((c: FamilyTreeNode) => this.mapApiResponseToTreeNode(c)),
+      spouses: node.spouses?.map((s: FamilyTreeNode) => this.mapApiResponseToTreeNode(s))
     };
-
-    const grandparent2: FamilyTreeNode = {
-      id: 2,
-      name: 'Mary Smith',
-      photoUrl: undefined,
-      birthDate: new Date('1932-08-20'),
-      deathDate: undefined,
-      generation: -2,
-      children: []
-    };
-
-    const parent1: FamilyTreeNode = {
-      id: 3,
-      name: 'John Smith',
-      photoUrl: undefined,
-      birthDate: new Date('1955-12-25'),
-      deathDate: undefined,
-      generation: -1,
-      parents: [grandparent1, grandparent2],
-      children: [],
-      spouses: []
-    };
-
-    const parent2: FamilyTreeNode = {
-      id: 4,
-      name: 'Jane Doe',
-      photoUrl: undefined,
-      birthDate: new Date('1957-03-14'),
-      deathDate: undefined,
-      generation: -1,
-      children: [],
-      spouses: [parent1]
-    };
-
-    parent1.spouses = [parent2];
-
-    const focusPerson: FamilyTreeNode = {
-      id: this.focusPersonId,
-      name: 'Robert Smith Jr.',
-      photoUrl: undefined,
-      birthDate: new Date('1980-06-15'),
-      deathDate: undefined,
-      generation: 0,
-      parents: [parent1, parent2],
-      children: [],
-      spouses: []
-    };
-
-    const child1: FamilyTreeNode = {
-      id: 101,
-      name: 'Emily Smith',
-      photoUrl: undefined,
-      birthDate: new Date('2005-06-15'),
-      deathDate: undefined,
-      generation: 1,
-      parents: [focusPerson],
-      children: []
-    };
-
-    const child2: FamilyTreeNode = {
-      id: 102,
-      name: 'Michael Smith',
-      photoUrl: undefined,
-      birthDate: new Date('2008-09-20'),
-      deathDate: undefined,
-      generation: 1,
-      parents: [focusPerson],
-      children: []
-    };
-
-    focusPerson.children = [child1, child2];
-    parent1.children = [focusPerson];
-    parent2.children = [focusPerson];
-    grandparent1.children = [parent1];
-    grandparent2.children = [parent1];
-
-    return focusPerson;
   }
 
   /**

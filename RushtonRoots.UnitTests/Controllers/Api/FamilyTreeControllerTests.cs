@@ -13,6 +13,7 @@ public class FamilyTreeControllerTests
     private readonly IPersonService _mockPersonService;
     private readonly IParentChildService _mockParentChildService;
     private readonly IPartnershipService _mockPartnershipService;
+    private readonly IFamilyTreeService _mockFamilyTreeService;
     private readonly ILogger<FamilyTreeController> _mockLogger;
     private readonly FamilyTreeController _controller;
 
@@ -21,11 +22,13 @@ public class FamilyTreeControllerTests
         _mockPersonService = A.Fake<IPersonService>();
         _mockParentChildService = A.Fake<IParentChildService>();
         _mockPartnershipService = A.Fake<IPartnershipService>();
+        _mockFamilyTreeService = A.Fake<IFamilyTreeService>();
         _mockLogger = A.Fake<ILogger<FamilyTreeController>>();
         _controller = new FamilyTreeController(
             _mockPersonService,
             _mockParentChildService,
             _mockPartnershipService,
+            _mockFamilyTreeService,
             _mockLogger);
     }
 
@@ -383,6 +386,134 @@ public class FamilyTreeControllerTests
         var peopleProperty = data.GetType().GetProperty("people");
         var returnedPeople = peopleProperty?.GetValue(data) as IEnumerable<PersonViewModel>;
         Assert.Equal(100, returnedPeople?.Count());
+    }
+
+    #endregion
+
+    #region GetMiniTree Tests
+
+    [Fact]
+    public async Task GetMiniTree_WithValidPersonId_ReturnsOkWithTreeData()
+    {
+        // Arrange
+        var treeNode = new FamilyTreeNodeViewModel
+        {
+            Id = 1,
+            Name = "John Doe",
+            Generation = 0,
+            Parents = new List<FamilyTreeNodeViewModel>(),
+            Children = new List<FamilyTreeNodeViewModel>(),
+            Spouses = new List<FamilyTreeNodeViewModel>()
+        };
+
+        A.CallTo(() => _mockFamilyTreeService.GetMiniTreeAsync(1, 2)).Returns(treeNode);
+
+        // Act
+        var result = await _controller.GetMiniTree(1, 2);
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnedTree = Assert.IsType<FamilyTreeNodeViewModel>(okResult.Value);
+        Assert.Equal(1, returnedTree.Id);
+        Assert.Equal("John Doe", returnedTree.Name);
+    }
+
+    [Fact]
+    public async Task GetMiniTree_WithInvalidPersonId_ReturnsNotFound()
+    {
+        // Arrange
+        A.CallTo(() => _mockFamilyTreeService.GetMiniTreeAsync(999, 2)).Returns((FamilyTreeNodeViewModel?)null);
+
+        // Act
+        var result = await _controller.GetMiniTree(999, 2);
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result.Result);
+        Assert.Contains("not found", notFoundResult.Value?.ToString());
+    }
+
+    [Fact]
+    public async Task GetMiniTree_WithCustomGenerations_PassesCorrectParameter()
+    {
+        // Arrange
+        var treeNode = new FamilyTreeNodeViewModel { Id = 1, Name = "John Doe", Generation = 0 };
+        A.CallTo(() => _mockFamilyTreeService.GetMiniTreeAsync(1, 3)).Returns(treeNode);
+
+        // Act
+        var result = await _controller.GetMiniTree(1, 3);
+
+        // Assert
+        A.CallTo(() => _mockFamilyTreeService.GetMiniTreeAsync(1, 3)).MustHaveHappenedOnceExactly();
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        Assert.NotNull(okResult.Value);
+    }
+
+    [Fact]
+    public async Task GetMiniTree_WhenServiceThrows_Returns500()
+    {
+        // Arrange
+        A.CallTo(() => _mockFamilyTreeService.GetMiniTreeAsync(1, 2)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.GetMiniTree(1, 2);
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusResult.StatusCode);
+    }
+
+    [Fact]
+    public async Task GetCurrentUserMiniTree_ReturnsOkWithTreeData()
+    {
+        // Arrange
+        var treeNode = new FamilyTreeNodeViewModel
+        {
+            Id = 1,
+            Name = "John Doe",
+            Generation = 0,
+            Parents = new List<FamilyTreeNodeViewModel>(),
+            Children = new List<FamilyTreeNodeViewModel>(),
+            Spouses = new List<FamilyTreeNodeViewModel>()
+        };
+
+        A.CallTo(() => _mockFamilyTreeService.GetMiniTreeForCurrentUserAsync(A<string?>._)).Returns(treeNode);
+
+        // Act
+        var result = await _controller.GetCurrentUserMiniTree();
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result.Result);
+        var returnedTree = Assert.IsType<FamilyTreeNodeViewModel>(okResult.Value);
+        Assert.Equal(1, returnedTree.Id);
+        Assert.Equal("John Doe", returnedTree.Name);
+    }
+
+    [Fact]
+    public async Task GetCurrentUserMiniTree_WhenNoPersonFound_ReturnsNotFound()
+    {
+        // Arrange
+        A.CallTo(() => _mockFamilyTreeService.GetMiniTreeForCurrentUserAsync(A<string?>._)).Returns((FamilyTreeNodeViewModel?)null);
+
+        // Act
+        var result = await _controller.GetCurrentUserMiniTree();
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result.Result);
+        Assert.Contains("No person found", notFoundResult.Value?.ToString());
+    }
+
+    [Fact]
+    public async Task GetCurrentUserMiniTree_WhenServiceThrows_Returns500()
+    {
+        // Arrange
+        A.CallTo(() => _mockFamilyTreeService.GetMiniTreeForCurrentUserAsync(A<string?>._)).Throws<Exception>();
+
+        // Act
+        var result = await _controller.GetCurrentUserMiniTree();
+
+        // Assert
+        var statusResult = Assert.IsType<ObjectResult>(result.Result);
+        Assert.Equal(500, statusResult.StatusCode);
     }
 
     #endregion
