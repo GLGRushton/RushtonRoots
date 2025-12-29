@@ -37,10 +37,7 @@ export class PersonIndexComponent implements OnInit {
   errorMessage?: string;
 
   ngOnInit(): void {
-    // Parse inputs that may come as JSON strings from Angular Elements
-    this.parseInputs();
-    
-    // Initialize data
+    // Initialize data - parse inputs that may come as JSON strings from Angular Elements
     this.allPeople = this.parseArrayInput<PersonTableRow>(this.initialPeople);
     this.parsedHouseholds = this.parseArrayInput<HouseholdOption>(this.households);
     this.parsedCanEdit = this.parseBooleanInput(this.canEdit);
@@ -80,17 +77,6 @@ export class PersonIndexComponent implements OnInit {
       // Otherwise show all people
       this.filteredPeople = this.allPeople;
     }
-  }
-
-  /**
-   * Parse inputs to handle both Angular Elements (strings) and direct Angular usage (objects/arrays)
-   */
-  private parseInputs(): void {
-    // Re-assign parsed values to the input properties for use in template
-    this.households = this.parseArrayInput<HouseholdOption>(this.households);
-    this.initialFilters = this.parsedFilters;
-    this.canEdit = this.parsedCanEdit;
-    this.canDelete = this.parsedCanDelete;
   }
 
   /**
