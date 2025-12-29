@@ -16,4 +16,5 @@ public interface IPersonRepository
     Task<Person> UpdateAsync(Person person);
     Task DeleteAsync(int id);
     Task<bool> ExistsAsync(int id);
+    Task<Person?> GetYoungestPersonAsync();
 }

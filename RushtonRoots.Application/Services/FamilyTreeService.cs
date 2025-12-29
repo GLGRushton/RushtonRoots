@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using RushtonRoots.Domain.Database;
 using RushtonRoots.Domain.UI.Models;
-using RushtonRoots.Infrastructure.Database;
 using RushtonRoots.Infrastructure.Repositories;
 
 namespace RushtonRoots.Application.Services;
@@ -15,20 +13,17 @@ public class FamilyTreeService : IFamilyTreeService
     private readonly IPersonRepository _personRepository;
     private readonly IParentChildRepository _parentChildRepository;
     private readonly IPartnershipRepository _partnershipRepository;
-    private readonly RushtonRootsDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
 
     public FamilyTreeService(
         IPersonRepository personRepository,
         IParentChildRepository parentChildRepository,
         IPartnershipRepository partnershipRepository,
-        RushtonRootsDbContext context,
         UserManager<ApplicationUser> userManager)
     {
         _personRepository = personRepository;
         _parentChildRepository = parentChildRepository;
         _partnershipRepository = partnershipRepository;
-        _context = context;
         _userManager = userManager;
     }
 
@@ -96,11 +91,7 @@ public class FamilyTreeService : IFamilyTreeService
 
     public async Task<int?> GetYoungestPersonIdAsync()
     {
-        var youngestPerson = await _context.People
-            .Where(p => !p.IsDeleted)
-            .OrderByDescending(p => p.DateOfBirth)
-            .FirstOrDefaultAsync();
-
+        var youngestPerson = await _personRepository.GetYoungestPersonAsync();
         return youngestPerson?.Id;
     }
 
