@@ -1,9 +1,8 @@
-import { Component, Input, Output, EventEmitter, ViewChild, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Subscription } from 'rxjs';
 
 export interface PersonTableRow {
   id: number;
@@ -40,7 +39,7 @@ export interface PersonAction {
   templateUrl: './person-table.component.html',
   styleUrls: ['./person-table.component.scss']
 })
-export class PersonTableComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PersonTableComponent implements OnInit {
   @Input() set people(value: PersonTableRow[]) {
     this.dataSource.data = value;
     // Reset to first page when data changes
@@ -64,7 +63,6 @@ export class PersonTableComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<PersonTableRow>([]);
   selection = new SelectionModel<PersonTableRow>(true, []);
-  private subscriptions = new Subscription();
 
   @ViewChild(MatPaginator) set paginator(value: MatPaginator) {
     if (value) {
@@ -80,20 +78,6 @@ export class PersonTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.updateDisplayedColumns();
-  }
-
-  ngAfterViewInit(): void {
-    // Ensure paginator displays correct information after view initialization
-    if (this.dataSource.paginator) {
-      const pageSubscription = this.dataSource.paginator.page.subscribe(() => {
-        // This ensures the paginator stays in sync with data changes
-      });
-      this.subscriptions.add(pageSubscription);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   updateDisplayedColumns(): void {
