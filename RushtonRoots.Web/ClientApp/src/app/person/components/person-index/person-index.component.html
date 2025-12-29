@@ -6,7 +6,7 @@
       <div class="header-actions">
         <button mat-raised-button 
                 color="primary" 
-                *ngIf="canEdit"
+                *ngIf="parsedCanEdit"
                 (click)="navigateToCreate()">
           <mat-icon>person_add</mat-icon>
           Add New Person
@@ -25,8 +25,8 @@
 
   <!-- Search Component -->
   <app-person-search 
-    [households]="households"
-    [initialFilters]="initialFilters"
+    [households]="parsedHouseholds"
+    [initialFilters]="parsedFilters"
     (search)="onSearch($event)">
   </app-person-search>
 
@@ -56,8 +56,8 @@
     [pageSize]="10"
     [pageSizeOptions]="[5, 10, 25, 50, 100]"
     [showActions]="true"
-    [canEdit]="canEdit"
-    [canDelete]="canDelete"
+    [canEdit]="parsedCanEdit"
+    [canDelete]="parsedCanDelete"
     (actionTriggered)="onAction($event)">
   </app-person-table>
 </div>
