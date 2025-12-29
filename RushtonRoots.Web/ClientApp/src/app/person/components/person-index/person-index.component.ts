@@ -10,6 +10,8 @@ import { PersonTableRow, PersonAction } from '../person-table/person-table.compo
  * - Handles search and filtering
  * - Export functionality
  * - Quick actions
+ * - Parses JSON string inputs from Angular Elements
+ * - Handles query parameters for initial search
  */
 @Component({
   selector: 'app-person-index',
@@ -18,20 +20,106 @@ import { PersonTableRow, PersonAction } from '../person-table/person-table.compo
   styleUrls: ['./person-index.component.scss']
 })
 export class PersonIndexComponent implements OnInit {
-  @Input() initialPeople: PersonTableRow[] = [];
-  @Input() households: HouseholdOption[] = [];
-  @Input() canEdit = false;
-  @Input() canDelete = false;
-  @Input() initialFilters?: PersonSearchFilters;
+  // Inputs can be either objects/arrays (when used in Angular) or JSON strings (when used as Angular Elements)
+  @Input() initialPeople: PersonTableRow[] | string = [];
+  @Input() households: HouseholdOption[] | string = [];
+  @Input() canEdit: boolean | string = false;
+  @Input() canDelete: boolean | string = false;
+  @Input() initialFilters?: PersonSearchFilters | string;
 
   filteredPeople: PersonTableRow[] = [];
   allPeople: PersonTableRow[] = [];
+  parsedHouseholds: HouseholdOption[] = [];
+  parsedFilters?: PersonSearchFilters;
+  parsedCanEdit = false;
+  parsedCanDelete = false;
   isLoading = false;
   errorMessage?: string;
 
   ngOnInit(): void {
-    this.allPeople = this.initialPeople;
-    this.filteredPeople = this.initialPeople;
+    // Parse inputs that may come as JSON strings from Angular Elements
+    this.parseInputs();
+    
+    // Initialize data
+    this.allPeople = this.parseArrayInput<PersonTableRow>(this.initialPeople);
+    this.parsedHouseholds = this.parseArrayInput<HouseholdOption>(this.households);
+    this.parsedCanEdit = this.parseBooleanInput(this.canEdit);
+    this.parsedCanDelete = this.parseBooleanInput(this.canDelete);
+    
+    // Parse filters (might be JSON string or object)
+    if (this.initialFilters) {
+      if (typeof this.initialFilters === 'string') {
+        try {
+          this.parsedFilters = JSON.parse(this.initialFilters);
+        } catch (e) {
+          console.error('Error parsing initial filters:', e);
+          this.parsedFilters = undefined;
+        }
+      } else {
+        this.parsedFilters = this.initialFilters;
+      }
+    }
+    
+    // Check for URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    
+    // If there's a search query parameter, use it and trigger search
+    if (searchParam) {
+      this.parsedFilters = {
+        ...this.parsedFilters,
+        searchTerm: searchParam
+      };
+    }
+    
+    // Set initial filtered people
+    if (this.parsedFilters && Object.keys(this.parsedFilters).some(key => this.parsedFilters![key as keyof PersonSearchFilters])) {
+      // If we have filters, apply them
+      this.filteredPeople = this.filterPeople(this.allPeople, this.parsedFilters);
+    } else {
+      // Otherwise show all people
+      this.filteredPeople = this.allPeople;
+    }
+  }
+
+  /**
+   * Parse inputs to handle both Angular Elements (strings) and direct Angular usage (objects/arrays)
+   */
+  private parseInputs(): void {
+    // Re-assign parsed values to the input properties for use in template
+    this.households = this.parseArrayInput<HouseholdOption>(this.households);
+    this.initialFilters = this.parsedFilters;
+    this.canEdit = this.parsedCanEdit;
+    this.canDelete = this.parsedCanDelete;
+  }
+
+  /**
+   * Parse array input that might be a JSON string or already an array
+   */
+  private parseArrayInput<T>(input: T[] | string): T[] {
+    if (typeof input === 'string') {
+      if (!input || input.trim() === '') {
+        return [];
+      }
+      try {
+        const parsed = JSON.parse(input);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        console.error('Error parsing array input:', e, 'Input:', input);
+        return [];
+      }
+    }
+    return Array.isArray(input) ? input : [];
+  }
+
+  /**
+   * Parse boolean input that might be a string or already a boolean
+   */
+  private parseBooleanInput(input: boolean | string): boolean {
+    if (typeof input === 'string') {
+      return input.toLowerCase() === 'true';
+    }
+    return Boolean(input);
   }
 
   onSearch(filters: PersonSearchFilters): void {
