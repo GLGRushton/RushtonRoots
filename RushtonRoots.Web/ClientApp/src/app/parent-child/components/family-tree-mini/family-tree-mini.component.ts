@@ -82,7 +82,7 @@ export class FamilyTreeMiniComponent implements OnInit {
   /**
    * Map API response to FamilyTreeNode (handles date strings)
    */
-  private mapApiResponseToTreeNode(node: any): FamilyTreeNode {
+  private mapApiResponseToTreeNode(node: FamilyTreeNode): FamilyTreeNode {
     return {
       id: node.id,
       name: node.name,
@@ -90,9 +90,9 @@ export class FamilyTreeMiniComponent implements OnInit {
       birthDate: node.birthDate ? new Date(node.birthDate) : undefined,
       deathDate: node.deathDate ? new Date(node.deathDate) : undefined,
       generation: node.generation,
-      parents: node.parents?.map((p: any) => this.mapApiResponseToTreeNode(p)),
-      children: node.children?.map((c: any) => this.mapApiResponseToTreeNode(c)),
-      spouses: node.spouses?.map((s: any) => this.mapApiResponseToTreeNode(s))
+      parents: node.parents?.map((p: FamilyTreeNode) => this.mapApiResponseToTreeNode(p)),
+      children: node.children?.map((c: FamilyTreeNode) => this.mapApiResponseToTreeNode(c)),
+      spouses: node.spouses?.map((s: FamilyTreeNode) => this.mapApiResponseToTreeNode(s))
     };
   }
 
