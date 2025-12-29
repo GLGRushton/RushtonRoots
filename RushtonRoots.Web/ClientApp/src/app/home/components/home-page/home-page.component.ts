@@ -190,6 +190,11 @@ export class HomePageComponent implements OnInit {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   }
 
+  formatYear(dateString: string): string {
+    const date = new Date(dateString);
+    return date.getFullYear().toString();
+  }
+
   formatTimestamp(dateString: string): string {
     const date = new Date(dateString);
     const now = new Date();

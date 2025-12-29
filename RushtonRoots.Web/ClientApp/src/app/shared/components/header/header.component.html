@@ -45,8 +45,11 @@
         mat-icon-button 
         *ngIf="showNotifications && userInfo && userInfo.isAuthenticated"
         aria-label="Notifications"
-        class="notification-button">
-        <mat-icon [matBadge]="0" matBadgeColor="warn" [matBadgeHidden]="true">notifications</mat-icon>
+        class="notification-button"
+        [matBadge]="0" 
+        matBadgeColor="warn" 
+        [matBadgeHidden]="true">
+        <mat-icon>notifications</mat-icon>
       </button>
 
       <!-- User Menu -->
