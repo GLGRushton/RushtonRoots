@@ -58,25 +58,39 @@ export class PersonIndexComponent implements OnInit {
     }
     
     // Check for URL query parameters
+    // Note: Using window.location for Angular Elements compatibility in MVC views
+    // This component is embedded as a custom element, not in a full Angular router context
     const urlParams = new URLSearchParams(window.location.search);
     const searchParam = urlParams.get('search');
     
-    // If there's a search query parameter, use it and trigger search
+    // If there's a search query parameter, merge it with existing filters
+    // URL parameter takes precedence over initial filters for searchTerm
     if (searchParam) {
       this.parsedFilters = {
         ...this.parsedFilters,
-        searchTerm: searchParam
+        searchTerm: searchParam // Intentionally overwrites any existing searchTerm
       };
     }
     
     // Set initial filtered people
-    if (this.parsedFilters && Object.keys(this.parsedFilters).some(key => this.parsedFilters![key as keyof PersonSearchFilters])) {
+    if (this.hasActiveFilters(this.parsedFilters)) {
       // If we have filters, apply them
-      this.filteredPeople = this.filterPeople(this.allPeople, this.parsedFilters);
+      this.filteredPeople = this.filterPeople(this.allPeople, this.parsedFilters!);
     } else {
       // Otherwise show all people
       this.filteredPeople = this.allPeople;
     }
+  }
+
+  /**
+   * Check if any filters have active values
+   */
+  private hasActiveFilters(filters?: PersonSearchFilters): boolean {
+    if (!filters) return false;
+    return Object.keys(filters).some(key => {
+      const value = filters[key as keyof PersonSearchFilters];
+      return value !== undefined && value !== null && value !== '';
+    });
   }
 
   /**
