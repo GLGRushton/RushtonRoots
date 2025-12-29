@@ -197,7 +197,7 @@ dotnet ef migrations remove --project RushtonRoots.Infrastructure --startup-proj
 **Build Commands**:
 
 ```bash
-# Build solution
+# Build solution (REQUIRED before PR completion)
 dotnet build
 
 # Build for Release
@@ -207,8 +207,12 @@ dotnet build -c Release
 cd RushtonRoots.Web
 dotnet run
 
-# Run tests
+# Run tests (REQUIRED before PR completion)
 dotnet test
+
+# Build Angular for development (REQUIRED before PR completion)
+cd RushtonRoots.Web/ClientApp
+ng build --watch --configuration development
 
 # Publish
 dotnet publish -c Release
@@ -234,6 +238,35 @@ dotnet publish -c Release
 - `ClientApp/package.json` - npm dependencies (Angular 19)
 - `ClientApp/src/main.ts` - Bootstrap entry point
 - `ClientApp/src/app/app.module.ts` - Module with Angular Elements registration
+
+## PR Completion Requirements
+
+Before any pull request is considered complete, the following requirements **MUST** be met:
+
+### 1. Unit Testing Requirements
+- **Add unit tests** for all new functionality
+- **Update unit tests** for all modified functionality
+- **Remove unit tests** for any removed functionality
+- Tests must follow existing patterns using XUnit and FakeItEasy
+- All tests must pass via `dotnet test`
+
+### 2. Build Validation Requirements
+Both of the following builds **MUST** complete successfully:
+
+**Backend Build**:
+```bash
+dotnet build
+```
+
+**Frontend Build** (from `RushtonRoots.Web/ClientApp/`):
+```bash
+ng build --watch --configuration development
+```
+
+**Important**: 
+- Do not submit a PR if either build fails
+- Address all build errors and warnings before marking PR as ready for review
+- Verify both builds run successfully in your local environment
 
 ## Development Workflow
 
@@ -294,11 +327,24 @@ Follow this step-by-step process:
     - Inject service via constructor
     - Keep thin - delegate to service
 
-11. **Write Unit Tests** in `UnitTests/`
+11. **Write Unit Tests** in `UnitTests/` (**REQUIRED**)
     - Use FakeItEasy for mocking: `var mock = A.Fake<IMyService>();`
     - Setup calls: `A.CallTo(() => mock.Method()).Returns(result);`
+    - Test all new services, repositories, validators, and mappers
+    - Verify tests pass with `dotnet test`
+
+12. **Validate Builds** (**REQUIRED**)
+    - Run `dotnet build` from repository root - must succeed
+    - Run `ng build --watch --configuration development` from `RushtonRoots.Web/ClientApp/` - must succeed
+    - Fix any errors before submitting PR
 
 ### Testing Strategy
+
+**Unit Testing is REQUIRED for all PRs**:
+- **New functionality**: Must have comprehensive unit tests
+- **Modified functionality**: Update existing tests to reflect changes
+- **Removed functionality**: Remove associated tests
+- All tests must pass before PR can be completed
 
 **Unit Tests**:
 - Test services with mocked repositories
