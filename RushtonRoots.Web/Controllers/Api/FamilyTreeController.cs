@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RushtonRoots.Application.Services;
@@ -16,18 +17,88 @@ public class FamilyTreeController : ControllerBase
     private readonly IPersonService _personService;
     private readonly IParentChildService _parentChildService;
     private readonly IPartnershipService _partnershipService;
+    private readonly IFamilyTreeService _familyTreeService;
     private readonly ILogger<FamilyTreeController> _logger;
 
     public FamilyTreeController(
         IPersonService personService,
         IParentChildService parentChildService,
         IPartnershipService partnershipService,
+        IFamilyTreeService familyTreeService,
         ILogger<FamilyTreeController> logger)
     {
         _personService = personService;
         _parentChildService = parentChildService;
         _partnershipService = partnershipService;
+        _familyTreeService = familyTreeService;
         _logger = logger;
+    }
+
+    /// <summary>
+    /// Get mini family tree for a specific person.
+    /// Includes parents, grandparents, children, and spouses.
+    /// </summary>
+    /// <param name="personId">Person ID to focus on</param>
+    /// <param name="generations">Number of generations to include (default: 2)</param>
+    /// <returns>Family tree node with relationships</returns>
+    [HttpGet("mini/{personId}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(FamilyTreeNodeViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<FamilyTreeNodeViewModel>> GetMiniTree(
+        int personId,
+        [FromQuery] int generations = 2)
+    {
+        try
+        {
+            var tree = await _familyTreeService.GetMiniTreeAsync(personId, generations);
+            
+            if (tree == null)
+            {
+                _logger.LogWarning("Person with ID {PersonId} not found for family tree", personId);
+                return NotFound($"Person with ID {personId} not found");
+            }
+            
+            return Ok(tree);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving mini family tree for person {PersonId}", personId);
+            return StatusCode(500, "An error occurred while retrieving the family tree");
+        }
+    }
+
+    /// <summary>
+    /// Get mini family tree for the current logged-in user.
+    /// If not logged in or user not associated with a person, returns tree for youngest person.
+    /// </summary>
+    /// <returns>Family tree node for current user or youngest person</returns>
+    [HttpGet("mini/current")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(FamilyTreeNodeViewModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<FamilyTreeNodeViewModel>> GetCurrentUserMiniTree()
+    {
+        try
+        {
+            // Get current user ID if authenticated
+            var userId = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            
+            var tree = await _familyTreeService.GetMiniTreeForCurrentUserAsync(userId);
+            
+            if (tree == null)
+            {
+                _logger.LogWarning("No person found for family tree (user: {UserId})", userId ?? "anonymous");
+                return NotFound("No person found for family tree");
+            }
+            
+            return Ok(tree);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving mini family tree for current user");
+            return StatusCode(500, "An error occurred while retrieving the family tree");
+        }
     }
 
     /// <summary>

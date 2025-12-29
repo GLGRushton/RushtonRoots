@@ -13,6 +13,7 @@ public class FamilyTreeControllerTests
     private readonly IPersonService _mockPersonService;
     private readonly IParentChildService _mockParentChildService;
     private readonly IPartnershipService _mockPartnershipService;
+    private readonly IFamilyTreeService _mockFamilyTreeService;
     private readonly ILogger<FamilyTreeController> _mockLogger;
     private readonly FamilyTreeController _controller;
 
@@ -21,11 +22,13 @@ public class FamilyTreeControllerTests
         _mockPersonService = A.Fake<IPersonService>();
         _mockParentChildService = A.Fake<IParentChildService>();
         _mockPartnershipService = A.Fake<IPartnershipService>();
+        _mockFamilyTreeService = A.Fake<IFamilyTreeService>();
         _mockLogger = A.Fake<ILogger<FamilyTreeController>>();
         _controller = new FamilyTreeController(
             _mockPersonService,
             _mockParentChildService,
             _mockPartnershipService,
+            _mockFamilyTreeService,
             _mockLogger);
     }
 
