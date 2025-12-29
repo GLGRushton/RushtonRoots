@@ -29,6 +29,7 @@
       font-size: 2.5em;
       font-weight: 700;
       margin: 0 0 10px 0;
+      color: white;
     }
 
     .tagline {
@@ -36,6 +37,7 @@
       font-style: italic;
       margin: 0;
       opacity: 0.95;
+      color: white;
     }
   }
 
@@ -48,20 +50,39 @@
   .search-container {
     display: flex;
     gap: 16px;
-    align-items: center;
+    align-items: flex-start;
 
     .search-field {
       flex: 1;
       background: white;
       border-radius: 8px;
 
-      ::ng-deep .mat-form-field-wrapper {
+      ::ng-deep .mat-mdc-form-field-wrapper {
         padding-bottom: 0;
+      }
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        padding-bottom: 0;
+      }
+
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+
+      ::ng-deep .mat-mdc-form-field-hint-wrapper,
+      ::ng-deep .mat-mdc-form-field-error-wrapper {
+        display: none;
       }
     }
 
     .search-btn {
       height: 56px;
+      min-width: 120px;
+      
+      // Ensure text is readable on primary color button
+      ::ng-deep .mat-mdc-button-persistent-ripple {
+        color: white;
+      }
     }
   }
 
@@ -212,31 +233,6 @@
 
   mat-card-content {
     padding: 20px;
-  }
-
-  .family-tree-placeholder {
-    text-align: center;
-    padding: 60px 20px;
-    color: #666;
-
-    .tree-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-      color: #667eea;
-      margin-bottom: 16px;
-    }
-
-    p {
-      margin: 8px 0;
-      font-size: 16px;
-    }
-
-    .note {
-      font-size: 14px;
-      font-style: italic;
-      color: #999;
-    }
   }
 
   .tree-actions {

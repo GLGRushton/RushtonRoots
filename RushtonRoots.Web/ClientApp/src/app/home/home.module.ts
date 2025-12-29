@@ -10,6 +10,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+// Parent-Child Module for family tree
+import { ParentChildModule } from '../parent-child/parent-child.module';
+
 // Components
 import { HomePageComponent } from './components/home-page/home-page.component';
 
@@ -25,7 +28,8 @@ import { HomePageComponent } from './components/home-page/home-page.component';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    ParentChildModule
   ],
   exports: [
     HomePageComponent

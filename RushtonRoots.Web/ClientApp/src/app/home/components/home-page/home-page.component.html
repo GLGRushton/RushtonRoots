@@ -163,11 +163,12 @@
     </h2>
     <mat-card>
       <mat-card-content>
-        <div class="family-tree-placeholder">
-          <mat-icon class="tree-icon">account_tree</mat-icon>
-          <p>Family tree visualization will appear here</p>
-          <p class="note">The interactive family tree component will be loaded from the Razor view</p>
-        </div>
+        <app-family-tree-mini 
+          [focusPersonId]="1" 
+          [generations]="2" 
+          [compact]="true"
+          (personClicked)="onPersonClick($event)">
+        </app-family-tree-mini>
         <div class="tree-actions">
           <button mat-raised-button color="primary" (click)="onViewTree()">
             <mat-icon>open_in_full</mat-icon>
