@@ -56,7 +56,7 @@ export class PersonSearchComponent implements OnInit, OnChanges {
       if (filters) {
         this.searchForm.patchValue({
           searchTerm: filters.searchTerm || '',
-          householdId: filters.householdId || null,
+          householdId: filters.householdId ?? null,
           isDeceased: filters.isDeceased ?? null,
           birthDateFrom: filters.birthDateFrom || null,
           birthDateTo: filters.birthDateTo || null,
@@ -72,7 +72,7 @@ export class PersonSearchComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.searchForm = this.fb.group({
       searchTerm: [this.initialFilters?.searchTerm || ''],
-      householdId: [this.initialFilters?.householdId || null],
+      householdId: [this.initialFilters?.householdId ?? null],
       isDeceased: [this.initialFilters?.isDeceased ?? null],
       birthDateFrom: [this.initialFilters?.birthDateFrom || null],
       birthDateTo: [this.initialFilters?.birthDateTo || null],
