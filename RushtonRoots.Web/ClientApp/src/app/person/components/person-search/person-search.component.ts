@@ -50,8 +50,9 @@ export class PersonSearchComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     // Handle changes to initialFilters after component initialization
-    if (changes['initialFilters'] && !changes['initialFilters'].firstChange && this.searchForm) {
-      const filters = changes['initialFilters'].currentValue;
+    const initialFiltersChange = changes['initialFilters'];
+    if (initialFiltersChange && !initialFiltersChange.firstChange && this.searchForm) {
+      const filters = initialFiltersChange.currentValue;
       if (filters) {
         this.searchForm.patchValue({
           searchTerm: filters.searchTerm || '',
