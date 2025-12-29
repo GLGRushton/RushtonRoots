@@ -106,7 +106,9 @@ export class PersonSearchComponent implements OnInit, OnChanges {
     const filters: PersonSearchFilters = {};
 
     if (formValue.searchTerm) filters.searchTerm = formValue.searchTerm;
-    if (formValue.householdId) filters.householdId = formValue.householdId;
+    if (formValue.householdId !== null && formValue.householdId !== undefined) {
+      filters.householdId = formValue.householdId;
+    }
     if (formValue.isDeceased !== null && formValue.isDeceased !== '') {
       filters.isDeceased = formValue.isDeceased === 'true' || formValue.isDeceased === true;
     }
