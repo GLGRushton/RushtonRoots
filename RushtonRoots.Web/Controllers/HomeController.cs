@@ -143,8 +143,8 @@ public class HomeController : Controller
                 .OrderBy(p => p.DateOfBirth)
                 .FirstOrDefaultAsync()
             : await _context.People
-                .Where(p => !p.IsDeleted)
-                .OrderByDescending(p => p.CreatedDateTime)
+                .Where(p => !p.IsDeleted && p.DateOfBirth.HasValue)
+                .OrderByDescending(p => p.DateOfBirth)
                 .FirstOrDefaultAsync();
         
         if (person == null)

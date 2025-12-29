@@ -38,10 +38,10 @@ public class HomePageService : IHomePageService
             statistics.OldestAncestor = $"{oldestPerson.FirstName} {oldestPerson.LastName}";
         }
 
-        // Get newest member (most recently added person)
+        // Get newest member (youngest family member by birth date)
         var newestPerson = await _context.People
-            .Where(p => !p.IsDeleted)
-            .OrderByDescending(p => p.CreatedDateTime)
+            .Where(p => !p.IsDeleted && p.DateOfBirth.HasValue)
+            .OrderByDescending(p => p.DateOfBirth)
             .FirstOrDefaultAsync();
 
         if (newestPerson != null)

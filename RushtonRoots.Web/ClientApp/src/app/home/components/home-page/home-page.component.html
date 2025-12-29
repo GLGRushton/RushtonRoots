@@ -248,7 +248,7 @@
               {{ homePageData.statistics.oldestAncestor.fullName }}
             </div>
             <div class="stat-meta" *ngIf="homePageData.statistics.oldestAncestor">
-              {{ homePageData.statistics.oldestAncestor.birthDate ? formatDate(homePageData.statistics.oldestAncestor.birthDate) : 'Unknown' }}
+              {{ homePageData.statistics.oldestAncestor.birthDate ? formatYear(homePageData.statistics.oldestAncestor.birthDate) : 'Unknown' }}
             </div>
             <div class="stat-value" *ngIf="!homePageData.statistics.oldestAncestor">N/A</div>
           </div>
@@ -264,7 +264,7 @@
               {{ homePageData.statistics.newestMember.fullName }}
             </div>
             <div class="stat-meta" *ngIf="homePageData.statistics.newestMember">
-              {{ homePageData.statistics.newestMember.birthDate ? formatDate(homePageData.statistics.newestMember.birthDate) : 'Unknown' }}
+              {{ homePageData.statistics.newestMember.birthDate ? formatYear(homePageData.statistics.newestMember.birthDate) : 'Unknown' }}
             </div>
             <div class="stat-value" *ngIf="!homePageData.statistics.newestMember">N/A</div>
           </div>
