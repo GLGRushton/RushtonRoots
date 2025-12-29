@@ -139,11 +139,9 @@ export class PersonIndexComponent implements OnInit {
         if (!nameMatch) return false;
       }
 
-      // Household filter
-      if (filters.householdId && person.householdName) {
-        // This is a simplified check - in reality, you'd match by ID
-        // For now, we don't have the household ID in PersonTableRow
-        // This would need to be added or filtered server-side
+      // Household filter - now properly checks by ID
+      if (filters.householdId !== undefined && filters.householdId !== null) {
+        if (person.householdId !== filters.householdId) return false;
       }
 
       // Deceased status filter
